@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Virtualenvs
+venv/
+env/
+.med-env/
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets / env
+.env
+*.pem
+*.key
+
+# Logs
+*.log
+
+# Test artifacts / outputs
+output.txt
+
+# Large data / indexes
+/indexes/
+*.index
+*.faiss
+*.faiss.index
+
+# Large data / data
+/data/
+*.jsonl
+*.json
+
+# audio test files (optional)
+tests/*.mp3
+tests/*.wav
+
+# data dumps you don't want versioned (optional)
+data/*.db
+data/*.sqlite
+
+# Python cache
+__pycache__/
+*.py[cod]
