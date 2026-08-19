@@ -51,3 +51,6 @@ data/*.sqlite
 # Python cache
 __pycache__/
 *.py[cod]
+
+
+*.jpg
