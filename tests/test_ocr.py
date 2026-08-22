@@ -81,7 +81,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import os
 import cv2
-from backend import ocr
+from app import ocr
 
 def run_test(image_path: str, show_preview: bool = False):
     # Run OCR and get both text + preview image with bounding boxes

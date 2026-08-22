@@ -1,7 +1,7 @@
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from backend import embeddings
+from app import embeddings
 import numpy as np
 
 def test_embeddings_vector():

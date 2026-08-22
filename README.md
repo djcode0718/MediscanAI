@@ -195,31 +195,38 @@ sequenceDiagram
 ```text
 MediScanAI/
 │
-├── frontend/
-│   ├── app.py              # earlier prototype UI
-│   └── app_new.py          # ✅ active UI — text + live/upload voice + image, Streamlit
+├── frontend/                # ✅ Vite + React (Tailwind CSS v4) SPA
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── LandingAuth.jsx # Pre-app Landing & simulated Sign In/Up
+│   │   │   └── Dashboard.jsx   # Core Workspace UI: Text, Voice, Dropzone Image
+│   │   ├── App.jsx         # App view & Theme (Light/Dark) coordinator
+│   │   └── index.css       # Tailwind imports & customized styling variables
+│   ├── index.html          # Web entry point with FOUC theme injection
+│   └── package.json
 │
-├── backend/
-│   ├── core_new.py         # ✅ active Pipeline: orchestrates OCR → retrieval → LLM → card
-│   ├── core.py              # earlier pipeline version
-│   ├── ocr.py               # PaddleOCR wrapper (extract + annotate)
-│   ├── whisper.py           # Faster-Whisper speech-to-text wrapper
-│   ├── embeddings.py        # SentenceTransformers (all-MiniLM-L6-v2) embedder
-│   ├── retriever.py         # FAISS index wrapper + MultiRetriever
-│   ├── prompt.py            # ANALYSIS_PROMPT_TEMPLATE — the strict output contract
-│   ├── llm.py                # Ollama REST client with CLI fallback
-│   ├── formatter_new.py     # builds the structured summary "card"
-│   ├── formatter.py         # earlier formatter version
-│   └── utils.py             # text normalization + SymSpell spell-correction, JSONL loader
+├── app/                    # ✅ RAG Core Pipeline (renamed from backend/)
+│   ├── core_new.py         # Active Pipeline: orchestrates OCR → retrieval → LLM → card
+│   ├── core.py             # Earlier pipeline version
+│   ├── ocr.py              # PaddleOCR wrapper (extract + annotate)
+│   ├── whisper.py          # Faster-Whisper speech-to-text wrapper
+│   ├── embeddings.py       # SentenceTransformers (all-MiniLM-L6-v2) embedder
+│   ├── retriever.py        # FAISS index wrapper + MultiRetriever
+│   ├── prompt.py           # ANALYSIS_PROMPT_TEMPLATE — the strict output contract
+│   ├── llm.py              # Ollama REST client with CLI fallback
+│   ├── formatter_new.py    # Builds the structured summary "card"
+│   ├── formatter.py        # Earlier formatter version
+│   └── utils.py            # Text normalization + SymSpell spell-correction, JSONL loader
 │
-├── data/                    # diseases_faiss_data.jsonl, drugs_faiss_data.jsonl, drug_dict_faiss_data.jsonl
-├── indexes/                 # diseases_faiss.index, drugs_faiss.index, drug_dict_faiss.index
-├── tests/                   # unit tests for every backend module
+├── backend/                # ✅ FastAPI Web Server
+│   └── main.py             # FastAPI POST /api/analyze endpoint coordinator
+│
+├── data/                   # diseases_faiss_data.jsonl, drugs_faiss_data.jsonl, drug_dict_faiss_data.jsonl
+├── indexes/                # diseases_faiss.index, drugs_faiss.index, drug_dict_faiss.index
+├── tests/                  # Unit tests for every pipeline module (updated to import app.*)
 ├── requirements.txt
 └── README.md
 ```
-
-> 💡 `_new` suffixed files (`app_new.py`, `core_new.py`, `formatter_new.py`) are the **current, active** implementations. Their non-suffixed counterparts are earlier iterations kept for reference — the codebase shows clear signs of active in-place experimentation (see the commented-out earlier drafts at the top of several files).
 
 ---
 
@@ -227,7 +234,7 @@ MediScanAI/
 
 | Layer | Technology | Purpose |
 |---|---|---|
-| 🖼️ Frontend | **Streamlit** + `streamlit_mic_recorder` | Sidebar inputs, live mic capture, results rendering |
+| 🖼️ Frontend | **React (Vite + Tailwind CSS v4)** | Core dashboard, voice recorder, dropzone file upload, dark mode toggler |
 | 🔤 OCR | **PaddleOCR** (`use_textline_orientation=True`) | Reads medicine strip images, returns text + polygons |
 | 🗣️ Speech-to-Text | **Faster-Whisper** (`base`, CPU, int8) | Transcribes recorded/uploaded audio |
 | ✍️ Text Cleanup | **SymSpell** | Spell-correction while preserving numeric dosages |
@@ -402,17 +409,31 @@ chmod +x start.sh
 bash start.sh
 ```
 
-Or run Streamlit directly on any platform:
+Or run both servers manually:
 
+**FastAPI Backend Server:**
 ```bash
-streamlit run frontend/app_new.py
+conda run --no-capture-output -n med-env python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000
 ```
 
-Open the local URL Streamlit prints, describe your symptoms (type or speak), optionally upload a photo of the medicine strip, and hit **Analyze**.
+**React Vite Frontend Server:**
+```bash
+cd frontend && npm run dev
+```
+
+Open the local URL http://localhost:5173/ in your browser.
 
 ---
 
 ## 🧪 Running Tests
+
+You can run the unified test suite runner script:
+
+```bash
+./run_tests.sh
+```
+
+Or execute any specific unit test using python:
 
 ```bash
 python tests/test_utils.py
@@ -421,7 +442,6 @@ python tests/test_whisper.py
 python tests/test_embeddings.py
 python tests/test_retriever.py
 python tests/test_llm.py
-python tests/test_pipeline.py
 python tests/test_pipeline_new.py
 ```
 

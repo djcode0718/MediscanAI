@@ -31,7 +31,7 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from backend.retriever import MultiRetriever
+from app.retriever import MultiRetriever
 
 def print_results(results_list, index_name):
     print(f"\n--- Results from index: {index_name} ---")

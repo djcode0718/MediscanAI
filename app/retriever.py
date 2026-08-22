@@ -120,8 +120,8 @@ import faiss
 import os
 import numpy as np
 from typing import Dict, List, Tuple
-from backend.utils import load_jsonl_to_dict, normalize_text
-from backend.embeddings import embed_texts
+from app.utils import load_jsonl_to_dict, normalize_text
+from app.embeddings import embed_texts
 
 BASE = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DATA_DIR = os.path.join(BASE, "data")

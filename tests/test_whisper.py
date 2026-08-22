@@ -5,7 +5,7 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from backend.whisper import WhisperTranscriber
+from app.whisper import WhisperTranscriber
 
 def run_transcription_test():
     print("--- Initializing Whisper Transcriber ---")

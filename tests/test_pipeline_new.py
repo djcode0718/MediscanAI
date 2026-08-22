@@ -56,8 +56,8 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from backend.core_new import Pipeline
-from backend.llm import OllamaError
+from app.core_new import Pipeline
+from app.llm import OllamaError
 
 def run_pipeline_test(text: str, image_path: str = None):
     """
