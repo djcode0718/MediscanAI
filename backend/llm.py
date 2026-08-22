@@ -161,7 +161,7 @@ from typing import Dict, Any, Optional
 OLLAMA_API_URL = "http://localhost:11434/api/generate"
 OLLAMA_CHAT_URL = "http://localhost:11434/api/chat"
 # DEFAULT_MODEL = "phi3:mini"
-DEFAULT_MODEL = "llama3.1:8b"
+DEFAULT_MODEL = "mistral"
 
 class OllamaError(Exception):
     pass

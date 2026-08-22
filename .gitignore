@@ -54,3 +54,7 @@ __pycache__/
 
 
 *.jpg
+
+# Helper scripts and outputs
+copy_codes.py
+output.txt
