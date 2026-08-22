@@ -36,7 +36,7 @@ TESTS=(
   "tests/test_ocr.py"
   "tests/test_whisper.py"
   "tests/test_llm.py"
-  "tests/test_pipeline_new.py"
+  "tests/test_pipeline.py"
 )
 
 PASSED=0

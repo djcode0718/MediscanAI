@@ -7,7 +7,7 @@ from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from app.core_new import Pipeline
+from app.core import Pipeline
 from app.whisper import WhisperTranscriber
 
 app = FastAPI(title="MediScanAI Backend API", version="1.0.0")

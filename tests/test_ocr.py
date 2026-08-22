@@ -109,10 +109,15 @@ def run_test(image_path: str, show_preview: bool = False):
 
 
 if __name__ == "__main__":
-    # Hardcoded values
     print("starting..")
-    # image_path = '/Users/sj/Downloads/WhatsApp Image 2025-09-14 at 14.00.39 (1).jpeg'
     image_path = '/Users/sj/Downloads/WhatsApp Image 2025-09-16 at 22.31.52.jpeg'
-    show_preview = True  # Set to False if you do not want to show preview
-
-    run_test(image_path, show_preview)
+    # Fallback to local test image if downloads file is missing
+    if not os.path.exists(image_path):
+        image_path = 'tests/ocr_preview.jpg'
+        
+    show_preview = False  # Set to False for non-blocking headless automated runs
+    
+    if os.path.exists(image_path):
+        run_test(image_path, show_preview)
+    else:
+        print(f"⚠️ Test image '{image_path}' not found. Skipping OCR test.")
