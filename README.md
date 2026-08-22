@@ -62,34 +62,34 @@ Nothing leaves your machine. No OpenAI/cloud calls, no telemetry — OCR, speech
 
 ```mermaid
 flowchart TB
-    subgraph Client["🖥️ Frontend — Streamlit (app_new.py)"]
-        A1["📝 Symptom Text Area"]
-        A2["🎙️ Live Mic Recorder"]
-        A3["📁 Upload Audio File"]
-        A4["📷 Upload Medicine Image"]
-        A5["▶️ Analyze Button"]
+    subgraph Client["🖥️ Frontend"]
+        A1["📝 Symptom Text"]
+        A2["🎙️ Live Mic Recording"]
+        A3["📁 Uploaded Audio"]
+        A4["📷 Medicine Image"]
+        A5["▶️ Analyze"]
     end
 
-    subgraph Backend["⚙️ Backend Pipeline (backend/core_new.py)"]
-        B1["🗣️ WhisperTranscriber\n(backend/whisper.py)"]
-        B2["🔎 PaddleOCR Extractor\n(backend/ocr.py)"]
-        B3["🧹 normalize_text()\nSymSpell correction\n(backend/utils.py)"]
-        B4["🧬 embed_texts()\nall-MiniLM-L6-v2\n(backend/embeddings.py)"]
-        B5["📚 MultiRetriever\n(backend/retriever.py)"]
-        B6["📝 ANALYSIS_PROMPT_TEMPLATE\n(backend/prompt.py)"]
-        B7["🤖 Ollama generate()\n(backend/llm.py)"]
-        B8["🗂️ build_summary_card()\n(backend/formatter_new.py)"]
+    subgraph Backend["⚙️ Backend Pipeline"]
+        B1["🗣️ Speech-to-Text"]
+        B2["🔎 OCR Extraction"]
+        B3["🧹 Text Normalization\n& Spell Correction"]
+        B4["🧬 Embedding"]
+        B5["📚 Vector Retrieval"]
+        B6["📝 Prompt Assembly"]
+        B7["🤖 LLM Generation"]
+        B8["🗂️ Summary Card"]
     end
 
     subgraph Store["💾 Local Data & Indexes"]
-        D1[("diseases_faiss.index")]
-        D2[("drugs_faiss.index")]
-        D3[("drug_dict_faiss.index")]
+        D1[("Disease Index")]
+        D2[("Drug Index")]
+        D3[("Drug Dictionary Index")]
     end
 
     subgraph LLM["🧠 Local LLM"]
-        L1["Ollama REST API\n:11434/api/generate"]
-        L2["Ollama CLI fallback"]
+        L1["REST API"]
+        L2["CLI Fallback"]
     end
 
     A2 --> B1
@@ -127,25 +127,25 @@ flowchart TB
 flowchart LR
     S([Start]) --> I1["Text / Voice / Image input"]
     I1 --> D{"Image\nuploaded?"}
-    D -- Yes --> OCR["PaddleOCR\nextracts medicine text"]
-    D -- No --> SKIP1["ocr_text = ''"]
+    D -- Yes --> OCR["Extract medicine text\nfrom image"]
+    D -- No --> SKIP1["No OCR text"]
     I1 --> V{"Audio\nrecorded/uploaded?"}
-    V -- Yes --> WSP["Faster-Whisper\ntranscribes speech"]
-    V -- No --> SKIP2["skip transcription"]
-    WSP --> MERGE["Merge into\ncombined_user_text"]
+    V -- Yes --> WSP["Transcribe speech"]
+    V -- No --> SKIP2["Skip transcription"]
+    WSP --> MERGE["Merge into\ncombined symptom text"]
     SKIP2 --> MERGE
-    OCR --> NORM2["normalize_text(ocr_text)"]
+    OCR --> NORM2["Normalize medicine text"]
     SKIP1 --> NORM2
-    MERGE --> NORM1["normalize_text(user_text)"]
-    NORM1 --> EMB1["Embed (MiniLM)"]
-    NORM2 --> EMB2["Embed (MiniLM)"]
-    EMB1 --> R1["Search: diseases index\nSearch: drugs index"]
-    EMB2 --> R2["Search: drug_dict index\nSearch: drugs index (as drugs_from_ocr)"]
+    MERGE --> NORM1["Normalize symptom text"]
+    NORM1 --> EMB1["Embed symptom text"]
+    NORM2 --> EMB2["Embed medicine text"]
+    EMB1 --> R1["Search disease index\nSearch drug index"]
+    EMB2 --> R2["Search drug dictionary\nSearch drug index"]
     R1 --> CTX["Format retrieved context\n(scores + records)"]
     R2 --> CTX
-    CTX --> PROMPT["Fill ANALYSIS_PROMPT_TEMPLATE"]
-    PROMPT --> LLM["Ollama LLM (mistral)\ngenerates structured answer"]
-    LLM --> CARD["build_summary_card()"]
+    CTX --> PROMPT["Assemble structured prompt"]
+    PROMPT --> LLM["Local LLM\ngenerates structured answer"]
+    LLM --> CARD["Build summary card"]
     CARD --> OUT(["Verdict • Explanation •\nSuggested Alternatives • ⚠️ Warning"])
 
     style S fill:#00A67E,color:#fff
@@ -160,31 +160,31 @@ flowchart LR
 ```mermaid
 sequenceDiagram
     actor User
-    participant UI as Streamlit UI
-    participant W as WhisperTranscriber
-    participant O as PaddleOCR
-    participant P as Pipeline (core_new.py)
-    participant Ret as MultiRetriever (FAISS)
-    participant LLM as Ollama (mistral)
+    participant UI as Frontend
+    participant Speech as Speech-to-Text
+    participant Vision as OCR Engine
+    participant Pipe as Pipeline
+    participant Ret as Vector Retrieval
+    participant LLM as Local LLM
 
     User->>UI: Types symptoms / records voice / uploads image
     User->>UI: Clicks "Analyze"
-    UI->>W: transcribe_audio_file() for each clip
-    W-->>UI: transcribed text
-    UI->>P: pipeline.run(user_text, image_path)
+    UI->>Speech: Transcribe each audio clip
+    Speech-->>UI: Transcribed text
+    UI->>Pipe: Run pipeline with text + image
     alt image provided
-        P->>O: extract_text_from_image()
-        O-->>P: OCR text + bounding boxes
+        Pipe->>Vision: Extract text from image
+        Vision-->>Pipe: OCR text + bounding boxes
     end
-    P->>P: normalize_text() both texts
-    P->>Ret: search_specific("diseases"/"drugs", user text)
-    P->>Ret: search_specific("drug_dict"/"drugs", ocr text)
-    Ret-->>P: top-k matches with similarity scores
-    P->>P: format retrievals into context blocks
-    P->>LLM: generate(ANALYSIS_PROMPT_TEMPLATE.format(...))
-    LLM-->>P: Verdict + Explanation + Alternatives + Warning
-    P->>P: build_summary_card()
-    P-->>UI: {card, meta}
+    Pipe->>Pipe: Normalize both texts
+    Pipe->>Ret: Search disease & drug indexes (symptom text)
+    Pipe->>Ret: Search drug indexes (OCR text)
+    Ret-->>Pipe: Top-k matches with similarity scores
+    Pipe->>Pipe: Format retrievals into context blocks
+    Pipe->>LLM: Generate from assembled prompt
+    LLM-->>Pipe: Verdict + Explanation + Alternatives + Warning
+    Pipe->>Pipe: Build summary card
+    Pipe-->>UI: Result card
     UI-->>User: Renders OCR text + final Markdown analysis
 ```
 
@@ -328,27 +328,56 @@ The model is explicitly told to use **only** the retrieved context — no free-f
 
 ### 1. Clone the repository
 
+**macOS / Linux**
 ```bash
 git clone https://github.com/yourusername/MediScanAI.git
 cd MediScanAI
 ```
 
-### 2. Install dependencies
+**Windows (PowerShell)**
+```powershell
+git clone https://github.com/yourusername/MediScanAI.git
+cd MediScanAI
+```
 
+### 2. Create a virtual environment (recommended)
+
+**macOS / Linux**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+**Windows (PowerShell)**
+```powershell
+python -m venv venv
+venv\Scripts\Activate.ps1
+```
+
+### 3. Install dependencies
+
+**macOS / Linux / Windows**
 ```bash
 pip install -r requirements.txt
 ```
 
 > ⚠️ `utils.py` requires a SymSpell frequency dictionary file (`frequency_dictionary_en_82_765.txt`) placed inside `backend/`.
 
-### 3. Install & prepare Ollama
+### 4. Install & prepare Ollama
 
+**macOS / Linux**
 ```bash
 # Install Ollama: https://ollama.com/download
 ollama pull mistral
 ```
 
-### 4. Build / place your FAISS indexes
+**Windows (PowerShell)**
+```powershell
+# Install Ollama: https://ollama.com/download
+ollama pull mistral
+```
+
+### 5. Build / place your FAISS indexes
 
 The retriever expects these files to already exist:
 
@@ -358,7 +387,22 @@ indexes/drugs_faiss.index         data/drugs_faiss_data.jsonl
 indexes/drug_dict_faiss.index     data/drug_dict_faiss_data.jsonl
 ```
 
-### 5. Run the app
+### 6. Run the app
+
+The quickest way — a single setup + launch script:
+
+**macOS / Linux**
+```bash
+chmod +x start.sh
+./start.sh
+```
+
+**Windows (PowerShell / Git Bash)**
+```bash
+bash start.sh
+```
+
+Or run Streamlit directly on any platform:
 
 ```bash
 streamlit run frontend/app_new.py
