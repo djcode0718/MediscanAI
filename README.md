@@ -419,13 +419,25 @@ cd MediScanAI
 
 ### 2. Create a virtual environment (recommended)
 
-**macOS / Linux**
+#### Option A: Using Conda (Recommended)
+
+```bash
+# Create a new conda environment
+conda create -n med-env python=3.10 -y
+
+# Activate the environment
+conda activate med-env
+```
+
+#### Option B: Using `venv`
+
+*macOS / Linux*
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-**Windows (PowerShell)**
+*Windows (PowerShell)*
 ```powershell
 python -m venv venv
 venv\Scripts\Activate.ps1
