@@ -450,7 +450,7 @@ venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
 
-> ⚠️ `app/utils.py` requires a SymSpell frequency dictionary file (`frequency_dictionary_en_82_765.txt`) placed inside `app/`.
+> ⚠️ `app/utils.py` requires a SymSpell frequency dictionary file (`frequency_dictionary_en_82_765.txt`) placed inside `data/`.
 >
 > ⚠️ The Cross-Encoder reranker (`cross-encoder/ms-marco-MiniLM-L-6-v2`) is downloaded automatically via `sentence-transformers` on first run and cached locally — the first `MultiRetriever` startup will take a little longer while it loads.
 

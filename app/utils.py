@@ -6,10 +6,10 @@
 #     """Helper function to load the SymSpell object and dictionary only once."""
 #     sym_spell = SymSpell(max_dictionary_edit_distance=2, prefix_length=7)
     
-#     dictionary_path = os.path.join(os.path.dirname(__file__), "frequency_dictionary_en_82_765.txt")
+#     dictionary_path = os.path.join(os.path.dirname(__file__), "..", "data", "frequency_dictionary_en_82_765.txt")
     
 #     if not os.path.exists(dictionary_path):
-#         raise FileNotFoundError(f"Dictionary file not found at {dictionary_path}. Please download and place it in the 'backend' folder.")
+#         raise FileNotFoundError(f"Dictionary file not found at {dictionary_path}. Please download and place it in the 'data' folder.")
         
 #     sym_spell.load_dictionary(dictionary_path, term_index=0, count_index=1)
 #     return sym_spell
@@ -98,10 +98,10 @@ def _load_spell_checker():
     """Helper function to load the SymSpell object and dictionary only once."""
     sym_spell = SymSpell(max_dictionary_edit_distance=2, prefix_length=7)
     
-    dictionary_path = os.path.join(os.path.dirname(__file__), "frequency_dictionary_en_82_765.txt")
+    dictionary_path = os.path.join(os.path.dirname(__file__), "..", "data", "frequency_dictionary_en_82_765.txt")
     
     if not os.path.exists(dictionary_path):
-        raise FileNotFoundError(f"Dictionary file not found at {dictionary_path}. Please download and place it in the 'backend' folder.")
+        raise FileNotFoundError(f"Dictionary file not found at {dictionary_path}. Please download and place it in the 'data' folder.")
         
     sym_spell.load_dictionary(dictionary_path, term_index=0, count_index=1)
     return sym_spell
