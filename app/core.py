@@ -173,9 +173,10 @@
 
 
 from typing import Optional, Dict, Any, List
+import time
 from app.ocr import extract_text_from_image, ocr_text_join
 from app.retriever import MultiRetriever
-from app.llm import generate
+from app.llm import generate_with_mode
 from app.utils import normalize_text
 from app.prompt import ANALYSIS_PROMPT_TEMPLATE
 from app.formatter import build_summary_card
@@ -216,25 +217,36 @@ class Pipeline:
                 context_str += f"* Result: {str(obj)} (Score: {score:.4f})\n"
         return context_str
 
-    def run(self, user_text: str, image_path: Optional[str] = None, top_k: int = 5) -> Dict[str, Any]:
+    def run(self, user_text: str, image_path: Optional[str] = None,
+             top_k: int = 5, llm_mode: str = "offline") -> Dict[str, Any]:
+        _t_pipeline_start = time.perf_counter()
+        pipeline_timings: Dict[str, int] = {}
+
         print("\n🔍 [RAG CORE] Running MediScanAI Core Pipeline...")
         user_norm = normalize_text(user_text or "")
         ocr_text = ""
-        
+
         # 1. OCR Extraction
         if image_path:
-            print(f"📷 [Vision] Running PaddleOCR on medicine image: {image_path}")
+            print("📷 [Vision] Running PaddleOCR on medicine image...")
+            _t_ocr = time.perf_counter()
             ocr_res = extract_text_from_image(image_path)
             ocr_text = ocr_text_join(ocr_res["texts"])
-            print(f"   ↳ Extracted label text: '{ocr_text}'")
+            pipeline_timings["ocr_total_ms"] = int((time.perf_counter() - _t_ocr) * 1000)
+            print(f"   ↳ OCR label extraction completed ({len(ocr_text)} characters extracted).")
         else:
             print("📷 [Vision] No image provided. Skipping OCR.")
 
         # 2. Retrievals for Symptom Text
-        print(f"🔎 [Retrieval] Running Hybrid Search (FAISS + BM25 + RRF + Cross-Encoder) for symptom: '{user_norm[:60]}...'")
+        print(f"🔎 [Retrieval] Running Hybrid Search (FAISS + BM25 + RRF + Cross-Encoder) for symptom query ({len(user_norm)} chars)...")
+        _t_ret_symptoms = time.perf_counter()
         diseases_retrieved = self.retriever.search_specific('diseases', user_norm, top_k=top_k)
+        pipeline_timings["retrieval_diseases_ms"] = int((time.perf_counter() - _t_ret_symptoms) * 1000)
+
+        _t_ret_drugs = time.perf_counter()
         drugs_retrieved = self.retriever.search_specific('drugs', user_norm, top_k=top_k)
-        
+        pipeline_timings["retrieval_drugs_ms"] = int((time.perf_counter() - _t_ret_drugs) * 1000)
+
         print(f"   ↳ Diseases index matches (fused & reranked):")
         for idx, (key, score, obj) in enumerate(diseases_retrieved, 1):
             disease_name = obj.get('chunk', {}).get('disease', key) if isinstance(obj, dict) else key
@@ -253,10 +265,15 @@ class Pipeline:
         # 3. Retrievals for OCR Text
         retrievals_for_ocr_text = {}
         if ocr_text:
-            print(f"🔎 [Retrieval] Running Hybrid Search (FAISS + BM25 + RRF + Cross-Encoder) for OCR label: '{ocr_text[:60]}...'")
+            print(f"🔎 [Retrieval] Running Hybrid Search (FAISS + BM25 + RRF + Cross-Encoder) for OCR label ({len(ocr_text)} chars)...")
+            _t_ret_drug_dict = time.perf_counter()
             drug_dict_retrieved = self.retriever.search_specific('drug_dict', ocr_text, top_k=top_k)
+            pipeline_timings["retrieval_drug_dict_ms"] = int((time.perf_counter() - _t_ret_drug_dict) * 1000)
+
+            _t_ret_drugs_ocr = time.perf_counter()
             drugs_from_ocr_retrieved = self.retriever.search_specific('drugs', ocr_text, top_k=top_k)
-            
+            pipeline_timings["retrieval_drugs_from_ocr_ms"] = int((time.perf_counter() - _t_ret_drugs_ocr) * 1000)
+
             print(f"   ↳ Drug Dictionary index matches (fused & reranked):")
             for idx, (key, score, obj) in enumerate(drug_dict_retrieved, 1):
                 drug_name = obj.get('drug_name', key) if isinstance(obj, dict) else key
@@ -273,6 +290,7 @@ class Pipeline:
             }
 
         # 4. Assembling Prompt & generation
+        _t_prompt = time.perf_counter()
         formatted_user_retrievals = self._format_retrievals(retrievals_for_user_text)
         formatted_ocr_retrievals = self._format_retrievals(retrievals_for_ocr_text)
 
@@ -283,28 +301,52 @@ class Pipeline:
             retrievals_for_user_text=formatted_user_retrievals,
             retrievals_for_ocr_text=formatted_ocr_retrievals
         )
+        pipeline_timings["prompt_assembly_ms"] = int((time.perf_counter() - _t_prompt) * 1000)
 
-        print("🤖 [LLM] Requesting clinical analysis from local model (Mistral)...")
-        llm_response_str = generate(full_prompt)
+        provider_label = "Gemini/Groq (online)" if llm_mode == "online" else "Ollama/Mistral"
+        print(f"🤖 [LLM] Requesting clinical analysis via {provider_label}...")
+        _t_llm = time.perf_counter()
+        llm_response_str = generate_with_mode(full_prompt, llm_mode=llm_mode)
+        pipeline_timings["llm_total_ms"] = int((time.perf_counter() - _t_llm) * 1000)
         print("   ↳ Generation completed successfully.")
 
         all_retrievals = {**retrievals_for_user_text, **retrievals_for_ocr_text}
-        
+
         card = build_summary_card(
             user_text=user_text,
             ocr_text=ocr_text,
             retrievals=all_retrievals,
             llm_output=llm_response_str.strip()
         )
-        
+
         card_meta = {
             "mismatch": None,
             "mismatch_details": "Mismatch check not performed in this pipeline version."
         }
 
+        pipeline_timings["pipeline_total_ms"] = int((time.perf_counter() - _t_pipeline_start) * 1000)
+
+        # --- Pipeline timing summary ---
+        print("\n" + "=" * 60)
+        print("[PIPELINE TIMING SUMMARY]")
+        if "ocr_total_ms" in pipeline_timings:
+            print(f"  OCR (init+infer):           {pipeline_timings['ocr_total_ms']}ms")
+        print(f"  Retrieval diseases:          {pipeline_timings.get('retrieval_diseases_ms', 0)}ms")
+        print(f"  Retrieval drugs (symptoms):  {pipeline_timings.get('retrieval_drugs_ms', 0)}ms")
+        if "retrieval_drug_dict_ms" in pipeline_timings:
+            print(f"  Retrieval drug_dict (OCR):   {pipeline_timings['retrieval_drug_dict_ms']}ms")
+        if "retrieval_drugs_from_ocr_ms" in pipeline_timings:
+            print(f"  Retrieval drugs (OCR):       {pipeline_timings['retrieval_drugs_from_ocr_ms']}ms")
+        print(f"  Prompt assembly:             {pipeline_timings.get('prompt_assembly_ms', 0)}ms")
+        print(f"  LLM ({provider_label}): {pipeline_timings.get('llm_total_ms', 0)}ms")
+        print(f"  " + "-" * 40)
+        print(f"  Pipeline total:              {pipeline_timings['pipeline_total_ms']}ms")
+        print("=" * 60 + "\n")
+
         print("✅ [RAG CORE] Completed execution.\n")
         return {
             "card": card,
-            "meta": card_meta
+            "meta": card_meta,
+            "pipeline_timings": pipeline_timings,
         }
 

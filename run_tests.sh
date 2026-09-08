@@ -29,52 +29,27 @@ if [ -z "$RUN_CMD" ]; then
   exit 1
 fi
 
-TESTS=(
-  "tests/test_utils.py"
-  "tests/test_embeddings.py"
-  "tests/test_retriever.py"
-  "tests/test_ocr.py"
-  "tests/test_whisper.py"
-  "tests/test_llm.py"
-  "tests/test_pipeline.py"
-)
+MODE="${1:-fast}"
 
-PASSED=0
-FAILED=0
-FAILED_LIST=()
-
-for test_file in "${TESTS[@]}"; do
-  echo -e "${YELLOW}🔄 Running: $test_file...${NC}"
-  echo "--------------------------------------------------"
-  
-  $RUN_CMD python "$test_file"
-  
-  if [ $? -eq 0 ]; then
-    echo -e "${GREEN}✔ $test_file PASSED${NC}"
-    echo ""
-    PASSED=$((PASSED + 1))
-  else
-    echo -e "${RED}✘ $test_file FAILED${NC}"
-    echo ""
-    FAILED=$((FAILED + 1))
-    FAILED_LIST+=("$test_file")
-  fi
-done
+if [ "$MODE" == "--all" ] || [ "$MODE" == "all" ]; then
+  echo -e "${YELLOW}🔄 Running ALL test suites (including real AI/RAG models)...${NC}"
+  $RUN_CMD pytest -v
+  EXIT_CODE=$?
+elif [ "$MODE" == "--integration" ] || [ "$MODE" == "integration" ]; then
+  echo -e "${YELLOW}🔄 Running real AI/ML integration test suite...${NC}"
+  $RUN_CMD pytest tests/integration -v -m integration
+  EXIT_CODE=$?
+else
+  echo -e "${YELLOW}🔄 Running fast deterministic test suite (Unit, API, Database, E2E Smoke)...${NC}"
+  $RUN_CMD pytest tests/unit tests/api tests/database tests/test_e2e_smoke.py -v
+  EXIT_CODE=$?
+fi
 
 echo "=================================================="
-echo -e "${TEAL}📊 Test Summary:${NC}"
-echo -e "   - ${GREEN}Passed:${NC} $PASSED"
-echo -e "   - ${RED}Failed:${NC} $FAILED"
-
-if [ $FAILED -gt 0 ]; then
-  echo ""
-  echo -e "${RED}❌ Some tests failed:${NC}"
-  for failed_test in "${FAILED_LIST[@]}"; do
-    echo -e "   - $failed_test"
-  done
-  exit 1
-else
-  echo ""
-  echo -e "${GREEN}✅ All tests passed successfully!${NC}"
+if [ $EXIT_CODE -eq 0 ]; then
+  echo -e "${GREEN}✅ Test suite passed successfully!${NC}"
   exit 0
+else
+  echo -e "${RED}❌ Test suite reported failures.${NC}"
+  exit $EXIT_CODE
 fi

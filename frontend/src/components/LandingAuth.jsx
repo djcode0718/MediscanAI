@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Shield, Sparkles, Heart, Activity, ArrowRight, Lock, Mail, User, Sun, Moon } from 'lucide-react';
+import { API_ENDPOINTS } from '../config/api';
 
 export default function LandingAuth({ onLogin, theme, toggleTheme }) {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -8,19 +9,57 @@ export default function LandingAuth({ onLogin, theme, toggleTheme }) {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password || (isSignUp && !name)) {
       setError('Please fill in all fields.');
       return;
     }
     setError('');
-    // Simulate login
-    onLogin(email, name || email.split('@')[0], false);
-  };
+    setIsSubmitting(true);
 
-  const handleGuest = () => {
-    onLogin('guest@mediscan.ai', 'Guest User', true);
+    try {
+      const endpoint = isSignUp 
+        ? API_ENDPOINTS.AUTH_REGISTER 
+        : API_ENDPOINTS.AUTH_LOGIN;
+
+      const payload = isSignUp
+        ? { email, password, full_name: name }
+        : { email, password };
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        let msg = 'Authentication failed. Please check your credentials.';
+        if (data.detail) {
+          if (Array.isArray(data.detail)) {
+            msg = data.detail.map(d => d.msg || d).join(', ');
+          } else if (typeof data.detail === 'string') {
+            msg = data.detail;
+          }
+        }
+        setError(msg);
+        return;
+      }
+
+      // Success: pass user & access_token to parent
+      onLogin(data.user, data.access_token);
+    } catch (err) {
+      console.error('Auth request error:', err);
+      setError('Unable to connect to the backend authentication server. Ensure the backend is running.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -194,28 +233,17 @@ export default function LandingAuth({ onLogin, theme, toggleTheme }) {
 
               <button
                 type="submit"
-                className="w-full bg-teal-600 hover:bg-teal-500 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md shadow-teal-600/10 flex items-center justify-center space-x-1 cursor-pointer"
+                disabled={isSubmitting}
+                className="w-full bg-teal-600 hover:bg-teal-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md shadow-teal-600/10 flex items-center justify-center space-x-1 cursor-pointer"
               >
-                <span>{isSignUp ? 'Create Account' : 'Sign In'}</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>
+                  {isSubmitting
+                    ? (isSignUp ? 'Creating Account...' : 'Signing In...')
+                    : (isSignUp ? 'Create Account' : 'Sign In')}
+                </span>
+                {!isSubmitting && <ArrowRight className="w-4 h-4" />}
               </button>
             </form>
-
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-200 dark:border-slate-800"></div>
-              </div>
-              <div className="relative flex justify-center text-xs">
-                <span className="bg-white dark:bg-slate-900 px-3 text-slate-500 dark:text-slate-400">Or</span>
-              </div>
-            </div>
-
-            <button
-              onClick={handleGuest}
-              className="w-full border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 text-slate-700 dark:text-slate-300 font-semibold py-3 px-4 rounded-xl transition-all flex items-center justify-center space-x-1.5 cursor-pointer"
-            >
-              <span>Continue as Guest</span>
-            </button>
           </div>
         </div>
       </div>

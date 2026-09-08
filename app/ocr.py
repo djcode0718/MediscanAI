@@ -1,18 +1,32 @@
 # backend/ocr.py
 from typing import List, Dict
+import time
 import numpy as np
 import cv2
 
 # PaddleOCR import - your environment already has paddleocr installed
 from paddleocr import PaddleOCR
+import threading
 
-# Initialize OCR model once on import to reuse
-# Note: you tuned PaddleOCR previously. Keep the flags you used.
-ocr_model = PaddleOCR(use_textline_orientation=True, lang='en')
+_ocr_model = None
+_ocr_lock = threading.Lock()
+
+def get_ocr_model() -> PaddleOCR:
+    """Lazy initializer for PaddleOCR model. Reports initialization time on first call."""
+    global _ocr_model
+    if _ocr_model is None:
+        with _ocr_lock:
+            if _ocr_model is None:
+                _t = time.perf_counter()
+                _ocr_model = PaddleOCR(use_textline_orientation=True, lang='en')
+                print(f"[OCR] PaddleOCR initialization: {time.perf_counter()-_t:.2f}s")
+    return _ocr_model
 
 def extract_with_preview(img_path: str):
     """Run OCR on image and return (texts, preview_image_with_boxes)."""
-    result = ocr_model.predict(img_path)
+    model = get_ocr_model()
+    with _ocr_lock:
+        result = model.predict(img_path)
     res = result[0]
 
     image = cv2.imread(img_path)
@@ -38,7 +52,17 @@ def extract_text_from_image(image_path: str) -> Dict:
       "preview_image": np.ndarray (RGB)  # optional for UI preview
     }
     """
-    result = ocr_model.predict(image_path)
+    already_initialized = _ocr_model is not None
+    model = get_ocr_model()
+    if already_initialized:
+        print("[OCR] PaddleOCR initialization: 0.00s (already initialized)")
+
+    _t_infer = time.perf_counter()
+    with _ocr_lock:
+        result = model.predict(image_path)
+    _infer_ms = int((time.perf_counter() - _t_infer) * 1000)
+    print(f"[OCR] PaddleOCR inference: {_infer_ms}ms")
+
     # result is typically a list per-image; we assume single image input
     res = result[0]
 
@@ -52,6 +76,7 @@ def extract_text_from_image(image_path: str) -> Dict:
         raise FileNotFoundError(f"Image not found or can't be read: {image_path}")
     image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
 
+    print(f"[OCR] Text regions extracted: {len(rec_texts)}")
     return {
         "texts": rec_texts,
         "boxes": [np.array(b).astype(np.int32) for b in dt_polys],

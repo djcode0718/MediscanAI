@@ -2,10 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   Heart, Sun, Moon, LogOut, FileText, Mic, Image, 
   Trash2, Play, Pause, RefreshCw, ChevronDown, ChevronUp,
-  AlertTriangle, CheckCircle2, HelpCircle, Upload, AlertCircle, FileAudio
+  AlertTriangle, CheckCircle2, HelpCircle, Upload, AlertCircle, FileAudio,
+  Clock, X
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { API_ENDPOINTS } from '../config/api';
 
 const getExplanationMarkdown = (llmOutput) => {
   if (!llmOutput) return '';
@@ -24,7 +26,7 @@ const getAlternativesMarkdown = (llmOutput) => {
   return warningSplit[0].trim();
 };
 
-export default function Dashboard({ user, onSignOut, theme, toggleTheme }) {
+export default function Dashboard({ user, token, onSignOut, theme, toggleTheme }) {
   // Input States
   const [symptoms, setSymptoms] = useState('');
   const [audioClips, setAudioClips] = useState([]); // Array of { id, file, url, name, duration }
@@ -48,6 +50,12 @@ export default function Dashboard({ user, onSignOut, theme, toggleTheme }) {
     drugs: true,
     drug_dict: true,
   });
+
+  // History States
+  const [showHistory, setShowHistory] = useState(false);
+  const [historyItems, setHistoryItems] = useState([]);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+  const [historyError, setHistoryError] = useState('');
 
   // Audio Playback states for clips
   const [playingClipId, setPlayingClipId] = useState(null);
@@ -76,13 +84,68 @@ export default function Dashboard({ user, onSignOut, theme, toggleTheme }) {
 
   // Loading indicator messages
   const loadingSteps = [
-    "Uploading data to secure local server...",
+    "Uploading data to secure server...",
     "Transcribing voice recording clips with Whisper...",
     "Running PaddleOCR on medicine label image...",
-    "Matching symptoms against local FAISS disease database...",
-    "Searching local FAISS drug databases...",
-    "Analyzing mismatch & generating RAG suggestions with Mistral...",
+    "Matching symptoms against FAISS disease database...",
+    "Searching FAISS drug databases...",
+    "Generating clinical analysis with AI...",
   ];
+
+  // Fetch user analysis history
+  const fetchHistory = async () => {
+    if (!token) return;
+    setIsLoadingHistory(true);
+    setHistoryError('');
+    try {
+      const res = await fetch(`${API_ENDPOINTS.ANALYSES}?limit=30`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setHistoryItems(data.items || []);
+      } else {
+        setHistoryError('Failed to load analysis history.');
+      }
+    } catch (err) {
+      setHistoryError('Network error while loading history.');
+    } finally {
+      setIsLoadingHistory(false);
+    }
+  };
+
+  const loadHistoryDetail = async (id) => {
+    try {
+      const res = await fetch(API_ENDPOINTS.ANALYSIS_DETAIL(id), {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const detail = await res.json();
+        setResult({ card: detail.summary_card, analysis_id: detail.id });
+        setShowHistory(false);
+      }
+    } catch (err) {
+      console.error('Failed to load analysis detail:', err);
+    }
+  };
+
+  const deleteHistory = async (id, e) => {
+    e.stopPropagation();
+    try {
+      const res = await fetch(API_ENDPOINTS.ANALYSIS_DETAIL(id), {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setHistoryItems(prev => prev.filter(item => item.id !== id));
+        if (result?.analysis_id === id) {
+          setResult(null);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to delete analysis:', err);
+    }
+  };
 
   // Auto-advance loading steps for visual feedback
   useEffect(() => {
@@ -242,31 +305,54 @@ export default function Dashboard({ user, onSignOut, theme, toggleTheme }) {
     const formData = new FormData();
     if (symptoms.trim()) formData.append('text', symptoms.trim());
     if (imageFile) formData.append('image', imageFile);
-    
+
     audioClips.forEach(clip => {
       formData.append('audio', clip.file);
     });
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/analyze', {
+      const headers = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      console.log('[FRONTEND] Analyze request started');
+      const _t0 = performance.now();
+
+      const response = await fetch(API_ENDPOINTS.ANALYZE, {
         method: 'POST',
+        headers: headers,
         body: formData,
       });
 
+      const _elapsedS = ((performance.now() - _t0) / 1000).toFixed(2);
+
       if (!response.ok) {
+        console.log(`[FRONTEND] API error response received: ${_elapsedS}s (HTTP ${response.status})`);
+        if (response.status === 401) {
+          onSignOut();
+          throw new Error('Your session has expired or is invalid. Please sign in again.');
+        }
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.detail || `Server error: ${response.status}`);
+        const errorDetail = errorData.detail;
+        if (response.status === 429) {
+          throw new Error(errorDetail || 'Rate limit exceeded. Please wait before submitting another analysis.');
+        }
+        if (response.status === 503) {
+          throw new Error(errorDetail || 'Server is currently at maximum capacity. Please wait a few seconds and try again.');
+        }
+        if (Array.isArray(errorDetail)) {
+          throw new Error(errorDetail.map(d => d.msg || d).join(', '));
+        }
+        throw new Error(errorDetail || `Server error: ${response.status}`);
       }
 
+      console.log(`[FRONTEND] API response received: ${_elapsedS}s`);
       const data = await response.json();
       setResult(data);
     } catch (err) {
       console.error("API error:", err);
-      // Give a detailed error and offer mock fallback
-      setError(
-        `Failed to reach local MediScanAI server: ${err.message}. ` +
-        `Make sure the FastAPI backend is running locally at http://localhost:8000.`
-      );
+      setError(err.message || 'An error occurred during analysis.');
     } finally {
       setIsLoading(false);
     }
@@ -427,17 +513,30 @@ This analysis is for informational purposes only and is generated based on the d
           {/* User profile capsule */}
           <div className="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/60">
             <div className="w-5 h-5 rounded-full bg-teal-600 flex items-center justify-center text-[10px] text-white font-bold uppercase">
-              {user.name.charAt(0)}
+              {(user?.full_name || user?.name || user?.email || 'User').charAt(0)}
             </div>
             <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 truncate max-w-28">
-              {user.name}
+              {user?.full_name || user?.name || user?.email || 'User'}
             </span>
-            {user.isGuest && (
+            {user?.isGuest && (
               <span className="text-[9px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase px-1">
                 Guest
               </span>
             )}
           </div>
+
+          {/* History Button */}
+          <button
+            onClick={() => {
+              setShowHistory(true);
+              fetchHistory();
+            }}
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/60 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all text-xs font-semibold cursor-pointer"
+            aria-label="View history"
+          >
+            <Clock className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+            <span className="hidden sm:inline">History</span>
+          </button>
 
           {/* Theme toggler */}
           <button
@@ -445,7 +544,7 @@ This analysis is for informational purposes only and is generated based on the d
             className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all cursor-pointer"
             aria-label="Toggle theme"
           >
-            {theme === 'dark' ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
+            {theme === 'dark' ? <Sun className="w-4.5 h-4.5 text-teal-400" /> : <Moon className="w-4.5 h-4.5" />}
           </button>
 
           {/* Sign out */}
@@ -660,10 +759,10 @@ This analysis is for informational purposes only and is generated based on the d
                 {isLoading ? (
                   <>
                     <RefreshCw className="w-5 h-5 animate-spin" />
-                    <span>Analyzing Health Query...</span>
+                    <span>Analyzing...</span>
                   </>
                 ) : (
-                  <span>Run local RAG Analysis</span>
+                  <span>Run Analysis</span>
                 )}
               </button>
             </div>
@@ -705,7 +804,7 @@ This analysis is for informational purposes only and is generated based on the d
                   <Heart className="absolute w-6 h-6 text-teal-600 dark:text-teal-400 animate-pulse fill-teal-600/5" />
                 </div>
                 
-                <h3 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white mb-1.5">Processing Query Locally</h3>
+                <h3 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white mb-1.5">Processing Analysis...</h3>
                 
                 {/* Active progress message */}
                 <p className="text-slate-500 dark:text-slate-400 text-sm max-w-xs text-center leading-relaxed h-10 animate-pulse">
@@ -729,7 +828,7 @@ This analysis is for informational purposes only and is generated based on the d
                 <div className="border-b border-slate-100 dark:border-slate-800 pb-3 flex justify-between items-center">
                   <h3 className="text-base font-bold tracking-tight text-slate-900 dark:text-white">Analysis Result</h3>
                   <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2 py-1 rounded font-semibold">
-                    Local RAG Execution Complete
+                    Analysis Complete
                   </span>
                 </div>
 
@@ -919,6 +1018,78 @@ This analysis is for informational purposes only and is generated based on the d
         </section>
 
       </main>
+
+      {/* 3. Analysis History Drawer Modal */}
+      {showHistory && (
+        <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/50 backdrop-blur-sm animate-fade-in">
+          <div className="w-full max-w-md bg-white dark:bg-slate-900 h-full shadow-2xl border-l border-slate-200 dark:border-slate-800 flex flex-col p-6 overflow-hidden">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center space-x-2">
+                <Clock className="w-5 h-5 text-teal-600 dark:text-teal-400" />
+                <h3 className="font-bold text-base text-slate-900 dark:text-white">Analysis History</h3>
+              </div>
+              <button
+                onClick={() => setShowHistory(false)}
+                className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto py-4 space-y-3">
+              {isLoadingHistory ? (
+                <div className="flex items-center justify-center py-12 text-slate-400 text-sm animate-pulse">
+                  Loading analysis history...
+                </div>
+              ) : historyError ? (
+                <div className="p-3 bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 text-xs rounded-xl border border-rose-200 dark:border-rose-900/30">
+                  {historyError}
+                </div>
+              ) : historyItems.length === 0 ? (
+                <div className="text-center py-12 text-slate-400 text-sm">
+                  No past analyses found. Run a new health query to get started!
+                </div>
+              ) : (
+                historyItems.map((item) => (
+                  <div
+                    key={item.id}
+                    onClick={() => loadHistoryDetail(item.id)}
+                    className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-teal-500/50 bg-slate-50 dark:bg-slate-950/50 hover:bg-white dark:hover:bg-slate-800/50 transition-all cursor-pointer group flex flex-col space-y-2 shadow-xs"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20">
+                        {item.modality}
+                      </span>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-[11px] text-slate-400">
+                          {new Date(item.created_at).toLocaleDateString()} {new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                        <button
+                          onClick={(e) => deleteHistory(item.id, e)}
+                          className="text-slate-400 hover:text-rose-500 p-1 rounded transition-colors"
+                          title="Delete record"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                    {item.verdict && (
+                      <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 line-clamp-2">
+                        {item.verdict}
+                      </p>
+                    )}
+                    {item.processing_duration_ms && (
+                      <span className="text-[10px] text-slate-400">
+                        Processed in {item.processing_duration_ms} ms
+                      </span>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import LandingAuth from './components/LandingAuth';
 import Dashboard from './components/Dashboard';
+import { getToken, setToken, getUser, setUser as persistUser, clearAuth } from './utils/auth';
+import { API_ENDPOINTS } from './config/api';
 
 function App() {
   // Theme state
@@ -10,11 +12,48 @@ function App() {
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
 
-  // User state
-  const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('user');
-    return saved ? JSON.parse(saved) : null;
-  });
+  // Real authenticated user state
+  const [user, setUserState] = useState(() => getUser());
+  const [token, setTokenState] = useState(() => getToken());
+  const [isValidating, setIsValidating] = useState(true);
+
+  // Validate session on mount against /api/auth/me
+  useEffect(() => {
+    const validateSession = async () => {
+      const currentToken = getToken();
+      if (!currentToken) {
+        setIsValidating(false);
+        return;
+      }
+
+      try {
+        const res = await fetch(API_ENDPOINTS.AUTH_ME, {
+          headers: {
+            'Authorization': `Bearer ${currentToken}`,
+          },
+        });
+
+        if (res.ok) {
+          const freshUser = await res.json();
+          persistUser(freshUser);
+          setUserState(freshUser);
+          setTokenState(currentToken);
+        } else {
+          // Token expired or invalid
+          clearAuth();
+          setUserState(null);
+          setTokenState(null);
+        }
+      } catch (err) {
+        console.warn('Auth session validation failed (network/offline):', err);
+        // If network error, retain local state or reset if preferred
+      } finally {
+        setIsValidating(false);
+      }
+    };
+
+    validateSession();
+  }, []);
 
   // Theme synchronization with document classlist and OS level listeners
   useEffect(() => {
@@ -48,22 +87,36 @@ function App() {
     setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
   };
 
-  const handleLogin = (email, name, isGuest) => {
-    const newUser = { email, name, isGuest };
-    setUser(newUser);
-    localStorage.setItem('user', JSON.stringify(newUser));
+  const handleLogin = (newUser, newToken) => {
+    persistUser(newUser);
+    setToken(newToken);
+    setUserState(newUser);
+    setTokenState(newToken);
   };
 
   const handleSignOut = () => {
-    setUser(null);
-    localStorage.removeItem('user');
+    clearAuth();
+    setUserState(null);
+    setTokenState(null);
   };
+
+  if (isValidating) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 text-slate-500">
+        <div className="animate-pulse flex items-center space-x-2">
+          <div className="w-3 h-3 bg-teal-500 rounded-full"></div>
+          <span className="text-sm font-medium">Verifying MediScanAI session...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
-      {user ? (
+      {user && token ? (
         <Dashboard
           user={user}
+          token={token}
           onSignOut={handleSignOut}
           theme={theme}
           toggleTheme={toggleTheme}

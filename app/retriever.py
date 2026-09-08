@@ -1,4 +1,5 @@
 import os
+import time
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 os.environ["OMP_NUM_THREADS"] = "1"
 
@@ -139,16 +140,20 @@ def rrf_fuse(faiss_results: List[Tuple[str, float, dict]], bm25_results: List[Tu
     return fused_results
 
 
+import threading
+
 class CrossEncoderReranker:
     def __init__(self, model_name: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"):
         self.model = None
         self.model_name = model_name
+        self._lock = threading.Lock()
 
     def load_model(self):
-        if self.model is None:
-            from sentence_transformers import CrossEncoder
-            print(f"🎙️ Loading Cross-Encoder Model '{self.model_name}'...")
-            self.model = CrossEncoder(self.model_name, device="cpu")
+        with self._lock:
+            if self.model is None:
+                from sentence_transformers import CrossEncoder
+                print(f"🎙️ Loading Cross-Encoder Model '{self.model_name}'...")
+                self.model = CrossEncoder(self.model_name, device="cpu")
 
     def rerank(self, query: str, candidates: List[Tuple[str, float, dict]], index_name: str, top_k: int = 5) -> List[Tuple[str, float, dict]]:
         if not candidates:
@@ -160,7 +165,8 @@ class CrossEncoderReranker:
             doc_text = extract_text_for_bm25(index_name, obj)
             pairs.append((query, doc_text))
             
-        scores = self.model.predict(pairs)
+        with self._lock:
+            scores = self.model.predict(pairs)
         
         reranked = []
         for idx, (key, score, obj) in enumerate(candidates):
@@ -228,21 +234,33 @@ class MultiRetriever:
                 "drug_dict": {"index_path": INDEX_FILES["drug_dict"], "jsonl_path": JSONL_FILES["drug_dict"], "id_key": "id"},
             }
 
+        # --- FAISS index + JSONL loading ---
+        _t0 = time.perf_counter()
         for name, cfg in indexes_config.items():
+            _ti = time.perf_counter()
             self.idx_wrappers[name] = FaissIndexWrapper(cfg["index_path"], cfg["jsonl_path"], cfg.get("id_key"))
+            _records = len(self.idx_wrappers[name].id_to_obj)
+            print(f"[STARTUP] FAISS index '{name}': {time.perf_counter()-_ti:.2f}s ({_records} records)")
+        print(f"[STARTUP] FAISS total (all indexes): {time.perf_counter()-_t0:.2f}s")
 
-        # Build in-memory BM25 indexes
+        # --- BM25 index construction ---
         self.bm25_indexes = {}
         print("🔍 [Retriever] Building in-memory BM25 indexes...")
+        _t_bm25 = time.perf_counter()
         for name, wrapper in self.idx_wrappers.items():
+            _ti = time.perf_counter()
             corpus = list(wrapper.id_to_obj.values())
             extractor = lambda rec, idx_name=name: extract_text_for_bm25(idx_name, rec)
             self.bm25_indexes[name] = BM25Index(corpus, extractor)
+            print(f"[STARTUP] BM25 index '{name}': {time.perf_counter()-_ti:.2f}s ({len(corpus)} docs)")
+        print(f"[STARTUP] BM25 total (all indexes): {time.perf_counter()-_t_bm25:.2f}s")
         print("   ↳ BM25 indexes built successfully.")
 
-        # Warm up CrossEncoder model
+        # --- CrossEncoder model loading ---
+        _t_ce = time.perf_counter()
         self.reranker = CrossEncoderReranker()
         self.reranker.load_model()
+        print(f"[STARTUP] CrossEncoder model: {time.perf_counter()-_t_ce:.2f}s")
 
     def search_specific(self, index_name: str, text: str, top_k: int = 3) -> List[Tuple[str, float, dict]]:
         """
@@ -250,34 +268,51 @@ class MultiRetriever:
         """
         if index_name not in self.idx_wrappers:
             raise ValueError(f"Index '{index_name}' not found in retriever configuration.")
-        
+
+        _t_embed = time.perf_counter()
         norm = normalize_text(text)
         emb = embed_texts([norm])[0].astype("float32")
+        _embed_ms = int((time.perf_counter() - _t_embed) * 1000)
+
         wrapper = self.idx_wrappers[index_name]
-        
+
         # 1. Retrieve candidates via Dense Vector Search
         candidate_pool_size = max(15, top_k * 3)
+        _t_faiss = time.perf_counter()
         dense_results = wrapper.search(emb, top_k=candidate_pool_size)
-        
+        _faiss_ms = int((time.perf_counter() - _t_faiss) * 1000)
+
         # 2. Retrieve candidates via Sparse BM25 Search
         bm25_index = self.bm25_indexes[index_name]
+        _t_bm25 = time.perf_counter()
         bm25_raw = bm25_index.search(text, top_k=candidate_pool_size)
-        
+        _bm25_ms = int((time.perf_counter() - _t_bm25) * 1000)
+
         bm25_results = []
         keys = list(wrapper.id_to_obj.keys())
         for doc_idx, score in bm25_raw:
             key = keys[doc_idx]
             obj = wrapper.id_to_obj[key]
             bm25_results.append((key, score, obj))
-            
+
         # 3. Fuse Ranks using RRF
+        _t_rrf = time.perf_counter()
         fused_candidates = rrf_fuse(dense_results, bm25_results)
-        
+        _rrf_ms = int((time.perf_counter() - _t_rrf) * 1000)
+
         # 4. Rerank using Cross-Encoder
-        # Rerank the top fused candidates to return the top_k
         rerank_pool = fused_candidates[:candidate_pool_size]
+        _t_rerank = time.perf_counter()
         final_results = self.reranker.rerank(text, rerank_pool, index_name, top_k=top_k)
-        
+        _rerank_ms = int((time.perf_counter() - _t_rerank) * 1000)
+
+        print(
+            f"[RETRIEVAL] index={index_name!r} "
+            f"embed={_embed_ms}ms faiss={_faiss_ms}ms bm25={_bm25_ms}ms "
+            f"rrf={_rrf_ms}ms rerank={_rerank_ms}ms "
+            f"candidates_in={len(rerank_pool)} results_out={len(final_results)}"
+        )
+
         return final_results
 
     def search_all(self, text: str, top_k: int = 3) -> Dict[str, List[Tuple[str, float, dict]]]:
