@@ -9,7 +9,7 @@ from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Depends, Req
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
-from backend.core.config import settings
+from backend.core.config import settings, get_settings
 from backend.core.errors import global_exception_handler
 from backend.core.middleware import CorrelationIdMiddleware
 from backend.db.session import check_db_connection, get_db
@@ -209,7 +209,7 @@ async def analyze(
     LLM provider is determined by LLM_MODE in server config (.env), not by the client.
     """
     # Read server-configured LLM mode (set via LLM_MODE in .env)
-    llm_mode = settings.LLM_MODE
+    llm_mode = get_settings().LLM_MODE
 
     # 1. Rate Limiting Check (Request frequency)
     rate_key = f"user:{current_user.id}"

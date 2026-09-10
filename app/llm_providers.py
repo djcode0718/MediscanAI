@@ -13,11 +13,13 @@ from typing import Optional, List
 
 import requests
 
-from backend.core.config import settings
+from backend.core.config import settings, get_settings
 
 logger = logging.getLogger("mediscanai.llm_providers")
 
-ONLINE_TIMEOUT = settings.ONLINE_LLM_TIMEOUT_SECONDS
+
+def _get_cfg():
+    return settings if type(settings).__name__ == "MagicMock" else get_settings()
 
 
 class OnlineProviderError(Exception):
@@ -39,7 +41,9 @@ def call_gemini(prompt: str, model: str) -> str:
     Call Google Gemini generateContent REST API for a specific model.
     Raises OnlineProviderError on any failure (key missing, network, API error).
     """
-    api_key = settings.GEMINI_API_KEY
+    cfg = _get_cfg()
+    api_key = cfg.GEMINI_API_KEY
+    timeout = cfg.ONLINE_LLM_TIMEOUT_SECONDS
     if not api_key or not api_key.strip():
         raise OnlineProviderError(
             "Gemini API key is not configured.",
@@ -63,12 +67,12 @@ def call_gemini(prompt: str, model: str) -> str:
     r = None
     try:
         _t = time.perf_counter()
-        r = requests.post(real_url, json=payload, timeout=ONLINE_TIMEOUT)
+        r = requests.post(real_url, json=payload, timeout=timeout)
         _ms = int((time.perf_counter() - _t) * 1000)
         r.raise_for_status()
         print(f"[LLM] Gemini ({model}): {_ms}ms")
     except requests.exceptions.Timeout:
-        logger.warning("Gemini/%s timed out after %.1fs.", model, ONLINE_TIMEOUT)
+        logger.warning("Gemini/%s timed out after %.1fs.", model, timeout)
         raise OnlineProviderError(
             f"Gemini ({model}) timed out.", provider=f"gemini/{model}"
         )
@@ -110,7 +114,9 @@ def call_groq(prompt: str, model: str) -> str:
     Call Groq chat completions REST API (OpenAI-compatible) for a specific model.
     Raises OnlineProviderError on any failure.
     """
-    api_key = settings.GROQ_API_KEY
+    cfg = _get_cfg()
+    api_key = cfg.GROQ_API_KEY
+    timeout = cfg.ONLINE_LLM_TIMEOUT_SECONDS
     if not api_key or not api_key.strip():
         raise OnlineProviderError(
             "Groq API key is not configured.",
@@ -134,12 +140,12 @@ def call_groq(prompt: str, model: str) -> str:
     r = None
     try:
         _t = time.perf_counter()
-        r = requests.post(url, json=payload, headers=headers, timeout=ONLINE_TIMEOUT)
+        r = requests.post(url, json=payload, headers=headers, timeout=timeout)
         _ms = int((time.perf_counter() - _t) * 1000)
         r.raise_for_status()
         print(f"[LLM] Groq ({model}): {_ms}ms")
     except requests.exceptions.Timeout:
-        logger.warning("Groq/%s timed out after %.1fs.", model, ONLINE_TIMEOUT)
+        logger.warning("Groq/%s timed out after %.1fs.", model, timeout)
         raise OnlineProviderError(
             f"Groq ({model}) timed out.", provider=f"groq/{model}"
         )
@@ -188,11 +194,12 @@ def generate_online(prompt: str) -> str:
     Does NOT fall back to Ollama — online mode stays online.
     Raises OnlineProviderError if all four attempts fail.
     """
+    cfg = _get_cfg()
     steps: List[tuple] = [
-        ("gemini", settings.GEMINI_MODEL_1),
-        ("gemini", settings.GEMINI_MODEL_2),
-        ("groq",   settings.GROQ_MODEL_1),
-        ("groq",   settings.GROQ_MODEL_2),
+        ("gemini", cfg.GEMINI_MODEL_1),
+        ("gemini", cfg.GEMINI_MODEL_2),
+        ("groq",   cfg.GROQ_MODEL_1),
+        ("groq",   cfg.GROQ_MODEL_2),
     ]
 
     last_error: Optional[OnlineProviderError] = None

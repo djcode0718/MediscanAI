@@ -1,8 +1,14 @@
 # backend/core/config.py
-from functools import lru_cache
+from pathlib import Path
 from typing import List
+from dotenv import load_dotenv
 from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+_BASE_DIR = Path(__file__).resolve().parent.parent.parent
+_ENV_PATH = _BASE_DIR / ".env"
+if _ENV_PATH.exists():
+    load_dotenv(_ENV_PATH, override=True)
 
 
 class Settings(BaseSettings):
@@ -11,7 +17,7 @@ class Settings(BaseSettings):
     Values are loaded strictly from environment variables and the local .env file.
     """
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=str(_ENV_PATH) if _ENV_PATH.exists() else ".env",
         env_file_encoding="utf-8",
         extra="ignore"
     )
@@ -59,11 +65,11 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: str = ""
     GROQ_API_KEY: str = ""
     # Gemini models (tried in order on failure)
-    GEMINI_MODEL_1: str = "gemini-2.0-flash"
-    GEMINI_MODEL_2: str = "gemini-1.5-flash"
+    GEMINI_MODEL_1: str = "gemini-3.6-flash"
+    GEMINI_MODEL_2: str = "gemini-3.7-flash"
     # Groq models (tried in order on failure)
-    GROQ_MODEL_1: str = "llama-3.3-70b-versatile"
-    GROQ_MODEL_2: str = "llama-3.1-8b-instant"
+    GROQ_MODEL_1: str = "openai/gpt-oss-120b"
+    GROQ_MODEL_2: str = "openai/gpt-oss-20b"
     ONLINE_LLM_TIMEOUT_SECONDS: float = 60.0
     # LLM mode: 'offline' (Ollama/Mistral) or 'online' (Gemini->Groq fallback chain)
     LLM_MODE: str = "offline"
@@ -109,9 +115,10 @@ class Settings(BaseSettings):
         return self
 
 
-@lru_cache()
 def get_settings() -> Settings:
-    """Return a cached singleton instance of Settings."""
+    """Return an up-to-date instance of Settings loaded from .env."""
+    if _ENV_PATH.exists():
+        load_dotenv(_ENV_PATH, override=True)
     return Settings()
 
 

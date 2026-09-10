@@ -75,8 +75,8 @@ class TestGenerateWithModeRouting(unittest.TestCase):
     def test_online_mode_calls_generate_online(self):
         """online mode must delegate to generate_online(), not Ollama."""
         with patch("app.llm_providers.generate_online", return_value="online response") as mock_online:
-            with patch("app.llm.generate_online", mock_online):
-                result = generate_with_mode("test prompt", llm_mode="online")
+            result = generate_with_mode("test prompt", llm_mode="online")
+        mock_online.assert_called_once_with("test prompt")
         self.assertEqual(result, "online response")
 
     def test_default_mode_is_offline(self):
@@ -375,26 +375,32 @@ class TestAnalyzeEndpointLlmMode(unittest.TestCase):
     def tearDownClass(cls):
         cls.db.close()
 
-    def test_invalid_llm_mode_returns_400(self):
-        """An unrecognized llm_mode must return 400 before any ML work is done."""
-        from unittest.mock import patch, MagicMock
-        mock_pipeline = MagicMock()
-        mock_pipeline.run.return_value = {
-            "card": {"user_text": "test", "ocr_text": "", "llm_output": "ok"},
-            "meta": {},
-            "pipeline_timings": {},
-        }
-        with patch("backend.main.get_pipeline", return_value=mock_pipeline):
-            resp = self.client.post(
-                "/api/analyze",
-                data={"text": "headache", "llm_mode": "invalid_provider"},
-                headers=self.auth_headers,
+    def test_settings_rejects_invalid_llm_mode(self):
+        """Settings validator must reject invalid LLM_MODE."""
+        from pydantic import ValidationError
+        from backend.core.config import Settings
+        with self.assertRaises(ValidationError):
+            Settings(
+                JWT_SECRET_KEY="testsecretkeythatislongenoughforjwtvalidation123",
+                LLM_MODE="invalid_mode"
             )
-        self.assertEqual(resp.status_code, 400)
-        self.assertIn("llm_mode", resp.json()["detail"])
 
-    def test_valid_offline_mode_accepted(self):
-        """llm_mode='offline' must be accepted and route to Ollama (mocked)."""
+    def test_settings_accepts_valid_modes(self):
+        """Settings validator must accept 'offline' and 'online'."""
+        from backend.core.config import Settings
+        s_off = Settings(
+            JWT_SECRET_KEY="testsecretkeythatislongenoughforjwtvalidation123",
+            LLM_MODE="offline"
+        )
+        self.assertEqual(s_off.LLM_MODE, "offline")
+        s_on = Settings(
+            JWT_SECRET_KEY="testsecretkeythatislongenoughforjwtvalidation123",
+            LLM_MODE="online"
+        )
+        self.assertEqual(s_on.LLM_MODE, "online")
+
+    def test_endpoint_uses_settings_llm_mode(self):
+        """Endpoint reads LLM_MODE from settings and passes it to pipeline.run()."""
         from unittest.mock import patch, MagicMock
         mock_pipeline = MagicMock()
         mock_pipeline.run.return_value = {
@@ -407,39 +413,16 @@ class TestAnalyzeEndpointLlmMode(unittest.TestCase):
             "pipeline_timings": {},
         }
         with patch("backend.main.get_pipeline", return_value=mock_pipeline):
-            resp = self.client.post(
-                "/api/analyze",
-                data={"text": "headache", "llm_mode": "offline"},
-                headers=self.auth_headers,
-            )
-        self.assertIn(resp.status_code, [200, 422])
+            with patch("backend.main.settings.LLM_MODE", "online"):
+                resp = self.client.post(
+                    "/api/analyze",
+                    data={"text": "headache"},
+                    headers=self.auth_headers,
+                )
         if resp.status_code == 200:
             mock_pipeline.run.assert_called_once()
             call_kwargs = mock_pipeline.run.call_args
-            self.assertEqual(call_kwargs.kwargs.get("llm_mode", "offline"), "offline")
-
-    def test_offline_mode_is_default(self):
-        """Omitting llm_mode must default to offline behavior."""
-        from unittest.mock import patch, MagicMock
-        mock_pipeline = MagicMock()
-        mock_pipeline.run.return_value = {
-            "card": {
-                "user_text": "headache",
-                "ocr_text": "",
-                "llm_output": "Based on the information, ### Suggested Alternatives\n* Paracetamol\n### ⚠️ Important Warning\nConsult a physician.",
-            },
-            "meta": {"mismatch": None, "mismatch_details": ""},
-            "pipeline_timings": {},
-        }
-        with patch("backend.main.get_pipeline", return_value=mock_pipeline):
-            resp = self.client.post(
-                "/api/analyze",
-                data={"text": "headache"},  # no llm_mode field
-                headers=self.auth_headers,
-            )
-        if resp.status_code == 200:
-            call_kwargs = mock_pipeline.run.call_args
-            self.assertEqual(call_kwargs.kwargs.get("llm_mode", "offline"), "offline")
+            self.assertEqual(call_kwargs.kwargs.get("llm_mode"), "online")
 
 
 if __name__ == "__main__":
