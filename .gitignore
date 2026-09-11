@@ -53,7 +53,7 @@ indexes/
 
 
 # Local biomedical entity-resolution working data
-entity_resolution
+# entity_resolution
 /entity_resolution/data/
 /entity_resolution/results/
 /entity_resolution/checkpoints/
