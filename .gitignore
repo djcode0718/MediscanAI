@@ -50,3 +50,13 @@ indexes/
 # Large generated data / ML artifacts
 data/
 indexes/
+
+
+# Local biomedical entity-resolution working data
+/entity_resolution/data/
+/entity_resolution/results/
+/entity_resolution/checkpoints/
+
+# Local entity-resolution databases
+/entity_resolution/*.sqlite
+/entity_resolution/*.db
