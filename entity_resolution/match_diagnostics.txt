@@ -1,0 +1,3217 @@
+MediScanAI 2.0 — Trial → FDA Matcher Diagnostics
+====================================================================================================
+Total records: 10,000
+
+====================================================================================================
+BELOW_THRESHOLD: 6,656 (66.56%)
+====================================================================================================
+
+--- Example 1 ---
+QUERY:       (+)-SJ000557733
+NORMALIZED:  -sj000557733
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.170426
+MARGIN:      0.048283
+TOKEN:       0.0
+CANDIDATES:  5
+
+--- Example 2 ---
+QUERY:       (+)-SJ000557733 (SJ733)
+NORMALIZED:  -sj000557733 sj733
+FDA NAME:    None
+FDA ID:      None
+METHOD:      no_shared_vocabulary
+CONFIDENCE:  0.202277
+MARGIN:      0.043691
+TOKEN:       0.0
+CANDIDATES:  5
+
+--- Example 3 ---
+QUERY:       + Brief ED Intervention (BI)
+NORMALIZED:  brief ed intervention bi
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.602072
+MARGIN:      0.020027
+TOKEN:       0.459102
+CANDIDATES:  400
+
+--- Example 4 ---
+QUERY:       + laser
+NORMALIZED:  laser
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.706818
+MARGIN:      0.076062
+TOKEN:       1.0
+CANDIDATES:  400
+
+--- Example 5 ---
+QUERY:       + occlusive membrane
+NORMALIZED:  occlusive membrane
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.506142
+MARGIN:      0.007974
+TOKEN:       0.474014
+CANDIDATES:  393
+
+--- Example 6 ---
+QUERY:       + Text
+NORMALIZED:  text
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.466667
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  388
+
+--- Example 7 ---
+QUERY:       + Vitamin B12
+NORMALIZED:  vitamin b12
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.717828
+MARGIN:      0.013104
+TOKEN:       0.400279
+CANDIDATES:  400
+
+--- Example 8 ---
+QUERY:       +/- 200mg NANO-Lopinavir
+NORMALIZED:  - nano-lopinavir
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.376957
+MARGIN:      0.004271
+TOKEN:       0.0
+CANDIDATES:  388
+
+--- Example 9 ---
+QUERY:       (+/-)3,4-methylenedioxymethamphetamine Hydrochloride, MDMA HCI Capsules
+NORMALIZED:  - -methylenedioxymethamphetamine hydrochloride mdma hci capsules
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.630751
+MARGIN:      0.174479
+TOKEN:       0.591959
+CANDIDATES:  400
+
+--- Example 10 ---
+QUERY:       +/- prophylactic surgery
+NORMALIZED:  - prophylactic surgery
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.710429
+MARGIN:      0.114861
+TOKEN:       0.914625
+CANDIDATES:  372
+
+--- Example 11 ---
+QUERY:       +12% Body Mass
+NORMALIZED:  body mass
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.675815
+MARGIN:      0.009294
+TOKEN:       0.850554
+CANDIDATES:  400
+
+--- Example 12 ---
+QUERY:       +150% of dietary requirements, 51% of the calories from carbohydrates, 46%, from fat and 3% from protein
+NORMALIZED:  of dietary requirements of the calories from carbohydrates from fat and from protein
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.363755
+MARGIN:      0.002222
+TOKEN:       0.218189
+CANDIDATES:  400
+
+--- Example 13 ---
+QUERY:       +150% of energy balance requirements, 50% of calories from carbohydrates, 20% from protein, and 30% from fat
+NORMALIZED:  of energy balance requirements of calories from carbohydrates from protein and from fat
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.35611
+MARGIN:      0.011042
+TOKEN:       0.19685
+CANDIDATES:  400
+
+--- Example 14 ---
+QUERY:       +200% of dietary requirements, 50% of calories from carbohydrates, 20% from protein, and 30% from fat
+NORMALIZED:  of dietary requirements of calories from carbohydrates from protein and from fat
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.351838
+MARGIN:      1.3e-05
+TOKEN:       0.190451
+CANDIDATES:  400
+
+--- Example 15 ---
+QUERY:       +3D Lenses
+NORMALIZED:  lenses
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.417279
+MARGIN:      0.044472
+TOKEN:       0.0
+CANDIDATES:  400
+
+--- Example 16 ---
+QUERY:       +Care
+NORMALIZED:  care
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.860909
+MARGIN:      0.035152
+TOKEN:       1.0
+CANDIDATES:  400
+
+--- Example 17 ---
+QUERY:       +Long AAT
+NORMALIZED:  long aat
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.63213
+MARGIN:      0.03177
+TOKEN:       0.890087
+CANDIDATES:  400
+
+--- Example 18 ---
+QUERY:       +RxWell
+NORMALIZED:  rxwell
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.466667
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  391
+
+--- Example 19 ---
+QUERY:       +Short AAT
+NORMALIZED:  short aat
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.726933
+MARGIN:      0.347885
+TOKEN:       0.917482
+CANDIDATES:  396
+
+--- Example 20 ---
+QUERY:       +STEP Implementation
+NORMALIZED:  step implementation
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.613285
+MARGIN:      0.058786
+TOKEN:       0.894912
+CANDIDATES:  400
+
+--- Example 21 ---
+QUERY:       (-)-[2-14C]epicatechin intake
+NORMALIZED:  - - - epicatechin intake
+FDA NAME:    None
+FDA ID:      None
+METHOD:      no_shared_vocabulary
+CONFIDENCE:  0.348823
+MARGIN:      0.002832
+TOKEN:       0.0
+CANDIDATES:  376
+
+--- Example 22 ---
+QUERY:       (-)-Epicatechin-3-O-gallate (ECG)
+NORMALIZED:  - -epicatechin- -o-gallate ecg
+FDA NAME:    None
+FDA ID:      None
+METHOD:      no_shared_vocabulary
+CONFIDENCE:  0.33059
+MARGIN:      0.025495
+TOKEN:       0.0
+CANDIDATES:  393
+
+--- Example 23 ---
+QUERY:       (-)-Epigallocatechin-3-O-gallate (EGCG)
+NORMALIZED:  - -epigallocatechin- -o-gallate egcg
+FDA NAME:    None
+FDA ID:      None
+METHOD:      no_shared_vocabulary
+CONFIDENCE:  0.294933
+MARGIN:      0.006374
+TOKEN:       0.0
+CANDIDATES:  394
+
+--- Example 24 ---
+QUERY:       - After baseline measurement, the 120 patients were randomly divided into two equal groups: Study (Intervention) group (n = 60): received the multidisciplinary psychiatric nursing intervention session
+NORMALIZED:  - after baseline measurement the were randomly divided into two equal groups study intervention group n received the multidisciplinary psychiatric nursing intervention session
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.306547
+MARGIN:      0.009397
+TOKEN:       0.161554
+CANDIDATES:  400
+
+--- Example 25 ---
+QUERY:       - Certagen (multivitamins with minerals)
+NORMALIZED:  - certagen multivitamins with minerals
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.554022
+MARGIN:      0.104154
+TOKEN:       0.352608
+CANDIDATES:  400
+
+--- Example 26 ---
+QUERY:       - Cervical Vestibular-Evoked Myogenic Potential (cVEMP) along the Sternocleidomastoid
+NORMALIZED:  - cervical vestibular-evoked myogenic potential cvemp along the sternocleidomastoid
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.390901
+MARGIN:      0.0
+TOKEN:       0.452752
+CANDIDATES:  400
+
+--- Example 27 ---
+QUERY:       - Conventional culture medium for IVF
+NORMALIZED:  - conventional culture medium for ivf
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.4364
+MARGIN:      0.017008
+TOKEN:       0.482988
+CANDIDATES:  400
+
+--- Example 28 ---
+QUERY:       - Core Training Protocol
+NORMALIZED:  - core training protocol
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.619768
+MARGIN:      0.051745
+TOKEN:       0.476236
+CANDIDATES:  374
+
+--- Example 29 ---
+QUERY:       - Directed open-glottis pushing
+NORMALIZED:  - directed open-glottis pushing
+FDA NAME:    None
+FDA ID:      None
+METHOD:      no_shared_vocabulary
+CONFIDENCE:  0.331181
+MARGIN:      0.003887
+TOKEN:       0.0
+CANDIDATES:  394
+
+--- Example 30 ---
+QUERY:       - EEG video recording or extension of an EEG video recording planned as part of the care - Wearing a connected heart rate and motion recording patch
+NORMALIZED:  - eeg video recording or extension of an eeg video recording planned as part of the care - wearing a connected heart rate and motion recording patch
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.362872
+MARGIN:      0.00954
+TOKEN:       0.29265
+CANDIDATES:  400
+
+--- Example 31 ---
+QUERY:       - Group A: Platelet-rich fibrin membrane prepared intraoperatively and applied over neourethra
+NORMALIZED:  - group a platelet-rich fibrin membrane prepared intraoperatively and applied over neourethra
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.345927
+MARGIN:      0.006875
+TOKEN:       0.203096
+CANDIDATES:  400
+
+--- Example 32 ---
+QUERY:       - Intubation
+NORMALIZED:  - intubation
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.402478
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  399
+
+--- Example 33 ---
+QUERY:       - locking anterior plate
+NORMALIZED:  - locking anterior plate
+FDA NAME:    None
+FDA ID:      None
+METHOD:      no_shared_vocabulary
+CONFIDENCE:  0.341941
+MARGIN:      0.010703
+TOKEN:       0.0
+CANDIDATES:  358
+
+--- Example 34 ---
+QUERY:       - Lyc-O-Mato (dietary supplement, 30 mg lycopene/day)
+NORMALIZED:  - lyc-o-mato dietary supplement lycopene day
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.660215
+MARGIN:      0.011149
+TOKEN:       0.711294
+CANDIDATES:  400
+
+--- Example 35 ---
+QUERY:       - Melatonin - Active light ttherapy
+NORMALIZED:  - melatonin - active light ttherapy
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.493642
+MARGIN:      0.001066
+TOKEN:       0.353225
+CANDIDATES:  400
+
+--- Example 36 ---
+QUERY:       - Microscopic examination and culture of collected specimens
+NORMALIZED:  - microscopic examination and culture of collected specimens
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.471948
+MARGIN:      0.007371
+TOKEN:       0.66815
+CANDIDATES:  400
+
+--- Example 37 ---
+QUERY:       - Nexfin (Pulse Pressure Variation) - Radical 7 (Pleth Variability Index) - CardioQ (stroke volume)
+NORMALIZED:  - nexfin pulse pressure variation - radical pleth variability index - cardioq stroke volume
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.377759
+MARGIN:      0.000928
+TOKEN:       0.217142
+CANDIDATES:  400
+
+--- Example 38 ---
+QUERY:       - Non-Invasive Near-infrared Spectroscopy (NIRS) device (HEM1 with Foresight Elite Sensor)
+NORMALIZED:  - non-invasive near-infrared spectroscopy nirs device hem1 with foresight elite sensor
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.348227
+MARGIN:      0.004567
+TOKEN:       0.153899
+CANDIDATES:  400
+
+--- Example 39 ---
+QUERY:       - Placebo drug - Placebo light therapy
+NORMALIZED:  - placebo drug - placebo light therapy
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.484129
+MARGIN:      0.013675
+TOKEN:       0.305419
+CANDIDATES:  400
+
+--- Example 40 ---
+QUERY:       - Postoperative Antagonistic Peripheral Magnetic Stimulation
+NORMALIZED:  - postoperative antagonistic peripheral magnetic stimulation
+FDA NAME:    None
+FDA ID:      None
+METHOD:      no_shared_vocabulary
+CONFIDENCE:  0.381052
+MARGIN:      0.04086
+TOKEN:       0.0
+CANDIDATES:  394
+
+--- Example 41 ---
+QUERY:       - Quadriceps muscle ultrasound
+NORMALIZED:  - quadriceps muscle ultrasound
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.634786
+MARGIN:      0.009266
+TOKEN:       0.778169
+CANDIDATES:  400
+
+--- Example 42 ---
+QUERY:       - Serum Uromodulin level quantitative test by ELISA technique at day 0, day 21 of 1st cycle and at the end of 2nd cycle of bortezomib based protocol of chemotherapy.
+NORMALIZED:  - serum uromodulin level quantitative test by elisa technique at day day cycle and at the end of cycle of bortezomib based protocol of chemotherapy
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.311442
+MARGIN:      0.006739
+TOKEN:       0.146919
+CANDIDATES:  400
+
+--- Example 43 ---
+QUERY:       - Skin biopsy - Urine sample - Blood sample
+NORMALIZED:  - skin biopsy - urine sample - blood sample
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.438978
+MARGIN:      0.019662
+TOKEN:       0.413387
+CANDIDATES:  400
+
+--- Example 44 ---
+QUERY:       - Sociodemographic Assessment - Psychological Assessment - Quality of Life Assessment - D
+NORMALIZED:  - sociodemographic assessment - psychological assessment - quality of life assessment - d
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.41427
+MARGIN:      0.045642
+TOKEN:       0.60793
+CANDIDATES:  400
+
+--- Example 45 ---
+QUERY:       - standard oxygenation
+NORMALIZED:  - standard oxygenation
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.650725
+MARGIN:      0.003782
+TOKEN:       0.909255
+CANDIDATES:  295
+
+--- Example 46 ---
+QUERY:       - Strong kids screening tool - Stamp screening tool - PYMS screening tool
+NORMALIZED:  - strong kids screening tool - stamp screening tool - pyms screening tool
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.449327
+MARGIN:      0.022166
+TOKEN:       0.473918
+CANDIDATES:  400
+
+--- Example 47 ---
+QUERY:       - use of resorbable membrane Seprafilm
+NORMALIZED:  - use of resorbable membrane seprafilm
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.397049
+MARGIN:      0.003528
+TOKEN:       0.251605
+CANDIDATES:  400
+
+--- Example 48 ---
+QUERY:       - Weaning from mechanical ventilation
+NORMALIZED:  - weaning from mechanical ventilation
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.546553
+MARGIN:      0.191984
+TOKEN:       0.756627
+CANDIDATES:  397
+
+--- Example 49 ---
+QUERY:       -12% Body Mass
+NORMALIZED:  - body mass
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.677505
+MARGIN:      0.057005
+TOKEN:       0.850554
+CANDIDATES:  400
+
+--- Example 50 ---
+QUERY:       -12cm H2O ITPR
+NORMALIZED:  - h2o itpr
+FDA NAME:    None
+FDA ID:      None
+METHOD:      fuzzy_uncertain
+CONFIDENCE:  0.557363
+MARGIN:      0.190416
+TOKEN:       0.917482
+CANDIDATES:  220
+
+====================================================================================================
+AMBIGUOUS: 2,947 (29.47%)
+====================================================================================================
+
+--- Example 1 ---
+QUERY:       (+)- Epicatechin
+NORMALIZED:  - epicatechin
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.475758
+MARGIN:      0.05947
+TOKEN:       0.0
+CANDIDATES:  375
+
+--- Example 2 ---
+QUERY:       (+)-Epicatechin
+NORMALIZED:  -epicatechin
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.4917
+MARGIN:      0.061462
+TOKEN:       0.0
+CANDIDATES:  375
+
+--- Example 3 ---
+QUERY:       + Folic acid
+NORMALIZED:  folic acid
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 4 ---
+QUERY:       +/- 200mg ritonavir NORVIR
+NORMALIZED:  - ritonavir norvir
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.671371
+MARGIN:      0.0
+TOKEN:       0.474014
+CANDIDATES:  383
+
+--- Example 5 ---
+QUERY:       +/- Bupivacaine HCl
+NORMALIZED:  - bupivacaine hcl
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.975
+MARGIN:      0.975
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 6 ---
+QUERY:       +/- Ethyl Chloride Topical Aerosol Anesthetic
+NORMALIZED:  - ethyl chloride topical aerosol anesthetic
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.603774
+MARGIN:      0.005473
+TOKEN:       0.380588
+CANDIDATES:  400
+
+--- Example 7 ---
+QUERY:       +2.75 diopters multifocal intraocular lens
+NORMALIZED:  multifocal intraocular lens
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.334472
+MARGIN:      0.003658
+TOKEN:       0.0
+CANDIDATES:  370
+
+--- Example 8 ---
+QUERY:       +Gz accelerations and positive pressure breathing
+NORMALIZED:  gz accelerations and positive pressure breathing
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.474241
+MARGIN:      0.013261
+TOKEN:       0.420336
+CANDIDATES:  400
+
+--- Example 9 ---
+QUERY:       (-)-epicatechin
+NORMALIZED:  - -epicatechin
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.461091
+MARGIN:      0.057636
+TOKEN:       0.0
+CANDIDATES:  375
+
+--- Example 10 ---
+QUERY:       (-)-Epicatechin (EC)
+NORMALIZED:  - -epicatechin ec
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.641391
+MARGIN:      0.053267
+TOKEN:       0.914625
+CANDIDATES:  378
+
+--- Example 11 ---
+QUERY:       (-)-Epicatechin-rich cocoa supplementation combined with exercise training
+NORMALIZED:  - -epicatechin-rich cocoa supplementation combined with exercise training
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.497489
+MARGIN:      0.006194
+TOKEN:       0.723609
+CANDIDATES:  400
+
+--- Example 12 ---
+QUERY:       (-)-Epigallocatechin (EGC)
+NORMALIZED:  - -epigallocatechin egc
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.338824
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  395
+
+--- Example 13 ---
+QUERY:       - Angiotensin conversing enzyme inhibitors: enalapril, captopril, lisinopril, ramipril, trandolapril.
+NORMALIZED:  - angiotensin conversing enzyme inhibitors enalapril captopril lisinopril ramipril trandolapril
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.318908
+MARGIN:      0.000481
+TOKEN:       0.147865
+CANDIDATES:  362
+
+--- Example 14 ---
+QUERY:       - Endocell®
+NORMALIZED:  - endocell
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.508235
+MARGIN:      0.084706
+TOKEN:       0.0
+CANDIDATES:  397
+
+--- Example 15 ---
+QUERY:       - Synthetic anti-malarial drugs
+NORMALIZED:  - synthetic anti-malarial drugs
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.606169
+MARGIN:      0.011282
+TOKEN:       0.804461
+CANDIDATES:  377
+
+--- Example 16 ---
+QUERY:       - Therapeutic Alliance Questionnaire (HAQ-CP)
+NORMALIZED:  - therapeutic alliance questionnaire haq-cp
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.608702
+MARGIN:      0.016255
+TOKEN:       0.729683
+CANDIDATES:  400
+
+--- Example 17 ---
+QUERY:       -5-FU (Fluorouracil) 2,400 mg/m2 IV over 46-48 hours
+NORMALIZED:  - -fu fluorouracil m2 iv over -
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.579637
+MARGIN:      0.036689
+TOKEN:       0.334996
+CANDIDATES:  400
+
+--- Example 18 ---
+QUERY:       -aminosalicylic acid
+NORMALIZED:  -aminosalicylic acid
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.720845
+MARGIN:      0.0
+TOKEN:       0.838491
+CANDIDATES:  400
+
+--- Example 19 ---
+QUERY:       %-hypo (laboratory parameter, functional iron deficiency)
+NORMALIZED:  -hypo laboratory parameter functional iron deficiency
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.462888
+MARGIN:      0.005897
+TOKEN:       0.472909
+CANDIDATES:  400
+
+--- Example 20 ---
+QUERY:       -PRECISE Nitinol Stent System (5F, 5.5F and 6F)
+NORMALIZED:  -precise nitinol stent system and
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.596685
+MARGIN:      0.011172
+TOKEN:       0.777912
+CANDIDATES:  400
+
+--- Example 21 ---
+QUERY:       .02% Chlorohexidine Gluconate
+NORMALIZED:  chlorohexidine gluconate
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.948729
+MARGIN:      0.0
+TOKEN:       0.879213
+CANDIDATES:  380
+
+--- Example 22 ---
+QUERY:       .1% lidocaine in shoulder entheses
+NORMALIZED:  lidocaine in shoulder entheses
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.516136
+MARGIN:      0.00525
+TOKEN:       0.230969
+CANDIDATES:  400
+
+--- Example 23 ---
+QUERY:       .1% lidocaine subcu. above shouldr enth.
+NORMALIZED:  lidocaine subcu above shouldr enth
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.537822
+MARGIN:      0.000546
+TOKEN:       0.353286
+CANDIDATES:  400
+
+--- Example 24 ---
+QUERY:       .2% chlorhexidine mouthwash
+NORMALIZED:  chlorhexidine mouthwash
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.642403
+MARGIN:      0.0
+TOKEN:       0.511786
+CANDIDATES:  336
+
+--- Example 25 ---
+QUERY:       .2% Ropivacaine
+NORMALIZED:  ropivacaine
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.78873
+MARGIN:      0.189849
+TOKEN:       1.0
+CANDIDATES:  369
+
+--- Example 26 ---
+QUERY:       .5% Bupivacaine
+NORMALIZED:  bupivacaine
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 27 ---
+QUERY:       .9 normal saline
+NORMALIZED:  saline
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 28 ---
+QUERY:       .spironolactone
+NORMALIZED:  spironolactone
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 29 ---
+QUERY:       /hydromorphone 0.05mg/ml
+NORMALIZED:  hydromorphone ml
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.777283
+MARGIN:      0.307168
+TOKEN:       0.917482
+CANDIDATES:  399
+
+--- Example 30 ---
+QUERY:       0,09% Bromfenac
+NORMALIZED:  bromfenac
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  1.0
+MARGIN:      0.0
+TOKEN:       1.0
+CANDIDATES:  2
+
+--- Example 31 ---
+QUERY:       0,1 mg/kg of oxycodone
+NORMALIZED:  kg of oxycodone
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.737216
+MARGIN:      0.074143
+TOKEN:       0.548294
+CANDIDATES:  400
+
+--- Example 32 ---
+QUERY:       0,1% sodium hyaluronate
+NORMALIZED:  sodium hyaluronate
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 33 ---
+QUERY:       0,1mg/kg Dexamethasone
+NORMALIZED:  kg dexamethasone
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.917191
+MARGIN:      0.0
+TOKEN:       0.897616
+CANDIDATES:  361
+
+--- Example 34 ---
+QUERY:       0,35% povidone-iodine solution lavage
+NORMALIZED:  povidone-iodine solution lavage
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.910929
+MARGIN:      0.045295
+TOKEN:       0.932793
+CANDIDATES:  400
+
+--- Example 35 ---
+QUERY:       0,5 mg Fingolimod
+NORMALIZED:  fingolimod
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 36 ---
+QUERY:       0,5 mg seasonal influenza vaccine i.m.
+NORMALIZED:  seasonal influenza vaccine i m
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.506298
+MARGIN:      0.008064
+TOKEN:       0.315133
+CANDIDATES:  397
+
+--- Example 37 ---
+QUERY:       0,9% Chloride Sodium
+NORMALIZED:  chloride sodium
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.910606
+MARGIN:      0.091558
+TOKEN:       1.0
+CANDIDATES:  400
+
+--- Example 38 ---
+QUERY:       0,9% Sodium chloride
+NORMALIZED:  sodium chloride
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  1.0
+MARGIN:      0.0
+TOKEN:       1.0
+CANDIDATES:  4
+
+--- Example 39 ---
+QUERY:       0% adoption rate
+NORMALIZED:  adoption rate
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.447368
+MARGIN:      0.017131
+TOKEN:       0.0
+CANDIDATES:  392
+
+--- Example 40 ---
+QUERY:       0% calcium sodium phosphosilicate/ sodium monofluorophosphate dentifrice
+NORMALIZED:  calcium sodium phosphosilicate sodium monofluorophosphate dentifrice
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.628928
+MARGIN:      0.01397
+TOKEN:       0.454673
+CANDIDATES:  400
+
+--- Example 41 ---
+QUERY:       0%CO2, 6%O2, balance N2
+NORMALIZED:  co2 o2 balance n2
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.533349
+MARGIN:      0.012919
+TOKEN:       0.261823
+CANDIDATES:  400
+
+--- Example 42 ---
+QUERY:       0 db with QST
+NORMALIZED:  with qst
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.692248
+MARGIN:      0.068685
+TOKEN:       0.837938
+CANDIDATES:  400
+
+--- Example 43 ---
+QUERY:       0 degrees 3D printed upper complete dentures
+NORMALIZED:  printed upper complete dentures
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.526886
+MARGIN:      0.004489
+TOKEN:       0.36226
+CANDIDATES:  400
+
+--- Example 44 ---
+QUERY:       0 g Flax
+NORMALIZED:  flax
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.56
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  396
+
+--- Example 45 ---
+QUERY:       0 g/d CICR-NAM (blinded)
+NORMALIZED:  d cicr-nam blinded
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.309375
+MARGIN:      0.000688
+TOKEN:       0.0
+CANDIDATES:  389
+
+--- Example 46 ---
+QUERY:       0 g/Kg ethanol
+NORMALIZED:  kg ethanol
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.884404
+MARGIN:      0.230344
+TOKEN:       0.912475
+CANDIDATES:  400
+
+--- Example 47 ---
+QUERY:       0% KNO3 Mouthwash
+NORMALIZED:  kno3 mouthwash
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.852294
+MARGIN:      0.03934
+TOKEN:       0.888412
+CANDIDATES:  312
+
+--- Example 48 ---
+QUERY:       0 mg Prednisone
+NORMALIZED:  prednisone
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 49 ---
+QUERY:       0 mg tropicamide
+NORMALIZED:  tropicamide
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 50 ---
+QUERY:       0 mg/kg Midazolam (Control Group)
+NORMALIZED:  kg midazolam control group
+FDA NAME:    None
+FDA ID:      None
+METHOD:      ambiguous_fda_mapping
+CONFIDENCE:  0.545165
+MARGIN:      0.024745
+TOKEN:       0.350251
+CANDIDATES:  400
+
+====================================================================================================
+NO_CANDIDATES: 184 (1.84%)
+====================================================================================================
+
+--- Example 1 ---
+QUERY:       +2D PDL
+NORMALIZED:  pdl
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 2 ---
+QUERY:       0% N2O
+NORMALIZED:  n2o
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 3 ---
+QUERY:       0.05 Hz PPT
+NORMALIZED:  ppt
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 4 ---
+QUERY:       0.075 mg RVX-100
+NORMALIZED:  rvx-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 5 ---
+QUERY:       0.1 mg PF-04995274
+NORMALIZED:  pf-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 6 ---
+QUERY:       0.125 mg NX-1207
+NORMALIZED:  nx-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 7 ---
+QUERY:       0.4mg/m2/d
+NORMALIZED:  m2 d
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 8 ---
+QUERY:       0.5% CO2
+NORMALIZED:  co2
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 9 ---
+QUERY:       0.5 ml.kg-1 bupivacaine 0.25%
+NORMALIZED:  kg-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 10 ---
+QUERY:       0.5mg AZ-010
+NORMALIZED:  az-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 11 ---
+QUERY:       009-A0
+NORMALIZED:  -a0
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 12 ---
+QUERY:       009-A1
+NORMALIZED:  -a1
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 13 ---
+QUERY:       009-A2
+NORMALIZED:  -a2
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 14 ---
+QUERY:       009-A3
+NORMALIZED:  -a3
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 15 ---
+QUERY:       1 mg CL-197 capsules
+NORMALIZED:  cl-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 16 ---
+QUERY:       1 MyChart R/R
+NORMALIZED:  r r
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 17 ---
+QUERY:       1 zirconia FDP
+NORMALIZED:  fdp
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 18 ---
+QUERY:       1+PRN
+NORMALIZED:  prn
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 19 ---
+QUERY:       1-on-1 counseling
+NORMALIZED:  -on-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 20 ---
+QUERY:       10 mg/kg Q2W
+NORMALIZED:  kg q2w
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 21 ---
+QUERY:       10% Nu-3 gel
+NORMALIZED:  nu-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 22 ---
+QUERY:       10-10-5-5 technique
+NORMALIZED:  - - -
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 23 ---
+QUERY:       10-1074-LS
+NORMALIZED:  - -ls
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 24 ---
+QUERY:       10-1074-LS-J
+NORMALIZED:  - -ls-j
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 25 ---
+QUERY:       100 mg PG-530742
+NORMALIZED:  pg-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 26 ---
+QUERY:       111In-BU-12
+NORMALIZED:  -bu-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 27 ---
+QUERY:       [11C] JNJ-42491293
+NORMALIZED:  jnj-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 28 ---
+QUERY:       [11C] JNJ-42491293 + JNJ-40411813
+NORMALIZED:  jnj- jnj-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 29 ---
+QUERY:       [11C]MK-3168
+NORMALIZED:  mk-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 30 ---
+QUERY:       [11C]NNC-112
+NORMALIZED:  nnc-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 31 ---
+QUERY:       11C-HY-2-15 PET
+NORMALIZED:  -hy- -
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 32 ---
+QUERY:       11C-JMJ-129
+NORMALIZED:  -jmj-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 33 ---
+QUERY:       11C-JNJ-63779586
+NORMALIZED:  -jnj-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 34 ---
+QUERY:       11C-MC1
+NORMALIZED:  -mc1
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 35 ---
+QUERY:       11C-MK-3168
+NORMALIZED:  -mk-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 36 ---
+QUERY:       11C-ZTP-1
+NORMALIZED:  -ztp-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 37 ---
+QUERY:       11β-methyl-nortestosterone-dodecylcarbonate
+NORMALIZED:  11 -methyl-nortestosterone-dodecylcarbonate
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 38 ---
+QUERY:       11βmethyl nortestosterone dodecylcarbonate
+NORMALIZED:  11 methyl nortestosterone dodecylcarbonate
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 39 ---
+QUERY:       1200 mg/m2 5-fu
+NORMALIZED:  m2 -fu
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 40 ---
+QUERY:       [123] 5-I-A-85380
+NORMALIZED:  -i-a-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 41 ---
+QUERY:       [123I] 5-IA
+NORMALIZED:  -ia
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 42 ---
+QUERY:       [123I]5-IA-85380
+NORMALIZED:  -ia-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 43 ---
+QUERY:       [123I] AV-151
+NORMALIZED:  av-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 44 ---
+QUERY:       124I AT-01
+NORMALIZED:  at-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 45 ---
+QUERY:       124I-AT-01
+NORMALIZED:  -at-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 46 ---
+QUERY:       124I-p5+14 Injection
+NORMALIZED:  -p5
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 47 ---
+QUERY:       129-Xe
+NORMALIZED:  -xe
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 48 ---
+QUERY:       131 I-8H9
+NORMALIZED:  -8h9
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 49 ---
+QUERY:       [131I]/[18F]/[68Ga]ZT-111
+NORMALIZED:  zt-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 50 ---
+QUERY:       131I-3F8
+NORMALIZED:  -3f8
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+====================================================================================================
+HIGH_CONFIDENCE: 123 (1.23%)
+====================================================================================================
+
+--- Example 1 ---
+QUERY:       0 Hz Control
+NORMALIZED:  control
+FDA NAME:    control
+FDA ID:      drug:9daec04d-44fb-4d0f-8e21-1109f515eb5d
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 2 ---
+QUERY:       0.005% Latanoprost Ophthalmic Solution
+NORMALIZED:  latanoprost ophthalmic solution
+FDA NAME:    latanoprost ophthalmic solution
+FDA ID:      drug:2c87e99e-33d4-4060-8876-ff05557c05eb
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      0.0
+TOKEN:       1.0
+CANDIDATES:  2
+
+--- Example 3 ---
+QUERY:       0.006%diprospan+0.5ropivacaine
+NORMALIZED:  diprospan
+FDA NAME:    diprospan
+FDA ID:      drug:55fa9ecb-b843-5748-e063-6294a90a2d53
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 4 ---
+QUERY:       0.01% Hypochlorous acid
+NORMALIZED:  hypochlorous acid
+FDA NAME:    hypochlorous acid
+FDA ID:      drug:3afa5e69-c285-fd73-e063-6294a90a93f9
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 5 ---
+QUERY:       0.04% capsaicin patch
+NORMALIZED:  capsaicin patch
+FDA NAME:    capsaicin patch
+FDA ID:      drug:33154a9b-f6d0-4e95-b4cb-6b938f5dcf4d
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      0.0
+TOKEN:       1.0
+CANDIDATES:  2
+
+--- Example 6 ---
+QUERY:       0.05% xylometazoline hydrochloride
+NORMALIZED:  xylometazoline hydrochloride
+FDA NAME:    xylometazoline hydrochloride
+FDA ID:      drug:e9da6f39-8620-faca-e053-2995a90a8a57
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 7 ---
+QUERY:       0.09% cyclosporine A ophthalmic solution
+NORMALIZED:  cyclosporine a ophthalmic solution
+FDA NAME:    cyclosporine ophthalmic solution
+FDA ID:      drug:0a60fccf-7e1b-44fe-e063-6394a90aadd5
+METHOD:      fuzzy_high_confidence
+CONFIDENCE:  0.98542
+MARGIN:      0.248739
+TOKEN:       1.0
+CANDIDATES:  400
+
+--- Example 8 ---
+QUERY:       0.1% brimonidine tartrate ophthalmic solution
+NORMALIZED:  brimonidine tartrate ophthalmic solution
+FDA NAME:    brimonidine tartrate ophthalmic solution
+FDA ID:      drug:f6666d85-f810-4869-993d-e8ae35b4517f
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      0.0
+TOKEN:       1.0
+CANDIDATES:  2
+
+--- Example 9 ---
+QUERY:       0.1% Fluocinonide Cream
+NORMALIZED:  fluocinonide cream
+FDA NAME:    fluocinonide cream
+FDA ID:      drug:817cac6b-fec5-406d-aa0c-8852d08a3c65
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 10 ---
+QUERY:       0.1 mg triptorelin
+NORMALIZED:  triptorelin
+FDA NAME:    triptorelin
+FDA ID:      drug:f41380e7-b830-432d-a5f5-a872932f107e
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 11 ---
+QUERY:       0.1% sodium hyaluronate eye drop
+NORMALIZED:  sodium hyaluronate eye drop
+FDA NAME:    sodium hyaluronate eye drops
+FDA ID:      drug:5187d136-15c6-517b-e063-6294a90a811d
+METHOD:      fuzzy_high_confidence
+CONFIDENCE:  0.899646
+MARGIN:      0.152566
+TOKEN:       0.709024
+CANDIDATES:  400
+
+--- Example 12 ---
+QUERY:       0.1% Sodium Hyaluronate Eye Drops
+NORMALIZED:  sodium hyaluronate eye drops
+FDA NAME:    sodium hyaluronate eye drops
+FDA ID:      drug:5187d136-15c6-517b-e063-6294a90a811d
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 13 ---
+QUERY:       0.1 % tacrolimus ointment
+NORMALIZED:  tacrolimus ointment
+FDA NAME:    tacrolimus ointment 0.1
+FDA ID:      drug:43b38551-6c5e-48a4-a453-9286f1c16b34
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 14 ---
+QUERY:       0.1% triamcinolone CREAM
+NORMALIZED:  triamcinolone cream
+FDA NAME:    triamcinolone acetonide cream
+FDA ID:      drug:d92e9eaf-3a79-76d7-e053-2995a90ae28d
+METHOD:      fuzzy_high_confidence
+CONFIDENCE:  0.886667
+MARGIN:      0.068113
+TOKEN:       1.0
+CANDIDATES:  400
+
+--- Example 15 ---
+QUERY:       0.12% Chlorhexidine Digluconate
+NORMALIZED:  chlorhexidine digluconate
+FDA NAME:    chlorhexidine digluconate
+FDA ID:      drug:3e95a30c-8ed3-30ed-e063-6294a90a2417
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 16 ---
+QUERY:       0.12% chlorhexidine glucanate solution
+NORMALIZED:  chlorhexidine glucanate solution
+FDA NAME:    chlorhexidine gluconate solution 0.75 antiseptic
+FDA ID:      drug:014a5f36-0396-498b-901f-9a86df4e11fe
+METHOD:      fuzzy_high_confidence
+CONFIDENCE:  0.958447
+MARGIN:      0.056823
+TOKEN:       0.935447
+CANDIDATES:  400
+
+--- Example 17 ---
+QUERY:       0.12% chlorhexidine gluconate solution
+NORMALIZED:  chlorhexidine gluconate solution
+FDA NAME:    chlorhexidine gluconate solution 0.75 antiseptic
+FDA ID:      drug:014a5f36-0396-498b-901f-9a86df4e11fe
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 18 ---
+QUERY:       0.2% w/v Chlorhexidine digluconate
+NORMALIZED:  w v chlorhexidine digluconate
+FDA NAME:    chlorhexidine digluconate
+FDA ID:      drug:3e95a30c-8ed3-30ed-e063-6294a90a2417
+METHOD:      fuzzy_high_confidence
+CONFIDENCE:  0.96437
+MARGIN:      0.176851
+TOKEN:       1.0
+CANDIDATES:  367
+
+--- Example 19 ---
+QUERY:       0.20 gm/kg fish oil
+NORMALIZED:  kg fish oil
+FDA NAME:    fish oil
+FDA ID:      drug:5d9d0b24-e139-48bf-ab2d-536fb59cf8e0
+METHOD:      fuzzy_high_confidence
+CONFIDENCE:  0.901119
+MARGIN:      0.403493
+TOKEN:       0.943424
+CANDIDATES:  400
+
+--- Example 20 ---
+QUERY:       0.25 mg Atrasentan QD
+NORMALIZED:  atrasentan qd
+FDA NAME:    atrasentan
+FDA ID:      drug:9a7e7f85-bfd0-44a0-beda-3bcfa8215c64
+METHOD:      fuzzy_high_confidence
+CONFIDENCE:  0.909434
+MARGIN:      0.484697
+TOKEN:       0.917482
+CANDIDATES:  399
+
+--- Example 21 ---
+QUERY:       0.3% gatifloxacin ophthalmic solution
+NORMALIZED:  gatifloxacin ophthalmic solution
+FDA NAME:    gatifloxacin ophthalmic solution 0.5
+FDA ID:      drug:2dc44fc5-b7fc-40ec-8e9b-d86fae1fc523
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 22 ---
+QUERY:       0.38% Sodium Hyaluronate (SH) Eye Drops
+NORMALIZED:  sodium hyaluronate sh eye drops
+FDA NAME:    sodium hyaluronate eye drops
+FDA ID:      drug:5187d136-15c6-517b-e063-6294a90a811d
+METHOD:      fuzzy_high_confidence
+CONFIDENCE:  0.892274
+MARGIN:      0.205215
+TOKEN:       0.727941
+CANDIDATES:  400
+
+--- Example 23 ---
+QUERY:       0.5% Ivermectin lotion
+NORMALIZED:  ivermectin lotion
+FDA NAME:    bldaxn ivermectin lotion 0.5
+FDA ID:      drug:5679e6f5-1ee8-ee46-e063-6394a90a8d64
+METHOD:      fuzzy_high_confidence
+CONFIDENCE:  0.908023
+MARGIN:      0.17793
+TOKEN:       1.0
+CANDIDATES:  382
+
+--- Example 24 ---
+QUERY:       0.5 mgTestosterone + 10 mg Buspirone
+NORMALIZED:  buspirone
+FDA NAME:    buspirone
+FDA ID:      drug:18e90d65-4a3a-864e-e063-6294a90ae99d
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 25 ---
+QUERY:       0.5 ml lidocaine + epinephrine 1:100,000
+NORMALIZED:  lidocaine epinephrine
+FDA NAME:    lidocaine epinephrine
+FDA ID:      drug:ddd34237-7770-19b3-e053-2995a90af775
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 26 ---
+QUERY:       0.5% Povidone/Iodine oral/nasal rinse
+NORMALIZED:  povidone iodine oral nasal rinse
+FDA NAME:    povidone iodine oral rinse 0.5
+FDA ID:      drug:b83dbdd1-ff63-caf8-e053-2a95a90a5764
+METHOD:      fuzzy_high_confidence
+CONFIDENCE:  0.887759
+MARGIN:      0.254761
+TOKEN:       0.812814
+CANDIDATES:  400
+
+--- Example 27 ---
+QUERY:       0.5% timolol
+NORMALIZED:  timolol
+FDA NAME:    timolol
+FDA ID:      drug:3ae775f4-340c-4bf4-aa49-8a31daba0f8b
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 28 ---
+QUERY:       0.67% Sodium Chloride Ophthalmic Solution
+NORMALIZED:  sodium chloride ophthalmic solution
+FDA NAME:    sodium chloride hypertonicity ophthalmic solution 5
+FDA ID:      drug:29175c17-223e-5e92-e063-6294a90a71d2
+METHOD:      fuzzy_high_confidence
+CONFIDENCE:  0.908009
+MARGIN:      0.101822
+TOKEN:       1.0
+CANDIDATES:  400
+
+--- Example 29 ---
+QUERY:       0.75 % Boric Acid
+NORMALIZED:  boric acid
+FDA NAME:    boric acid
+FDA ID:      drug:3c3a423c-805d-4146-b16e-0138617a8dc6
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 30 ---
+QUERY:       0.9% NaCl solution
+NORMALIZED:  nacl solution
+FDA NAME:    nacl 0.9 normal saline solution
+FDA ID:      drug:5a53c4c8-c9de-700c-e063-6394a90a3ab5
+METHOD:      fuzzy_high_confidence
+CONFIDENCE:  0.885152
+MARGIN:      0.157474
+TOKEN:       1.0
+CANDIDATES:  400
+
+--- Example 31 ---
+QUERY:       0.9% sodium chloride solution
+NORMALIZED:  sodium chloride solution
+FDA NAME:    sodium chloride 0.9 saline solution
+FDA ID:      drug:4e4e4169-2a14-3466-e063-6394a90a081b
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 32 ---
+QUERY:       0.9% sodium-chloride solution
+NORMALIZED:  sodium-chloride solution
+FDA NAME:    sodium chloride 0.9 saline solution
+FDA ID:      drug:4e4e4169-2a14-3466-e063-6394a90a081b
+METHOD:      compact
+CONFIDENCE:  0.860097
+MARGIN:      0.860097
+TOKEN:       0.860047
+CANDIDATES:  1
+
+--- Example 33 ---
+QUERY:       0.9% w/v sodium chloride solution
+NORMALIZED:  w v sodium chloride solution
+FDA NAME:    sodium chloride 0.9 saline solution
+FDA ID:      drug:4e4e4169-2a14-3466-e063-6394a90a081b
+METHOD:      fuzzy_high_confidence
+CONFIDENCE:  0.962709
+MARGIN:      0.179245
+TOKEN:       1.0
+CANDIDATES:  400
+
+--- Example 34 ---
+QUERY:       1,2 dithiolane 3 valeric acid
+NORMALIZED:  acid
+FDA NAME:    10 azelaic acid
+FDA ID:      drug:55b03daa-b6d4-9edf-e063-6394a90ac4d1
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      0.0
+TOKEN:       1.0
+CANDIDATES:  6
+
+--- Example 35 ---
+QUERY:       1% Clascoterone
+NORMALIZED:  clascoterone
+FDA NAME:    clascoterone
+FDA ID:      drug:1673a84b-7f5c-47ab-a99c-1e3db21a6a09
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 36 ---
+QUERY:       1% clindamycin phosphate gel
+NORMALIZED:  clindamycin phosphate gel
+FDA NAME:    clindamycin phosphate gel usp 1
+FDA ID:      drug:ac21d7ad-f94e-4d57-95e3-1648add7ad0b
+METHOD:      fuzzy_high_confidence
+CONFIDENCE:  0.961187
+MARGIN:      0.079721
+TOKEN:       1.0
+CANDIDATES:  400
+
+--- Example 37 ---
+QUERY:       1% Colloidal Oatmeal Balm
+NORMALIZED:  colloidal oatmeal balm
+FDA NAME:    colloidal oatmeal balm
+FDA ID:      drug:4307a0cd-95d3-ce4a-e063-6394a90abb4c
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 38 ---
+QUERY:       1=Etanercept
+NORMALIZED:  etanercept
+FDA NAME:    etanercept
+FDA ID:      drug:a002b40c-097d-47a5-957f-7a7b1807af7f
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 39 ---
+QUERY:       1 (Lipitor®)
+NORMALIZED:  lipitor
+FDA NAME:    lipitor
+FDA ID:      drug:a60cc18b-0631-4cf0-b021-9f52224ece65
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 40 ---
+QUERY:       1 Magnesium Sulfate
+NORMALIZED:  sulfate
+FDA NAME:    50 magnesium sulfate
+FDA ID:      drug:7446d09b-10fe-7765-e053-2a91aa0a56a8
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 41 ---
+QUERY:       #1 Respiratory Care Solution
+NORMALIZED:  care solution
+FDA NAME:    5 minoxidil hair care solution
+FDA ID:      drug:49195e81-4a86-839b-e063-6294a90ac883
+METHOD:      fuzzy_high_confidence
+CONFIDENCE:  0.914055
+MARGIN:      0.121699
+TOKEN:       1.0
+CANDIDATES:  400
+
+--- Example 42 ---
+QUERY:       1 x 30 mg/mL pegvisomant
+NORMALIZED:  ml pegvisomant
+FDA NAME:    pegvisomant
+FDA ID:      drug:3cbb485b-6df1-49ce-8747-592b395b1988
+METHOD:      fuzzy_high_confidence
+CONFIDENCE:  0.914744
+MARGIN:      0.520954
+TOKEN:       0.917482
+CANDIDATES:  394
+
+--- Example 43 ---
+QUERY:       1-13C glutamine
+NORMALIZED:  - glutamine
+FDA NAME:    glutamine
+FDA ID:      drug:d5a783f4-12ef-4326-8faa-40018e45ba3b
+METHOD:      compact
+CONFIDENCE:  0.96
+MARGIN:      0.96
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 44 ---
+QUERY:       1. Pred Forte
+NORMALIZED:  pred forte
+FDA NAME:    pred forte
+FDA ID:      drug:00a5aa88-e361-4ea7-8922-530c738b726e
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 45 ---
+QUERY:       1.23% sodium fluoride acidic gel
+NORMALIZED:  sodium fluoride acidic gel
+FDA NAME:    sodium fluoride gel
+FDA ID:      drug:de973f9c-af34-4977-e053-2995a90a54a0
+METHOD:      fuzzy_high_confidence
+CONFIDENCE:  0.898315
+MARGIN:      0.149756
+TOKEN:       0.943457
+CANDIDATES:  400
+
+--- Example 46 ---
+QUERY:       1.25% fluoride gel
+NORMALIZED:  fluoride gel
+FDA NAME:    2.7 sodium fluoride gel
+FDA ID:      drug:15f79f56-c8ba-434b-a839-f969a1758b9f
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      0.0
+TOKEN:       1.0
+CANDIDATES:  2
+
+--- Example 47 ---
+QUERY:       1.25mg bevacizumab
+NORMALIZED:  bevacizumab
+FDA NAME:    bevacizumab
+FDA ID:      drug:939b5d1f-9fb2-4499-80ef-0607aa6b114e
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 48 ---
+QUERY:       10 mg Rabeprazole
+NORMALIZED:  rabeprazole
+FDA NAME:    rabeprazole
+FDA ID:      drug:951caefe-6e18-48ff-9567-beb545b09c25
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      1.0
+TOKEN:       1.0
+CANDIDATES:  1
+
+--- Example 49 ---
+QUERY:       10% phenylephrine
+NORMALIZED:  phenylephrine
+FDA NAME:    phenylephrine
+FDA ID:      drug:4e75da23-35f2-431c-92cb-c2c4cb3f09f1
+METHOD:      exact
+CONFIDENCE:  1.0
+MARGIN:      0.0
+TOKEN:       1.0
+CANDIDATES:  2
+
+--- Example 50 ---
+QUERY:       10-10-10 Protocol
+NORMALIZED:  - -
+FDA NAME:    48951-1405-1
+FDA ID:      drug:3dd7da72-ab65-696f-e063-6294a90a3ef1
+METHOD:      exact
+CONFIDENCE:  0.7
+MARGIN:      0.7
+TOKEN:       0.0
+CANDIDATES:  1
+
+====================================================================================================
+TOO_SHORT: 49 (0.49%)
+====================================================================================================
+
+--- Example 1 ---
+QUERY:       0 ppm F
+NORMALIZED:  f
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 2 ---
+QUERY:       0-15 Water
+NORMALIZED:  -
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 3 ---
+QUERY:       0.02mg/kg
+NORMALIZED:  kg
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 4 ---
+QUERY:       0.03%NF
+NORMALIZED:  nf
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 5 ---
+QUERY:       0.1% TR 987
+NORMALIZED:  tr
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 6 ---
+QUERY:       0.24mg/,KB
+NORMALIZED:  kb
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 7 ---
+QUERY:       0.5% TM
+NORMALIZED:  tm
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 8 ---
+QUERY:       0.9%NS
+NORMALIZED:  ns
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 9 ---
+QUERY:       1 alpha D2
+NORMALIZED:  d2
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 10 ---
+QUERY:       1 step SE
+NORMALIZED:  se
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 11 ---
+QUERY:       1 week RT
+NORMALIZED:  rt
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 12 ---
+QUERY:       1.5 microns at 50mg
+NORMALIZED:  at
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 13 ---
+QUERY:       1/10 NA/EE
+NORMALIZED:  ee
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 14 ---
+QUERY:       10 mg BI 1356 BS
+NORMALIZED:  bi
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 15 ---
+QUERY:       100% O2
+NORMALIZED:  o2
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 16 ---
+QUERY:       1000 IU D3
+NORMALIZED:  d3
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 17 ---
+QUERY:       103024-F
+NORMALIZED:  -f
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 18 ---
+QUERY:       [^11C]T-773
+NORMALIZED:  t-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 19 ---
+QUERY:       [123I] AV 39
+NORMALIZED:  av
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 20 ---
+QUERY:       140 mg SC
+NORMALIZED:  sc
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 21 ---
+QUERY:       [14C]D-0316 suspension
+NORMALIZED:  d-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 22 ---
+QUERY:       2 cigarettes in 15 minutes
+NORMALIZED:  in
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 23 ---
+QUERY:       2% HA
+NORMALIZED:  ha
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 24 ---
+QUERY:       2% N-9 gel
+NORMALIZED:  n-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 25 ---
+QUERY:       2 step ER
+NORMALIZED:  er
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 26 ---
+QUERY:       200 mg OZ 439
+NORMALIZED:  oz
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 27 ---
+QUERY:       200 mg S-777469
+NORMALIZED:  s-
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 28 ---
+QUERY:       2D PC
+NORMALIZED:  pc
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 29 ---
+QUERY:       2D US
+NORMALIZED:  us
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 30 ---
+QUERY:       2WIN-S
+NORMALIZED:  -s
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 31 ---
+QUERY:       2x CC
+NORMALIZED:  cc
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 32 ---
+QUERY:       2x EC
+NORMALIZED:  ec
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 33 ---
+QUERY:       3:1 C:V
+NORMALIZED:  v
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 34 ---
+QUERY:       3D RA
+NORMALIZED:  ra
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 35 ---
+QUERY:       4 FEC 100 followed by 4 Taxol
+NORMALIZED:  by
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 36 ---
+QUERY:       4 Vitamin D
+NORMALIZED:  d
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 37 ---
+QUERY:       4fx x 5Gy
+NORMALIZED:  x
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 38 ---
+QUERY:       5 Fluorouracil (FU)
+NORMALIZED:  fu
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 39 ---
+QUERY:       5ARI + AB
+NORMALIZED:  ab
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 40 ---
+QUERY:       5FU; 2400 mg/m2
+NORMALIZED:  m2
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 41 ---
+QUERY:       5FU/LV
+NORMALIZED:  lv
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 42 ---
+QUERY:       6 TEC q 3 weeks
+NORMALIZED:  q
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 43 ---
+QUERY:       608 Dose A
+NORMALIZED:  a
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 44 ---
+QUERY:       608 Dose B
+NORMALIZED:  b
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 45 ---
+QUERY:       608 Dose C
+NORMALIZED:  c
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 46 ---
+QUERY:       60Gy (12 x 5 fr.s)
+NORMALIZED:  s
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 47 ---
+QUERY:       [68Ga]P3
+NORMALIZED:  p3
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 48 ---
+QUERY:       70 mg/dL
+NORMALIZED:  dl
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+--- Example 49 ---
+QUERY:       700 mg IV
+NORMALIZED:  iv
+FDA NAME:    None
+FDA ID:      None
+METHOD:      none
+CONFIDENCE:  0.0
+MARGIN:      0.0
+TOKEN:       0.0
+CANDIDATES:  0
+
+====================================================================================================
+MEDIUM_CONFIDENCE: 41 (0.41%)
+====================================================================================================
+
+--- Example 1 ---
+QUERY:       0.12% chlorhexidine digluconate mouthwash
+NORMALIZED:  chlorhexidine digluconate mouthwash
+FDA NAME:    chlorhexidine digluconate
+FDA ID:      drug:3e95a30c-8ed3-30ed-e063-6294a90a2417
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.821255
+MARGIN:      0.127585
+TOKEN:       0.705353
+CANDIDATES:  373
+
+--- Example 2 ---
+QUERY:       0.5% cyclopentolate and 2.5% phenylephrine
+NORMALIZED:  cyclopentolate and phenylephrine
+FDA NAME:    cyclopentolate hydrochloride and phenylephrine hydrochloride
+FDA ID:      drug:8268b70f-3f10-48dd-bb24-baaeb27a1325
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.832912
+MARGIN:      0.216217
+TOKEN:       1.0
+CANDIDATES:  400
+
+--- Example 3 ---
+QUERY:       0.9% NaCl, saline
+NORMALIZED:  nacl saline
+FDA NAME:    nacl 0.9 normal saline solution
+FDA ID:      drug:5a53c4c8-c9de-700c-e063-6394a90a3ab5
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.841014
+MARGIN:      0.17537
+TOKEN:       1.0
+CANDIDATES:  400
+
+--- Example 4 ---
+QUERY:       1 Cycle of Pembrolizumab
+NORMALIZED:  of pembrolizumab
+FDA NAME:    pembrolizumab
+FDA ID:      drug:9333c79b-d487-4538-a9f0-71b91a02b287
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.83189
+MARGIN:      0.263453
+TOKEN:       0.613279
+CANDIDATES:  400
+
+--- Example 5 ---
+QUERY:       1 tab Empagliflozin +1 tab Linagliptin +2 tabs Metformin XR
+NORMALIZED:  empagliflozin linagliptin metformin xr
+FDA NAME:    empagliflozin linagliptin metformin hydrochloride
+FDA ID:      drug:71873567-9594-452a-bb92-34a129adecac
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.836069
+MARGIN:      0.117814
+TOKEN:       0.776579
+CANDIDATES:  362
+
+--- Example 6 ---
+QUERY:       1.23% fluoride foam application
+NORMALIZED:  fluoride foam application
+FDA NAME:    acclean foam fluoride 60 second application
+FDA ID:      drug:c10af938-0537-2425-e053-2a95a90ad608
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.859271
+MARGIN:      0.312202
+TOKEN:       1.0
+CANDIDATES:  400
+
+--- Example 7 ---
+QUERY:       10% Arginine Hydrochloride-R-Gene 10
+NORMALIZED:  arginine hydrochloride-r-gene
+FDA NAME:    arginine hydrochloride
+FDA ID:      drug:6accf33f-9841-4327-8923-93c42020ef12
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.877548
+MARGIN:      0.231165
+TOKEN:       0.896653
+CANDIDATES:  397
+
+--- Example 8 ---
+QUERY:       10%lidocaine spray
+NORMALIZED:  lidocaine spray
+FDA NAME:    lidocaine hcl delay spray
+FDA ID:      drug:39bfb77f-090a-9ef1-e063-6294a90a5644
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.866667
+MARGIN:      0.244218
+TOKEN:       1.0
+CANDIDATES:  400
+
+--- Example 9 ---
+QUERY:       100 mg safinamide
+NORMALIZED:  safinamide
+FDA NAME:    safinamide mesylate
+FDA ID:      drug:c4d65f28-983f-42b4-bb23-023ae0fe81b2
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.833005
+MARGIN:      0.3909
+TOKEN:       1.0
+CANDIDATES:  364
+
+--- Example 10 ---
+QUERY:       111In Ibritumomab
+NORMALIZED:  ibritumomab
+FDA NAME:    ibritumomab tiuxetan
+FDA ID:      drug:25d367dc-da65-44c9-a844-1bf15339c285
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.843871
+MARGIN:      0.296045
+TOKEN:       1.0
+CANDIDATES:  368
+
+--- Example 11 ---
+QUERY:       12 g soluble corn fiber
+NORMALIZED:  soluble corn fiber
+FDA NAME:    soluble fiber
+FDA ID:      drug:6decd5ef-e8e1-44ae-8465-6266cf18e81e
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.831381
+MARGIN:      0.358585
+TOKEN:       0.724418
+CANDIDATES:  400
+
+--- Example 12 ---
+QUERY:       131-MIBG + Vorinostat
+NORMALIZED:  -mibg vorinostat
+FDA NAME:    vorinostat
+FDA ID:      drug:cd86ee78-2781-468b-930c-3c4677bcc092
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.857937
+MARGIN:      0.364668
+TOKEN:       0.917482
+CANDIDATES:  399
+
+--- Example 13 ---
+QUERY:       [13C5]glutamine
+NORMALIZED:  13c5 glutamine
+FDA NAME:    glutamine
+FDA ID:      drug:d5a783f4-12ef-4326-8faa-40018e45ba3b
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.85899
+MARGIN:      0.345599
+TOKEN:       0.910732
+CANDIDATES:  374
+
+--- Example 14 ---
+QUERY:       [14C]AZD5363 (Capivasertib)
+NORMALIZED:  azd5363 capivasertib
+FDA NAME:    capivasertib
+FDA ID:      drug:d698c106-2322-401e-b738-cbd83c843ecf
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.841374
+MARGIN:      0.488596
+TOKEN:       0.917482
+CANDIDATES:  382
+
+--- Example 15 ---
+QUERY:       177Lu-Dotatate PRRT
+NORMALIZED:  -dotatate prrt
+FDA NAME:    68ga-dotatate
+FDA ID:      drug:b2b3be70-17d8-4093-896c-f1c54a2cf242
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.858288
+MARGIN:      0.497574
+TOKEN:       0.917482
+CANDIDATES:  395
+
+--- Example 16 ---
+QUERY:       177Lu-DOTATOC + 90Y-DOTATOC
+NORMALIZED:  -dotatoc -dotatoc
+FDA NAME:    ga-68-dotatoc
+FDA ID:      drug:c4d185c3-d520-462d-ba50-4f4ee485ace3
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.83021
+MARGIN:      0.382719
+TOKEN:       1.0
+CANDIDATES:  391
+
+--- Example 17 ---
+QUERY:       188Re-SSS Lipiodol
+NORMALIZED:  -sss lipiodol
+FDA NAME:    lipiodol
+FDA ID:      drug:511d1f64-5cb9-4baa-a123-96205467e59a
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.856322
+MARGIN:      0.466322
+TOKEN:       0.917482
+CANDIDATES:  392
+
+--- Example 18 ---
+QUERY:       2.5ug/h transdermal fentanyl
+NORMALIZED:  h transdermal fentanyl
+FDA NAME:    fentanyl transdermal
+FDA ID:      drug:e15a7e9b-8025-49dd-9a6d-bafcccf1959f
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.82033
+MARGIN:      0.205996
+TOKEN:       1.0
+CANDIDATES:  355
+
+--- Example 19 ---
+QUERY:       211 Information Sheet
+NORMALIZED:  sheet
+FDA NAME:    sheet spf 30 mineral
+FDA ID:      drug:bbb5b87c-d641-3ba2-e053-2a95a90a0f70
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.851099
+MARGIN:      0.182035
+TOKEN:       1.0
+CANDIDATES:  392
+
+--- Example 20 ---
+QUERY:       25% Hypertonic Saline Bath
+NORMALIZED:  hypertonic saline bath
+FDA NAME:    hypertonic saline
+FDA ID:      drug:167c7a9c-1228-4fb2-a89c-d3e148386323
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.839237
+MARGIN:      0.162866
+TOKEN:       0.690621
+CANDIDATES:  400
+
+--- Example 21 ---
+QUERY:       25G x 1 Needle Autoinjector
+NORMALIZED:  x autoinjector
+FDA NAME:    lecanemab autoinjector
+FDA ID:      drug:9d1ff786-e577-410a-a273-c4d7d0e4e975
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.833233
+MARGIN:      0.329304
+TOKEN:       1.0
+CANDIDATES:  251
+
+--- Example 22 ---
+QUERY:       3% Nebulized Hypertonic Saline
+NORMALIZED:  nebulized hypertonic saline
+FDA NAME:    hypertonic saline
+FDA ID:      drug:167c7a9c-1228-4fb2-a89c-d3e148386323
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.860307
+MARGIN:      0.135478
+TOKEN:       0.947145
+CANDIDATES:  400
+
+--- Example 23 ---
+QUERY:       30 Gy over 3 weeks
+NORMALIZED:  over
+FDA NAME:    all over
+FDA ID:      drug:e37b225d-c7f7-111e-e053-2995a90a72b8
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.825758
+MARGIN:      0.224646
+TOKEN:       1.0
+CANDIDATES:  399
+
+--- Example 24 ---
+QUERY:       330 mg pregabalin controlled release
+NORMALIZED:  pregabalin controlled release
+FDA NAME:    pregabalin extended release
+FDA ID:      drug:1544a657-353c-47f8-96ac-a63fa78373f0
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.833848
+MARGIN:      0.232683
+TOKEN:       0.947258
+CANDIDATES:  400
+
+--- Example 25 ---
+QUERY:       3d printed restoration
+NORMALIZED:  printed restoration
+FDA NAME:    prevent restoration
+FDA ID:      drug:11df6e80-3dea-ca38-e063-6394a90a31a9
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.860934
+MARGIN:      0.117491
+TOKEN:       0.909255
+CANDIDATES:  400
+
+--- Example 26 ---
+QUERY:       3TC Once Daily
+NORMALIZED:  once daily
+FDA NAME:    once daily relief
+FDA ID:      drug:0cb0bb66-def2-35d4-7fe0-987757095d08
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.858796
+MARGIN:      0.093128
+TOKEN:       1.0
+CANDIDATES:  400
+
+--- Example 27 ---
+QUERY:       4 weeks of Nicotine lozenge
+NORMALIZED:  of nicotine lozenge
+FDA NAME:    nicotine lozenge
+FDA ID:      drug:db78d030-7abf-494f-94ca-4a385f519faf
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.868716
+MARGIN:      0.120749
+TOKEN:       0.707922
+CANDIDATES:  400
+
+--- Example 28 ---
+QUERY:       40 cc sterile saline solution
+NORMALIZED:  sterile saline solution
+FDA NAME:    sterile hypertonic saline solution 7 sodium chloride
+FDA ID:      drug:e7110525-9f9b-5b68-e053-2995a90ac034
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.833788
+MARGIN:      0.101373
+TOKEN:       1.0
+CANDIDATES:  400
+
+--- Example 29 ---
+QUERY:       48 weeks of Benralizumab
+NORMALIZED:  of benralizumab
+FDA NAME:    benralizumab
+FDA ID:      drug:da6aca1a-19ed-44a4-abb7-696c7d58b784
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.830633
+MARGIN:      0.322133
+TOKEN:       0.622052
+CANDIDATES:  400
+
+--- Example 30 ---
+QUERY:       5 A model
+NORMALIZED:  model
+FDA NAME:    model aa-2012
+FDA ID:      drug:e29b0f92-27b7-e09f-e053-2995a90a35e3
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.860714
+MARGIN:      0.394048
+TOKEN:       1.0
+CANDIDATES:  396
+
+--- Example 31 ---
+QUERY:       5% potassium nitrate dentifrice
+NORMALIZED:  potassium nitrate dentifrice
+FDA NAME:    potassium nitrate and sodium fluoride dentifrice
+FDA ID:      drug:3f47f399-1a14-5264-e063-6394a90aeb1c
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.85778
+MARGIN:      0.122585
+TOKEN:       1.0
+CANDIDATES:  400
+
+--- Example 32 ---
+QUERY:       5-FU/Kenalog
+NORMALIZED:  -fu kenalog
+FDA NAME:    kenalog
+FDA ID:      drug:3c627313-948f-4867-b64a-8e9adc40c405
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.865581
+MARGIN:      0.271594
+TOKEN:       0.910732
+CANDIDATES:  381
+
+--- Example 33 ---
+QUERY:       50:50 mixture of nitrous oxide/oxygen
+NORMALIZED:  of nitrous oxide oxygen
+FDA NAME:    nitrous oxide oxygen mix
+FDA ID:      drug:43cfee1f-c7e1-6db4-e063-6294a90a5b4d
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.84558
+MARGIN:      0.134552
+TOKEN:       0.779708
+CANDIDATES:  400
+
+--- Example 34 ---
+QUERY:       50 g Walnut
+NORMALIZED:  walnut
+FDA NAME:    bio walnut
+FDA ID:      drug:f38da639-33f0-4c93-aada-34ff3bbf6183
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.87
+MARGIN:      0.258346
+TOKEN:       1.0
+CANDIDATES:  333
+
+--- Example 35 ---
+QUERY:       50% Nitrous Oxide and 50% Oxygen (MEOPA)
+NORMALIZED:  nitrous oxide and oxygen meopa
+FDA NAME:    nitrous oxide oxygen mix
+FDA ID:      drug:43cfee1f-c7e1-6db4-e063-6294a90a5b4d
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.837734
+MARGIN:      0.177674
+TOKEN:       0.847224
+CANDIDATES:  400
+
+--- Example 36 ---
+QUERY:       500 with BP treatment
+NORMALIZED:  bp treatment
+FDA NAME:    bp acne spot treatment
+FDA ID:      drug:feb0ed89-878b-2497-e053-6394a90ad1c1
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.842353
+MARGIN:      0.120741
+TOKEN:       1.0
+CANDIDATES:  400
+
+--- Example 37 ---
+QUERY:       6% HES 130/0.4 in a saline solution
+NORMALIZED:  hes a saline solution
+FDA NAME:    0.9 sodium chloride saline solution
+FDA ID:      drug:546af257-dbd1-11fc-e063-6394a90a8e0a
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.844507
+MARGIN:      0.120952
+TOKEN:       0.931691
+CANDIDATES:  400
+
+--- Example 38 ---
+QUERY:       6% Hypertonic Saline (HS), 4mL
+NORMALIZED:  hypertonic saline hs
+FDA NAME:    hypertonic saline
+FDA ID:      drug:167c7a9c-1228-4fb2-a89c-d3e148386323
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.849908
+MARGIN:      0.184673
+TOKEN:       0.637213
+CANDIDATES:  400
+
+--- Example 39 ---
+QUERY:       7.5% hypertonic saline/6% Dextran-70 (HSD)
+NORMALIZED:  hypertonic saline dextran- hsd
+FDA NAME:    hypertonic saline
+FDA ID:      drug:167c7a9c-1228-4fb2-a89c-d3e148386323
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.823526
+MARGIN:      0.108331
+TOKEN:       0.899596
+CANDIDATES:  400
+
+--- Example 40 ---
+QUERY:       [89Zr]Panitumumab PET-MRI
+NORMALIZED:  panitumumab pet-mri
+FDA NAME:    panitumumab
+FDA ID:      drug:e0fa4bca-f245-4d92-ae29-b0c630a315c2
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.836435
+MARGIN:      0.394781
+TOKEN:       0.917482
+CANDIDATES:  388
+
+--- Example 41 ---
+QUERY:       [89Zr]Panitumumab Tracer
+NORMALIZED:  panitumumab tracer
+FDA NAME:    panitumumab
+FDA ID:      drug:e0fa4bca-f245-4d92-ae29-b0c630a315c2
+METHOD:      fuzzy_medium_confidence
+CONFIDENCE:  0.84655
+MARGIN:      0.443375
+TOKEN:       0.917482
+CANDIDATES:  390

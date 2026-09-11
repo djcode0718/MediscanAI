@@ -61,3 +61,5 @@ indexes/
 # Local entity-resolution databases
 /entity_resolution/*.sqlite
 /entity_resolution/*.db
+
+/entity_resolution/data/indexes/
