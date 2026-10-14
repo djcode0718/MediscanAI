@@ -172,6 +172,7 @@
 #         return llm_response.strip(), ocr_text
 
 
+import logging
 from typing import Optional, Dict, Any, List
 import time
 from app.ocr import extract_text_from_image, ocr_text_join
@@ -180,7 +181,10 @@ from app.llm import generate_with_mode
 from app.utils import normalize_text
 from app.prompt import ANALYSIS_PROMPT_TEMPLATE
 from app.formatter import build_summary_card
+from backend.core.config import get_settings, Settings
+from app.graph import GraphRetriever
 
+logger = logging.getLogger("mediscanai.rag.core")
 
 
 DEFAULT_INDEXES = {
@@ -202,9 +206,22 @@ DEFAULT_INDEXES = {
 }
 
 class Pipeline:
-    def __init__(self, indexes_config: Dict[str, Dict] = None):
+    def __init__(
+        self,
+        indexes_config: Optional[Dict[str, Dict]] = None,
+        retriever: Optional[Any] = None,
+        settings: Optional[Settings] = None,
+        graph_retriever: Optional[GraphRetriever] = None,
+    ):
         self.config = indexes_config or DEFAULT_INDEXES
-        self.retriever = MultiRetriever(self.config)
+        self.retriever = retriever if retriever is not None else MultiRetriever(self.config)
+        self.settings = settings or get_settings()
+        if graph_retriever is not None:
+            self.graph_retriever = graph_retriever
+        elif self.settings.NEO4J_ENABLED:
+            self.graph_retriever = GraphRetriever(settings=self.settings)
+        else:
+            self.graph_retriever = None
 
     def _format_retrievals(self, retrievals_dict: Dict[str, List]) -> str:
         context_str = ""
@@ -289,6 +306,137 @@ class Pipeline:
                 "drugs_from_ocr": drugs_from_ocr_retrieved,
             }
 
+        # 3b. Optional Supplementary Graph Retrieval (Neo4j)
+        if self.graph_retriever is not None and self.settings.NEO4J_ENABLED:
+            print("🕸️ [Graph] Running Supplementary Neo4j Graph Retrieval...")
+            _t_graph = time.perf_counter()
+
+            # A. Disease Graph Retrieval for Symptoms Context
+            # Use candidate disease and verified chunk symptoms from existing hybrid retrieval
+            graph_diseases_retrieved = []
+            seen_disease_names = set()
+            if diseases_retrieved:
+                top_disease_obj = diseases_retrieved[0][2]
+                if isinstance(top_disease_obj, dict):
+                    chunk_data = top_disease_obj.get("chunk", {})
+                    candidate_disease_name = chunk_data.get("disease")
+                    chunk_symptoms = chunk_data.get("symptoms", [])
+
+                    # 1. Neighborhood retrieval for top candidate disease
+                    if candidate_disease_name:
+                        resp_neigh = self.graph_retriever.get_disease_neighborhood(
+                            str(candidate_disease_name), max_chunks=3
+                        )
+                        if resp_neigh.status == "success":
+                            for d in resp_neigh.diseases:
+                                if d.disease_name not in seen_disease_names:
+                                    seen_disease_names.add(d.disease_name)
+                                    key = f"graph_disease_{d.disease_name}"
+                                    score = 1.0
+                                    obj = {
+                                        "disease": d.disease_name,
+                                        "symptoms": d.all_symptoms,
+                                        "matched_symptoms": d.matched_symptoms,
+                                        "overlap_count": d.overlap_count,
+                                        "chunks": [{"chunk_id": c.chunk_id, "source_id": c.source_id} for c in d.chunks],
+                                        "provenance": d.provenance,
+                                    }
+                                    graph_diseases_retrieved.append((key, score, obj))
+                        elif resp_neigh.status in ("error", "timeout"):
+                            logger.warning(
+                                "Graph disease neighborhood query returned status '%s' (code: %s); continuing without graph disease context.",
+                                resp_neigh.status,
+                                resp_neigh.error_code,
+                            )
+
+                    # 2. Symptom overlap retrieval if symptoms match query tokens
+                    overlapping_symptoms = [
+                        str(s).strip() for s in chunk_symptoms
+                        if str(s).strip().lower() in user_norm.lower()
+                    ]
+                    if overlapping_symptoms:
+                        resp_syms = self.graph_retriever.find_diseases_by_symptoms(
+                            overlapping_symptoms, limit=top_k, max_chunks_per_disease=3
+                        )
+                        if resp_syms.status == "success":
+                            for d in resp_syms.diseases:
+                                if d.disease_name not in seen_disease_names:
+                                    seen_disease_names.add(d.disease_name)
+                                    key = f"graph_disease_{d.disease_name}"
+                                    score = float(d.overlap_count)
+                                    obj = {
+                                        "disease": d.disease_name,
+                                        "symptoms": d.all_symptoms,
+                                        "matched_symptoms": d.matched_symptoms,
+                                        "overlap_count": d.overlap_count,
+                                        "chunks": [{"chunk_id": c.chunk_id, "source_id": c.source_id} for c in d.chunks],
+                                        "provenance": d.provenance,
+                                    }
+                                    graph_diseases_retrieved.append((key, score, obj))
+                        elif resp_syms.status in ("error", "timeout"):
+                            logger.warning(
+                                "Graph disease symptom query returned status '%s' (code: %s); continuing without additional graph disease context.",
+                                resp_syms.status,
+                                resp_syms.error_code,
+                            )
+
+            if graph_diseases_retrieved:
+                retrievals_for_user_text["graph_diseases"] = graph_diseases_retrieved
+                print(f"   ↳ Graph disease matches retrieved: {len(graph_diseases_retrieved)}")
+
+            # B. Drug Graph Retrieval for Medicine/OCR Context
+            # Prefer resolved candidate drug names from existing retrieval over raw OCR text
+            graph_drugs_retrieved = []
+            seen_drug_source_ids = set()
+            candidate_drug_names: List[str] = []
+
+            for _, _, obj in retrievals_for_ocr_text.get("drug_dict", [])[:2]:
+                if isinstance(obj, dict) and obj.get("drug_name"):
+                    name = str(obj["drug_name"]).strip()
+                    if name and name not in candidate_drug_names:
+                        candidate_drug_names.append(name)
+
+            for _, _, obj in retrievals_for_ocr_text.get("drugs_from_ocr", [])[:2]:
+                if isinstance(obj, dict):
+                    for field_name in ("brand_name", "generic_name"):
+                        val = obj.get(field_name)
+                        if val and str(val).strip() and str(val).strip() not in candidate_drug_names:
+                            candidate_drug_names.append(str(val).strip())
+
+            for candidate_name in candidate_drug_names[:2]:
+                resp_drug = self.graph_retriever.find_drugs_by_name(candidate_name, limit=top_k)
+                if resp_drug.status == "success":
+                    for drug in resp_drug.drugs:
+                        if drug.source_id not in seen_drug_source_ids:
+                            seen_drug_source_ids.add(drug.source_id)
+                            key = f"graph_drug_{drug.source_id}"
+                            score = 1.0
+                            obj = {
+                                "brand_name": drug.brand_name,
+                                "generic_name": drug.generic_name,
+                                "active_ingredients": drug.active_ingredients,
+                                "indications_and_usage": drug.indications_text,
+                                "warnings": drug.warnings_text,
+                                "dosage": drug.dosage_text,
+                                "adverse_reactions": drug.adverse_reactions_text,
+                                "match_field": drug.match_field,
+                                "provenance": drug.provenance,
+                            }
+                            graph_drugs_retrieved.append((key, score, obj))
+                elif resp_drug.status in ("error", "timeout"):
+                    logger.warning(
+                        "Graph drug query for '%s' returned status '%s' (code: %s); continuing without graph drug context.",
+                        candidate_name,
+                        resp_drug.status,
+                        resp_drug.error_code,
+                    )
+
+            if graph_drugs_retrieved:
+                retrievals_for_ocr_text["graph_drugs"] = graph_drugs_retrieved
+                print(f"   ↳ Graph drug matches retrieved: {len(graph_drugs_retrieved)}")
+
+            pipeline_timings["retrieval_graph_ms"] = int((time.perf_counter() - _t_graph) * 1000)
+
         # 4. Assembling Prompt & generation
         _t_prompt = time.perf_counter()
         formatted_user_retrievals = self._format_retrievals(retrievals_for_user_text)
@@ -337,6 +485,8 @@ class Pipeline:
             print(f"  Retrieval drug_dict (OCR):   {pipeline_timings['retrieval_drug_dict_ms']}ms")
         if "retrieval_drugs_from_ocr_ms" in pipeline_timings:
             print(f"  Retrieval drugs (OCR):       {pipeline_timings['retrieval_drugs_from_ocr_ms']}ms")
+        if "retrieval_graph_ms" in pipeline_timings:
+            print(f"  Retrieval graph (Neo4j):     {pipeline_timings['retrieval_graph_ms']}ms")
         print(f"  Prompt assembly:             {pipeline_timings.get('prompt_assembly_ms', 0)}ms")
         print(f"  LLM ({provider_label}): {pipeline_timings.get('llm_total_ms', 0)}ms")
         print(f"  " + "-" * 40)

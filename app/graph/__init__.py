@@ -9,10 +9,23 @@ from app.graph.driver import (
     verify_neo4j_connectivity,
     close_neo4j_driver,
 )
+from app.graph.retriever import (
+    GraphRetriever,
+    DrugGraphResult,
+    DiseaseChunkProvenance,
+    DiseaseGraphResult,
+    GraphRetrievalResponse,
+)
 
 __all__ = [
     "create_neo4j_driver",
     "get_neo4j_driver",
     "verify_neo4j_connectivity",
     "close_neo4j_driver",
+    "GraphRetriever",
+    "DrugGraphResult",
+    "DiseaseChunkProvenance",
+    "DiseaseGraphResult",
+    "GraphRetrievalResponse",
 ]
+
