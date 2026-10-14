@@ -80,6 +80,15 @@ class Settings(BaseSettings):
     # CORS Configuration
     CORS_ORIGINS: List[str] = ["http://localhost:5173", "http://127.0.0.1:5173", "*"]
 
+    # Neo4j Graph Database Configuration (Optional - Phase 2)
+    NEO4J_ENABLED: bool = False
+    NEO4J_URI: str = "bolt://localhost:7687"
+    NEO4J_USER: str = "neo4j"
+    NEO4J_PASSWORD: str = ""
+    NEO4J_CONNECTION_TIMEOUT_SECONDS: float = 5.0
+    NEO4J_MAX_CONNECTION_LIFETIME_SECONDS: float = 3600.0
+    NEO4J_MAX_CONNECTION_POOL_SIZE: int = 50
+
     @field_validator("JWT_SECRET_KEY")
     @classmethod
     def validate_jwt_secret(cls, v: str) -> str:
@@ -112,6 +121,17 @@ class Settings(BaseSettings):
                 )
             if not self.CORS_ORIGINS:
                 raise ValueError("CORS_ORIGINS cannot be empty in production.")
+        return self
+
+    @model_validator(mode="after")
+    def validate_neo4j_configuration(self):
+        if self.NEO4J_ENABLED:
+            if not self.NEO4J_URI or not self.NEO4J_URI.strip():
+                raise ValueError("NEO4J_URI must be configured when NEO4J_ENABLED is True.")
+            if not self.NEO4J_PASSWORD or not self.NEO4J_PASSWORD.strip():
+                raise ValueError("NEO4J_PASSWORD must be configured when NEO4J_ENABLED is True.")
+            if self.NEO4J_CONNECTION_TIMEOUT_SECONDS <= 0:
+                raise ValueError("NEO4J_CONNECTION_TIMEOUT_SECONDS must be positive.")
         return self
 
 
