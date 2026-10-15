@@ -1,0 +1,80 @@
+{
+  "phase": "Phase C.3 — Ragas Infrastructure Setup",
+  "environment": "conda:med-env",
+  "hardware_constraints": {
+    "host_platform": "macOS-15.7.9-arm64",
+    "cpu_cores": 10,
+    "memory_gb": 16,
+    "memory_architecture": "Apple Silicon Unified Memory",
+    "recommended_concurrency": 1
+  },
+  "generator": {
+    "role": "Response Generation for Baseline and Graph Retrieval",
+    "provider": "ollama",
+    "model_name": "llama3.1:8b",
+    "model_digest": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+    "parameter_size": "8.0B",
+    "quantization": "Q4_K_M",
+    "context_window": 131072,
+    "base_url": "http://localhost:11434",
+    "generation_settings": {
+      "temperature": 0.0,
+      "num_predict": 512,
+      "top_p": 1.0,
+      "stream": false,
+      "timeout_seconds": 180.0
+    }
+  },
+  "judge": {
+    "role": "Automated Ragas Metric Evaluation",
+    "primary_local_judge": {
+      "provider": "ollama",
+      "model_name": "llama3.1:8b",
+      "integration_wrapper": "langchain_community.chat_models.ChatOllama -> ragas.llms.LangchainLLMWrapper",
+      "temperature": 0.0,
+      "base_url": "http://localhost:11434",
+      "status": "VALIDATED_FUNCTIONAL"
+    },
+    "alternative_local_judge_evaluated": {
+      "provider": "ollama",
+      "model_name": "mistral:latest",
+      "status": "DISQUALIFIED_OUTPUT_PARSER_ERROR",
+      "disqualification_reason": "Mistral outputs float values (e.g. 0.5) for NLI verdict fields, violating Ragas Pydantic integer/binary schema validation."
+    },
+    "optional_hosted_judge_alternatives": {
+      "gemini": {
+        "provider": "google-generative-ai",
+        "models": ["gemini-2.0-flash", "gemini-1.5-flash"],
+        "status": "CONFIGURED_SUBJECT_TO_USER_APPROVAL",
+        "credential_source": "environment_variable:GEMINI_API_KEY",
+        "requires_paid_external_transmission": false
+      },
+      "groq": {
+        "provider": "groq",
+        "models": ["llama-3.3-70b-versatile"],
+        "status": "CONFIGURED_SUBJECT_TO_USER_APPROVAL",
+        "credential_source": "environment_variable:GROQ_API_KEY",
+        "requires_paid_external_transmission": false
+      }
+    }
+  },
+  "embeddings": {
+    "role": "Semantic Similarity & Relevancy Computation",
+    "provider": "sentence-transformers / huggingface",
+    "model_name": "all-MiniLM-L6-v2",
+    "vector_dimension": 384,
+    "integration_wrapper": "langchain_community.embeddings.HuggingFaceEmbeddings -> ragas.embeddings.LangchainEmbeddingsWrapper",
+    "cache_location": "local_disk_cache",
+    "local_files_only": true,
+    "status": "VALIDATED_FUNCTIONAL"
+  },
+  "dataset_adapter": {
+    "source_module": "evaluation.ragas.phase_c_3.dataset_adapter",
+    "target_ragas_version": "0.2.15",
+    "dataset_formats_supported": [
+      "datasets.Dataset",
+      "ragas.dataset_schema.EvaluationDataset"
+    ],
+    "status": "VALIDATED_FUNCTIONAL"
+  }
+}

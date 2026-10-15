@@ -1,0 +1,51 @@
+{
+  "phase": "Phase C.3 \u2014 Ragas Evaluation Infrastructure Setup",
+  "timestamp": "2026-10-15T20:21:00+05:30",
+  "status": "PASSED",
+  "conda_environment": "med-env",
+  "python_version": "3.10.18",
+  "ragas_version": "0.2.15",
+  "dependencies_verified": {
+    "ragas": "0.2.15",
+    "datasets": "3.6.0",
+    "langchain": "1.4.6",
+    "langchain_core": "1.6.10",
+    "langchain_community": "0.3.31",
+    "sentence_transformers": "5.1.0",
+    "transformers": "4.56.1",
+    "huggingface_hub": "0.36.2",
+    "pydantic": "2.11.9",
+    "torch": "2.8.0"
+  },
+  "model_roles": {
+    "generator": "llama3.1:8b (local Ollama REST API)",
+    "judge": "llama3.1:8b (local ChatOllama -> LangchainLLMWrapper)",
+    "embeddings": "all-MiniLM-L6-v2 (local HuggingFaceEmbeddings -> LangchainEmbeddingsWrapper)"
+  },
+  "smoke_test_validation": {
+    "overall_status": "PASSED",
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "synthetic_faithfulness": 1.0,
+    "synthetic_answer_relevancy": 1.0
+  },
+  "compliance_checks": {
+    "gold_judgments_zero_bytes": true,
+    "gold_judgments_byte_size": 0,
+    "entity_resolution_untouched": true,
+    "production_code_unmodified": true,
+    "benchmark_labels_unmodified": true,
+    "narrative_references_count": 50,
+    "no_secrets_in_artifacts": true,
+    "zero_full_benchmark_answers_generated": true
+  },
+  "artifact_sha256_manifest": {
+    "setup_report.md": "706cdd863831c75d203d3ab07c971ed5e070f35318486dd2ada104cc125ec2e6",
+    "metric_contract.md": "ed956be282e7fed08aa79022ef24898abfbfd7345aa8626dc3d0eaae62a87ac0",
+    "model_configuration.json": "f9a8b61afd5c8f557e3a9ba9176f1158fd55bb5074ebacbd218ae4c59c65b654",
+    "requirements-evaluation.txt": "eb4e7c1a9882cdb3ad87db6760742f1eba790713cd408b380c3c9635dd5e7dcf",
+    "dataset_adapter.py": "b9ad488aaa44108b2cdc1654cba5755b7578708766ada8af41d817d0a3faf171",
+    "smoke_test.py": "a92c41c00437b4189011a5a58ff905655c4afcd8b03171131d3d929b2b74c349",
+    "smoke_test_results.json": "bb863f4ba557649d1eee237bb55cbc553fd2b2a1b4f5970c0a14ea7eeb5dbf87"
+  }
+}
