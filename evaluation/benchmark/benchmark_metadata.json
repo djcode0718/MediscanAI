@@ -1,0 +1,36 @@
+{
+  "benchmark_name": "MediScanAI Ground-Truth Retrieval Benchmark",
+  "benchmark_version": "1.0.0",
+  "phase": "Phase A - Ground-Truth Benchmark Design & Dataset",
+  "sampling_seed": 42,
+  "source_provenance": {
+    "drugs_dataset": "data/drugs_faiss_data.jsonl",
+    "diseases_dataset": "data/diseases_faiss_data.jsonl",
+    "drug_dict_dataset_note": "data/drug_dict_faiss_data.jsonl excluded from graph ground truth per repository constraints."
+  },
+  "counts": {
+    "total_candidate_queries": 50,
+    "total_candidate_judgments": 57,
+    "total_reviewed_gold_judgments": 0,
+    "queries_by_category": {
+      "drug_brand_lookup": 5,
+      "drug_generic_lookup": 5,
+      "active_ingredient_lookup": 5,
+      "brand_generic_ingredient_relationship": 5,
+      "single_symptom_disease_retrieval": 5,
+      "multi_symptom_disease_retrieval": 5,
+      "synonym_wording_variants": 5,
+      "ambiguous_queries": 5,
+      "insufficient_evidence_unanswerable": 5,
+      "graph_relevant": 3,
+      "graph_neutral": 2
+    }
+  },
+  "labeling_status": "provisional_unverified_candidates",
+  "known_limitations_and_disclosures": [
+    "All candidate evidence judgments in candidate_judgments.jsonl are unverified candidate associations and must NOT be interpreted as human-reviewed ground truth.",
+    "gold_judgments.jsonl contains 0 rows pending clinical human adjudication.",
+    "Candidate judgments are susceptible to incomplete-ground-truth bias until top-K pooling from dense FAISS, BM25, and Neo4j graph retrieval is conducted in Phase B.",
+    "Queries are sampled across 11 key clinical and structural retrieval patterns but do not represent the full diversity of general medical dialogue."
+  ]
+}

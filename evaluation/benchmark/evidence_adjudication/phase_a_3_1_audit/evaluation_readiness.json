@@ -1,0 +1,52 @@
+{
+  "audit_summary": {
+    "audit_phase": "Phase A.3.1",
+    "dataset_audited": "evaluation/benchmark/evidence_adjudication/phase_a_3/",
+    "overall_decision": "PASS",
+    "audit_timestamp": "2026-10-15T01:12:00Z"
+  },
+  "audit_decisions": {
+    "audit_1_dataset_integrity": {
+      "status": "PASS",
+      "details": "All 62 judgments, 50 queries, 57 candidates, and 5 negative controls accounted for with exact ID parity. Provenance flags human_reviewed: false and adjudicator_type: ai_assisted_external_evidence strictly preserved."
+    },
+    "audit_2_source_registry_reconciliation": {
+      "status": "PASS",
+      "details": "35 unique source records reconciled against 62 judgment references. Discrepancy in Phase A.3 summary table (reported 34 vs 35) explained: DailyMed negative control NC-043 was grouped under FDA Approved Drug Labeling rather than the DailyMed product tier."
+    },
+    "audit_3_evidence_support": {
+      "status": "PASS",
+      "details": "21-record sample (33.9% coverage, 100% of grade changes and 100% of negative controls) verified against active Tier 1 medical repositories. Content and rationales conform to benchmark relevance rubrics and Rule 4.2."
+    },
+    "audit_4_evaluation_harness_compatibility": {
+      "status": "PASS",
+      "details": "Harness architecture supports separate evaluation track via a non-mutating adapter without writing to gold_judgments.jsonl or confusing AI research labels with official gold labels."
+    }
+  },
+  "track_eligibility": {
+    "ai_assisted_evidence_verified_retrieval_evaluation": {
+      "eligible": true,
+      "gold_file_mutated": false,
+      "required_input_file": "evaluation/benchmark/evidence_adjudication/phase_a_3/evidence_verified_judgments.jsonl",
+      "labeling_requirement": "Must be explicitly labeled \"AI-assisted evidence-verified evaluation\""
+    },
+    "official_human_gold_evaluation": {
+      "eligible": false,
+      "reason": "Blocked pending licensed clinician adjudication under Phase A.2 human review protocol."
+    },
+    "ragas_langfuse_phase_c": {
+      "eligible": false,
+      "reason": "Blocked pending authorization of Phase C."
+    }
+  },
+  "adapter_implementation_plan": {
+    "target_file": "evaluation/retrieval/run_retrieval_evaluation.py",
+    "required_changes": [
+      "Parameterize judgment loading: add judgments_path: Optional[Path] = None and allowed_statuses: Optional[Set[str]] = None.",
+      "Support research evaluation mode: when judgments_path is specified, load from evidence_verified_judgments.jsonl accepting statuses {\"evidence_verified\", \"grade_changed_after_research\", \"negative_control_verified\"}.",
+      "Preserve official gold path: when judgments_path is None, default to gold_judgments.jsonl requiring judgment_status == \"human_reviewed\".",
+      "Metadata isolation: write evaluation_track (\"ai_assisted_evidence_verified\" vs \"human_reviewed_gold\") to run_metadata.json and summary outputs."
+    ],
+    "modifications_in_this_phase": "None (read-only audit phase)."
+  }
+}

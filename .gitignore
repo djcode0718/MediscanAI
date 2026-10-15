@@ -67,3 +67,7 @@ indexes/
 inspect_mediscanai_data.py
 inspect_mediscanai_data.py.save
 mediscanai_data_inventory.txt
+
+# Evaluation run output directories
+evaluation/results/
+

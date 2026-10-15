@@ -1,0 +1,199 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MediScanAIBenchmarkSchema",
+  "description": "Validation schemas for MediScanAI Phase A retrieval benchmark records.",
+  "definitions": {
+    "CandidateQuery": {
+      "type": "object",
+      "required": [
+        "case_id",
+        "query",
+        "query_category",
+        "retrieval_task",
+        "expected_evidence_types",
+        "candidate_gold_evidence_ids",
+        "labeling_status",
+        "rationale",
+        "source_provenance"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "type": "string",
+          "pattern": "^MED-BENCH-[0-9]{3}$",
+          "description": "Stable unique identifier for the benchmark evaluation case."
+        },
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Natural language query submitted to the retrieval pipeline."
+        },
+        "query_category": {
+          "type": "string",
+          "enum": [
+            "drug_brand_lookup",
+            "drug_generic_lookup",
+            "active_ingredient_lookup",
+            "brand_generic_ingredient_relationship",
+            "single_symptom_disease_retrieval",
+            "multi_symptom_disease_retrieval",
+            "synonym_wording_variants",
+            "ambiguous_queries",
+            "insufficient_evidence_unanswerable",
+            "graph_relevant",
+            "graph_neutral"
+          ],
+          "description": "Targeted retrieval evaluation category."
+        },
+        "retrieval_task": {
+          "type": "string",
+          "minLength": 5,
+          "description": "Explicit clinical or operational retrieval objective."
+        },
+        "expected_evidence_types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["drug_product", "disease_chunk", "active_ingredient", "none"]
+          },
+          "description": "Types of evidence required to satisfy the retrieval task."
+        },
+        "candidate_gold_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Composite IDs of candidate evidence records grounded in source data."
+        },
+        "labeling_status": {
+          "type": "string",
+          "enum": ["unverified_candidate", "human_reviewed"],
+          "description": "Verification status of the query and candidate set."
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 5,
+          "description": "Clinical or system rationale for including this case."
+        },
+        "source_provenance": {
+          "type": "string",
+          "minLength": 3,
+          "description": "Verifiable source dataset location and record identifier."
+        },
+        "ambiguity_notes": {
+          "type": ["string", "null"],
+          "description": "Clinical caveats, edge cases, or safety considerations."
+        }
+      }
+    },
+    "EvidenceJudgment": {
+      "type": "object",
+      "required": [
+        "case_id",
+        "query",
+        "query_category",
+        "evidence_id",
+        "evidence_type",
+        "source_record_id",
+        "relevance_grade",
+        "evidence_excerpt",
+        "judgment_status",
+        "reviewer_id",
+        "reviewed_at",
+        "judgment_rationale"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "type": "string",
+          "pattern": "^MED-BENCH-[0-9]{3}$",
+          "description": "Associated benchmark case identifier."
+        },
+        "query": {
+          "type": "string",
+          "minLength": 1
+        },
+        "query_category": {
+          "type": "string"
+        },
+        "evidence_id": {
+          "type": "string",
+          "pattern": "^(drug_[0-9]+|disease_chunk_[0-9]+|ingredient_[a-zA-Z0-9_]+)$",
+          "description": "Composite unique ID identifying the specific evidence record."
+        },
+        "evidence_type": {
+          "type": "string",
+          "enum": ["drug_product", "disease_chunk", "active_ingredient"]
+        },
+        "source_record_id": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Integer primary key in the source JSONL dataset."
+        },
+        "relevance_grade": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3,
+          "description": "Graded relevance: 3=Directly relevant, 2=Relevant supporting, 1=Weakly related, 0=Irrelevant."
+        },
+        "evidence_excerpt": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Concise factual excerpt from the source record."
+        },
+        "judgment_status": {
+          "type": "string",
+          "enum": ["unverified_candidate", "human_reviewed"],
+          "description": "Strict verification boundary."
+        },
+        "reviewer_id": {
+          "type": ["string", "null"],
+          "description": "Human reviewer identifier; must be null for unverified candidates."
+        },
+        "reviewed_at": {
+          "type": ["string", "null"],
+          "description": "ISO timestamp of human adjudication; must be null for unverified candidates."
+        },
+        "judgment_rationale": {
+          "type": "string",
+          "minLength": 5,
+          "description": "Justification for assigned relevance grade."
+        }
+      }
+    },
+    "BenchmarkMetadata": {
+      "type": "object",
+      "required": [
+        "benchmark_name",
+        "benchmark_version",
+        "phase",
+        "sampling_seed",
+        "source_provenance",
+        "counts",
+        "labeling_status",
+        "known_limitations_and_disclosures"
+      ],
+      "properties": {
+        "benchmark_name": { "type": "string" },
+        "benchmark_version": { "type": "string" },
+        "phase": { "type": "string" },
+        "sampling_seed": { "type": "integer" },
+        "source_provenance": { "type": "object" },
+        "counts": {
+          "type": "object",
+          "required": [
+            "total_candidate_queries",
+            "total_candidate_judgments",
+            "total_reviewed_gold_judgments",
+            "queries_by_category"
+          ]
+        },
+        "labeling_status": { "type": "string" },
+        "known_limitations_and_disclosures": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

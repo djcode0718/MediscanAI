@@ -1,0 +1,46 @@
+{
+  "audit_timestamp": "2026-10-14T22:15:00Z",
+  "unique_benchmark_cases": 50,
+  "canonical_case_range": "MED-BENCH-001 to MED-BENCH-050",
+  "candidate_judgments_count": 57,
+  "proposed_judgments_count": 62,
+  "reviewer_packet_count": 62,
+  "source_evidence_count": 35,
+  "gold_file_path": "evaluation/benchmark/gold_judgments.jsonl",
+  "gold_file_size_bytes": 0,
+  "proposed_vs_reviewer_packet_parity_mismatches": 0,
+  "negative_control_rows_count": 5,
+  "preliminary_status_rows_count": 62,
+  "all_records_preliminary_and_null_reviewed_at": true,
+  "reconciliation": {
+    "total_unique_cases": 50,
+    "nonclinical_cases_count": 29,
+    "clinical_cases_count": 21,
+    "case_overlap_count": 0,
+    "case_overlap_list": [],
+    "nonclinical_rows_count": 37,
+    "clinical_rows_count": 25,
+    "total_rows": 62
+  },
+  "grade_distribution": {
+    "3": 45,
+    "2": 11,
+    "1": 1,
+    "0": 5
+  },
+  "channel_distribution": {
+    "both": 11,
+    "graph": 7,
+    "unretrieved_in_top5": 25,
+    "baseline": 14,
+    "none": 5
+  },
+  "git_state": {
+    "status_porcelain_lines": [
+      "?? evaluation/",
+      "?? tests/unit/test_evaluation_benchmark.py",
+      "?? tests/unit/test_retrieval_evaluation.py"
+    ],
+    "clean_working_tree_for_tracked": true
+  }
+}
