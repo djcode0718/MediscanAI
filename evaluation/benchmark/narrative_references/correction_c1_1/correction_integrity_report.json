@@ -1,0 +1,30 @@
+{
+  "report_timestamp_utc": "2026-10-15T12:38:06.034898+00:00",
+  "phase": "Phase C.1.1 \u2014 Review Audit Findings and Prepare Approved Corrections",
+  "status": "proposed_ready_for_review",
+  "baseline_dataset": {
+    "path": "evaluation/benchmark/narrative_references/reference_answers.jsonl",
+    "sha256": "e1008637468bafb58f6345279133108197a981384520d63a6a17630a5883f0bc",
+    "record_count": 50
+  },
+  "proposed_dataset": {
+    "path": "evaluation/benchmark/narrative_references/correction_c1_1/reference_answers_proposed.jsonl",
+    "sha256": "14fb0654f217ac887317d80fd036b9a5d19ff151932db53ba0e80fe08368dd23",
+    "record_count": 50
+  },
+  "validation_checks": {
+    "total_records_equal_50": true,
+    "case_ids_aligned_with_candidates": true,
+    "character_parity_reference_and_reference_answer": true,
+    "gold_judgments_zero_bytes": true,
+    "original_reference_answers_untouched": true,
+    "provenance_flags_properly_unupgraded": true
+  },
+  "metrics_summary": {
+    "material_changes_logged": 27,
+    "source_claim_mappings_count": 166,
+    "unresolved_findings_count": 4,
+    "sources_replaced_count": 7,
+    "internal_ids_removed_count": 8
+  }
+}

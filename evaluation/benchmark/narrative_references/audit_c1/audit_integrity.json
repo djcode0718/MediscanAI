@@ -1,0 +1,67 @@
+{
+  "audit_timestamp_utc": "2026-10-15T12:29:32.370254+00:00",
+  "phase": "Phase C.1 \u2014 Independent Audit of Narrative Reference Answers",
+  "status": "completed",
+  "inputs_examined": {
+    "evaluation/benchmark/narrative_references/reference_answers.jsonl": {
+      "sha256": "e1008637468bafb58f6345279133108197a981384520d63a6a17630a5883f0bc",
+      "size_bytes": 128335
+    },
+    "evaluation/benchmark/narrative_references/README.md": {
+      "sha256": "8316f660a59a2b07f07512a929bfadc7b5910aecf70ef6f727f7497853c07451",
+      "size_bytes": 3658
+    },
+    "evaluation/benchmark/narrative_references/reference_answers_review.csv": {
+      "sha256": "3f6f069fe16acede058c41432adaa0dc2d3a18bde68c6bcb503d6bd9cddcdf52",
+      "size_bytes": 35225
+    },
+    "evaluation/benchmark/narrative_references/integrity_check.json": {
+      "sha256": "05c35465754df4844a4b0bdb571e6b437b6d8edf8f3a1f8faaaaa38306d5b6db",
+      "size_bytes": 911
+    },
+    "evaluation/benchmark/candidate_queries.jsonl": {
+      "sha256": "001745806cdc9aa02f17127468c2c49737f16041a252975fcaf490559ecdc4ca",
+      "size_bytes": 27935
+    },
+    "evaluation/benchmark/gold_judgments.jsonl": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    }
+  },
+  "dataset_metrics": {
+    "total_cases_evaluated": 50,
+    "total_source_associations": 68,
+    "total_unique_source_urls": 34,
+    "total_claims_assessed": 132
+  },
+  "claim_verification_counts": {
+    "supported": 114,
+    "partially_supported": 9,
+    "unsupported": 9,
+    "contradicted": 0,
+    "source_unavailable": 0,
+    "not_independently_verified": 0
+  },
+  "case_suitability_counts": {
+    "ready_for_research_review": 36,
+    "needs_correction": 7,
+    "needs_clinical_review": 1,
+    "insufficient_evidence": 0,
+    "ambiguous_or_unanswerable": 6
+  },
+  "live_web_verification": {
+    "executed": true,
+    "method": "Live HTTP/HTTPS requests with user-agent simulation and curl HTTP/2 validation",
+    "urls_probed": 34,
+    "http_success_count": 34,
+    "notes": "All 34 unique URLs were resolved live. Two critical URL content mismatches were identified (EMC 4155 and MedlinePlus 000202)."
+  },
+  "integrity_confirmations": {
+    "reference_answers_modified": false,
+    "candidate_queries_modified": false,
+    "gold_judgments_modified": false,
+    "gold_judgments_empty_zero_bytes": true,
+    "entity_resolution_accessed": false,
+    "uncompleted_checks": []
+  }
+}

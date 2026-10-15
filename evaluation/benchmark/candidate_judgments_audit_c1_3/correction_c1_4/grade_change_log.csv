@@ -1,0 +1,16 @@
+case_id,query,evidence_id,evidence_type,old_relevance_grade,new_relevance_grade,status,reason
+MED-BENCH-015,Lisinopril,drug_473,drug_product,3,2,APPLIED,Combination product (Lisinopril + HCTZ) is supporting partner (Grade 2) for single-agent query 'Lisinopril'.
+MED-BENCH-017,What generic drug is in Advil?,drug_44,drug_product,3,2,APPLIED,Generic Ibuprofen record provides supporting context (Grade 2); brand record drug_2765 directly answers brand lookup.
+MED-BENCH-019,Is Amoxil brand for amoxicillin?,drug_353,drug_product,3,2,APPLIED,Generic Amoxicillin record provides supporting context (Grade 2); brand record drug_13249 directly answers brand lookup.
+MED-BENCH-021,oliguria,disease_chunk_2501,disease_chunk,3,1,APPLIED,Rule 4.2: Candidate chunk text omits oliguria; clinical inference of unstated symptoms is prohibited. Weak contextual overlap.
+MED-BENCH-029,"oliguria, shortness of breath, and hyperkalemia",disease_chunk_2501,disease_chunk,3,1,APPLIED,"Rule 4.2: Candidate chunk text omits oliguria, shortness of breath, and hyperkalemia. Weak contextual overlap."
+MED-BENCH-032,painful swollen veins in rectal area with bleeding,disease_chunk_201,disease_chunk,3,2,APPLIED,"Partial symptom match: Chunk 201 contains rectal pain and swelling, but omits bleeding."
+MED-BENCH-034,kidney failure with reduced urine output,disease_chunk_2501,disease_chunk,3,2,APPLIED,"Disease entity matches query, but candidate chunk text omits the queried symptom (reduced urine output)."
+MED-BENCH-035,"missed periods, trouble getting pregnant, and weight gain",disease_chunk_3001,disease_chunk,3,2,APPLIED,"Partial symptom match: Chunk 3001 contains amenorrhea and infertility, but omits weight gain."
+MED-BENCH-037,Cough and fever,disease_chunk_248,disease_chunk,3,2,APPLIED,"Partial symptom match: Chunk 248 contains cough, but omits fever from symptoms array."
+MED-BENCH-037,Cough and fever,disease_chunk_501,disease_chunk,3,1,APPLIED,Rule 4.2: Chunk 501 omits cough; weak contextual overlap for acute cough and fever presentation.
+MED-BENCH-038,Chest pain,disease_chunk_2472,disease_chunk,3,2,APPLIED,"Provisional Grade 2 pending qualified clinical review: Chunk documents chest tightness, not acute chest pain."
+MED-BENCH-038,Chest pain,disease_chunk_2501,disease_chunk,3,1,APPLIED,Provisional Grade 1 pending qualified clinical review: Renal fluid overload is a peripheral cause of chest discomfort.
+MED-BENCH-039,Fatigue and dizziness,disease_chunk_89,disease_chunk,3,1,APPLIED,Rule 4.2: Chunk 89 omits dizziness; weak contextual overlap for fatigue + dizziness presentation.
+MED-BENCH-039,Fatigue and dizziness,disease_chunk_160,disease_chunk,3,2,APPLIED,"Partial symptom match: Chunk 160 contains fatigue, but omits dizziness."
+MED-BENCH-047,Diseases presenting both oliguria and hyperkalemia,disease_chunk_2501,disease_chunk,3,0,APPLIED,Relevance Mismatch: Chunk omits both oliguria and hyperkalemia; fails multi-symptom intersection query.

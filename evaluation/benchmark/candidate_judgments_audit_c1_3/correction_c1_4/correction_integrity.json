@@ -1,0 +1,39 @@
+{
+  "correction_timestamp_utc": "2026-10-15T13:49:55.311756+00:00",
+  "phase": "Phase C.1.4 \u2014 Apply Candidate Judgment Grade Corrections",
+  "status": "validated_and_promoted",
+  "baseline_dataset": {
+    "file_path": "evaluation/benchmark/candidate_judgments.jsonl",
+    "sha256": "8d4557dfd0e93f9e0578a3d8af524a9797687233fc562bbbbc1ceae21367de84",
+    "size_bytes": 35587,
+    "record_count": 57
+  },
+  "backup_dataset": {
+    "file_path": "evaluation/benchmark/candidate_judgments_audit_c1_3/correction_c1_4/candidate_judgments_baseline.jsonl",
+    "sha256": "8d4557dfd0e93f9e0578a3d8af524a9797687233fc562bbbbc1ceae21367de84",
+    "record_count": 57
+  },
+  "corrected_dataset": {
+    "file_path": "evaluation/benchmark/candidate_judgments_audit_c1_3/correction_c1_4/candidate_judgments_corrected.jsonl",
+    "sha256": "504ec88f4e5c72288f7ed4dcc8b36adc8a4c96dca7cec7edcc8b9574481b835a",
+    "record_count": 57
+  },
+  "changes_summary": {
+    "total_judgments": 57,
+    "applied_changes_count": 15,
+    "blocked_changes_count": 0,
+    "unchanged_judgments_count": 42,
+    "grade_distribution": {
+      "grade_3": 42,
+      "grade_2": 9,
+      "grade_1": 5,
+      "grade_0": 1
+    }
+  },
+  "validations": {
+    "record_count_57": true,
+    "case_evidence_pairs_intact": true,
+    "gold_judgments_zero_bytes": true,
+    "entity_resolution_unaccessed": true
+  }
+}
