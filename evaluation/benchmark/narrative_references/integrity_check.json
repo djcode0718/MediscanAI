@@ -1,0 +1,25 @@
+{
+  "dataset": "MediScanAI Narrative Reference Answers",
+  "created_date": "2026-10-15",
+  "record_count": 50,
+  "unique_case_ids": 50,
+  "case_ids_contiguous": true,
+  "all_have_reference": true,
+  "all_have_sources": true,
+  "all_have_key_facts": true,
+  "all_marked_not_human_reviewed": true,
+  "all_marked_not_clinically_reviewed": true,
+  "official_gold_file_modified": false,
+  "answerability_counts": {
+    "answerable": 20,
+    "answerable_with_caveat": 21,
+    "ambiguous": 4,
+    "unanswerable": 5
+  },
+  "sha256_reference_answers_jsonl": "e1008637468bafb58f6345279133108197a981384520d63a6a17630a5883f0bc",
+  "limitations": [
+    "Automated structural validation is not clinical validation.",
+    "Sources are cited for traceability; references still warrant source-by-source human review before publication.",
+    "This dataset must remain separate from official human-reviewed gold judgments."
+  ]
+}
