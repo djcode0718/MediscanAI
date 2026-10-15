@@ -1,0 +1,150 @@
+{
+  "phase": "Phase C.2 \u2014 Controlled Generator Model Comparison Pilot",
+  "timestamp": "2026-10-15T19:54:00+05:30",
+  "status": "PASSED",
+  "models_evaluated": [
+    "llama3.1:8b",
+    "mistral:latest"
+  ],
+  "runtime_environment": {
+    "platform": "macOS-15.7.9-arm64",
+    "host_hardware": "Apple Silicon (Mac16,12), 10 CPU cores, 16 GB RAM",
+    "ollama_version": "0.30.5",
+    "ollama_base_url": "http://localhost:11434"
+  },
+  "execution_counts": {
+    "selected_cases": 10,
+    "models": 2,
+    "total_generation_runs": 20,
+    "successful_runs": 20,
+    "failed_runs": 0,
+    "retried_runs": 0
+  },
+  "compliance_checks": {
+    "gold_judgments_zero_bytes": true,
+    "gold_judgments_byte_size": 0,
+    "entity_resolution_untouched": true,
+    "production_code_unmodified": true,
+    "benchmark_labels_unmodified": true,
+    "temperature_zero_verified": true,
+    "byte_identical_context_supplied_to_both_models": true,
+    "no_reference_answers_leaked_to_generator": true,
+    "mandatory_warning_header_compliance": {
+      "llama3.1:8b": "10/10 (100%)",
+      "mistral:latest": "10/10 (100%)"
+    },
+    "mandatory_warning_verbatim_compliance": {
+      "llama3.1:8b": "10/10 (100%)",
+      "mistral:latest": "10/10 (100%)"
+    }
+  },
+  "paired_case_verifications": [
+    {
+      "case_id": "MED-BENCH-001",
+      "query": "Lipitor",
+      "context_hash_match": true,
+      "query_text_match": true,
+      "llama_prompt_hash": "29a61b11ce4b42a7947c3a8a1ea91d197a50f76709ef13a71bdead30c9969928",
+      "mistral_prompt_hash": "29a61b11ce4b42a7947c3a8a1ea91d197a50f76709ef13a71bdead30c9969928",
+      "prompts_identical": true
+    },
+    {
+      "case_id": "MED-BENCH-017",
+      "query": "What generic drug is in Advil?",
+      "context_hash_match": true,
+      "query_text_match": true,
+      "llama_prompt_hash": "04e25fbd5375d7c49f314e64fa078f19408a3e693e52e140974ade7c731190a5",
+      "mistral_prompt_hash": "04e25fbd5375d7c49f314e64fa078f19408a3e693e52e140974ade7c731190a5",
+      "prompts_identical": true
+    },
+    {
+      "case_id": "MED-BENCH-015",
+      "query": "Lisinopril",
+      "context_hash_match": true,
+      "query_text_match": true,
+      "llama_prompt_hash": "746af64411b68d7ef5a8927a43b728b7cb519c8cb50d0023f8b651b2c6dc0593",
+      "mistral_prompt_hash": "746af64411b68d7ef5a8927a43b728b7cb519c8cb50d0023f8b651b2c6dc0593",
+      "prompts_identical": true
+    },
+    {
+      "case_id": "MED-BENCH-025",
+      "query": "intense joint pain in foot",
+      "context_hash_match": true,
+      "query_text_match": true,
+      "llama_prompt_hash": "c5cbcdc292f99c3f40d10afedc3a103219d7f43f29d08da737660f0d9b741d1e",
+      "mistral_prompt_hash": "c5cbcdc292f99c3f40d10afedc3a103219d7f43f29d08da737660f0d9b741d1e",
+      "prompts_identical": true
+    },
+    {
+      "case_id": "MED-BENCH-027",
+      "query": "absence of menstruation, infertility, and pelvic pain",
+      "context_hash_match": true,
+      "query_text_match": true,
+      "llama_prompt_hash": "ab67fc229cd19f67721abb4e06d4abc18fbaf3e27d78e9711dc61777034cd61b",
+      "mistral_prompt_hash": "ab67fc229cd19f67721abb4e06d4abc18fbaf3e27d78e9711dc61777034cd61b",
+      "prompts_identical": true
+    },
+    {
+      "case_id": "MED-BENCH-032",
+      "query": "painful swollen veins in rectal area with bleeding",
+      "context_hash_match": true,
+      "query_text_match": true,
+      "llama_prompt_hash": "2ef905f1df3845e93b197e8f23d72f00808286f1ab231ac873e45664ce965714",
+      "mistral_prompt_hash": "2ef905f1df3845e93b197e8f23d72f00808286f1ab231ac873e45664ce965714",
+      "prompts_identical": true
+    },
+    {
+      "case_id": "MED-BENCH-037",
+      "query": "Cough and fever",
+      "context_hash_match": true,
+      "query_text_match": true,
+      "llama_prompt_hash": "338d5a4f32e5d236eab17c8c755f81a95bb6beca2208106e28170460be35e633",
+      "mistral_prompt_hash": "338d5a4f32e5d236eab17c8c755f81a95bb6beca2208106e28170460be35e633",
+      "prompts_identical": true
+    },
+    {
+      "case_id": "MED-BENCH-039",
+      "query": "Fatigue and dizziness",
+      "context_hash_match": true,
+      "query_text_match": true,
+      "llama_prompt_hash": "f86f9ee53a978c62e404329ff4868dc7907a41a59c2dbcdfd1ee11897fced5ed",
+      "mistral_prompt_hash": "f86f9ee53a978c62e404329ff4868dc7907a41a59c2dbcdfd1ee11897fced5ed",
+      "prompts_identical": true
+    },
+    {
+      "case_id": "MED-BENCH-041",
+      "query": "NonexistentDrugZ 500mg dosage and administration",
+      "context_hash_match": true,
+      "query_text_match": true,
+      "llama_prompt_hash": "d24296b9df099f466a4b024797579b2bde07a337379792c59ab226a9991d2a4e",
+      "mistral_prompt_hash": "d24296b9df099f466a4b024797579b2bde07a337379792c59ab226a9991d2a4e",
+      "prompts_identical": true
+    },
+    {
+      "case_id": "MED-BENCH-038",
+      "query": "Chest pain",
+      "context_hash_match": true,
+      "query_text_match": true,
+      "llama_prompt_hash": "6decdb9fe62442d95cd0e1b075827ca57325e863a275a1dc8500594823e381ec",
+      "mistral_prompt_hash": "6decdb9fe62442d95cd0e1b075827ca57325e863a275a1dc8500594823e381ec",
+      "prompts_identical": true
+    }
+  ],
+  "artifact_sha256_manifest": {
+    "pilot_plan.md": "953da0d259ceac2f2eb2af25c850241c727c6155f8a541f2be81c135cdfd80e1",
+    "selected_cases.jsonl": "5006cb84634e66fbe30dbe4df75bb52e0052532dcd49f6f6fec9b680e0791f2f",
+    "evidence_contexts.jsonl": "b7cd23f1b989f99aac4198a69a254e305d0c911729ba4f49638fa42cf90715a2",
+    "generation_runs.jsonl": "9751451846fcfbb8eec29452498ed5d7f1ff5927576fc446b45469d897b59128",
+    "scoring_rubric.md": "44fd217813ad7feaeb2beb944ecc0579d5ca3e957b07afb27785d2e883f107c7",
+    "case_level_scores.csv": "23abada1b5cafd005514995da633099b14bb4a1088a2909f681eb503b86eaadb",
+    "model_comparison.csv": "bc8f4ceb0527adfd370056faf7c75f03d9a3533ba4aacae0980e886d113259d7",
+    "failure_analysis.md": "b58f31f6d612ece0b65554c9c14c7e8a8cac3568f8dd2886ec483c49f7be7f46",
+    "recommendation.md": "1ab78ae6624e3460797d28b54dedea67bb876c3e663da3c27954f9bd3618eaa3",
+    "README.md": "6033bcc73acf09a472cccc1744e7254aeb2e7289f001712995c2bac3f162f8fa",
+    "run_pilot.py": "4bfca67cec6e374d6e895771a31212d5a3b9efd66144064c654634de6b653b11"
+  },
+  "recommendation_summary": {
+    "decision": "Llama 3 8B preferred",
+    "rationale": "Strict evidence grounding with zero outside knowledge leakage, superior resistance to distractor noise during negative control abstention, explicit emergency medical escalation guidance, and 48.6% faster generation latency."
+  }
+}

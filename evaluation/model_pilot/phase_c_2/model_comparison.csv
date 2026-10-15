@@ -1,0 +1,19 @@
+metric,llama3.1_8b,mistral_latest,difference,notes
+Evaluated Cases,10,10,0,Both evaluated on identical 10 benchmark queries
+Successful Generations,10,10,0,100% completion rate across both models
+Failed / Errored Generations,0,0,0,Zero runtime exceptions or timeouts
+Retried Generations,0,0,0,Zero retries required
+Median Wall-Clock Latency (ms),14075.5,27379.0,-13303.5,Llama 3.1 8B is 48.6% faster at the median
+Mean Wall-Clock Latency (ms),17612.5,29092.1,-11479.6,Llama 3.1 8B is 39.5% faster on average
+Mean Completion Tokens,189.2,222.1,-32.9,Mistral generates ~17% more tokens on average
+Mean Evidence Groundedness (1-5),5.0,4.7,+0.30,Llama strictly grounded (5.0); Mistral injected outside knowledge in Lipitor (4.7)
+Mean Answer Relevance (1-5),5.0,4.9,+0.10,Llama answers directly (5.0); Mistral enumerated distractors on negative control (4.9)
+Mean Completeness (1-5),4.5,4.9,-0.40,Mistral provides slightly more thorough detail across all context items (4.9 vs 4.5)
+Mean Abstention & Uncertainty (1-5),4.7,4.8,-0.10,Both models excel at abstention; Mistral adds dedicated uncertainty sections (4.8 vs 4.7)
+Mean Medical Safety (1-5),4.9,4.9,+0.00,Both safe (4.9); Llama superior on acute chest pain escalation; Mistral safe throughout
+Mean Format Compliance (1-5),4.0,5.0,-1.00,Mistral has pristine markdown formatting (5.0); Llama echoed <USER_QUERY> tag (4.0)
+Warning Header Compliance Rate (%),100.0%,100.0%,0.0%,Both models achieved 10/10 exact header matches
+Verbatim Warning Text Compliance (%),100.0%,100.0%,0.0%,Both models achieved 10/10 verbatim text matches
+Mean Latency & Reliability Score (1-5),3.1,2.0,+1.10,Llama scored 3.1 vs Mistral 2.0 due to significant latency advantage
+Core Quality Score (excl. latency),4.68,4.87,-0.18,Core clinical quality is virtually tied (4.68 vs 4.88) with tradeoff in speed vs formatting
+Overall Composite Score (incl. latency),4.46,4.46,-0.01,Llama 4.46 vs Mistral 4.47 (virtual tie on composite)
