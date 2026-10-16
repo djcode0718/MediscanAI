@@ -1,0 +1,237 @@
+{
+  "taxonomy_metadata": {
+    "version": "1.0.0",
+    "phase": "Phase D.0",
+    "created_at": "2026-10-16T09:55:00Z",
+    "author": "MediScanAI Retrieval Engineering Team",
+    "purpose": "Evaluation taxonomy and routing specification for medical and pharmaceutical RAG retrieval"
+  },
+  "categories": [
+    {
+      "category_id": "CAT-01-BRAND-LOOKUP",
+      "category_name": "Brand-name lookup",
+      "description": "User provides an exact or colloquial proprietary pharmaceutical brand name seeking product details.",
+      "clinical_objective": "Retrieve the exact commercial drug package records matching the brand identity, manufacturer labeling, and formulation.",
+      "example_queries": [
+        "Lipitor",
+        "Cinzan",
+        "Amoxil",
+        "Advil",
+        "Zyrtec",
+        "What is in Tylenol?"
+      ],
+      "target_indexes": ["drugs", "drug_dict"],
+      "ambiguity_handling_rules": "Do not infer clinical pathology or disease state from a bare brand name. Preserve user focus on product verification.",
+      "safety_constraints": "Never recommend dosage or administration adjustments without verifying the exact active formulation.",
+      "desired_retriever_behavior": "Sparse BM25 exact match should receive high weight; exact brand hit should rank #1; disease index search should be suppressed.",
+      "anti_patterns_to_avoid": "Returning unrelated cardiovascular disease chunks when the user simply asked for 'Lipitor'.",
+      "benchmark_cases_mapped": ["MED-BENCH-001", "MED-BENCH-002", "MED-BENCH-003", "MED-BENCH-004", "MED-BENCH-005"]
+    },
+    {
+      "category_id": "CAT-02-GENERIC-LOOKUP",
+      "category_name": "Generic-name lookup",
+      "description": "User provides the non-proprietary international nonproprietary name (INN) or USAN generic chemical compound name.",
+      "clinical_objective": "Retrieve all approved pharmaceutical products, package inserts, and formulations utilizing the specified generic molecule.",
+      "example_queries": [
+        "Atorvastatin calcium",
+        "Cinnarizine",
+        "Amoxicillin",
+        "Ibuprofen",
+        "Cetirizine hydrochloride"
+      ],
+      "target_indexes": ["drugs", "drug_dict"],
+      "ambiguity_handling_rules": "Preserve chemical salt specificity (e.g., Atorvastatin calcium vs generic statin class) without unsolicited brand promotion.",
+      "safety_constraints": "Do not assert clinical bioequivalence across different salt formulations unless supported by FDA labeling.",
+      "desired_retriever_behavior": "High recall across single-ingredient and combination formulations containing the generic compound.",
+      "anti_patterns_to_avoid": "Truncating generic candidates to 5 items when multiple dosage strengths and combination products exist.",
+      "benchmark_cases_mapped": ["MED-BENCH-006", "MED-BENCH-007", "MED-BENCH-008", "MED-BENCH-009", "MED-BENCH-010"]
+    },
+    {
+      "category_id": "CAT-03-ACTIVE-INGREDIENT-LOOKUP",
+      "category_name": "Active-ingredient lookup",
+      "description": "Query focuses on the pharmacologically active chemical constituent responsible for therapeutic activity.",
+      "clinical_objective": "Retrieve product labeling detailing substance presence, concentration, and pharmaceutical equivalence.",
+      "example_queries": [
+        "Metformin",
+        "Acetaminophen",
+        "Ciprofloxacin",
+        "Omeprazole",
+        "Lisinopril"
+      ],
+      "target_indexes": ["drugs", "drug_dict"],
+      "ambiguity_handling_rules": "Distinguish active pharmacological ingredient from inactive excipients or delivery vehicles.",
+      "safety_constraints": "Highlight maximum daily ingredient thresholds (e.g., 4000mg acetaminophen toxicity ceiling) where safety context is queried.",
+      "desired_retriever_behavior": "Match against `substance_name` and `generic_name` fields in `drugs` index and `drug_dict`.",
+      "anti_patterns_to_avoid": "Retrieving topical disinfectants when an oral systemic active ingredient is requested.",
+      "benchmark_cases_mapped": ["MED-BENCH-011", "MED-BENCH-012", "MED-BENCH-013", "MED-BENCH-014", "MED-BENCH-015"]
+    },
+    {
+      "category_id": "CAT-04-DRUG-PURPOSE-INDICATIONS",
+      "category_name": "Drug purpose and indications",
+      "description": "User inquires what a specific medication is approved or clinically indicated to treat.",
+      "clinical_objective": "Retrieve approved FDA indications and usage sections from official drug package inserts.",
+      "example_queries": [
+        "What is metformin used for?",
+        "Why is atorvastatin prescribed?",
+        "Can amoxicillin treat strep throat?",
+        "What does omeprazole do for the stomach?",
+        "What is lisinopril indication?"
+      ],
+      "target_indexes": ["drugs"],
+      "ambiguity_handling_rules": "Distinguish between FDA-approved primary indications and off-label exploratory usage. Do not extrapolate unproven uses.",
+      "safety_constraints": "Only surface indications present in verifiable source text; do not infer therapeutic claims.",
+      "desired_retriever_behavior": "Cross-Encoder must evaluate `indications_and_usage` text section specifically rather than truncating at token 512.",
+      "anti_patterns_to_avoid": "Returning drug adverse reactions or dosage text while failing to retrieve the actual indication statement.",
+      "benchmark_cases_mapped": ["MED-BENCH-016", "MED-BENCH-017", "MED-BENCH-018", "MED-BENCH-019", "MED-BENCH-020"]
+    },
+    {
+      "category_id": "CAT-05-SYMPTOM-ONLY-QUERY",
+      "category_name": "Symptom-only query",
+      "description": "User states one or more physical symptoms without mentioning a diagnosis or requesting a specific prescription.",
+      "clinical_objective": "Retrieve differential disease candidates, symptometiology, and diagnostic considerations.",
+      "example_queries": [
+        "I have a headache",
+        "dry cough",
+        "pain in lower back",
+        "dizziness and nausea",
+        "fatigue"
+      ],
+      "target_indexes": ["diseases"],
+      "ambiguity_handling_rules": "CRITICAL: Do NOT assume a symptom query is a request for a drug prescription. Preserve clinical ambiguity. Prioritize pathology exploration and differential context over unsolicited pharmaceutical recommendations.",
+      "safety_constraints": "Never recommend high-potency prescription medications (e.g., triptans, opioids, systemic steroids) based solely on an isolated lay symptom query.",
+      "desired_retriever_behavior": "Query `diseases` index exclusively; expand lay terms to clinical concepts (e.g., headache -> cephalalgia); suppress aggressive prescription drug retrieval.",
+      "anti_patterns_to_avoid": "Flooding the prompt with NSAID and migraine medication labels while providing zero disease differential context.",
+      "benchmark_cases_mapped": ["MED-BENCH-021", "MED-BENCH-022", "MED-BENCH-023", "MED-BENCH-024", "MED-BENCH-025"]
+    },
+    {
+      "category_id": "CAT-06-DISEASE-ONLY-QUERY",
+      "category_name": "Disease-only query",
+      "description": "User mentions a disease, medical condition, or confirmed diagnosis seeking clinical overview.",
+      "clinical_objective": "Retrieve clinical pathophysiology, diagnostic criteria, standard symptom presentations, and authorized treatment classes.",
+      "example_queries": [
+        "I have diabetes",
+        "hypertension",
+        "celiac disease",
+        "asthma",
+        "Parkinson's disease"
+      ],
+      "target_indexes": ["diseases", "drugs"],
+      "ambiguity_handling_rules": "Distinguish between acute manifestations and chronic disease management.",
+      "safety_constraints": "Do not suggest self-diagnosis or curative guarantees for chronic systemic conditions.",
+      "desired_retriever_behavior": "Retrieve disease overview chunks from `diseases` and first-line indicated pharmaceutical classes from `drugs`.",
+      "anti_patterns_to_avoid": "Returning surgical procedural records when a general disease definition is requested.",
+      "benchmark_cases_mapped": ["MED-BENCH-026", "MED-BENCH-027", "MED-BENCH-029", "MED-BENCH-030"]
+    },
+    {
+      "category_id": "CAT-07-MULTI-SYMPTOM-QUERY",
+      "category_name": "Multi-symptom query",
+      "description": "User presents a constellation of concurrent symptoms requiring clinical differential association.",
+      "clinical_objective": "Retrieve disease entities whose canonical symptom profile demonstrates high intersectional overlap with the user's multi-symptom presentation.",
+      "example_queries": [
+        "fever, stiff neck, and severe headache",
+        "frequent urination, extreme thirst, and unexplained weight loss",
+        "shortness of breath, wheezing, and chest tightness",
+        "abdominal pain, nausea, and yellowing of eyes"
+      ],
+      "target_indexes": ["diseases"],
+      "ambiguity_handling_rules": "Weight co-occurring symptom overlap; avoid returning conditions that match only a single generic symptom (e.g., fever) while ignoring specific hallmarks (stiff neck).",
+      "safety_constraints": "Screen multi-symptom clusters for emergency red flags (e.g., triad of meningitis, diabetic ketoacidosis, anaphylaxis).",
+      "desired_retriever_behavior": "Dense and sparse multi-term matching over `chunk.symptoms`; score boost for disease chunks matching $\\ge 2$ distinct presentation terms.",
+      "anti_patterns_to_avoid": "Returning 5 different conditions that each match only 'fever' while ignoring the neurological symptom constellation.",
+      "benchmark_cases_mapped": ["MED-BENCH-028", "MED-BENCH-031", "MED-BENCH-032", "MED-BENCH-033", "MED-BENCH-034", "MED-BENCH-035"]
+    },
+    {
+      "category_id": "CAT-08-DRUG-COMPARISON",
+      "category_name": "Drug comparison",
+      "description": "User inquires about similarities, differences, mechanism, or interchangeability between two distinct medications.",
+      "clinical_objective": "Retrieve comparative drug product labels for both entities covering mechanism, indications, safety profiles, and contraindications.",
+      "example_queries": [
+        "difference between advil and tylenol",
+        "ibuprofen vs acetaminophen for fever",
+        "atorvastatin vs rosuvastatin potency",
+        "amoxicillin vs augmentin"
+      ],
+      "target_indexes": ["drugs"],
+      "ambiguity_handling_rules": "Ensure both entities receive balanced retrieval coverage; do not let one entity dominate all 5 candidate slots.",
+      "safety_constraints": "Explicitly identify differences in toxicity pathways (e.g., hepatic risk for acetaminophen vs renal/GI risk for NSAIDs).",
+      "desired_retriever_behavior": "Split query into constituent entities; perform balanced sub-retrievals (e.g., top-3 for Entity A, top-3 for Entity B); merge without suppression.",
+      "anti_patterns_to_avoid": "Returning 5 ibuprofen records and 0 acetaminophen records for an 'Advil vs Tylenol' query.",
+      "benchmark_cases_mapped": ["MED-BENCH-049", "MED-BENCH-050"]
+    },
+    {
+      "category_id": "CAT-09-RELATIONSHIP-QUERIES",
+      "category_name": "Brand/generic or ingredient relationships",
+      "description": "User asks for the structural relationship between commercial brand names, generic chemical names, or active ingredient combinations.",
+      "clinical_objective": "Retrieve cross-referenced product documentation verifying brand-to-generic mappings and active chemical constituents.",
+      "example_queries": [
+        "what is the generic name for Lipitor?",
+        "what active ingredient is in Tylenol?",
+        "is Amoxil the same as amoxicillin?",
+        "what brand names contain ciprofloxacin?"
+      ],
+      "target_indexes": ["drugs", "drug_dict"],
+      "ambiguity_handling_rules": "Directly answer the mapping relationship without extraneous therapeutic or pathological digressions.",
+      "safety_constraints": "Clarify that brand-to-generic chemical equivalence does not automatically guarantee identical inactive excipients in hypersensitive patients.",
+      "desired_retriever_behavior": "Join `drugs` records where `brand_name` matches Query Entity and extract `generic_name` / `substance_name`.",
+      "anti_patterns_to_avoid": "Returning disease monographs or unrelated dosage guidelines when a simple chemical equivalence was queried.",
+      "benchmark_cases_mapped": ["MED-BENCH-036", "MED-BENCH-037"]
+    },
+    {
+      "category_id": "CAT-10-AMBIGUOUS-UNDERSPECIFIED",
+      "category_name": "Ambiguous or underspecified query",
+      "description": "User submits a fragmented, short, or multi-meaning keyword without sufficient context to discern intent.",
+      "clinical_objective": "Retrieve broad representative candidates while signaling the necessity for user disambiguation.",
+      "example_queries": [
+        "pill",
+        "dose",
+        "pain",
+        "rash on body",
+        "capsule 500mg"
+      ],
+      "target_indexes": ["drugs", "diseases"],
+      "ambiguity_handling_rules": "Acknowledge the multiple valid interpretations; retrieve high-level category overviews rather than guessing a specific rare condition.",
+      "safety_constraints": "Never guess a toxic drug dosage or prescribe therapy for an underspecified query.",
+      "desired_retriever_behavior": "Flag query as ambiguous; return diverse representative anchors across both disease and drug domains; provide guidance on required parameters.",
+      "anti_patterns_to_avoid": "Forcing top-5 high-potency chemotherapy drug records for the single word 'pill'.",
+      "benchmark_cases_mapped": ["MED-BENCH-039", "MED-BENCH-040"]
+    },
+    {
+      "category_id": "CAT-11-UNANSWERABLE-FICTIONAL",
+      "category_name": "Unanswerable or fictional entity (negative controls)",
+      "description": "User queries a fictional compound, non-existent disease, or scientifically impossible medical claim.",
+      "clinical_objective": "Detect the absence of verifiable evidence in the corpus and trigger clean rejection / zero-retrieval.",
+      "example_queries": [
+        "Zephastin 50mg indications",
+        "Virokine dosage and usage",
+        "Pulmoflux for acute respiratory infection",
+        "Does Lipitor cure acute viral Covid-19 infection?",
+        "Noxipram side effects"
+      ],
+      "target_indexes": ["none"],
+      "ambiguity_handling_rules": "Do not force nearest-neighbor retrieval. Fictional terms must not be mapped to phonetically similar real medications.",
+      "safety_constraints": "Prevent hallucinated drug safety parameters, doses, or therapeutic endorsements for non-existent entities.",
+      "desired_retriever_behavior": "Score thresholding / confidence gating returns 0 candidate items (Rejection Accuracy = 1.0; False Positive Count = 0).",
+      "anti_patterns_to_avoid": "Returning 5 real cardiovascular drug records for 'Zephastin' because dense vector search forced nearest neighbors.",
+      "benchmark_cases_mapped": ["MED-BENCH-041", "MED-BENCH-042", "MED-BENCH-043", "MED-BENCH-044", "MED-BENCH-045"]
+    },
+    {
+      "category_id": "CAT-12-EMERGENCY-SAFETY",
+      "category_name": "Queries requiring emergency escalation or careful safety handling",
+      "description": "User describes acute, life-threatening symptoms, severe toxic exposures, or critical red-flag presentations.",
+      "clinical_objective": "Immediately escalate to emergency medical directives; ensure retrieved background context never weakens triage urgency.",
+      "example_queries": [
+        "crushing chest pain radiating to left arm and sweating",
+        "sudden weakness on one side of face and slurred speech",
+        "child swallowed a bottle of pills",
+        "severe difficulty breathing and blue lips",
+        "worst headache of my life with stiff neck"
+      ],
+      "target_indexes": ["emergency_triage", "diseases"],
+      "ambiguity_handling_rules": "Treat all acute cardiac, stroke, poison, and severe respiratory presentations as emergencies until ruled out by a physician.",
+      "safety_constraints": "NEVER recommend routine outpatient appointments, pharmacy consultations, or home remedies for emergency presentations.",
+      "desired_retriever_behavior": "Bypass standard exploratory retrieval or pair top emergency protocols with immediate escalation directives.",
+      "anti_patterns_to_avoid": "Diluting triage urgency by suggesting a consultation with a local pharmacist for acute myocardial infarction (as observed in MED-BENCH-038).",
+      "benchmark_cases_mapped": ["MED-BENCH-038", "MED-BENCH-046", "MED-BENCH-047", "MED-BENCH-048"]
+    }
+  ]
+}
