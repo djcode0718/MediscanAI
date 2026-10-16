@@ -1,0 +1,86 @@
+{
+  "audit_phase": "Phase C.5.1 \u2014 Bootstrap Verification",
+  "timestamp": "2026-10-16T09:08:38.107801+00:00",
+  "methodology": {
+    "resampling_unit": "paired_case_level_delta",
+    "paired_structure_preserved": true,
+    "bootstrap_iterations": 1000,
+    "random_seed": 42,
+    "alpha": 0.05,
+    "confidence_level": 0.95
+  },
+  "metrics_verification": {
+    "faithfulness": {
+      "sample_size_paired": 50,
+      "reported_95_ci": [
+        -0.075905,
+        0.052703
+      ],
+      "recomputed_95_ci_1000": [
+        -0.075905,
+        0.052703
+      ],
+      "recomputed_95_ci_10000_stability_check": [
+        -0.078265,
+        0.053483
+      ],
+      "exact_match_1000": true,
+      "includes_zero": true,
+      "statistically_significant": false
+    },
+    "answer_relevancy": {
+      "sample_size_paired": 50,
+      "reported_95_ci": [
+        -0.018013,
+        0.075231
+      ],
+      "recomputed_95_ci_1000": [
+        -0.018013,
+        0.075231
+      ],
+      "recomputed_95_ci_10000_stability_check": [
+        -0.019567,
+        0.073901
+      ],
+      "exact_match_1000": true,
+      "includes_zero": true,
+      "statistically_significant": false
+    },
+    "context_precision": {
+      "sample_size_paired": 45,
+      "reported_95_ci": [
+        -0.053309,
+        0.001787
+      ],
+      "recomputed_95_ci_1000": [
+        -0.053309,
+        0.001787
+      ],
+      "recomputed_95_ci_10000_stability_check": [
+        -0.052515,
+        0.001243
+      ],
+      "exact_match_1000": true,
+      "includes_zero": true,
+      "statistically_significant": false
+    },
+    "context_recall": {
+      "sample_size_paired": 44,
+      "reported_95_ci": [
+        -0.080303,
+        0.059091
+      ],
+      "recomputed_95_ci_1000": [
+        -0.080303,
+        0.059091
+      ],
+      "recomputed_95_ci_10000_stability_check": [
+        -0.080303,
+        0.059848
+      ],
+      "exact_match_1000": true,
+      "includes_zero": true,
+      "statistically_significant": false
+    }
+  }
+}

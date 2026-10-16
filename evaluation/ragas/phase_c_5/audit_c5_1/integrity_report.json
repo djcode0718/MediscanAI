@@ -1,0 +1,46 @@
+{
+  "audit_phase": "Phase C.5.1 \u2014 Independent Results, Statistics & Safety Audit",
+  "audit_timestamp": "2026-10-16T09:08:38.418872+00:00",
+  "summary_verdict": "PASS WITH WARNINGS",
+  "warnings": [
+    "DISC-001: Context Recall reported graph marginal mean (0.604074, N=45) differs from strictly paired graph mean (0.606439, N=44) due to MED-BENCH-029 baseline timeout.",
+    "DISC-002: metric_failures.jsonl is 0 bytes because Ragas caught the timeout internally, returning NaN rather than raising an unhandled exception.",
+    "DISC-003: Executive summary in negative control report misstated pure/soft abstention tally as 4/6 instead of 5/5.",
+    "DISC-004: Context Precision explained using MAP rather than single-sample Average Precision."
+  ],
+  "verification_gates": {
+    "gate_1_gold_isolation": {
+      "description": "gold_judgments.jsonl remains strictly 0 bytes",
+      "observed_bytes": 0,
+      "status": "PASS"
+    },
+    "gate_2_hash_preservation": {
+      "description": "All frozen C.4 and reference artifact hashes match manifest",
+      "status": "PASS"
+    },
+    "gate_3_aggregate_metrics_reproducibility": {
+      "description": "All paired deltas, counts, and bootstrap CIs reproduce exactly",
+      "status": "PASS"
+    },
+    "gate_4_timeout_accounting": {
+      "description": "MED-BENCH-029 timeout documented and handled cleanly in paired scores",
+      "status": "PASS_WITH_WARNING"
+    },
+    "gate_5_category_claims_supported": {
+      "description": "All 10 audited category claims match case-level scores exactly",
+      "status": "PASS"
+    },
+    "gate_6_safety_negative_controls": {
+      "description": "Zero distractor adoption verified across all 5 negative controls",
+      "status": "PASS"
+    },
+    "gate_7_emergency_triage_regression": {
+      "description": "MED-BENCH-038 graph response weakened emergency instruction to routine referral",
+      "status": "FLAGGED_FOR_CLINICAL_REVIEW"
+    },
+    "gate_8_repository_invariants": {
+      "description": "Zero production code modified; entity_resolution/ strictly untouched",
+      "status": "PASS"
+    }
+  }
+}
