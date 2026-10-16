@@ -1,0 +1,71 @@
+{
+  "suite": "MediScanAI Phase D.2.b OCR Regressions",
+  "total_scenarios": 7,
+  "passed": 6,
+  "pass_rate": 0.8571,
+  "results": [
+    {
+      "test_id": "OCR-01-CLEAR-BRAND",
+      "ocr_text": "Lipitor 20mg Pfizer atorvastatin calcium",
+      "expected_action": "RETRIEVE_DRUG_CATALOG",
+      "observed_action": "RETRIEVE_DRUG_CATALOG",
+      "retrieved_count": 29,
+      "passed": true,
+      "latency_ms": 2084
+    },
+    {
+      "test_id": "OCR-02-GENERIC-ONLY",
+      "ocr_text": "Amoxicillin 500mg USP capsules",
+      "expected_action": "RETRIEVE_DRUG_CATALOG",
+      "observed_action": "RETRIEVE_DRUG_CATALOG",
+      "retrieved_count": 28,
+      "passed": true,
+      "latency_ms": 2012
+    },
+    {
+      "test_id": "OCR-03-PARTIALLY-CROPPED",
+      "ocr_text": "Cinnariz 25mg tab",
+      "expected_action": "RETRIEVE_DRUG_CATALOG",
+      "observed_action": "RETRIEVE_DRUG_CATALOG",
+      "retrieved_count": 0,
+      "passed": false,
+      "latency_ms": 1208
+    },
+    {
+      "test_id": "OCR-04-SPELLING-ERRORS",
+      "ocr_text": "Liptor 10mg atorvastatn",
+      "expected_action": "RETRIEVE_DRUG_CATALOG",
+      "observed_action": "RETRIEVE_DRUG_CATALOG",
+      "retrieved_count": 8,
+      "passed": true,
+      "latency_ms": 1848
+    },
+    {
+      "test_id": "OCR-05-MULTIPLE-FORMULATIONS",
+      "ocr_text": "Metformin HCl 500mg ER extended release",
+      "expected_action": "RETRIEVE_DRUG_CATALOG",
+      "observed_action": "RETRIEVE_DRUG_CATALOG",
+      "retrieved_count": 29,
+      "passed": true,
+      "latency_ms": 1706
+    },
+    {
+      "test_id": "OCR-06-MULTIPLE-MEDICINES",
+      "ocr_text": "Augmentin amoxicillin clavulanate potassium 875 125mg",
+      "expected_action": "RETRIEVE_DRUG_CATALOG",
+      "observed_action": "RETRIEVE_DRUG_CATALOG",
+      "retrieved_count": 30,
+      "passed": true,
+      "latency_ms": 2154
+    },
+    {
+      "test_id": "OCR-07-UNREADABLE-LABEL",
+      "ocr_text": "Unreadable blurry packaging noise ###???",
+      "expected_action": "CLARIFICATION_REQUIRED",
+      "observed_action": "CLARIFICATION_REQUIRED",
+      "retrieved_count": 0,
+      "passed": true,
+      "latency_ms": 0
+    }
+  ]
+}

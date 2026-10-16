@@ -1,0 +1,36 @@
+policy,test_id,ocr_text,confidence,routing_action,retrieved_count,top_candidate,passed,latency_ms,explanation
+ALT-1-FIXED-THRESHOLD,OCR-01-CLEAR-BRAND,Lipitor 20mg Pfizer atorvastatin calcium,0.95,RETRIEVE_DRUG_CATALOG,30,drug_41389 (ATORVASTATIN CALCIUM),True,5333,"PrefixExpanded: False, TopScore: 4.939"
+ALT-1-FIXED-THRESHOLD,OCR-02-GENERIC-ONLY,Amoxicillin 500mg USP capsules,0.92,RETRIEVE_DRUG_CATALOG,29,drug_5475 (Amoxicillin),True,1608,"PrefixExpanded: False, TopScore: 4.746"
+ALT-1-FIXED-THRESHOLD,OCR-03-PARTIALLY-CROPPED,Cinnariz 25mg tab,0.81,RETRIEVE_DRUG_CATALOG,2,drug_2305 (Cinzan),True,1620,"PrefixExpanded: False, TopScore: 3.708"
+ALT-1-FIXED-THRESHOLD,OCR-04-SPELLING-ERRORS,Liptor 10mg atorvastatn,0.76,RETRIEVE_DRUG_CATALOG,10,drug_63899 (Lipitor),True,1609,"PrefixExpanded: False, TopScore: 5.236"
+ALT-1-FIXED-THRESHOLD,OCR-05-MULTIPLE-FORMULATIONS,Metformin HCl 500mg ER extended release,0.89,RETRIEVE_DRUG_CATALOG,29,drug_2617 (Metformin),True,1536,"PrefixExpanded: False, TopScore: 8.371"
+ALT-1-FIXED-THRESHOLD,OCR-06-MULTIPLE-MEDICINES,Augmentin amoxicillin clavulanate potassium 875 125mg,0.88,RETRIEVE_DRUG_CATALOG,30,drug_38775 (Amoxicillin and Clavulanate Potassium),True,1535,"PrefixExpanded: False, TopScore: 6.218"
+ALT-1-FIXED-THRESHOLD,OCR-07-UNREADABLE-LABEL,Unreadable blurry packaging noise ###???,0.18,CLARIFICATION_REQUIRED,0,None (Abstain/Clarify),True,0,OCR text confidence below readability threshold; prompting user for clearer packaging image.
+ALT-2-OCR-ADAPTIVE-THRESHOLD,OCR-01-CLEAR-BRAND,Lipitor 20mg Pfizer atorvastatin calcium,0.95,RETRIEVE_DRUG_CATALOG,30,drug_41389 (ATORVASTATIN CALCIUM),True,1462,"PrefixExpanded: False, TopScore: 4.939"
+ALT-2-OCR-ADAPTIVE-THRESHOLD,OCR-02-GENERIC-ONLY,Amoxicillin 500mg USP capsules,0.92,RETRIEVE_DRUG_CATALOG,30,drug_5475 (Amoxicillin),True,1506,"PrefixExpanded: False, TopScore: 4.746"
+ALT-2-OCR-ADAPTIVE-THRESHOLD,OCR-03-PARTIALLY-CROPPED,Cinnariz 25mg tab,0.81,RETRIEVE_DRUG_CATALOG,2,drug_2305 (Cinzan),True,1504,"PrefixExpanded: False, TopScore: 3.708"
+ALT-2-OCR-ADAPTIVE-THRESHOLD,OCR-04-SPELLING-ERRORS,Liptor 10mg atorvastatn,0.76,RETRIEVE_DRUG_CATALOG,15,drug_63899 (Lipitor),True,1499,"PrefixExpanded: False, TopScore: 5.236"
+ALT-2-OCR-ADAPTIVE-THRESHOLD,OCR-05-MULTIPLE-FORMULATIONS,Metformin HCl 500mg ER extended release,0.89,RETRIEVE_DRUG_CATALOG,30,drug_2617 (Metformin),True,1502,"PrefixExpanded: False, TopScore: 8.371"
+ALT-2-OCR-ADAPTIVE-THRESHOLD,OCR-06-MULTIPLE-MEDICINES,Augmentin amoxicillin clavulanate potassium 875 125mg,0.88,RETRIEVE_DRUG_CATALOG,30,drug_38775 (Amoxicillin and Clavulanate Potassium),True,1502,"PrefixExpanded: False, TopScore: 6.218"
+ALT-2-OCR-ADAPTIVE-THRESHOLD,OCR-07-UNREADABLE-LABEL,Unreadable blurry packaging noise ###???,0.18,CLARIFICATION_REQUIRED,0,None (Abstain/Clarify),True,0,OCR text confidence below readability threshold; prompting user for clearer packaging image.
+ALT-3-CATALOG-PREFIX-VERIFICATION,OCR-01-CLEAR-BRAND,Lipitor 20mg Pfizer atorvastatin calcium,0.95,RETRIEVE_DRUG_CATALOG,30,drug_41389 (ATORVASTATIN CALCIUM),True,1449,"PrefixExpanded: True, TopScore: 4.939"
+ALT-3-CATALOG-PREFIX-VERIFICATION,OCR-02-GENERIC-ONLY,Amoxicillin 500mg USP capsules,0.92,RETRIEVE_DRUG_CATALOG,30,drug_5475 (Amoxicillin),True,1560,"PrefixExpanded: True, TopScore: 4.746"
+ALT-3-CATALOG-PREFIX-VERIFICATION,OCR-03-PARTIALLY-CROPPED,Cinnariz 25mg tab,0.81,RETRIEVE_DRUG_CATALOG,2,drug_2305 (Cinzan),True,1604,"PrefixExpanded: False, TopScore: 3.708"
+ALT-3-CATALOG-PREFIX-VERIFICATION,OCR-04-SPELLING-ERRORS,Liptor 10mg atorvastatn,0.76,RETRIEVE_DRUG_CATALOG,10,drug_63899 (Lipitor),True,1525,"PrefixExpanded: False, TopScore: 5.236"
+ALT-3-CATALOG-PREFIX-VERIFICATION,OCR-05-MULTIPLE-FORMULATIONS,Metformin HCl 500mg ER extended release,0.89,RETRIEVE_DRUG_CATALOG,29,drug_2617 (Metformin),True,1535,"PrefixExpanded: False, TopScore: 8.371"
+ALT-3-CATALOG-PREFIX-VERIFICATION,OCR-06-MULTIPLE-MEDICINES,Augmentin amoxicillin clavulanate potassium 875 125mg,0.88,RETRIEVE_DRUG_CATALOG,30,drug_38775 (Amoxicillin and Clavulanate Potassium),True,1537,"PrefixExpanded: False, TopScore: 6.218"
+ALT-3-CATALOG-PREFIX-VERIFICATION,OCR-07-UNREADABLE-LABEL,Unreadable blurry packaging noise ###???,0.18,CLARIFICATION_REQUIRED,0,None (Abstain/Clarify),True,0,OCR text confidence below readability threshold; prompting user for clearer packaging image.
+ALT-4-LEXICAL-BM25-GATE,OCR-01-CLEAR-BRAND,Lipitor 20mg Pfizer atorvastatin calcium,0.95,RETRIEVE_DRUG_CATALOG,30,drug_41389 (ATORVASTATIN CALCIUM),True,1460,"PrefixExpanded: False, TopScore: 4.939"
+ALT-4-LEXICAL-BM25-GATE,OCR-02-GENERIC-ONLY,Amoxicillin 500mg USP capsules,0.92,RETRIEVE_DRUG_CATALOG,29,drug_5475 (Amoxicillin),True,1522,"PrefixExpanded: False, TopScore: 4.746"
+ALT-4-LEXICAL-BM25-GATE,OCR-03-PARTIALLY-CROPPED,Cinnariz 25mg tab,0.81,RETRIEVE_DRUG_CATALOG,17,drug_2305 (Cinzan),True,1512,"PrefixExpanded: False, TopScore: 3.708"
+ALT-4-LEXICAL-BM25-GATE,OCR-04-SPELLING-ERRORS,Liptor 10mg atorvastatn,0.76,RETRIEVE_DRUG_CATALOG,25,drug_63899 (Lipitor),True,1514,"PrefixExpanded: False, TopScore: 5.236"
+ALT-4-LEXICAL-BM25-GATE,OCR-05-MULTIPLE-FORMULATIONS,Metformin HCl 500mg ER extended release,0.89,RETRIEVE_DRUG_CATALOG,30,drug_2617 (Metformin),True,1523,"PrefixExpanded: False, TopScore: 8.371"
+ALT-4-LEXICAL-BM25-GATE,OCR-06-MULTIPLE-MEDICINES,Augmentin amoxicillin clavulanate potassium 875 125mg,0.88,RETRIEVE_DRUG_CATALOG,30,drug_38775 (Amoxicillin and Clavulanate Potassium),True,1511,"PrefixExpanded: False, TopScore: 6.218"
+ALT-4-LEXICAL-BM25-GATE,OCR-07-UNREADABLE-LABEL,Unreadable blurry packaging noise ###???,0.18,CLARIFICATION_REQUIRED,0,None (Abstain/Clarify),True,0,OCR text confidence below readability threshold; prompting user for clearer packaging image.
+ALT-5-CLARIFICATION-POLICY,OCR-01-CLEAR-BRAND,Lipitor 20mg Pfizer atorvastatin calcium,0.95,RETRIEVE_DRUG_CATALOG,30,drug_41389 (ATORVASTATIN CALCIUM),True,1457,"PrefixExpanded: False, TopScore: 4.939"
+ALT-5-CLARIFICATION-POLICY,OCR-02-GENERIC-ONLY,Amoxicillin 500mg USP capsules,0.92,RETRIEVE_DRUG_CATALOG,29,drug_5475 (Amoxicillin),True,1513,"PrefixExpanded: False, TopScore: 4.746"
+ALT-5-CLARIFICATION-POLICY,OCR-03-PARTIALLY-CROPPED,Cinnariz 25mg tab,0.81,RETRIEVE_DRUG_CATALOG,2,drug_2305 (Cinzan),True,1504,"PrefixExpanded: False, TopScore: 3.708"
+ALT-5-CLARIFICATION-POLICY,OCR-04-SPELLING-ERRORS,Liptor 10mg atorvastatn,0.76,RETRIEVE_DRUG_CATALOG,10,drug_63899 (Lipitor),True,1505,"PrefixExpanded: False, TopScore: 5.236"
+ALT-5-CLARIFICATION-POLICY,OCR-05-MULTIPLE-FORMULATIONS,Metformin HCl 500mg ER extended release,0.89,RETRIEVE_DRUG_CATALOG,29,drug_2617 (Metformin),True,1519,"PrefixExpanded: False, TopScore: 8.371"
+ALT-5-CLARIFICATION-POLICY,OCR-06-MULTIPLE-MEDICINES,Augmentin amoxicillin clavulanate potassium 875 125mg,0.88,RETRIEVE_DRUG_CATALOG,30,drug_38775 (Amoxicillin and Clavulanate Potassium),True,1517,"PrefixExpanded: False, TopScore: 6.218"
+ALT-5-CLARIFICATION-POLICY,OCR-07-UNREADABLE-LABEL,Unreadable blurry packaging noise ###???,0.18,CLARIFICATION_REQUIRED,0,None (Abstain/Clarify),True,0,OCR text confidence below readability threshold; prompting user for clearer packaging image.

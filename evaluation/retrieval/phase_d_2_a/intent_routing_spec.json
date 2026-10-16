@@ -1,0 +1,196 @@
+{
+  "spec_version": "1.0.0",
+  "phase": "D.2.a",
+  "system": "MediScanAI Intent Routing Engine",
+  "routing_policy": {
+    "default_channel_allocation": "data_driven_priority",
+    "preserve_original_query": true,
+    "fallback_channel": "multi_channel_rrf",
+    "abstention_on_unverified_entity": true,
+    "emergency_escalation_protocol": "immediate_red_flag_interception"
+  },
+  "intents": [
+    {
+      "intent_id": "emergency_escalation",
+      "description": "High-risk, life-threatening symptoms requiring immediate emergency clinical triage rather than ordinary medicine advice.",
+      "target_indexes": [],
+      "routing_action": "TRIAGE_ESCALATE",
+      "candidate_allocation": { "drugs": 0, "diseases": 0, "drug_dict": 0 },
+      "priority": 1,
+      "examples": [
+        "severe chest pain radiating to left arm and shortness of breath",
+        "sudden numbness on one side of face and arm weakness",
+        "anaphylaxis with throat swelling and difficulty breathing"
+      ]
+    },
+    {
+      "intent_id": "unverified_fictional_negative",
+      "description": "Fictional, non-existent, or unverified drug entities (e.g., negative controls like Zephastin, Virokine, Pulmoflux, Noxipram) that must not match real pharmaceuticals.",
+      "target_indexes": [],
+      "routing_action": "CLEAN_ABSTAIN",
+      "candidate_allocation": { "drugs": 0, "diseases": 0, "drug_dict": 0 },
+      "priority": 2,
+      "examples": [
+        "Zephastin 50mg indications",
+        "Virokine dosage and usage",
+        "Pulmoflux for acute respiratory infection",
+        "Noxipram side effects"
+      ]
+    },
+    {
+      "intent_id": "ocr_medicine_image",
+      "description": "Inputs derived from medicine packaging OCR. Gated by text readability; routes valid text to drug catalogs.",
+      "target_indexes": ["drugs", "drug_dict"],
+      "routing_action": "RETRIEVE_DRUG_CATALOG",
+      "candidate_allocation": { "drugs": 20, "drug_dict": 10, "diseases": 0 },
+      "priority": 3,
+      "examples": [
+        "OCR text: Lipitor 20mg atorvastatin calcium",
+        "OCR text: Amoxicillin 500mg capsules",
+        "Unreadable blur -> UNREADABLE_UNCERTAIN"
+      ]
+    },
+    {
+      "intent_id": "brand_generic_comparison",
+      "description": "Queries comparing two entities, asking for differences, or inquiring about brand/generic bioequivalence.",
+      "target_indexes": ["drugs"],
+      "routing_action": "MULTI_ENTITY_UNION_RETRIEVAL",
+      "candidate_allocation": { "drugs": 30, "diseases": 0, "drug_dict": 10 },
+      "priority": 4,
+      "examples": [
+        "Lipitor versus generic atorvastatin",
+        "Difference between Advil and Motrin",
+        "Is generic metformin as effective as Glucophage?"
+      ]
+    },
+    {
+      "intent_id": "brand_generic_relationship",
+      "description": "Queries inquiring about the relationship, manufacturer, brand equivalence, or active ingredient of a specific brand.",
+      "target_indexes": ["drugs", "drug_dict"],
+      "routing_action": "RETRIEVE_DRUG_RELATIONSHIPS",
+      "candidate_allocation": { "drugs": 25, "drug_dict": 10, "diseases": 0 },
+      "priority": 5,
+      "examples": [
+        "What is the active ingredient in Lipitor?",
+        "What is the brand name of cinnarizine?",
+        "Who manufactures Augmentin?"
+      ]
+    },
+    {
+      "intent_id": "drug_purpose_indications",
+      "description": "Questions asking what a medicine is used for, what condition it treats, or its approved indications.",
+      "target_indexes": ["drugs", "diseases"],
+      "routing_action": "RETRIEVE_INDICATIONS_AND_CONDITIONS",
+      "candidate_allocation": { "drugs": 20, "diseases": 10, "drug_dict": 5 },
+      "priority": 6,
+      "examples": [
+        "What is metformin used for?",
+        "Indications of atorvastatin",
+        "What does amoxicillin treat?"
+      ]
+    },
+    {
+      "intent_id": "brand_lookup",
+      "description": "Direct lookup of an established commercial brand name product.",
+      "target_indexes": ["drugs", "drug_dict"],
+      "routing_action": "RETRIEVE_DRUG_CATALOG",
+      "candidate_allocation": { "drugs": 25, "drug_dict": 10, "diseases": 0 },
+      "priority": 7,
+      "examples": [
+        "Lipitor",
+        "Cinzan",
+        "Amoxil",
+        "Augmentin",
+        "Panadol"
+      ]
+    },
+    {
+      "intent_id": "generic_lookup",
+      "description": "Direct lookup of an established generic drug name.",
+      "target_indexes": ["drugs", "drug_dict"],
+      "routing_action": "RETRIEVE_DRUG_CATALOG",
+      "candidate_allocation": { "drugs": 25, "drug_dict": 10, "diseases": 0 },
+      "priority": 8,
+      "examples": [
+        "Atorvastatin calcium",
+        "Cinnarizine",
+        "Amoxicillin",
+        "Ibuprofen",
+        "Cetirizine hydrochloride"
+      ]
+    },
+    {
+      "intent_id": "active_ingredient_lookup",
+      "description": "Lookup focused on active chemical ingredient substances.",
+      "target_indexes": ["drugs", "drug_dict"],
+      "routing_action": "RETRIEVE_DRUG_CATALOG",
+      "candidate_allocation": { "drugs": 25, "drug_dict": 10, "diseases": 0 },
+      "priority": 9,
+      "examples": [
+        "Metformin",
+        "Acetaminophen",
+        "Ciprofloxacin",
+        "Omeprazole",
+        "Lisinopril"
+      ]
+    },
+    {
+      "intent_id": "multi_symptom_query",
+      "description": "Clinical queries presenting multiple co-occurring symptoms requiring differential disease matching without assuming medication requests.",
+      "target_indexes": ["diseases"],
+      "routing_action": "RETRIEVE_DISEASE_CHUNKS",
+      "candidate_allocation": { "diseases": 30, "drugs": 0, "drug_dict": 0 },
+      "priority": 10,
+      "examples": [
+        "fever, cough, and shortness of breath",
+        "abdominal pain, nausea, and vomiting",
+        "fatigue, weight loss, and frequent urination"
+      ]
+    },
+    {
+      "intent_id": "symptom_only_query",
+      "description": "Queries describing a single presenting symptom or physical sign. Must retrieve disease etiology without assuming prescription advice.",
+      "target_indexes": ["diseases"],
+      "routing_action": "RETRIEVE_DISEASE_CHUNKS",
+      "candidate_allocation": { "diseases": 30, "drugs": 0, "drug_dict": 0 },
+      "priority": 11,
+      "examples": [
+        "I have a headache",
+        "oliguria",
+        "absence of menstruation",
+        "facial tenderness",
+        "recurrent episodes of wheezing",
+        "intense joint pain in foot"
+      ]
+    },
+    {
+      "intent_id": "disease_only_query",
+      "description": "Queries inquiring about an established disease, its causes, or clinical profile.",
+      "target_indexes": ["diseases"],
+      "routing_action": "RETRIEVE_DISEASE_CHUNKS",
+      "candidate_allocation": { "diseases": 30, "drugs": 0, "drug_dict": 0 },
+      "priority": 12,
+      "examples": [
+        "Gestational Cholestasis",
+        "Acute Sinusitis",
+        "Chronic Kidney Failure",
+        "Polycystic Ovary Syndrome"
+      ]
+    },
+    {
+      "intent_id": "ambiguous_underspecified",
+      "description": "Underspecified single-word or broad medical queries where clinical intent is unclear. Dispatches dual-channel retrieval and flags for user disambiguation.",
+      "target_indexes": ["diseases", "drugs"],
+      "routing_action": "DUAL_CHANNEL_DISAMBIGUATION",
+      "candidate_allocation": { "diseases": 15, "drugs": 15, "drug_dict": 5 },
+      "priority": 13,
+      "examples": [
+        "diabetes",
+        "hypertension",
+        "cough",
+        "infection",
+        "pain"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "phase": "Phase D.1 — Faithfulness-First Hybrid Retrieval Engineering",
+  "audit_timestamp": "2026-10-16T13:12:00Z",
+  "summary_verdict": "PASS WITH WARNINGS",
+  "warnings": [
+    "WARNING-01: Cross-encoder static thresholding (tau=-2.0) failed on 3 fictional entity cases containing valid clinical framing words (SR-01 Zephastin, SR-02 Virokine, SR-03 Pulmoflux). Requires upstream lexical entity verification in Phase D.2.",
+    "WARNING-02: Target engineering metrics (Recall > 0.95, Precision > 0.90) were not met on the held-out test split (Recall@5 = 0.1111). Multi-channel slot competition requires Phase D.2 Intent Routing to eliminate context dilution."
+  ],
+  "verification_gates": {
+    "gate_1_gold_isolation": {
+      "description": "evaluation/benchmark/gold_judgments.jsonl remains strictly 0 bytes",
+      "observed_bytes": 0,
+      "status": "PASS"
+    },
+    "gate_2_source_index_preservation": {
+      "description": "Original source JSONL files, FAISS indexes, and Neo4j data remain strictly unmodified",
+      "status": "PASS"
+    },
+    "gate_3_baseline_reproducibility": {
+      "description": "Baseline MultiRetriever remains reproducible and isolated from experimental changes",
+      "status": "PASS"
+    },
+    "gate_4_experimental_isolation": {
+      "description": "All Phase D.1 modules and artifacts contained within evaluation/retrieval/phase_d_1/",
+      "status": "PASS"
+    },
+    "gate_5_ocr_first_class_support": {
+      "description": "OCR-only scenarios tested for readability, feature extraction, and uncertainty communication",
+      "scenarios_evaluated": 5,
+      "status": "PASS"
+    },
+    "gate_6_safety_regression_testing": {
+      "description": "12-case safety suite executed covering negative controls, chest pain MI, stroke, and pediatric poisoning",
+      "pass_count": 9,
+      "fail_count": 3,
+      "status": "PASS_WITH_WARNING"
+    },
+    "gate_7_split_integrity": {
+      "description": "Dev (30), Val (10), and Held-Out Test (10) splits strictly separated; zero test-set tuning",
+      "status": "PASS"
+    },
+    "gate_8_entity_resolution_boundary": {
+      "description": "entity_resolution/ directory strictly untouched and unreferenced",
+      "status": "PASS"
+    }
+  }
+}

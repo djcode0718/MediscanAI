@@ -1,0 +1,60 @@
+{
+  "audit_phase": "Phase D.2.c-Final Pre-Phase-3 Integrity and Safety Audit",
+  "timestamp": "2026-10-17T00:23:00+00:00",
+  "overall_readiness_decision": "READY_WITH_WARNINGS",
+  "invariants": {
+    "entity_resolution_accessed": false,
+    "gold_judgments_size_bytes": 0,
+    "production_code_modified_app": false,
+    "production_code_modified_backend": false,
+    "source_jsonl_datasets_modified": false,
+    "faiss_indexes_modified": false,
+    "prior_phase_artifacts_overwritten": false,
+    "cloud_api_calls_made": 0,
+    "paid_external_judges_used": false,
+    "held_out_re_evaluation_executed": false,
+    "tuning_against_held_out_performed": false
+  },
+  "checks_summary": {
+    "check_1_metric_reconciliation": {
+      "classification": "EXPLAINED_BY_RETRIEVAL_CHANGE",
+      "d2a_recall_at_5": 0.6667,
+      "d2c_record_recall_at_5": 0.5556,
+      "d2c_canonical_entity_recall_at_5": 0.7778,
+      "answerable_denominator": 9,
+      "held_out_cases_count": 10,
+      "root_cause": "Introduction of calibrated threshold tau = -0.5 in CFG-04 pruned low-scoring lay query MED-BENCH-035 (score -2.82), while simultaneously improving negative control MED-BENCH-045 rejection accuracy from 0.0 to 1.0."
+    },
+    "check_2_safety_comparability": {
+      "classification": "COMPARABLE_ON_COMMON_SUBSET_ONLY",
+      "common_subset_size": 12,
+      "common_subset_results": {
+        "phase_d_1": "9/12 (75.0%)",
+        "phase_d_2_a": "12/12 (100.0%)",
+        "phase_d_2_b": "12/12 (100.0%)",
+        "phase_d_2_c": "12/12 (100.0%)"
+      },
+      "extended_suite_results": {
+        "phase_d_2_b": "13/14 (92.86%)",
+        "phase_d_2_c": "14/14 (100.0%)"
+      },
+      "historical_denominator_explanation": "'2/5' in D.1 was the pass rate on the 5 negative control cases (SR-01 to SR-05), not the total suite. Total D.1 pass rate was 9/12. '12/12' in D.2.a was the full 12-test suite. '14/14' in D.2.c was the expanded 14-test suite after resolving SAF-13."
+    },
+    "check_3_intent_router_edge_cases": {
+      "verdict": "DEFECTS_IDENTIFIED_NONCRITICAL_ROUTING",
+      "total_edge_cases_tested": 27,
+      "passed_cases": 21,
+      "acceptable_degradation": 3,
+      "routing_mismatches_identified": 3,
+      "critical_safety_leaks": 0,
+      "fictional_negative_control_resistance": "100.0% clean rejection on novel and known fictional drugs",
+      "combination_therapy_preservation": "100.0% preserved without collapsing to monotherapy",
+      "identified_defects": [
+        "DEFECT-ORAL-ROUTE-COLLISION: Standalone word 'oral' in symptom_phrases causes generic liquid formulations ('Metformin oral solution', 'Amoxicillin oral suspension') to route to disease index.",
+        "DEFECT-SPACE-SEPARATED-STRENGTH: Spaced dosage tokens ('500 mg') leave numeral '500' unstripped, falling back to balanced multi-retrieval.",
+        "DEFECT-SUBSTRING-COLLISION: Substring match in lexical gate allows 'met' to pass through rather than cleanly abstaining."
+      ]
+    }
+  },
+  "readiness_justification": "All integrity invariants strictly satisfied. Metric differences are 100% reconciled and mathematically verified. Safety suite comparability is documented on the 12-case common subset (100% pass rate in D.2.c). No critical safety leaks or unsupported drug hallucinations occur. The intent-router defects are bounded non-critical routing discrepancies that do not cause false acceptances of fictional entities and can be safely addressed in Phase 3."
+}

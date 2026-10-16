@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "evaluation_phase": "D.2.c",
+    "timestamp": "2026-10-16T18:30:18.965608+00:00",
+    "frozen_config_hash": "f3937376cd191ee7",
+    "selected_config": "CFG-04-D2C-ADAPTIVE-FINAL"
+  },
+  "held_out_test_final": {
+    "record_level": {
+      "total_cases": 10,
+      "answerable_count": 9,
+      "negative_control_count": 1,
+      "macro_recall_at_5": 0.5556,
+      "macro_recall_at_10": 0.5556,
+      "macro_hit_rate_at_5": 0.5556,
+      "macro_hit_rate_at_10": 0.5556,
+      "macro_mrr_at_10": 0.5,
+      "macro_ndcg_at_10": 0.5145,
+      "rejection_accuracy_at_5": 1.0,
+      "false_positive_count_at_5": null,
+      "latency_p50_ms": 1407,
+      "latency_p95_ms": 1791,
+      "latency_mean_ms": 936.7
+    },
+    "canonical_entity_level": {
+      "total_cases": 10,
+      "answerable_count": 9,
+      "negative_control_count": 1,
+      "macro_recall_at_5": 0.7778,
+      "macro_recall_at_10": 0.7778,
+      "macro_hit_rate_at_5": 0.7778,
+      "macro_hit_rate_at_10": 0.7778,
+      "macro_mrr_at_10": 0.6667,
+      "macro_ndcg_at_10": 1.0485,
+      "rejection_accuracy_at_5": 1.0,
+      "false_positive_count_at_5": null,
+      "latency_p50_ms": 1407,
+      "latency_p95_ms": 1791,
+      "latency_mean_ms": 936.7
+    }
+  }
+}

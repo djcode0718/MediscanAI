@@ -1,0 +1,34 @@
+{
+  "experiment_id": "EXP-00-BASELINE",
+  "timestamp": "2026-10-16T13:00:55.459233+00:00",
+  "dev_split": {
+    "total_cases": 30,
+    "answerable_count": 27,
+    "negative_control_count": 3,
+    "macro_recall_at_5": 0.2593,
+    "macro_recall_at_10": 0.2593,
+    "macro_hit_rate_at_5": 0.2593,
+    "macro_hit_rate_at_10": 0.2593,
+    "macro_mrr_at_10": 0.2407,
+    "macro_ndcg_at_10": 0.2456,
+    "rejection_accuracy_at_5": 0.0,
+    "false_positive_count_at_5": 5.0,
+    "latency_p50_ms": 840,
+    "latency_mean_ms": 1330.5
+  },
+  "val_split": {
+    "total_cases": 10,
+    "answerable_count": 9,
+    "negative_control_count": 1,
+    "macro_recall_at_5": 0.0556,
+    "macro_recall_at_10": 0.1667,
+    "macro_hit_rate_at_5": 0.1111,
+    "macro_hit_rate_at_10": 0.2222,
+    "macro_mrr_at_10": 0.127,
+    "macro_ndcg_at_10": 0.1245,
+    "rejection_accuracy_at_5": 0.0,
+    "false_positive_count_at_5": 5.0,
+    "latency_p50_ms": 650,
+    "latency_mean_ms": 952.7
+  }
+}

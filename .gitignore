@@ -88,6 +88,12 @@ evaluation/results/
 evaluation/ragas/phase_c_4/*.jsonl
 evaluation/ragas/phase_c_4/audit_c4_1/*.jsonl
 evaluation/ragas/phase_c_5/*.jsonl
+evaluation/retrieval/**/*.jsonl
+evaluation/retrieval/**/case_level_*.jsonl
+evaluation/retrieval/**/ocr_*_results.jsonl
+evaluation/retrieval/**/runs/
+evaluation/retrieval/**/checkpoints/
+evaluation/retrieval/**/tmp/
 
 # Evaluation Cache & SQLite Databases
 evaluation/retrieval/cache/

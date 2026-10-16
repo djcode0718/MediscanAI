@@ -1,0 +1,101 @@
+{
+  "no_threshold": {
+    "threshold_value": null,
+    "true_positives": 15,
+    "false_rejections": 0,
+    "false_acceptances": 825,
+    "true_negatives": 0,
+    "precision": 0.0179,
+    "recall": 1.0,
+    "f1_score": 0.0351,
+    "negative_control_rejection_acc": 0.6667
+  },
+  "tau_-2.0": {
+    "threshold_value": -2.0,
+    "true_positives": 15,
+    "false_rejections": 0,
+    "false_acceptances": 344,
+    "true_negatives": 451,
+    "precision": 0.0418,
+    "recall": 1.0,
+    "f1_score": 0.0802,
+    "negative_control_rejection_acc": 1.0
+  },
+  "tau_-1.0": {
+    "threshold_value": -1.0,
+    "true_positives": 13,
+    "false_rejections": 2,
+    "false_acceptances": 317,
+    "true_negatives": 478,
+    "precision": 0.0394,
+    "recall": 0.8667,
+    "f1_score": 0.0754,
+    "negative_control_rejection_acc": 1.0
+  },
+  "tau_-0.5": {
+    "threshold_value": -0.5,
+    "true_positives": 13,
+    "false_rejections": 2,
+    "false_acceptances": 302,
+    "true_negatives": 493,
+    "precision": 0.0413,
+    "recall": 0.8667,
+    "f1_score": 0.0788,
+    "negative_control_rejection_acc": 1.0
+  },
+  "tau_+0.0": {
+    "threshold_value": 0.0,
+    "true_positives": 13,
+    "false_rejections": 2,
+    "false_acceptances": 279,
+    "true_negatives": 516,
+    "precision": 0.0445,
+    "recall": 0.8667,
+    "f1_score": 0.0847,
+    "negative_control_rejection_acc": 1.0
+  },
+  "tau_+0.5": {
+    "threshold_value": 0.5,
+    "true_positives": 12,
+    "false_rejections": 3,
+    "false_acceptances": 268,
+    "true_negatives": 527,
+    "precision": 0.0429,
+    "recall": 0.8,
+    "f1_score": 0.0814,
+    "negative_control_rejection_acc": 1.0
+  },
+  "tau_+1.0": {
+    "threshold_value": 1.0,
+    "true_positives": 11,
+    "false_rejections": 4,
+    "false_acceptances": 255,
+    "true_negatives": 540,
+    "precision": 0.0414,
+    "recall": 0.7333,
+    "f1_score": 0.0783,
+    "negative_control_rejection_acc": 1.0
+  },
+  "tau_+2.0": {
+    "threshold_value": 2.0,
+    "true_positives": 11,
+    "false_rejections": 4,
+    "false_acceptances": 228,
+    "true_negatives": 567,
+    "precision": 0.046,
+    "recall": 0.7333,
+    "f1_score": 0.0866,
+    "negative_control_rejection_acc": 1.0
+  },
+  "tau_+3.0": {
+    "threshold_value": 3.0,
+    "true_positives": 10,
+    "false_rejections": 5,
+    "false_acceptances": 200,
+    "true_negatives": 595,
+    "precision": 0.0476,
+    "recall": 0.6667,
+    "f1_score": 0.0889,
+    "negative_control_rejection_acc": 1.0
+  }
+}

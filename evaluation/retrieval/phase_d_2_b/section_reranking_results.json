@@ -1,0 +1,320 @@
+{
+  "phase": "D.2.b",
+  "technique": "Section-Aware Max-Pooling",
+  "samples": [
+    {
+      "case_id": "MED-BENCH-001",
+      "query": "Lipitor",
+      "winning_section": "indications_and_usage",
+      "section_score": 7.485,
+      "section_scores": {
+        "metadata": 7.439,
+        "indications_and_usage": 7.485,
+        "dosage_and_administration": 4.836,
+        "warnings_and_cautions": 3.734,
+        "adverse_reactions": -10.669
+      },
+      "excerpt": "Indications and Usage: LIPITOR is indicated to reduce the risk of: o Myocardial infarction (MI), stroke, revascularization procedures, and angina in a"
+    },
+    {
+      "case_id": "MED-BENCH-001",
+      "query": "Lipitor",
+      "winning_section": "indications_and_usage",
+      "section_score": 7.485,
+      "section_scores": {
+        "metadata": 7.439,
+        "indications_and_usage": 7.485,
+        "dosage_and_administration": 4.731,
+        "warnings_and_cautions": 3.066,
+        "adverse_reactions": 4.386
+      },
+      "excerpt": "Indications and Usage: LIPITOR is indicated to reduce the risk of: o Myocardial infarction (MI), stroke, revascularization procedures, and angina in a"
+    },
+    {
+      "case_id": "MED-BENCH-002",
+      "query": "Cinzan",
+      "winning_section": "metadata",
+      "section_score": 7.861,
+      "section_scores": {
+        "metadata": 7.861,
+        "indications_and_usage": -8.222,
+        "dosage_and_administration": -10.229,
+        "warnings_and_cautions": -4.414
+      },
+      "excerpt": "Brand Name: Cinzan\nGeneric Name: Cinnarizine\nActive Substance: CINNARIZINE"
+    },
+    {
+      "case_id": "MED-BENCH-003",
+      "query": "Amoxil",
+      "winning_section": "metadata",
+      "section_score": 8.28,
+      "section_scores": {
+        "metadata": 8.28,
+        "indications_and_usage": 2.68,
+        "dosage_and_administration": -10.928,
+        "warnings_and_cautions": -1.182,
+        "adverse_reactions": 0.841
+      },
+      "excerpt": "Brand Name: Amoxil\nGeneric Name: AMOXICILLIN ORAL SUSP\nActive Substance: AMOXICILLIN"
+    },
+    {
+      "case_id": "MED-BENCH-003",
+      "query": "Amoxil",
+      "winning_section": "indications_and_usage",
+      "section_score": 4.496,
+      "section_scores": {
+        "metadata": 2.932,
+        "indications_and_usage": 4.496,
+        "dosage_and_administration": -1.528,
+        "adverse_reactions": 1.06
+      },
+      "excerpt": "Indications and Usage: INDICATIONS AND USAGE Amoxapine is indicated for the relief of symptoms of depression in patients with neurotic or reactive dep"
+    },
+    {
+      "case_id": "MED-BENCH-006",
+      "query": "Atorvastatin calcium",
+      "winning_section": "indications_and_usage",
+      "section_score": 8.763,
+      "section_scores": {
+        "metadata": 8.355,
+        "indications_and_usage": 8.763,
+        "dosage_and_administration": 8.006,
+        "warnings_and_cautions": 4.113,
+        "adverse_reactions": 5.107
+      },
+      "excerpt": "Indications and Usage: In patients with CHD or multiple risk factors for CHD, atorvastatin calcium tablets can be started simultaneously with diet. At"
+    },
+    {
+      "case_id": "MED-BENCH-006",
+      "query": "Atorvastatin calcium",
+      "winning_section": "indications_and_usage",
+      "section_score": 8.536,
+      "section_scores": {
+        "metadata": 8.355,
+        "indications_and_usage": 8.536,
+        "dosage_and_administration": -11.315,
+        "warnings_and_cautions": -11.121,
+        "adverse_reactions": 7.507
+      },
+      "excerpt": "Indications and Usage: In patients with CHD or multiple risk factors for CHD, atorvastatin calcium tablets can be started simultaneously with diet. At"
+    },
+    {
+      "case_id": "MED-BENCH-007",
+      "query": "Cinnarizine",
+      "winning_section": "adverse_reactions",
+      "section_score": 7.368,
+      "section_scores": {
+        "metadata": 6.405,
+        "indications_and_usage": -7.592,
+        "dosage_and_administration": -10.473,
+        "warnings_and_cautions": 5.953,
+        "adverse_reactions": 7.368
+      },
+      "excerpt": "Adverse Reactions: The most common side effect of cinnarizine is drowsiness or sedation, which can affect the ability to perform skilled tasks. Other "
+    },
+    {
+      "case_id": "MED-BENCH-007",
+      "query": "Cinnarizine",
+      "winning_section": "metadata",
+      "section_score": 7.134,
+      "section_scores": {
+        "metadata": 7.134,
+        "indications_and_usage": -7.592,
+        "dosage_and_administration": -10.473,
+        "warnings_and_cautions": 5.953
+      },
+      "excerpt": "Brand Name: Cinzan\nGeneric Name: Cinnarizine\nActive Substance: CINNARIZINE"
+    },
+    {
+      "case_id": "MED-BENCH-008",
+      "query": "Amoxicillin",
+      "winning_section": "indications_and_usage",
+      "section_score": 9.428,
+      "section_scores": {
+        "metadata": 7.941,
+        "indications_and_usage": 9.428,
+        "dosage_and_administration": -10.145,
+        "warnings_and_cautions": 2.055,
+        "adverse_reactions": 5.315
+      },
+      "excerpt": "Indications and Usage: Amoxicillin is a penicillin-class antibacterial indicated for treatment of infections due to susceptible strains of designated "
+    },
+    {
+      "case_id": "MED-BENCH-008",
+      "query": "Amoxicillin",
+      "winning_section": "indications_and_usage",
+      "section_score": 9.352,
+      "section_scores": {
+        "metadata": 7.941,
+        "indications_and_usage": 9.352,
+        "dosage_and_administration": 0.463,
+        "warnings_and_cautions": 1.095,
+        "adverse_reactions": 3.671
+      },
+      "excerpt": "Indications and Usage: Amoxicillin is a penicillin-class antibacterial indicated for treatment of infections due to susceptible strains of designated "
+    },
+    {
+      "case_id": "MED-BENCH-011",
+      "query": "Metformin",
+      "winning_section": "indications_and_usage",
+      "section_score": 8.115,
+      "section_scores": {
+        "metadata": 6.631,
+        "indications_and_usage": 8.115
+      },
+      "excerpt": "Indications and Usage: USES: Metformin is used with a proper diet and exercise program and possibly with other medications to control high blood sugar"
+    },
+    {
+      "case_id": "MED-BENCH-011",
+      "query": "Metformin",
+      "winning_section": "metadata",
+      "section_score": 6.924,
+      "section_scores": {
+        "metadata": 6.924,
+        "indications_and_usage": 6.008,
+        "dosage_and_administration": 5.713,
+        "adverse_reactions": 4.946
+      },
+      "excerpt": "Brand Name: Metformin Hydrochloride\nGeneric Name: METFORMIN HYDROCHLORIDE\nActive Substance: METFORMIN HYDROCHLORIDE"
+    },
+    {
+      "case_id": "MED-BENCH-012",
+      "query": "Acetaminophen",
+      "winning_section": "metadata",
+      "section_score": 7.898,
+      "section_scores": {
+        "metadata": 7.898,
+        "indications_and_usage": -10.674,
+        "dosage_and_administration": -10.706
+      },
+      "excerpt": "Brand Name: Acetaminophen\nGeneric Name: ACETAMINOPHEN\nActive Substance: ACETAMINOPHEN"
+    },
+    {
+      "case_id": "MED-BENCH-012",
+      "query": "Acetaminophen",
+      "winning_section": "metadata",
+      "section_score": 7.898,
+      "section_scores": {
+        "metadata": 7.898,
+        "indications_and_usage": -10.589
+      },
+      "excerpt": "Brand Name: ACETAMINOPHEN\nGeneric Name: ACETAMINOPHEN\nActive Substance: ACETAMINOPHEN"
+    },
+    {
+      "case_id": "MED-BENCH-013",
+      "query": "Ciprofloxacin",
+      "winning_section": "indications_and_usage",
+      "section_score": 9.013,
+      "section_scores": {
+        "metadata": 8.442,
+        "indications_and_usage": 9.013,
+        "dosage_and_administration": 3.153,
+        "warnings_and_cautions": 4.322,
+        "adverse_reactions": -10.794
+      },
+      "excerpt": "Indications and Usage: Ciprofloxacin is a fluoroquinolone antibacterial indicated in adults (18 years of age and older) with the infections caused by "
+    },
+    {
+      "case_id": "MED-BENCH-013",
+      "query": "Ciprofloxacin",
+      "winning_section": "indications_and_usage",
+      "section_score": 9.013,
+      "section_scores": {
+        "metadata": 8.442,
+        "indications_and_usage": 9.013,
+        "dosage_and_administration": 4.887,
+        "warnings_and_cautions": 4.062,
+        "adverse_reactions": -10.746
+      },
+      "excerpt": "Indications and Usage: Ciprofloxacin is a fluoroquinolone antibacterial indicated in adults (18 years of age and older) with the infections caused by "
+    },
+    {
+      "case_id": "MED-BENCH-016",
+      "query": "What is the active ingredient in Lipitor?",
+      "winning_section": "metadata",
+      "section_score": 5.512,
+      "section_scores": {
+        "metadata": 5.512,
+        "indications_and_usage": -0.982,
+        "dosage_and_administration": -6.088,
+        "warnings_and_cautions": -5.291,
+        "adverse_reactions": -11.316
+      },
+      "excerpt": "Brand Name: Lipitor\nGeneric Name: ATORVASTATIN CALCIUM\nActive Substance: ATORVASTATIN CALCIUM TRIHYDRATE"
+    },
+    {
+      "case_id": "MED-BENCH-016",
+      "query": "What is the active ingredient in Lipitor?",
+      "winning_section": "metadata",
+      "section_score": 5.512,
+      "section_scores": {
+        "metadata": 5.512,
+        "indications_and_usage": -0.982,
+        "dosage_and_administration": -6.043,
+        "warnings_and_cautions": -6.096,
+        "adverse_reactions": -4.486
+      },
+      "excerpt": "Brand Name: Lipitor\nGeneric Name: ATORVASTATIN CALCIUM\nActive Substance: ATORVASTATIN CALCIUM TRIHYDRATE"
+    },
+    {
+      "case_id": "MED-BENCH-021",
+      "query": "oliguria",
+      "winning_section": "disease_chunk",
+      "section_score": 6.826,
+      "section_scores": {
+        "disease_chunk": 6.826
+      },
+      "excerpt": "Disease: Oliguria"
+    },
+    {
+      "case_id": "MED-BENCH-021",
+      "query": "oliguria",
+      "winning_section": "disease_chunk",
+      "section_score": 6.588,
+      "section_scores": {
+        "disease_chunk": 6.588
+      },
+      "excerpt": "Disease: Oliguria"
+    },
+    {
+      "case_id": "MED-BENCH-022",
+      "query": "absence of menstruation",
+      "winning_section": "disease_chunk",
+      "section_score": 8.337,
+      "section_scores": {
+        "disease_chunk": 8.337
+      },
+      "excerpt": "Disease: idiopathic absence of menstruation"
+    },
+    {
+      "case_id": "MED-BENCH-022",
+      "query": "absence of menstruation",
+      "winning_section": "disease_chunk",
+      "section_score": 8.215,
+      "section_scores": {
+        "disease_chunk": 8.215
+      },
+      "excerpt": "Disease: Idiopathic Absence of Menstruation"
+    },
+    {
+      "case_id": "MED-BENCH-026",
+      "query": "itchy skin particularly on hands and feet during pregnancy",
+      "winning_section": "disease_chunk",
+      "section_score": 7.684,
+      "section_scores": {
+        "disease_chunk": 7.684
+      },
+      "excerpt": "Disease: Gestational Cholestasis"
+    },
+    {
+      "case_id": "MED-BENCH-026",
+      "query": "itchy skin particularly on hands and feet during pregnancy",
+      "winning_section": "disease_chunk",
+      "section_score": 3.464,
+      "section_scores": {
+        "disease_chunk": 3.464
+      },
+      "excerpt": "Disease: scabies"
+    }
+  ]
+}

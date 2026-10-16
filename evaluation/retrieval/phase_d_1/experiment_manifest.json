@@ -1,0 +1,31 @@
+{
+  "phase": "Phase D.1 \u2014 Faithfulness-First Hybrid Retrieval Engineering",
+  "timestamp": "2026-10-16T13:11:14.058450+00:00",
+  "git_commit": "d47631b",
+  "branch": "feat/retrieval-evaluation",
+  "working_tree_clean": true,
+  "models": {
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "reranker_model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+    "device": "cpu"
+  },
+  "indexes_evaluated": [
+    "diseases",
+    "drugs",
+    "drug_dict"
+  ],
+  "splits": {
+    "dev_cases_count": 30,
+    "val_cases_count": 10,
+    "test_cases_count": 10,
+    "total_benchmark_cases": 50
+  },
+  "calibrated_gating_threshold": -2.0,
+  "certified_configuration": {
+    "enable_medical_tokenizer": true,
+    "enable_drug_dict_text_channel": true,
+    "enable_structured_reranking": true,
+    "enable_expanded_bm25_fields": true,
+    "relevance_threshold": -2.0
+  }
+}

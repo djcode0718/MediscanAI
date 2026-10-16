@@ -1,0 +1,11 @@
+{
+  "phase": "D.2.b",
+  "timestamp": "2026-10-16T17:58:22.489686+00:00",
+  "gold_judgments_bytes": 0,
+  "gold_file_strictly_empty": true,
+  "entity_resolution_untouched": true,
+  "production_code_untouched": true,
+  "frozen_config_hash": "e4dc815ae49dc9f8",
+  "ocr_suite_pass_rate": 0.8571,
+  "safety_suite_pass_rate": 0.9286
+}

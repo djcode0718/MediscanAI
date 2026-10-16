@@ -1,0 +1,65 @@
+{
+  "metadata": {
+    "evaluation_phase": "D.2.a",
+    "timestamp": "2026-10-16T17:34:18.077212+00:00",
+    "frozen_config_hash": "e18c786bef3b95fc",
+    "denominator_rule": "Answerable queries with verified gold judgments (grade >= 2)"
+  },
+  "independent_channels": {
+    "dense_faiss": {
+      "recall_at_5": 0.2593,
+      "recall_at_10": 0.3704,
+      "hit_rate_at_5": 0.2593,
+      "hit_rate_at_10": 0.3704,
+      "mrr_at_10": 0.1797,
+      "ndcg_at_10": 0.2247
+    },
+    "bm25": {
+      "recall_at_5": 0.4815,
+      "recall_at_10": 0.5556,
+      "hit_rate_at_5": 0.4815,
+      "hit_rate_at_10": 0.5556,
+      "mrr_at_10": 0.3409,
+      "ndcg_at_10": 0.3928
+    },
+    "drug_dict": {
+      "recall_at_5": 0.0,
+      "recall_at_10": 0.0,
+      "hit_rate_at_5": 0.0,
+      "hit_rate_at_10": 0.0,
+      "mrr_at_10": 0.0,
+      "ndcg_at_10": 0.0
+    },
+    "rrf_fusion": {
+      "recall_at_5": 0.4074,
+      "recall_at_10": 0.5556,
+      "hit_rate_at_5": 0.4074,
+      "hit_rate_at_10": 0.5556,
+      "mrr_at_10": 0.3242,
+      "ndcg_at_10": 0.3792
+    },
+    "final_routed_retrieval": {
+      "recall_at_5": 0.4444,
+      "recall_at_10": 0.5556,
+      "hit_rate_at_5": 0.4444,
+      "hit_rate_at_10": 0.5556,
+      "mrr_at_10": 0.3544,
+      "ndcg_at_10": 0.4024
+    }
+  },
+  "held_out_test_final": {
+    "total_cases": 10,
+    "answerable_count": 9,
+    "negative_control_count": 1,
+    "macro_recall_at_5": 0.6667,
+    "macro_recall_at_10": 0.6667,
+    "macro_hit_rate_at_5": 0.6667,
+    "macro_hit_rate_at_10": 0.6667,
+    "macro_mrr_at_10": 0.537,
+    "macro_ndcg_at_10": 0.5701,
+    "rejection_accuracy_at_5": 0.0,
+    "false_positive_count_at_5": 5.0,
+    "latency_p50_ms": 1405,
+    "latency_mean_ms": 921.3
+  }
+}
