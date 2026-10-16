@@ -1,0 +1,107 @@
+{
+  "phase": "Phase C.5 \u2014 Paired Ragas Evaluation of Baseline vs Graph-Assisted Responses",
+  "status": "COMPLETED",
+  "timestamp_initialized": "2026-10-15T22:35:00+05:30",
+  "git_metadata": {
+    "commit": "20b679c",
+    "branch": "feat/retrieval-evaluation",
+    "dirty": false
+  },
+  "runtime_environment": {
+    "python": "3.10.18",
+    "ragas": "0.2.15",
+    "langchain": "1.4.6",
+    "sentence_transformers": "5.1.0",
+    "datasets": "3.6.0",
+    "conda_env": "med-env"
+  },
+  "judge_configuration": {
+    "model_name": "llama3.1:8b",
+    "model_digest": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+    "runtime": "ollama",
+    "ollama_endpoint": "http://localhost:11434",
+    "temperature": 0.0,
+    "quantization": "Q4_K_M",
+    "context_length": 131072,
+    "self_evaluation_bias_declared": true
+  },
+  "embedding_configuration": {
+    "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+    "offline_enforced": true,
+    "model_kwargs": {
+      "local_files_only": true
+    }
+  },
+  "execution_settings": {
+    "max_workers": 1,
+    "timeout_seconds": 180,
+    "max_wait_seconds": 60,
+    "concurrency_policy": "strictly_sequential",
+    "checkpoint_frequency": "per_case_atomic"
+  },
+  "input_artifacts": {
+    "paired_responses": {
+      "path": "evaluation/ragas/phase_c_4/paired_responses.jsonl",
+      "sha256": "1639cb0612f24dae8ccf6af920aeee97ddd3bf4c5ce9820adc4deed53b847352",
+      "record_count": 50
+    },
+    "retrieval_contexts": {
+      "path": "evaluation/ragas/phase_c_4/retrieval_contexts.jsonl",
+      "sha256": "c8802f0492eaf9ac25866cd5106468208a5f846d8ef4498564229b2b41cbcefb",
+      "record_count": 100
+    },
+    "generation_runs": {
+      "path": "evaluation/ragas/phase_c_4/generation_runs.jsonl",
+      "sha256": "ea58800623608d953b37545558e1c17f327502b2a8088a65d676700b8cafcfc4",
+      "record_count": 100
+    },
+    "reference_answers": {
+      "path": "evaluation/benchmark/narrative_references/reference_answers.jsonl",
+      "sha256": "14fb0654f217ac887317d80fd036b9a5d19ff151932db53ba0e80fe08368dd23",
+      "record_count": 50,
+      "provenance": {
+        "human_reviewed": false,
+        "clinical_reviewed": false,
+        "official_human_gold": false
+      }
+    },
+    "gold_judgments": {
+      "path": "evaluation/benchmark/gold_judgments.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    }
+  },
+  "metrics_plan": {
+    "faithfulness": {
+      "eligible_cases": 50,
+      "paired_cases": 50
+    },
+    "answer_relevancy": {
+      "eligible_cases": 50,
+      "paired_cases": 50
+    },
+    "context_precision": {
+      "eligible_cases": 45,
+      "paired_cases": 45,
+      "ineligible_cases": [
+        "MED-BENCH-041",
+        "MED-BENCH-042",
+        "MED-BENCH-043",
+        "MED-BENCH-044",
+        "MED-BENCH-045"
+      ]
+    },
+    "context_recall": {
+      "eligible_cases": 45,
+      "paired_cases": 45,
+      "ineligible_cases": [
+        "MED-BENCH-041",
+        "MED-BENCH-042",
+        "MED-BENCH-043",
+        "MED-BENCH-044",
+        "MED-BENCH-045"
+      ]
+    }
+  },
+  "timestamp_completed": "2026-10-15T21:34:08.514056+00:00"
+}

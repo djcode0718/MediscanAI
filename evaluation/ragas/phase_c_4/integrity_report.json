@@ -1,0 +1,48 @@
+{
+  "phase": "Phase C.4",
+  "validation_timestamp": "2026-10-15T15:50:36.205320+00:00",
+  "verification_gates": {
+    "benchmark_cases_count": {
+      "expected": 50,
+      "actual": 50,
+      "passed": true
+    },
+    "generation_runs_count": {
+      "expected": 100,
+      "actual": 100,
+      "passed": true
+    },
+    "paired_responses_count": {
+      "expected": 50,
+      "actual": 50,
+      "passed": true
+    },
+    "retrieval_contexts_count": {
+      "expected": 100,
+      "actual": 100,
+      "passed": true
+    },
+    "gold_judgments_zero_bytes": {
+      "expected_bytes": 0,
+      "actual_bytes": 0,
+      "passed": true
+    },
+    "provenance_flags_preserved": {
+      "human_reviewed": false,
+      "clinical_reviewed": false,
+      "official_gold": false,
+      "passed": true
+    },
+    "external_api_calls_made": {
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    "entity_resolution_untouched": {
+      "expected": true,
+      "actual": true,
+      "passed": true
+    }
+  },
+  "all_gates_passed": true
+}

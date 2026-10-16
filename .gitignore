@@ -29,28 +29,41 @@ frontend/dist/
 frontend/node_modules/
 frontend/.vite/
 
-# Temporary / Scratch Files
+# Temporary, Scratch & Runtime Files
 output.txt
 copy_codes.py
 temp_image_*
 temp_image_*.jpg
 *.tmp
+*.bak
+*.save
+*.swp
+*.swo
+*~
+**/progress.json
 
 # Operating System Files
 .DS_Store
+**/.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
 Thumbs.db
 
 # IDEs
 .vscode/
 .idea/
 
-# Large generated data / ML artifacts
-data/
-indexes/
-# Large generated data / ML artifacts
-data/
-indexes/
+# Testing & Coverage
+.coverage
+coverage/
+coverage.xml
+htmlcov/
 
+# Large generated data / ML artifacts
+data/
+indexes/
 
 # Local biomedical entity-resolution working data
 # entity_resolution
@@ -70,4 +83,9 @@ mediscanai_data_inventory.txt
 
 # Evaluation run output directories
 evaluation/results/
+
+# Large Evaluation Generation & Run Data Files
+evaluation/ragas/phase_c_4/*.jsonl
+evaluation/ragas/phase_c_4/audit_c4_1/*.jsonl
+evaluation/ragas/phase_c_5/*.jsonl
 

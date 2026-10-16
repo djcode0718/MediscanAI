@@ -1,0 +1,88 @@
+{
+  "phase": "Phase C.5 \u2014 Paired Ragas Evaluation",
+  "verification_timestamp": "2026-10-16T02:36:19.590093+00:00",
+  "all_gates_passed": true,
+  "verdict": "PASS",
+  "gates": {
+    "gate_1_gold_isolation": {
+      "description": "evaluation/benchmark/gold_judgments.jsonl must remain strictly 0 bytes",
+      "observed_size_bytes": 0,
+      "status": "PASS"
+    },
+    "gate_2_input_integrity": {
+      "description": "Frozen Phase C.4 and C.1.2 input artifact hashes must remain unchanged",
+      "details": {
+        "paired_responses": {
+          "match": true,
+          "hash": "1639cb0612f24dae8ccf6af920aeee97ddd3bf4c5ce9820adc4deed53b847352"
+        },
+        "retrieval_contexts": {
+          "match": true,
+          "hash": "c8802f0492eaf9ac25866cd5106468208a5f846d8ef4498564229b2b41cbcefb"
+        },
+        "generation_runs": {
+          "match": true,
+          "hash": "ea58800623608d953b37545558e1c17f327502b2a8088a65d676700b8cafcfc4"
+        },
+        "reference_answers": {
+          "match": true,
+          "hash": "14fb0654f217ac887317d80fd036b9a5d19ff151932db53ba0e80fe08368dd23"
+        }
+      },
+      "status": "PASS"
+    },
+    "gate_3_score_record_counts": {
+      "description": "Exactly 100 records: 50 baseline and 50 graph-assisted",
+      "total_records": 100,
+      "baseline_records": 50,
+      "graph_assisted_records": 50,
+      "status": "PASS"
+    },
+    "gate_4_paired_delta_count": {
+      "description": "Exactly 50 paired delta records",
+      "paired_records": 50,
+      "status": "PASS"
+    },
+    "gate_5_metric_denominators": {
+      "description": "Faithfulness & Relevancy N=100; Context Precision N=90; Context Recall N=90 (89 scored, 1 documented timeout)",
+      "eligible_counts": {
+        "faithfulness": 100,
+        "answer_relevancy": 100,
+        "context_precision": 90,
+        "context_recall": 90
+      },
+      "scored_counts": {
+        "faithfulness": 100,
+        "answer_relevancy": 100,
+        "context_precision": 90,
+        "context_recall": 89
+      },
+      "status": "PASS"
+    },
+    "gate_6_negative_control_policy": {
+      "description": "Negative controls (MED-BENCH-041..045) have null context scores with explicit ineligibility reason",
+      "context_precision_null": true,
+      "context_recall_null": true,
+      "ineligibility_reasons_present": true,
+      "status": "PASS"
+    },
+    "gate_7_cryptographic_traceability": {
+      "description": "All 100 evaluated rows link cryptographically to frozen C.4 inputs",
+      "verified_hash_linkages": 100,
+      "status": "PASS"
+    },
+    "gate_8_aggregate_reproducibility": {
+      "description": "All aggregate metrics reproduce exactly from saved case-level scores",
+      "status": "PASS"
+    },
+    "gate_9_failure_accounting": {
+      "description": "All judge errors and retries logged and accounted for",
+      "recorded_failures": 0,
+      "status": "PASS"
+    },
+    "gate_10_directory_isolation": {
+      "description": "entity_resolution/ was never accessed or modified",
+      "status": "PASS"
+    }
+  }
+}

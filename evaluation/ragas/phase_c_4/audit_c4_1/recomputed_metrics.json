@@ -1,0 +1,162 @@
+{
+  "audit_phase": "Phase C.4.1 — Read-Only Generation Integrity Audit",
+  "audit_timestamp": "2026-10-15T21:30:00Z",
+  "audited_target_directory": "evaluation/ragas/phase_c_4",
+  "summary_verdict": "PASS WITH WARNINGS",
+  "phase_c_5_readiness": "READY_FOR_PHASE_C_5",
+  "case_and_run_counts": {
+    "canonical_benchmark_cases": 50,
+    "unique_cases_in_runs": 50,
+    "total_generation_records": 100,
+    "baseline_records": 50,
+    "graph_assisted_records": 50,
+    "paired_records": 50,
+    "retrieval_contexts_count": 100,
+    "warning_compliance_rows": 100,
+    "successful_runs": 100,
+    "failed_runs": 0,
+    "retried_runs": 0
+  },
+  "model_and_runtime_verification": {
+    "model_name_uniformity": {
+      "expected": "llama3.1:8b",
+      "actual_unique_values": ["llama3.1:8b"],
+      "verified": true
+    },
+    "model_digest_uniformity": {
+      "expected": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+      "actual_unique_values": ["46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e"],
+      "verified": true
+    },
+    "generation_settings_uniformity": {
+      "expected": {
+        "temperature": 0.0,
+        "num_predict": 512,
+        "top_p": 1.0
+      },
+      "verified": true
+    },
+    "prompt_template_hash": {
+      "sha256": "d9cb6819ed81b1a02cea4fe5f654de1381b17fb3e8028f423e0347af1b44dbe0",
+      "verified_uniform": true
+    }
+  },
+  "retrieval_context_verification": {
+    "recomputed_context_hashes_matched": 100,
+    "recomputed_context_hashes_mismatched": 0,
+    "baseline_prefix_preserved_in_graph": 50,
+    "graph_separator_uniform": 50,
+    "cases_with_active_graph_evidence": 25,
+    "cases_with_empty_graph_evidence": 25
+  },
+  "warning_and_disclaimer_compliance": {
+    "mandatory_header": "### ⚠️ Important Warning",
+    "header_compliance_count": 100,
+    "header_compliance_pct": 100.0,
+    "verbatim_disclaimer_compliance_count": 100,
+    "verbatim_disclaimer_compliance_pct": 100.0,
+    "raw_output_hashes_matched": 100,
+    "raw_output_hashes_mismatched": 0
+  },
+  "latency_metrics": {
+    "wall_clock_ms": {
+      "overall": {
+        "count": 100,
+        "total_ms": 1902328,
+        "mean_ms": 19023.28,
+        "median_ms": 17708,
+        "min_ms": 6807,
+        "max_ms": 42728,
+        "std_dev_ms": 7129.29
+      },
+      "baseline": {
+        "count": 50,
+        "total_ms": 953679,
+        "mean_ms": 19073.58,
+        "median_ms": 18022,
+        "min_ms": 6807,
+        "max_ms": 36625,
+        "std_dev_ms": 6563.97
+      },
+      "graph_assisted": {
+        "count": 50,
+        "total_ms": 948649,
+        "mean_ms": 18972.98,
+        "median_ms": 16787,
+        "min_ms": 7361,
+        "max_ms": 42728,
+        "std_dev_ms": 7652.62
+      }
+    },
+    "ollama_total_duration_ms": {
+      "count": 100,
+      "total_ms": 1900696,
+      "mean_ms": 19006.96,
+      "median_ms": 17690,
+      "min_ms": 6801,
+      "max_ms": 42712,
+      "std_dev_ms": 7126.52
+    },
+    "client_http_overhead_mean_ms": 16.32
+  },
+  "token_metrics": {
+    "generated_eval_tokens": {
+      "overall": {
+        "count": 100,
+        "total_tokens": 16972,
+        "mean_tokens": 169.72,
+        "median_tokens": 153,
+        "min_tokens": 95,
+        "max_tokens": 415,
+        "std_dev_tokens": 56.9
+      },
+      "baseline": {
+        "count": 50,
+        "total_tokens": 8152,
+        "mean_tokens": 163.04,
+        "median_tokens": 151,
+        "min_tokens": 95,
+        "max_tokens": 301,
+        "std_dev_tokens": 44.3
+      },
+      "graph_assisted": {
+        "count": 50,
+        "total_tokens": 8820,
+        "mean_tokens": 176.4,
+        "median_tokens": 157,
+        "min_tokens": 95,
+        "max_tokens": 415,
+        "std_dev_tokens": 66.51
+      }
+    },
+    "prompt_eval_tokens": {
+      "overall": {
+        "count": 100,
+        "total_tokens": 81276,
+        "mean_tokens": 812.76,
+        "median_tokens": 749,
+        "min_tokens": 664,
+        "max_tokens": 1265,
+        "std_dev_tokens": 141.77
+      }
+    }
+  },
+  "manifest_reconciliation": {
+    "manifest_mean_latency_ms": 19023.3,
+    "recomputed_mean_latency_ms": 19023.28,
+    "manifest_median_latency_ms": 17708,
+    "recomputed_median_latency_ms": 17708,
+    "manifest_total_tokens": 16972,
+    "recomputed_total_tokens": 16972,
+    "manifest_elapsed_seconds": 1903,
+    "sum_latencies_seconds": 1902.33,
+    "loop_overhead_seconds": 0.67
+  },
+  "integrity_constraints_verified": {
+    "gold_judgments_size_bytes": 0,
+    "gold_judgments_zero_bytes": true,
+    "tracked_files_modified_in_git": 0,
+    "entity_resolution_untouched": true,
+    "external_api_calls_made": 0
+  }
+}
