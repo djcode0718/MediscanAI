@@ -1,0 +1,29 @@
+{
+  "sample_count": 50,
+  "retrieval_latency_ms": {
+    "p50": 1948,
+    "p95": 3441,
+    "mean": 1745.3,
+    "min": 0,
+    "max": 5303
+  },
+  "generation_latency_ms": {
+    "p50": 22612,
+    "p95": 42904,
+    "mean": 24415.5,
+    "min": 10666,
+    "max": 51448
+  },
+  "tokens_generated": {
+    "total": 9662,
+    "mean": 193.2,
+    "p50": 180,
+    "p95": 302
+  },
+  "token_generation_speed_tok_sec": {
+    "p50": 8.5,
+    "p95": 11.14,
+    "mean": 8.27
+  },
+  "timestamp": "2026-10-17T11:05:29.513916+00:00"
+}

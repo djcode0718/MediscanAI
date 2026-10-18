@@ -1,0 +1,94 @@
+{
+  "manifest_name": "MediScanAI Phase 1.2.d Production Integration Manifest",
+  "phase": "Phase 1.2.d — Controlled Emergency Guardrail Integration",
+  "timestamp": "2026-10-17T16:15:00+00:00",
+  "git_metadata": {
+    "branch": "feat/retrieval-evaluation",
+    "base_commit": "40ba53b24b8afefe8ea45188f2f2eaa921d2d548"
+  },
+  "production_files_modified": [
+    {
+      "path": "backend/core/config.py",
+      "purpose": "Introduce EMERGENCY_GUARDRAIL_ENABLED (default False), EMERGENCY_GUARDRAIL_CONFIG_PATH, and EMERGENCY_GUARDRAIL_FAST_PATH to Settings."
+    },
+    {
+      "path": "backend/main.py",
+      "purpose": "Log guardrail status during startup_event; record data-minimized EMERGENCY_GUARDRAIL_TRIGGERED audit event in /api/analyze."
+    },
+    {
+      "path": "app/core.py",
+      "purpose": "Integrate Pre-Generation Fast-Path (<1ms emergency return) and Post-Generation Safeguard Enforcement in Pipeline.run()."
+    },
+    {
+      "path": "app/guardrail.py",
+      "purpose": "Production deterministic emergency guardrail module implementing rule triggers, negation gating, and contradictory advice elimination."
+    },
+    {
+      "path": "app/guardrail_config.json",
+      "purpose": "Audited emergency guardrail rules, regex triggers, national hotlines (112/911), and negation/history patterns."
+    },
+    {
+      "path": "tests/conftest.py",
+      "purpose": "Compatibility shim for paddlex / langchain 1.4+ in test environments."
+    },
+    {
+      "path": "tests/integration/test_emergency_guardrail_integration.py",
+      "purpose": "Comprehensive integration test suite covering 23 clinical, adversarial, multimodal, and rollback test cases."
+    }
+  ],
+  "invariants_verified": {
+    "entity_resolution_off_limits": {
+      "accessed": false,
+      "verified": true
+    },
+    "gold_judgments_zero_bytes": {
+      "path": "evaluation/benchmark/gold_judgments.jsonl",
+      "size_bytes": 0,
+      "verified": true
+    },
+    "cloud_api_calls_made": 0,
+    "frozen_d2c_hash": {
+      "expected": "f3937376cd191ee7",
+      "observed": "f3937376cd191ee7",
+      "verified": true
+    },
+    "prior_phase_artifacts_immutable": {
+      "phase_1_2_a_results": "c63e2221405e7cc1",
+      "phase_1_2_b_results": "507d1ebda6436ffd",
+      "phase_1_2_b_1_reconciliation": "9a0ef97de3913fce",
+      "verified": true
+    }
+  },
+  "deliverables": [
+    "integration_report.md",
+    "integration_test_results.json",
+    "safety_regression_results.jsonl",
+    "latency_summary.json",
+    "rollback_test_report.md",
+    "feature_flag_verification.json",
+    "privacy_logging_audit.md",
+    "experiment_manifest.json"
+  ],
+  "test_summary": {
+    "integration_tests_passed": 23,
+    "integration_tests_failed": 0,
+    "regression_suite_cases": 28,
+    "emergency_recall": 1.0,
+    "non_emergency_false_positive_rate": 0.0,
+    "negative_control_abstention_rate": 1.0,
+    "contradictory_advice_occurrences": 0
+  },
+  "latency_metrics": {
+    "pre_generation_detector_p50_ms": 0.0097,
+    "pre_generation_detector_p95_ms": 0.0183,
+    "post_generation_enforcement_p50_ms": 0.0180,
+    "post_generation_enforcement_p95_ms": 0.0411,
+    "fast_path_pipeline_p50_ms": 0.0513,
+    "rollback_measured_seconds": 0.0047
+  },
+  "acceptance_verdict": "PASS WITH RELEASE BLOCKERS",
+  "release_blockers": [
+    "Clinical Safety Review Sign-off by Board-Certified Physician (GATE-10)",
+    "Production Deployment Owner Authorization (GATE-11)"
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "contract_name": "MediScanAI Emergency Triage Guardrail Integration Contract",
+  "version": "1.0.0",
+  "phase": "Phase 1.2.c — Integration Proposal & Readiness Design",
+  "status": "PROPOSED",
+  "date": "2026-10-17",
+  "component": {
+    "module_path": "app.guardrails.emergency",
+    "class_name": "EmergencyGuardrail",
+    "config_path": "app/guardrails/emergency_config.json",
+    "dependencies": {
+      "standard_library_only": true,
+      "requires_neo4j": false,
+      "requires_cloud_api": false,
+      "requires_model_download": false,
+      "requires_torch": false,
+      "python_version_min": "3.10"
+    }
+  },
+  "interface_specifications": {
+    "input_contract": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "Normalized user query string or concatenated speech transcription.",
+          "required": true,
+          "max_length": 5000
+        },
+        "baseline_response": {
+          "type": "string",
+          "description": "The raw generated markdown response from the LLM generator (required for post-generation stage).",
+          "required": false,
+          "default": ""
+        },
+        "retrieved_contexts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional list of retrieved disease or drug evidence summaries used for Rule-06 intercept.",
+          "required": false,
+          "default": []
+        },
+        "ocr_text": {
+          "type": "string",
+          "description": "Optional extracted OCR packaging text from user-uploaded images.",
+          "required": false,
+          "default": ""
+        },
+        "router_signals": {
+          "type": "object",
+          "description": "Optional structured intent router signals (e.g., query_type, target_entity, confidence).",
+          "required": false,
+          "default": {}
+        }
+      }
+    },
+    "output_contract": {
+      "type": "object",
+      "properties": {
+        "guarded_response": {
+          "type": "string",
+          "description": "Final user-facing response. Exactly equals baseline_response if no emergency fired; replaced with emergency escalation template if fired."
+        },
+        "decision": {
+          "type": "object",
+          "properties": {
+            "is_emergency": {
+              "type": "boolean",
+              "description": "True if an acute emergency trigger or evidence intercept fired."
+            },
+            "action_taken": {
+              "type": "string",
+              "enum": ["PASS_THROUGH", "FAST_PATH_OVERRIDE", "POST_GENERATION_OVERRIDE"],
+              "description": "The specific pipeline action applied."
+            },
+            "fired_rule_id": {
+              "type": ["string", "null"],
+              "description": "Unique identifier of the rule that fired (e.g., RULE-01-CARDIOVASCULAR-CHEST-PAIN)."
+            },
+            "category": {
+              "type": ["string", "null"],
+              "enum": ["cardiovascular", "respiratory", "neurological", "consciousness", "hemorrhage", null]
+            },
+            "severity": {
+              "type": ["string", "null"],
+              "enum": ["CRITICAL_EMERGENCY", "HIGH_PRIORITY", null]
+            },
+            "matched_text": {
+              "type": ["string", "null"],
+              "description": "Substring from the query or context that satisfied the regex pattern."
+            },
+            "confidence": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "reasoning": {
+              "type": "string",
+              "description": "Deterministic rationale for the triage decision."
+            },
+            "response_modified": {
+              "type": "boolean",
+              "description": "Indicates whether the response string was mutated by the guardrail."
+            },
+            "latency_ms": {
+              "type": "number",
+              "description": "Wall-clock execution duration of guardrail evaluation in milliseconds."
+            }
+          },
+          "required": ["is_emergency", "action_taken", "response_modified", "latency_ms"]
+        }
+      },
+      "required": ["guarded_response", "decision"]
+    }
+  },
+  "operational_constraints": {
+    "latency_budget": {
+      "max_p50_ms": 0.1,
+      "max_p95_ms": 0.5,
+      "timeout_hard_cap_ms": 10.0
+    },
+    "memory_budget": {
+      "allocation_overhead_bytes": 0,
+      "compiled_regex_cached": true
+    },
+    "idempotency": {
+      "guaranteed": true,
+      "description": "Applying apply_guardrail multiple times produces identical text without duplicate headers or nested warnings."
+    }
+  },
+  "privacy_and_telemetry_contract": {
+    "data_minimization_rules": [
+      "Never log full raw user symptom text to production application logs by default.",
+      "Never log raw LLM generation text or guarded response text into stdout / stderr.",
+      "Only record structured audit metadata: rule_id, category, severity, is_emergency, latency_ms, analysis_id, and hashed query fingerprint.",
+      "Retain full text only in designated, cryptographically secured offline evaluation sets under explicit IRB / clinical audit controls."
+    ],
+    "production_audit_event": {
+      "event_type": "EMERGENCY_GUARDRAIL_EVALUATED",
+      "fields": [
+        "analysis_id",
+        "is_emergency",
+        "action_taken",
+        "rule_id",
+        "category",
+        "severity",
+        "latency_ms",
+        "response_modified"
+      ]
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "phase": "Phase 1.2.a \u2014 Generation Baseline on Frozen D.2.c Evidence",
+  "date": "2026-10-17T11:05:29.541625+00:00",
+  "git": {
+    "branch": "feat/retrieval-evaluation",
+    "commit": "40ba53b24b8afefe8ea45188f2f2eaa921d2d548"
+  },
+  "frozen_retrieval_configuration": {
+    "name": "CFG-04-D2C-ADAPTIVE-FINAL",
+    "path": "evaluation/retrieval/phase_d_2_c/intent_router.py",
+    "hash": "f3937376cd191ee7",
+    "expected_hash": "f3937376cd191ee7",
+    "hash_verified": true
+  },
+  "generator": {
+    "model": "llama3.1:8b",
+    "model_digest": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "num_predict": 512,
+    "runtime": "ollama",
+    "endpoint": "http://localhost:11434"
+  },
+  "prompt": {
+    "template_hash": "d9cb6819ed81b1a02cea4fe5f654de1381b17fb3e8028f423e0347af1b44dbe0",
+    "expected_template_hash": "d9cb6819ed81b1a02cea4fe5f654de1381b17fb3e8028f423e0347af1b44dbe0"
+  },
+  "evaluator": {
+    "judge_model": "llama3.1:8b",
+    "embeddings": "all-MiniLM-L6-v2 (offline enforced)",
+    "ragas_version": "0.2.15",
+    "self_evaluation_bias_disclosed": true
+  },
+  "benchmark": {
+    "total_cases": 50,
+    "split_distribution": {
+      "dev": 30,
+      "val": 10,
+      "held_out_test": 10
+    },
+    "candidate_queries_path": "evaluation/benchmark/candidate_queries.jsonl",
+    "reference_answers_path": "evaluation/benchmark/narrative_references/reference_answers.jsonl",
+    "gold_judgments_path": "evaluation/benchmark/gold_judgments.jsonl",
+    "gold_judgments_size_bytes": 0
+  },
+  "invariants": {
+    "cloud_calls_made": false,
+    "production_code_modified": false,
+    "gold_judgments_bytes": 0,
+    "entity_resolution_accessed": false
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "audit_phase": "Phase 1.2.b.1 — Independent Guardrail Audit",
+  "audit_timestamp": "2026-10-17T11:55:00+00:00",
+  "integrity_verifications": {
+    "entity_resolution_off_limits": {
+      "invariant": "entity_resolution/ is strictly off-limits (zero reads, searches, listings, or imports)",
+      "accessed": false,
+      "verified": true,
+      "details": "Directory was never accessed, inspected, or referenced in Phase 1.2.b or 1.2.b.1."
+    },
+    "gold_judgments_zero_bytes": {
+      "invariant": "evaluation/benchmark/gold_judgments.jsonl must remain exactly 0 bytes",
+      "file_path": "evaluation/benchmark/gold_judgments.jsonl",
+      "actual_size_bytes": 0,
+      "verified": true,
+      "details": "ls -la confirms -rw-r--r-- 0 bytes."
+    },
+    "cloud_api_calls_disabled": {
+      "invariant": "Zero external cloud API calls; local execution only",
+      "cloud_calls_made": false,
+      "verified": true,
+      "details": "All guardrail execution is deterministic local regex logic."
+    },
+    "production_code_unchanged": {
+      "invariant": "Zero changes to production code under app/ or backend/",
+      "app_modified": false,
+      "backend_modified": false,
+      "verified": true,
+      "details": "git status confirms zero modified tracked files."
+    },
+    "frozen_d2c_configuration_hash": {
+      "invariant": "Frozen Phase D.2.c hash must remain f3937376cd191ee7",
+      "file_path": "evaluation/retrieval/phase_d_2_c/intent_router.py",
+      "expected_hash": "f3937376cd191ee7",
+      "observed_hash": "f3937376cd191ee7",
+      "hash_matched": true,
+      "verified": true
+    },
+    "phase_1_2_a_artifacts_immutable": {
+      "invariant": "Phase 1.2.a baseline generation outputs and reports must not be modified or overwritten",
+      "generation_results_path": "evaluation/retrieval/phase_1_2_a_generation_baseline/generation_results.jsonl",
+      "record_count": 50,
+      "sha256": "c63e2221405e7cc16f74550046a26464226dbd414670832c499cac6236d41e94",
+      "unmodified": true,
+      "verified": true
+    },
+    "held_out_tuning_prohibited": {
+      "invariant": "Held-out test split must not be used for iterative tuning",
+      "held_out_iterative_tuning_detected": false,
+      "verified": true,
+      "details": "Guardrail rules were designed from clinical guidelines and development cases; held-out test split was evaluated once without parameter adjustments."
+    },
+    "git_confinement": {
+      "invariant": "All Phase 1.2.b changes must be confined strictly to the experimental directory",
+      "experimental_directory": "evaluation/retrieval/phase_1_2_b_emergency_guardrail/",
+      "leaked_changes_outside_directory": false,
+      "verified": true
+    }
+  },
+  "overall_integrity_status": "ALL_CONSTRAINTS_VERIFIED"
+}

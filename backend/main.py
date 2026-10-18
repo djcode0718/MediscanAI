@@ -127,6 +127,12 @@ async def startup_event():
     except Exception as e:
         print(f"[STARTUP] Whisper model: {time.perf_counter()-_t_whisper:.2f}s ⚠️  (skipped/failed: {e})")
 
+    # 4. Check Emergency Guardrail status
+    if settings.EMERGENCY_GUARDRAIL_ENABLED:
+        print(f"[STARTUP] Emergency Triage Guardrail: ENABLED (Fast-path: {settings.EMERGENCY_GUARDRAIL_FAST_PATH}) 🚨")
+    else:
+        print("[STARTUP] Emergency Triage Guardrail: DISABLED (baseline mode) 🛡️")
+
     _total_s = time.perf_counter() - _t_startup
     print("[STARTUP] " + "-" * 50)
     print(f"[STARTUP] Total initialization: {_total_s:.2f}s")
@@ -395,6 +401,40 @@ async def analyze(
             },
             db=db
         )
+
+        # 9b. Record Emergency Guardrail Event if triggered (Data-Minimized)
+        guardrail_meta = result.get("meta", {}).get("guardrail")
+        if guardrail_meta and guardrail_meta.get("is_emergency"):
+            record_audit_event(
+                event_type="EMERGENCY_GUARDRAIL_TRIGGERED",
+                user_id=current_user.id,
+                ip_address=request.client.host if request.client else None,
+                user_agent=request.headers.get("user-agent"),
+                metadata={
+                    "analysis_id": analysis.id,
+                    "rule_id": guardrail_meta.get("fired_rule_id"),
+                    "category": guardrail_meta.get("category"),
+                    "severity": guardrail_meta.get("severity"),
+                    "fast_path": result.get("meta", {}).get("fast_path", False),
+                    "duration_ms": duration_ms
+                },
+                db=db
+            )
+
+        # 9c. Record OCR Processing Failure if occurred (Data-Minimized)
+        if result.get("meta", {}).get("ocr_status") == "FAILED":
+            record_audit_event(
+                event_type="OCR_PROCESSING_FAILED",
+                user_id=current_user.id,
+                ip_address=request.client.host if request.client else None,
+                user_agent=request.headers.get("user-agent"),
+                metadata={
+                    "analysis_id": analysis.id,
+                    "error_type": result.get("meta", {}).get("ocr_error_type", "UnknownError"),
+                    "duration_ms": duration_ms
+                },
+                db=db
+            )
 
         # --- Request-level timing summary ---
         _req_id = getattr(request.state, "request_id", "unknown")

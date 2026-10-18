@@ -1,0 +1,12 @@
+{
+  "sample_count": 65,
+  "guardrail_overhead_ms": {
+    "p50": 0.01,
+    "p95": 0.022,
+    "mean": 0.011,
+    "min": 0.002,
+    "max": 0.028
+  },
+  "throughput_evaluations_per_second": 88950.7,
+  "timestamp": "2026-10-17T11:46:07.887781+00:00"
+}

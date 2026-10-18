@@ -1,0 +1,83 @@
+{
+  "1_primary_detector_internal_exception": {
+    "fault_injected": "RuntimeError raised during primary rule trigger search",
+    "observable_behavior": "Primary detector exception caught internally by detect_emergency; fallback sweep engaged",
+    "is_emergency": true,
+    "fallback_engaged": true,
+    "signal_preserved": true,
+    "verified_fail_safe": true
+  },
+  "2_missing_or_malformed_config": {
+    "fault_injected": "Non-existent config file path",
+    "observable_behavior": "Initialized in fallback mode (is_valid=False) with static failsafe patterns",
+    "is_emergency": true,
+    "fallback_engaged": true,
+    "signal_preserved": true,
+    "verified_fail_safe": true
+  },
+  "3_fallback_detector_exception": {
+    "fault_injected": "Exception in both primary and fallback detectors",
+    "observable_behavior": "Pipeline propagates unhandled RuntimeError to caller (not swallowed silently)",
+    "signal_preserved": false,
+    "exception_raised": true,
+    "verified_fail_safe": false,
+    "note": "Documented: Unhandled exception in both primary and fallback propagates up to web request error handler (HTTP 500) rather than silently returning unsafe routine advice."
+  },
+  "4_empty_input": {
+    "fault_injected": "user_text='' and image_path=None",
+    "observable_behavior": "Detect emergency returns is_emergency=False (reasoning: Empty input query); proceeds to empty baseline",
+    "is_emergency": false,
+    "fast_path": false,
+    "signal_preserved": true,
+    "verified_fail_safe": true
+  },
+  "5_ocr_failure_handling": {
+    "fault_injected": "extract_text_from_image raises Exception",
+    "observable_behavior": "In app/core.py line 266, OCR is un-try-excepted; raises Exception before pre-gen fast-path",
+    "exception_raised": true,
+    "signal_preserved": false,
+    "verified_fail_safe": false,
+    "finding": "ARCHITECTURAL LIMITATION: OCR execution precedes pre-generation guardrail check; OCR crash blocks emergency detection."
+  },
+  "6_retrieval_failure_or_empty_evidence": {
+    "fast_path_emergency": {
+      "retrieval_called": false,
+      "fast_path_engaged": true,
+      "is_emergency": true,
+      "signal_preserved": true,
+      "verified_fail_safe": true
+    },
+    "non_emergency_retrieval_exception": {
+      "exception_raised": true,
+      "verified_fail_safe": false,
+      "finding": "Retrieval exceptions propagate to FastAPI error handler for non-emergencies; emergency fast-path is 100% immune to retrieval failure."
+    }
+  },
+  "7_generator_failure": {
+    "fault_injected": "generate_with_mode raises RuntimeError('Ollama connection failed')",
+    "fast_path_engaged": true,
+    "llm_called": false,
+    "emergency_signal_preserved": true,
+    "output_contains_hotlines": true,
+    "signal_preserved": true,
+    "verified_fail_safe": true,
+    "note": "Fast-path completely decouples emergency triage from LLM uptime. Critical emergency guidance succeeds even if Ollama is down."
+  },
+  "8_post_generation_enforcement_failure": {
+    "fault_injected": "apply_guardrail raises RuntimeError during post-generation enforcement",
+    "observable_behavior": "Pipeline does not catch apply_guardrail failure; exception propagates",
+    "exception_raised": true,
+    "signal_preserved": false,
+    "verified_fail_safe": false,
+    "finding": "No try-except block around apply_guardrail in app/core.py line 518."
+  },
+  "9_duplicate_guardrail_application": {
+    "header_count_first_application": 1,
+    "header_count_second_application": 1,
+    "disclaimer_count_first_application": 1,
+    "disclaimer_count_second_application": 1,
+    "is_idempotent": true,
+    "signal_preserved": true,
+    "verified_fail_safe": true
+  }
+}

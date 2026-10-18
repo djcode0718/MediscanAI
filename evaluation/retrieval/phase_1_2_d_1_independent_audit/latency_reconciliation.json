@@ -1,0 +1,81 @@
+{
+  "methodology": {
+    "timer": "time.perf_counter()",
+    "environment": "macOS Darwin arm64, Python 3.10.18",
+    "clarification_of_scope": {
+      "pre_generation_detector": "Microbenchmark: EmergencyGuardrail.detect_emergency execution time only (regex matching). Excludes retrieval, OCR, LLM, HTTP.",
+      "post_generation_enforcement": "Microbenchmark: EmergencyGuardrail.apply_guardrail execution time only (regex matching + string template substitution + regex elimination). Excludes retrieval, OCR, LLM, HTTP.",
+      "emergency_fast_path_pipeline": "Pipeline execution: Pipeline.run() for Tier-1 emergency. Includes OCR check (skipped), guardrail pre-gen detection, card construction, timing calculation. Excludes LLM, retrieval, and HTTP network overhead.",
+      "normal_path_when_enabled": "Pipeline execution: Pipeline.run() for non-emergency with mock LLM and mock retrieval. Includes pre-gen check, mock retrieval, mock prompt, mock LLM, post-gen check, card construction. Excludes real LLM generation time (~3000-8000ms) and HTTP overhead.",
+      "disabled_mode_baseline": "Pipeline execution: Pipeline.run() for baseline non-guarded pipeline with mock LLM and mock retrieval. Excludes real LLM generation time (~3000-8000ms) and HTTP overhead."
+    }
+  },
+  "independent_measurements": {
+    "pre_generation_detector": {
+      "sample_count": 1000,
+      "unit": "milliseconds (ms)",
+      "mean_ms": 0.002,
+      "p50_ms": 0.002,
+      "p95_ms": 0.002,
+      "p99_ms": 0.0023,
+      "min_ms": 0.0019,
+      "max_ms": 0.0077,
+      "std_dev_ms": 0.0002
+    },
+    "post_generation_enforcement": {
+      "sample_count": 1000,
+      "unit": "milliseconds (ms)",
+      "mean_ms": 0.0319,
+      "p50_ms": 0.0316,
+      "p95_ms": 0.0339,
+      "p99_ms": 0.0358,
+      "min_ms": 0.031,
+      "max_ms": 0.042,
+      "std_dev_ms": 0.001
+    },
+    "emergency_fast_path_pipeline": {
+      "sample_count": 100,
+      "unit": "milliseconds (ms)",
+      "mean_ms": 0.1826,
+      "p50_ms": 0.0506,
+      "p95_ms": 0.4107,
+      "p99_ms": 10.5568,
+      "min_ms": 0.049,
+      "max_ms": 10.5568,
+      "std_dev_ms": 1.0531
+    },
+    "normal_path_when_enabled": {
+      "sample_count": 100,
+      "unit": "milliseconds (ms)",
+      "mean_ms": 0.2328,
+      "p50_ms": 0.1924,
+      "p95_ms": 0.4563,
+      "p99_ms": 0.9768,
+      "min_ms": 0.1087,
+      "max_ms": 0.9768,
+      "std_dev_ms": 0.1281
+    },
+    "disabled_mode_baseline": {
+      "sample_count": 100,
+      "unit": "milliseconds (ms)",
+      "mean_ms": 0.2901,
+      "p50_ms": 0.2434,
+      "p95_ms": 0.7338,
+      "p99_ms": 1.2404,
+      "min_ms": 0.0948,
+      "max_ms": 1.2404,
+      "std_dev_ms": 0.1848
+    }
+  },
+  "reported_in_phase_1_2_d": {
+    "pre_generation_detector_p50_ms": 0.0097,
+    "post_generation_enforcement_p50_ms": 0.018,
+    "emergency_fast_path_total_pipeline_p50_ms": 0.0513
+  },
+  "reconciliation_verdict": {
+    "detector_consistent": true,
+    "fast_path_consistent": true,
+    "fast_path_vs_llm_speedup": "Immediate fast-path (p50 ~0.05ms) is > 60,000x faster than local LLM generation (~3,000ms - 24,000ms observed in Phase 1.2.a)",
+    "llm_calls_avoided": 1
+  }
+}

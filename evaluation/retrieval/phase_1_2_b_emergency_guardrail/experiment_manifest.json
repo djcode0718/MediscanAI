@@ -1,0 +1,35 @@
+{
+  "phase": "Phase 1.2.b \u2014 Emergency Triage Guardrail Experiment and Safety Regression Audit",
+  "date": "2026-10-17T11:46:07.902240+00:00",
+  "git": {
+    "branch": "feat/retrieval-evaluation",
+    "commit": "40ba53b24b8afefe8ea45188f2f2eaa921d2d548"
+  },
+  "frozen_retrieval_configuration": {
+    "name": "CFG-04-D2C-ADAPTIVE-FINAL",
+    "path": "evaluation/retrieval/phase_d_2_c/intent_router.py",
+    "hash": "f3937376cd191ee7",
+    "expected_hash": "f3937376cd191ee7",
+    "hash_verified": true
+  },
+  "frozen_baseline_inputs": {
+    "path": "evaluation/retrieval/phase_1_2_a_generation_baseline/generation_results.jsonl",
+    "record_count": 50,
+    "sha256": "c63e2221405e7cc16f74550046a26464226dbd414670832c499cac6236d41e94"
+  },
+  "guardrail_configuration": {
+    "path": "evaluation/retrieval/phase_1_2_b_emergency_guardrail/guardrail_config.json",
+    "sha256": "644c8ce636db8f653114a90485b4f52a01a5369629807f9975070e41139f80d1"
+  },
+  "test_commands": [
+    "pytest evaluation/retrieval/phase_1_2_b_emergency_guardrail/test_guardrail.py -v",
+    "python evaluation/retrieval/phase_1_2_b_emergency_guardrail/evaluate_guardrail.py"
+  ],
+  "invariants": {
+    "entity_resolution_accessed": false,
+    "gold_judgments_bytes": 0,
+    "cloud_calls_made": false,
+    "production_code_modified": false,
+    "phase_1_2_a_overwritten": false
+  }
+}

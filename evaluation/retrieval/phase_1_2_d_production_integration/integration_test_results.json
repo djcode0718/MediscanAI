@@ -1,0 +1,16 @@
+{
+  "total_cases_evaluated": 28,
+  "emergency_expected_total": 10,
+  "emergency_escalated_count": 10,
+  "emergency_missed_count": 0,
+  "non_emergency_expected_total": 13,
+  "non_emergency_false_positives": 0,
+  "negative_control_total": 5,
+  "negative_control_abstention_preserved": 5,
+  "contradictory_advice_occurrences": 0,
+  "disclaimer_preserved_count": 15,
+  "fast_path_engaged_count": 10,
+  "emergency_escalation_recall": 1.0,
+  "non_emergency_false_positive_rate": 0.0,
+  "negative_control_abstention_rate": 1.0
+}

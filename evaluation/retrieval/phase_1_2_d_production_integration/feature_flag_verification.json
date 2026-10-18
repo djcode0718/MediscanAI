@@ -1,0 +1,15 @@
+{
+  "rollback_procedure": "EMERGENCY_GUARDRAIL_ENABLED=False environment variable override",
+  "status": "VERIFIED_SUCCESSFUL",
+  "timings_ms": {
+    "config_reload_ms": 3.662,
+    "pipeline_reinit_ms": 0.113,
+    "execution_ms": 0.815,
+    "total_rollback_verification_duration_ms": 4.706
+  },
+  "total_rollback_verification_duration_seconds": 0.0047,
+  "target_threshold_seconds": 60.0,
+  "target_met": true,
+  "baseline_restored_exact": true,
+  "guardrail_detached": true
+}

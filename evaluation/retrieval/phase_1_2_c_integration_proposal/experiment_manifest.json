@@ -1,0 +1,90 @@
+{
+  "manifest_name": "MediScanAI Phase 1.2.c Integration Proposal Manifest",
+  "phase": "Phase 1.2.c — Emergency Guardrail Production Integration Proposal and Readiness Design",
+  "timestamp": "2026-10-17T12:45:00+00:00",
+  "author": "Antigravity AI Assistant & Engineering Auditor",
+  "git_metadata": {
+    "branch": "feat/retrieval-evaluation",
+    "commit_hash": "40ba53b24b8afefe8ea45188f2f2eaa921d2d548",
+    "working_tree_clean": true,
+    "production_files_modified": 0
+  },
+  "invariant_checks": {
+    "entity_resolution_off_limits": {
+      "accessed": false,
+      "verified": true
+    },
+    "gold_judgments_zero_bytes": {
+      "path": "evaluation/benchmark/gold_judgments.jsonl",
+      "size_bytes": 0,
+      "verified": true
+    },
+    "cloud_api_calls_made": 0,
+    "production_directories_pristine": {
+      "app": "UNTOUCHED",
+      "backend": "UNTOUCHED",
+      "verified": true
+    },
+    "frozen_d2c_config_hash": {
+      "path": "evaluation/retrieval/phase_d_2_c/intent_router.py",
+      "expected": "f3937376cd191ee7",
+      "actual": "f3937376cd191ee7",
+      "verified": true
+    },
+    "prior_phase_artifacts_immutable": {
+      "phase_1_2_a_generation_results_sha256": "c63e2221405e7cc16f74550046a26464226dbd414670832c499cac6236d41e94",
+      "phase_1_2_b_guardrail_results_sha256": "507d1ebda6436ffd441e8e82ef45b7ee9c4ff6c8f6158e0a8d6e3c0ee08c1d53",
+      "phase_1_2_b_guardrail_py_sha256": "cb1dcefc53a5810168340d87a41f83c162237eb35a643cfc1664ae0a4f5bcf41",
+      "phase_1_2_b_1_reconciliation_sha256": "9a0ef97de3913fcee362aa152501a3d1bcf5594aa0366ebbb1e893e35d1db9b0",
+      "verified": true
+    }
+  },
+  "deliverables": [
+    {
+      "filename": "integration_readiness_report.md",
+      "description": "Comprehensive integration readiness report, executive summary, findings, and release recommendations."
+    },
+    {
+      "filename": "current_pipeline_map.md",
+      "description": "Detailed architectural map of current MediScanAI request lifecycle from FastAPI to database persistence."
+    },
+    {
+      "filename": "integration_architecture.md",
+      "description": "Evaluation of pre-generation, post-generation, and two-stage hybrid alternatives with architectural rationale."
+    },
+    {
+      "filename": "integration_contract.json",
+      "description": "Formal interface specification defining input, output, operational constraints, and privacy contracts."
+    },
+    {
+      "filename": "failure_mode_analysis.md",
+      "description": "Failure Mode and Effects Analysis covering all 10 explicit operational, exception, and boundary cases."
+    },
+    {
+      "filename": "feature_flag_and_rollback.md",
+      "description": "Specification for EMERGENCY_GUARDRAIL_ENABLED, startup validation, zero-downtime rollback, and bypass prevention."
+    },
+    {
+      "filename": "integration_test_plan.json",
+      "description": "Test matrix covering 19 clinical and operational scenarios with automation and clinical review criteria."
+    },
+    {
+      "filename": "acceptance_gates.json",
+      "description": "Measurable release gates (9 engineering verified, 2 governance pending) required prior to production release."
+    },
+    {
+      "filename": "guardrail_integration.py",
+      "description": "Isolated reference implementation of IntegratedEmergencyGuardrail and middleware wrapper."
+    },
+    {
+      "filename": "test_integration_design.py",
+      "description": "Automated unit test suite verifying feature flag, fast-path, contradictory advice elimination, and fail-safe fallback."
+    },
+    {
+      "filename": "experiment_manifest.json",
+      "description": "Machine-readable experiment manifest, invariant checks, and file inventory."
+    }
+  ],
+  "readiness_verdict": "READY_FOR_REVIEW",
+  "required_next_approval": "Clinical Safety Review Sign-off by Board-Certified Physician"
+}

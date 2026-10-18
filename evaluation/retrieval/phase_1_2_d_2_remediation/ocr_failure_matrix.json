@@ -1,0 +1,137 @@
+[
+  {
+    "case_id": "CASE-MM-01",
+    "name": "image_only_critical_emergency",
+    "user_text": "",
+    "ocr_input": [
+      "Crushing chest pain radiating to left arm"
+    ],
+    "observed_emergency": true,
+    "observed_fast_path": true,
+    "observed_rule_id": "RULE-01-CARDIOVASCULAR-CHEST-PAIN",
+    "ocr_status": "SUCCESS",
+    "llm_output_preview": "<USER_QUERY> Crushing chest pain radiating to left arm </USER_QUERY>  ### \ud83d\udea8 Immediate Emergency Medical Guidance  **Seek",
+    "passed": true
+  },
+  {
+    "case_id": "CASE-MM-02",
+    "name": "image_only_respiratory_emergency",
+    "user_text": null,
+    "ocr_input": [
+      "Severe shortness of breath, gasping for air and cyanosis"
+    ],
+    "observed_emergency": true,
+    "observed_fast_path": true,
+    "observed_rule_id": "RULE-02-RESPIRATORY-DISTRESS",
+    "ocr_status": "SUCCESS",
+    "llm_output_preview": "<USER_QUERY> Severe shortness of breath, gasping for air and cyanosis </USER_QUERY>  ### \ud83d\udea8 Immediate Emergency Medical G",
+    "passed": true
+  },
+  {
+    "case_id": "CASE-MM-03",
+    "name": "combined_emergency_in_ocr_only",
+    "user_text": "Please summarize this document",
+    "ocr_input": [
+      "Discharge: sudden weakness on one side of face with slurred speech"
+    ],
+    "observed_emergency": true,
+    "observed_fast_path": true,
+    "observed_rule_id": "RULE-03-NEUROLOGICAL-STROKE",
+    "ocr_status": "SUCCESS",
+    "llm_output_preview": "<USER_QUERY> Please summarize this document Discharge: sudden weakness on one side of face with slurred speech </USER_QU",
+    "passed": true
+  },
+  {
+    "case_id": "CASE-MM-04",
+    "name": "combined_emergency_in_user_text_only",
+    "user_text": "I have severe chest pain and cannot catch my breath",
+    "ocr_input": [
+      "Paracetamol 500mg tablets"
+    ],
+    "observed_emergency": true,
+    "observed_fast_path": true,
+    "observed_rule_id": "RULE-01-CARDIOVASCULAR-CHEST-PAIN",
+    "ocr_status": "SUCCESS",
+    "llm_output_preview": "<USER_QUERY> I have severe chest pain and cannot catch my breath Paracetamol 500mg tablets </USER_QUERY>  ### \ud83d\udea8 Immediat",
+    "passed": true
+  },
+  {
+    "case_id": "CASE-MM-05",
+    "name": "ocr_negation_denies_chest_pain",
+    "user_text": "What does this clinic note say?",
+    "ocr_input": [
+      "Patient denies chest pain and without shortness of breath"
+    ],
+    "observed_emergency": false,
+    "observed_fast_path": false,
+    "observed_rule_id": null,
+    "ocr_status": "SUCCESS",
+    "llm_output_preview": "Baseline advice or abstention.",
+    "passed": true
+  },
+  {
+    "case_id": "CASE-MM-06",
+    "name": "ocr_historical_heart_attack_10_years_ago",
+    "user_text": "Diet advice",
+    "ocr_input": [
+      "Past medical history: heart attack 10 years ago in 2014"
+    ],
+    "observed_emergency": false,
+    "observed_fast_path": false,
+    "observed_rule_id": null,
+    "ocr_status": "SUCCESS",
+    "llm_output_preview": "Baseline advice or abstention.",
+    "passed": true
+  },
+  {
+    "case_id": "CASE-MM-07",
+    "name": "ocr_routine_packaging_lipitor",
+    "user_text": "Dosage instructions",
+    "ocr_input": [
+      "LIPITOR 20mg",
+      "Atorvastatin Calcium Tablets"
+    ],
+    "observed_emergency": false,
+    "observed_fast_path": false,
+    "observed_rule_id": null,
+    "ocr_status": "SUCCESS",
+    "llm_output_preview": "Baseline advice or abstention.",
+    "passed": true
+  },
+  {
+    "case_id": "CASE-MM-08",
+    "name": "empty_ocr_result_image_only",
+    "user_text": "",
+    "ocr_input": [],
+    "observed_emergency": false,
+    "observed_fast_path": false,
+    "observed_rule_id": null,
+    "ocr_status": "EMPTY",
+    "llm_output_preview": "### \ud83d\udcf7 No Text Detected in Image  No text or medication labels were detected in the uploaded image.  **Please provide add",
+    "passed": true
+  },
+  {
+    "case_id": "CASE-MM-09",
+    "name": "ocr_exception_with_urgent_user_text",
+    "user_text": "Crushing chest pain radiating to jaw",
+    "ocr_input": "EXCEPTION: RuntimeError",
+    "observed_emergency": true,
+    "observed_fast_path": true,
+    "observed_rule_id": "RULE-01-CARDIOVASCULAR-CHEST-PAIN",
+    "ocr_status": "FAILED",
+    "llm_output_preview": "<USER_QUERY> Crushing chest pain radiating to jaw </USER_QUERY>  ### \ud83d\udea8 Immediate Emergency Medical Guidance  **Seek imme",
+    "passed": true
+  },
+  {
+    "case_id": "CASE-MM-10",
+    "name": "ocr_exception_image_only_fallback",
+    "user_text": "",
+    "ocr_input": "EXCEPTION: Exception",
+    "observed_emergency": false,
+    "observed_fast_path": false,
+    "observed_rule_id": null,
+    "ocr_status": "FAILED",
+    "llm_output_preview": "### \ud83d\udcf7 Image Could Not Be Interpreted  The uploaded image could not be reliably processed or read. No readable medical te",
+    "passed": true
+  }
+]

@@ -6,6 +6,8 @@ __pycache__/
 build/
 dist/
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
 # Virtual Environments
 venv/
@@ -39,6 +41,8 @@ temp_image_*.jpg
 *.save
 *.swp
 *.swo
+*.orig
+*.rej
 *~
 **/progress.json
 

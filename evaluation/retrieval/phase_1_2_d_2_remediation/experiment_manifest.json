@@ -1,0 +1,27 @@
+{
+  "phase": "Phase 1.2.d.2 \u2014 Production Startup and Multimodal Safety Remediation",
+  "date": "2026-10-18",
+  "git": {
+    "branch": "feat/retrieval-evaluation",
+    "commit": "40ba53b24b8afefe8ea45188f2f2eaa921d2d548"
+  },
+  "remediated_files": [
+    "app/ocr.py",
+    "app/core.py",
+    "backend/main.py",
+    "tests/conftest.py"
+  ],
+  "new_test_files": [
+    "tests/integration/test_multimodal_emergency_remediation.py"
+  ],
+  "invariants": {
+    "entity_resolution_accessed": false,
+    "gold_judgments_zero_bytes": true,
+    "gold_judgments_actual_bytes": 0,
+    "zero_cloud_api_calls": true,
+    "frozen_d2c_hash": "f3937376cd191ee7",
+    "frozen_d2c_hash_verified": true,
+    "feature_flag_default_disabled": true,
+    "no_deployment_activation": true
+  }
+}

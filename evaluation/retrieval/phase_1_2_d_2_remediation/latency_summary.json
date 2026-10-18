@@ -1,0 +1,66 @@
+{
+  "platform_metadata": {
+    "os": "macOS (Darwin arm64)",
+    "python_version": "3.10.18",
+    "timer": "time.perf_counter()",
+    "date": "2026-10-18"
+  },
+  "clarification_of_scopes": {
+    "pre_generation_detector_microbenchmark": "Detector regex evaluation time only. Excludes OCR, retrieval, LLM, and HTTP overhead.",
+    "emergency_fast_path_text_only": "Full Pipeline.run() execution for text emergency. Avoids retrieval and LLM.",
+    "emergency_fast_path_multimodal_mock_ocr": "Full Pipeline.run() execution for image-only emergency with mock OCR (0ms OCR).",
+    "unreadable_image_safe_fallback": "Full Pipeline.run() execution when OCR fails for image-only request."
+  },
+  "measurements": {
+    "pre_generation_detector_microbenchmark": {
+      "sample_count": 1000,
+      "unit": "milliseconds (ms)",
+      "mean_ms": 0.0069,
+      "p50_ms": 0.0068,
+      "p95_ms": 0.007,
+      "p99_ms": 0.0083,
+      "min_ms": 0.006,
+      "max_ms": 0.0383,
+      "std_dev_ms": 0.0013
+    },
+    "emergency_fast_path_text_only": {
+      "sample_count": 100,
+      "unit": "milliseconds (ms)",
+      "mean_ms": 0.0676,
+      "p50_ms": 0.0556,
+      "p95_ms": 0.1164,
+      "p99_ms": 0.2614,
+      "min_ms": 0.0529,
+      "max_ms": 0.2614,
+      "std_dev_ms": 0.035
+    },
+    "emergency_fast_path_multimodal_mock_ocr": {
+      "sample_count": 100,
+      "unit": "milliseconds (ms)",
+      "mean_ms": 0.0809,
+      "p50_ms": 0.0591,
+      "p95_ms": 0.1761,
+      "p99_ms": 0.5511,
+      "min_ms": 0.0562,
+      "max_ms": 0.5511,
+      "std_dev_ms": 0.0644
+    },
+    "unreadable_image_safe_fallback": {
+      "sample_count": 100,
+      "unit": "milliseconds (ms)",
+      "mean_ms": 0.0432,
+      "p50_ms": 0.018,
+      "p95_ms": 0.1837,
+      "p99_ms": 0.3697,
+      "min_ms": 0.0155,
+      "max_ms": 0.3697,
+      "std_dev_ms": 0.0565
+    }
+  },
+  "speedup_summary": {
+    "fast_path_p50_ms": 0.0556,
+    "llm_baseline_latency_reference_ms": "3,000 - 24,000 ms",
+    "fast_path_speedup_factor": "> 50,000x faster than LLM generation",
+    "llm_calls_avoided": 1
+  }
+}

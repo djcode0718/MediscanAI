@@ -1,0 +1,45 @@
+{
+  "default_flag_value": {
+    "expected": false,
+    "observed": false,
+    "passed": true
+  },
+  "missing_flag_env": {
+    "expected": false,
+    "observed": false,
+    "passed": true
+  },
+  "disabled_mode_initialization": {
+    "guardrail_is_none": true,
+    "passed": true
+  },
+  "disabled_mode_execution": {
+    "guardrail_meta_present": false,
+    "fast_path_engaged": false,
+    "output_unmodified": true,
+    "llm_called": true,
+    "passed": true
+  },
+  "enabled_mode_initialization": {
+    "guardrail_not_none": true,
+    "guardrail_is_valid": true,
+    "rules_count": 5,
+    "passed": true
+  },
+  "invalid_config_fallback": {
+    "guardrail_initialized": true,
+    "guardrail_is_valid": false,
+    "passed": true
+  },
+  "invalid_config_execution": {
+    "fast_path": true,
+    "is_emergency": true,
+    "fallback_engaged": true,
+    "rule_fired": "RULE-FAILSAFE-KEYWORD",
+    "passed": true
+  },
+  "cannot_accidentally_enable": {
+    "default_is_secure": true,
+    "passed": true
+  }
+}

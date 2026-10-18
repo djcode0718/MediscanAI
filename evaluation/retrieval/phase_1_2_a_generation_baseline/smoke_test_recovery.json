@@ -1,0 +1,24 @@
+{
+  "case_id": "MED-BENCH-001",
+  "split": "dev",
+  "query": "Lipitor",
+  "query_category": "drug_brand_lookup",
+  "retrieval_configuration_hash": "f3937376cd191ee7",
+  "retrieval_latency_ms": 5303,
+  "retrieved_eids": [
+    "63899",
+    "53548"
+  ],
+  "context_hash": "8ecff818286bd5233efd8bb8209dd356aa5b8edf0096c5e9e82f7245266af3c7",
+  "prompt_template_hash": "d9cb6819ed81b1a02cea4fe5f654de1381b17fb3e8028f423e0347af1b44dbe0",
+  "model": "llama3.1:8b",
+  "model_digest": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+  "generation_latency_ms": 29375,
+  "prompt_eval_count": 1714,
+  "eval_count": 224,
+  "tokens_per_second": 7.63,
+  "response": "<USER_QUERY>\nLipitor\n</USER_QUERY>\n\n**Factual Summary**\n\nLipitor is a brand name for the generic medication atorvastatin calcium. It is used to reduce the risk of myocardial infarction (MI), stroke, revascularization procedures, and angina in adults with multiple risk factors for coronary heart disease (CHD) but without clinically evident CHD. Lipitor is also indicated to reduce the risk of MI and stroke in adults with type 2 diabetes mellitus with multiple risk factors for CHD but without clinically evident CHD.\n\n**Clinical Limitations & Uncertainty**\n\nThe available evidence provides information on the indications, warnings, and dosage of Lipitor. However, it does not provide a comprehensive list of all possible side effects or interactions.\n\n### \u26a0\ufe0f Important Warning\nThis analysis is for informational purposes only and is generated based on the data you provided. It is **not a substitute for professional medical advice**. You should always consult a qualified doctor or pharmacist for an accurate diagnosis and to determine the best course of treatment for your specific condition.",
+  "mandatory_header_passed": true,
+  "verbatim_disclaimer_passed": true,
+  "status": "success"
+}

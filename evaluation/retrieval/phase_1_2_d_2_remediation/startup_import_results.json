@@ -1,0 +1,32 @@
+{
+  "clean_process_import": {
+    "command": "python -c 'import backend.main'",
+    "exit_code": 0,
+    "stdout": "SUCCESS",
+    "stderr": "",
+    "duration_ms": 5119.42,
+    "passed": true
+  },
+  "pytest_shim_status": {
+    "shim_present_in_conftest": false,
+    "passed": true
+  },
+  "app_instance_verification": {
+    "initialized": true,
+    "title": "MediScanAI",
+    "routes_count": 10,
+    "passed": true
+  },
+  "api_health_endpoint": {
+    "status_code": 200,
+    "response": {
+      "status": "alive",
+      "app": "MediScanAI",
+      "environment": "development",
+      "timestamp": 1792268379.816105
+    },
+    "latency_ms": 5.83,
+    "passed": true
+  },
+  "final_status": "VERIFIED_RESOLVED"
+}

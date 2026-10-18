@@ -1,0 +1,59 @@
+{
+  "gold_judgments_zero_bytes": {
+    "path": "evaluation/benchmark/gold_judgments.jsonl",
+    "expected_bytes": 0,
+    "observed_bytes": 0,
+    "passed": true
+  },
+  "frozen_d2c_hash": {
+    "path": "evaluation/retrieval/phase_d_2_c/intent_router.py",
+    "expected_hash": "f3937376cd191ee7",
+    "observed_hash": "f3937376cd191ee7",
+    "passed": true
+  },
+  "entity_resolution_untouched": {
+    "status": "UNTOUCHED",
+    "passed": true
+  },
+  "zero_cloud_api_calls": {
+    "status": "VERIFIED_LOCAL_ONLY",
+    "passed": true
+  },
+  "prior_phase_artifacts": {
+    "phases_verified": {
+      "evaluation/retrieval/phase_1_1_baseline_audit": {
+        "exists": true,
+        "file_count": 12
+      },
+      "evaluation/retrieval/phase_1_2_a_generation_baseline": {
+        "exists": true,
+        "file_count": 14
+      },
+      "evaluation/retrieval/phase_1_2_b_emergency_guardrail": {
+        "exists": true,
+        "file_count": 12
+      },
+      "evaluation/retrieval/phase_1_2_b_1_independent_audit": {
+        "exists": true,
+        "file_count": 4
+      },
+      "evaluation/retrieval/phase_1_2_c_integration_proposal": {
+        "exists": true,
+        "file_count": 12
+      },
+      "evaluation/retrieval/phase_1_2_d_production_integration": {
+        "exists": true,
+        "file_count": 8
+      }
+    },
+    "passed": true
+  },
+  "feature_flag_disabled_by_default": {
+    "observed": false,
+    "passed": true
+  },
+  "no_deployment_activation": {
+    "status": "VERIFIED",
+    "passed": true
+  }
+}

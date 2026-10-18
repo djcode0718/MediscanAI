@@ -1,0 +1,164 @@
+{
+  "audit_phase": "Phase 1.2.b.1 — Independent Guardrail Audit",
+  "audit_timestamp": "2026-10-17T11:55:00+00:00",
+  "reconciliation_summary": {
+    "total_regression_suite_cases": 28,
+    "total_guardrail_results_records": 65,
+    "total_baseline_benchmark_cases": 50,
+    "total_synthetic_fixtures": 15,
+    "derivation_explanation": "The 65 result records represent the full set of 50 canonical benchmark cases from Phase 1.2.a plus the 15 synthetic safety test fixtures from the regression suite (50 + 15 = 65). The 28 regression suite cases comprise 13 canonical benchmark cases (Group A: 1, Group B: 7, Group C: 5) plus the 15 synthetic test fixtures (13 + 15 = 28). Zero duplicate case IDs exist.",
+    "duplicate_ids_detected": 0
+  },
+  "regression_suite_breakdown": {
+    "total_cases": 28,
+    "groups": {
+      "A_EMERGENCY_POSITIVE": {
+        "count": 7,
+        "canonical_benchmark_count": 1,
+        "canonical_benchmark_ids": ["MED-BENCH-038"],
+        "synthetic_fixture_count": 6,
+        "synthetic_fixture_ids": ["SYN-EMERG-001", "SYN-EMERG-002", "SYN-EMERG-003", "SYN-EMERG-004", "SYN-EMERG-005", "SYN-EMERG-006"]
+      },
+      "B_NON_EMERGENCY": {
+        "count": 10,
+        "canonical_benchmark_count": 7,
+        "canonical_benchmark_ids": ["MED-BENCH-033", "MED-BENCH-011", "MED-BENCH-001", "MED-BENCH-008", "MED-BENCH-023", "MED-BENCH-028", "MED-BENCH-025"],
+        "synthetic_fixture_count": 3,
+        "synthetic_fixture_ids": ["SYN-NONEMERG-001", "SYN-NONEMERG-002", "SYN-NONEMERG-003"]
+      },
+      "C_NEGATIVE_CONTROL": {
+        "count": 5,
+        "canonical_benchmark_count": 5,
+        "canonical_benchmark_ids": ["MED-BENCH-041", "MED-BENCH-042", "MED-BENCH-043", "MED-BENCH-044", "MED-BENCH-045"],
+        "synthetic_fixture_count": 0,
+        "synthetic_fixture_ids": []
+      },
+      "D_ADVERSARIAL_INTERACTION": {
+        "count": 6,
+        "canonical_benchmark_count": 0,
+        "canonical_benchmark_ids": [],
+        "synthetic_fixture_count": 6,
+        "synthetic_fixture_ids": ["SYN-ADV-001", "SYN-ADV-002", "SYN-ADV-003", "SYN-ADV-004", "SYN-ADV-005", "SYN-ADV-006"]
+      }
+    }
+  },
+  "guardrail_results_breakdown": {
+    "total_records": 65,
+    "provenance_distribution": {
+      "canonical_benchmark": 50,
+      "synthetic_safety_fixture": 15
+    },
+    "split_distribution": {
+      "dev": 37,
+      "val": 14,
+      "held_out_test": 14
+    },
+    "response_modification": {
+      "total_responses_modified": 11,
+      "canonical_benchmark_modified": 1,
+      "canonical_benchmark_modified_ids": ["MED-BENCH-038"],
+      "canonical_benchmark_untouched": 49,
+      "synthetic_fixtures_modified": 10,
+      "synthetic_fixtures_untouched": 5
+    }
+  },
+  "metrics_audit_and_denominators": {
+    "emergency_escalation_recall": {
+      "numerator": 10,
+      "denominator": 10,
+      "audited_rate": 1.0,
+      "reported_rate": 1.0,
+      "status": "VERIFIED_EXACT",
+      "cases_included": [
+        "MED-BENCH-038",
+        "SYN-EMERG-001",
+        "SYN-EMERG-002",
+        "SYN-EMERG-003",
+        "SYN-EMERG-004",
+        "SYN-EMERG-005",
+        "SYN-EMERG-006",
+        "SYN-ADV-004",
+        "SYN-ADV-005",
+        "SYN-ADV-006"
+      ]
+    },
+    "emergency_cases_missed": {
+      "numerator": 0,
+      "denominator": 10,
+      "audited_count": 0,
+      "reported_count": 0,
+      "status": "VERIFIED_EXACT"
+    },
+    "non_emergency_false_positive_rate": {
+      "numerator": 0,
+      "denominator": 50,
+      "audited_rate": 0.0,
+      "reported_rate": 0.0,
+      "status": "VERIFIED_EXACT",
+      "denominator_derivation": "65 total evaluated records minus 10 emergency-positive cases minus 5 negative controls = 50 non-emergency cases"
+    },
+    "non_emergency_specificity": {
+      "numerator": 50,
+      "denominator": 50,
+      "audited_rate": 1.0,
+      "reported_rate": 1.0,
+      "status": "VERIFIED_EXACT"
+    },
+    "negative_control_abstention_preservation": {
+      "numerator": 5,
+      "denominator": 5,
+      "audited_rate": 1.0,
+      "reported_rate": 1.0,
+      "status": "VERIFIED_EXACT",
+      "cases_included": [
+        "MED-BENCH-041",
+        "MED-BENCH-042",
+        "MED-BENCH-043",
+        "MED-BENCH-044",
+        "MED-BENCH-045"
+      ]
+    },
+    "negative_control_false_alarms": {
+      "numerator": 0,
+      "denominator": 5,
+      "audited_count": 0,
+      "reported_count": 0,
+      "status": "VERIFIED_EXACT"
+    },
+    "disclaimer_header_compliance": {
+      "numerator": 65,
+      "denominator": 65,
+      "audited_rate": 1.0,
+      "reported_rate": 1.0,
+      "status": "VERIFIED_EXACT"
+    },
+    "verbatim_disclaimer_compliance": {
+      "numerator": 65,
+      "denominator": 65,
+      "audited_rate": 1.0,
+      "reported_rate": 1.0,
+      "status": "VERIFIED_EXACT"
+    }
+  },
+  "latency_audit_and_recalculation": {
+    "raw_measurements_sample_count": 65,
+    "reported": {
+      "p50_ms": 0.01,
+      "p95_ms": 0.022,
+      "mean_ms": 0.011,
+      "min_ms": 0.002,
+      "max_ms": 0.028,
+      "throughput_eval_sec": 88950.7
+    },
+    "recalculated_from_raw": {
+      "p50_ms": 0.01,
+      "p95_ms": 0.0216,
+      "mean_ms": 0.0112,
+      "min_ms": 0.002,
+      "max_ms": 0.028,
+      "throughput_eval_sec": 88950.7
+    },
+    "units_verified": "milliseconds",
+    "discrepancy_detected": false
+  }
+}

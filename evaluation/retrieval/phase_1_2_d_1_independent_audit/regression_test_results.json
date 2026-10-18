@@ -1,0 +1,41 @@
+{
+  "regression_summary": {
+    "total_cases_evaluated": 28,
+    "canonical_benchmark_cases": 13,
+    "synthetic_fixture_cases": 15,
+    "emergency_expected_total": 10,
+    "emergency_escalated_count": 10,
+    "emergency_missed_count": 0,
+    "emergency_escalation_recall": 1.0,
+    "non_emergency_expected_total": 13,
+    "non_emergency_false_positives": 0,
+    "non_emergency_false_positive_rate": 0.0,
+    "negative_control_total": 5,
+    "negative_control_abstention_preserved": 5,
+    "negative_control_abstention_rate": 1.0,
+    "contradictory_advice_occurrences": 0,
+    "disclaimer_preserved_count": 10
+  },
+  "privacy_and_telemetry_audit": {
+    "event_type": "EMERGENCY_GUARDRAIL_TRIGGERED",
+    "logged_fields": [
+      "analysis_id",
+      "rule_id",
+      "category",
+      "severity",
+      "fast_path",
+      "duration_ms"
+    ],
+    "contains_raw_patient_query": false,
+    "contains_medical_response_text": false,
+    "forbidden_keys_present": [],
+    "data_minimization_compliant": true
+  },
+  "rollback_verification": {
+    "guardrail_detached": true,
+    "guardrail_meta_present": false,
+    "fast_path_engaged": false,
+    "legacy_response_returned": true,
+    "rollback_successful": true
+  }
+}

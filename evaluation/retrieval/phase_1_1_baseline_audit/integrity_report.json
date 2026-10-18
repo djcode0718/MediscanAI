@@ -1,0 +1,28 @@
+{
+  "audit_phase": "Phase 1.1 — Evaluation Baseline, Metric Reconciliation, and Failure Audit",
+  "audit_timestamp": "2026-10-17T01:33:30+00:00",
+  "overall_verdict": "BASELINE_ESTABLISHED_WITH_WARNINGS",
+  "invariants": {
+    "entity_resolution_accessed": false,
+    "gold_judgments_size_bytes": 0,
+    "production_code_modified_app": false,
+    "production_code_modified_backend": false,
+    "source_jsonl_datasets_modified": false,
+    "faiss_indexes_modified": false,
+    "prior_phase_artifacts_overwritten": false,
+    "cloud_api_calls_made": 0,
+    "paid_external_judges_used": false,
+    "held_out_re_evaluation_executed": false,
+    "tuning_against_held_out_performed": false,
+    "packages_installed_or_upgraded": false
+  },
+  "verification_evidence": {
+    "entity_resolution_guard": "Verified zero tool calls, imports, searches, or file listings targeting entity_resolution/.",
+    "gold_judgments_file": "evaluation/benchmark/gold_judgments.jsonl confirmed at exactly 0 bytes via filesystem check.",
+    "git_working_tree": "git status confirms zero production files under app/ or backend/ modified.",
+    "dataset_index_integrity": "data/*.jsonl and indexes/*.index remain untouched with identical checksums.",
+    "prior_artifacts_preserved": "Phases A, B, C, D.0, D.1, D.2.a, D.2.b, D.2.c, and D.2.c-Final audit directories completely unmodified.",
+    "offline_enforcement": "Zero external HTTP/REST requests; all checks and calculations executed using local environment."
+  },
+  "transition_readiness": "All hard integrity invariants satisfied. The retrieval baseline is established and verified. The generation baseline for the current retrieval configuration is explicitly marked BASELINE_NOT_ESTABLISHED, authoritatively setting the objective for Phase 1.2."
+}

@@ -223,6 +223,22 @@ class Pipeline:
         else:
             self.graph_retriever = None
 
+        # Emergency Triage Guardrail (Phase 1.2.d)
+        self.guardrail = None
+        if self.settings.EMERGENCY_GUARDRAIL_ENABLED:
+            try:
+                from app.guardrail import EmergencyGuardrail
+                from pathlib import Path
+                cfg_path = Path(self.settings.EMERGENCY_GUARDRAIL_CONFIG_PATH)
+                if not cfg_path.is_absolute():
+                    from backend.core.config import _BASE_DIR
+                    cfg_path = _BASE_DIR / cfg_path
+                self.guardrail = EmergencyGuardrail(config_path=cfg_path)
+            except Exception as e:
+                logger.error(f"Failed to initialize EmergencyGuardrail: {e}. Engaging fail-safe fallback.", exc_info=True)
+                from app.guardrail import EmergencyGuardrail
+                self.guardrail = EmergencyGuardrail(config_path=None)
+
     def _format_retrievals(self, retrievals_dict: Dict[str, List]) -> str:
         context_str = ""
         for index_name, results in retrievals_dict.items():
@@ -242,17 +258,140 @@ class Pipeline:
         print("\n🔍 [RAG CORE] Running MediScanAI Core Pipeline...")
         user_norm = normalize_text(user_text or "")
         ocr_text = ""
+        ocr_failed = False
+        ocr_error_type = None
 
-        # 1. OCR Extraction
+        # 1. OCR Extraction (Resilient to engine exceptions)
         if image_path:
             print("📷 [Vision] Running PaddleOCR on medicine image...")
             _t_ocr = time.perf_counter()
-            ocr_res = extract_text_from_image(image_path)
-            ocr_text = ocr_text_join(ocr_res["texts"])
-            pipeline_timings["ocr_total_ms"] = int((time.perf_counter() - _t_ocr) * 1000)
-            print(f"   ↳ OCR label extraction completed ({len(ocr_text)} characters extracted).")
+            try:
+                ocr_res = extract_text_from_image(image_path)
+                ocr_text = ocr_text_join(ocr_res.get("texts", []))
+                pipeline_timings["ocr_total_ms"] = int((time.perf_counter() - _t_ocr) * 1000)
+                print(f"   ↳ OCR label extraction completed ({len(ocr_text)} characters extracted).")
+            except Exception as e:
+                ocr_failed = True
+                ocr_error_type = type(e).__name__
+                pipeline_timings["ocr_total_ms"] = int((time.perf_counter() - _t_ocr) * 1000)
+                pipeline_timings["ocr_failed"] = True
+                logger.warning(f"OCR extraction failed ({ocr_error_type}): {e}")
+                print(f"   ⚠️ OCR extraction failed ({ocr_error_type}). Proceeding with safe fallback handling.")
         else:
             print("📷 [Vision] No image provided. Skipping OCR.")
+
+        # 1b. Multimodal Emergency Query Assembly
+        clean_user = (user_text or "").strip()
+        clean_ocr = (ocr_text or "").strip()
+        if clean_user and clean_ocr:
+            if clean_user.lower() == clean_ocr.lower():
+                combined_query = clean_user
+            else:
+                combined_query = f"{clean_user}\n{clean_ocr}"
+        elif clean_ocr:
+            combined_query = clean_ocr
+        else:
+            combined_query = clean_user
+
+        # 1c. Emergency Pre-Generation Fast-Path Check (Phase 1.2.d / 1.2.d.2)
+        if self.guardrail is not None and self.settings.EMERGENCY_GUARDRAIL_FAST_PATH and combined_query:
+            _t_guard_pre = time.perf_counter()
+            pre_decision = self.guardrail.detect_emergency(combined_query)
+            if pre_decision.is_emergency and pre_decision.severity == "CRITICAL_EMERGENCY":
+                guarded_response_str, final_decision = self.guardrail.apply_guardrail(
+                    query=combined_query,
+                    baseline_response=""
+                )
+                pipeline_timings["guardrail_fast_path_ms"] = int((time.perf_counter() - _t_guard_pre) * 1000)
+                pipeline_timings["pipeline_total_ms"] = int((time.perf_counter() - _t_pipeline_start) * 1000)
+                card = build_summary_card(
+                    user_text=user_text,
+                    ocr_text=ocr_text,
+                    retrievals={},
+                    llm_output=guarded_response_str.strip()
+                )
+                card_meta = {
+                    "mismatch": None,
+                    "mismatch_details": "Immediate emergency fast-path engaged.",
+                    "guardrail": final_decision.to_dict(),
+                    "fast_path": True,
+                }
+                if ocr_failed:
+                    card_meta["ocr_status"] = "FAILED"
+                    card_meta["ocr_error_type"] = ocr_error_type
+                elif image_path:
+                    card_meta["ocr_status"] = "SUCCESS" if ocr_text else "EMPTY"
+                else:
+                    card_meta["ocr_status"] = "SKIPPED"
+
+                print(f"🚨 [Emergency Guardrail] FAST-PATH ENGAGED: {final_decision.fired_rule_id} in {pipeline_timings['guardrail_fast_path_ms']}ms")
+                return {
+                    "card": card,
+                    "meta": card_meta,
+                    "pipeline_timings": pipeline_timings,
+                }
+
+        # 1d. Safe Fallback for Unreadable / Empty Image-Only Queries (Phase 1.2.d.2)
+        if image_path and not user_norm:
+            from app.guardrail import MANDATORY_HEADER, MANDATORY_TEXT
+            if ocr_failed:
+                fallback_header = "### 📷 Image Could Not Be Interpreted\n\n"
+                fallback_body = (
+                    "The uploaded image could not be reliably processed or read. "
+                    "No readable medical text or medication labels could be extracted.\n\n"
+                    "**Please provide additional information:**\n"
+                    "* Type your symptoms, questions, or medication names directly in the text input, or\n"
+                    "* Upload a clearer, well-lit, and focused photograph of the packaging or document.\n\n"
+                )
+                meta_status = "FAILED"
+                meta_details = "Image processing failed; requested readable text."
+            elif not clean_ocr:
+                fallback_header = "### 📷 No Text Detected in Image\n\n"
+                fallback_body = (
+                    "No text or medication labels were detected in the uploaded image.\n\n"
+                    "**Please provide additional information:**\n"
+                    "* Type your symptoms, questions, or medication names directly in the text input, or\n"
+                    "* Upload a clearer, well-lit, and focused photograph showing the label clearly.\n\n"
+                )
+                meta_status = "EMPTY"
+                meta_details = "No readable text detected in image; requested readable text."
+            else:
+                fallback_header = ""
+                fallback_body = ""
+                meta_status = "SUCCESS"
+                meta_details = ""
+
+            if fallback_body:
+                unreadable_message = (
+                    f"{fallback_header}{fallback_body}"
+                    "**Important Emergency Guidance:**\n"
+                    "If you or the person you are assisting is experiencing an acute medical emergency "
+                    "(such as severe chest pain, shortness of breath, sudden weakness, slurred speech, or unresponsiveness), "
+                    "do not wait for image processing or online consultation. "
+                    "Call **112** (in India), **911** (in the US), or your local emergency services immediately.\n\n"
+                    f"{MANDATORY_HEADER}\n"
+                    f"{MANDATORY_TEXT}"
+                )
+                card = build_summary_card(
+                    user_text=user_text,
+                    ocr_text="",
+                    retrievals={},
+                    llm_output=unreadable_message.strip()
+                )
+                card_meta = {
+                    "mismatch": None,
+                    "mismatch_details": meta_details,
+                    "ocr_status": meta_status,
+                    "fast_path": False,
+                }
+                if ocr_failed:
+                    card_meta["ocr_error_type"] = ocr_error_type
+                pipeline_timings["pipeline_total_ms"] = int((time.perf_counter() - _t_pipeline_start) * 1000)
+                return {
+                    "card": card,
+                    "meta": card_meta,
+                    "pipeline_timings": pipeline_timings,
+                }
 
         # 2. Retrievals for Symptom Text
         print(f"🔎 [Retrieval] Running Hybrid Search (FAISS + BM25 + RRF + Cross-Encoder) for symptom query ({len(user_norm)} chars)...")
@@ -460,6 +599,24 @@ class Pipeline:
 
         all_retrievals = {**retrievals_for_user_text, **retrievals_for_ocr_text}
 
+        # 4b. Emergency Post-Generation Safeguard Enforcement (Phase 1.2.d)
+        guardrail_meta_dict = None
+        if self.guardrail is not None:
+            _t_guard_post = time.perf_counter()
+            evidence_summaries: List[str] = []
+            for idx_name, items in all_retrievals.items():
+                for key, score, obj in items:
+                    if isinstance(obj, dict):
+                        evidence_summaries.append(str(obj))
+            guarded_response_str, post_decision = self.guardrail.apply_guardrail(
+                query=combined_query,
+                baseline_response=llm_response_str.strip(),
+                retrieved_contexts=evidence_summaries
+            )
+            pipeline_timings["guardrail_post_gen_ms"] = int((time.perf_counter() - _t_guard_post) * 1000)
+            llm_response_str = guarded_response_str
+            guardrail_meta_dict = post_decision.to_dict()
+
         card = build_summary_card(
             user_text=user_text,
             ocr_text=ocr_text,
@@ -471,6 +628,17 @@ class Pipeline:
             "mismatch": None,
             "mismatch_details": "Mismatch check not performed in this pipeline version."
         }
+        if ocr_failed:
+            card_meta["ocr_status"] = "FAILED"
+            card_meta["ocr_error_type"] = ocr_error_type
+        elif image_path:
+            card_meta["ocr_status"] = "SUCCESS" if ocr_text else "EMPTY"
+        else:
+            card_meta["ocr_status"] = "SKIPPED"
+
+        if guardrail_meta_dict is not None:
+            card_meta["guardrail"] = guardrail_meta_dict
+            card_meta["fast_path"] = False
 
         pipeline_timings["pipeline_total_ms"] = int((time.perf_counter() - _t_pipeline_start) * 1000)
 
@@ -489,6 +657,10 @@ class Pipeline:
             print(f"  Retrieval graph (Neo4j):     {pipeline_timings['retrieval_graph_ms']}ms")
         print(f"  Prompt assembly:             {pipeline_timings.get('prompt_assembly_ms', 0)}ms")
         print(f"  LLM ({provider_label}): {pipeline_timings.get('llm_total_ms', 0)}ms")
+        if "guardrail_fast_path_ms" in pipeline_timings:
+            print(f"  Emergency fast-path:         {pipeline_timings['guardrail_fast_path_ms']}ms")
+        if "guardrail_post_gen_ms" in pipeline_timings:
+            print(f"  Emergency post-guard:        {pipeline_timings['guardrail_post_gen_ms']}ms")
         print(f"  " + "-" * 40)
         print(f"  Pipeline total:              {pipeline_timings['pipeline_total_ms']}ms")
         print("=" * 60 + "\n")

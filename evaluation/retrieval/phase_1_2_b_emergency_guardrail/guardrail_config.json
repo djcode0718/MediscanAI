@@ -1,0 +1,117 @@
+{
+  "version": "1.0.0",
+  "name": "MediScanAI Deterministic Emergency Triage Guardrail",
+  "description": "Rule-based red-flag emergency detector and response safeguard for acute life-threatening medical presentations.",
+  "emergency_hotlines": {
+    "india": "112",
+    "us": "911",
+    "uk": "999",
+    "eu": "112"
+  },
+  "rules": [
+    {
+      "rule_id": "RULE-01-CARDIOVASCULAR-CHEST-PAIN",
+      "category": "cardiovascular",
+      "severity": "CRITICAL_EMERGENCY",
+      "description": "Acute chest pain, pressure, tightness, or radiation suggestive of cardiac ischemia/infarction or aortic dissection.",
+      "triggers": [
+        "\\bchest\\s+pain\\b",
+        "\\bpain\\s+in\\s+(?:the\\s+|my\\s+)?chest\\b",
+        "\\bchest\\s+hurts?\\b",
+        "\\bchest\\s+(?:tightness|pressure|heaviness|squeezing|crushing)\\b",
+        "\\bcrushing\\s+(?:chest\\s+)?pain\\b",
+        "\\bheavy\\s+weight\\s+on\\s+(?:the\\s+|my\\s+)?chest\\b",
+        "\\bheart\\s+attack\\b",
+        "\\bradiating\\s+to\\s+(?:the\\s+|my\\s+)?(?:left\\s+)?(?:arm|jaw|neck|back)\\b",
+        "\\b(?:left\\s+)?arm\\s+(?:is\\s+)?numb.*chest\\b",
+        "\\bchest.*(?:left\\s+)?arm\\s+(?:is\\s+)?numb\\b"
+      ],
+      "rationale": "Chest pain is a cardinal presentation for acute coronary syndromes, aortic dissection, or pulmonary embolism requiring immediate emergency evaluation."
+    },
+    {
+      "rule_id": "RULE-02-RESPIRATORY-DISTRESS",
+      "category": "respiratory",
+      "severity": "CRITICAL_EMERGENCY",
+      "description": "Acute severe dyspnea, airway compromise, stridor, or anaphylaxis.",
+      "triggers": [
+        "\\bsevere\\s+(?:difficulty\\s+breathing|shortness\\s+of\\s+breath|breathlessness)\\b",
+        "\\bgasping\\s+for\\s+(?:air|breath)\\b",
+        "\\bthroat\\s+swelling\\b",
+        "\\banaphylaxis\\b",
+        "\\banaphylactic\\b",
+        "\\bstridor\\b",
+        "\\bbluish\\s+(?:lips|face|skin)\\b",
+        "\\bcyanosis\\b",
+        "\\bcannot\\s+breathe\\b",
+        "\\bcan(?:'t| not)\\s+(?:catch\\s+my\\s+breath|breathe)\\b",
+        "\\bchoking\\b"
+      ],
+      "rationale": "Acute airway compromise and severe respiratory failure present immediate threats to oxygenation and life."
+    },
+    {
+      "rule_id": "RULE-03-NEUROLOGICAL-STROKE",
+      "category": "neurological",
+      "severity": "CRITICAL_EMERGENCY",
+      "description": "Acute focal neurological deficits (FAST signs) or sudden catastrophic headache.",
+      "triggers": [
+        "\\bfacial\\s+droop(?:ing)?\\b",
+        "\\bsudden\\s+(?:weakness|numbness|paralysis)\\s+(?:in|on|of)\\s+(?:one\\s+side|arm|face|leg)\\b",
+        "\\barm\\s+weakness.*slurred\\s+speech\\b",
+        "\\bslurred\\s+speech.*(?:weakness|droop)\\b",
+        "\\bsudden\\s+inability\\s+to\\s+(?:speak|talk|move)\\b",
+        "\\bthunderclap\\s+headache\\b",
+        "\\bworst\\s+headache\\s+of\\s+(?:my\\s+)?life\\b"
+      ],
+      "rationale": "Acute stroke requires ultra-rapid emergency triage within strict thrombolytic and thrombectomy time windows."
+    },
+    {
+      "rule_id": "RULE-04-UNCONSCIOUSNESS-COLLAPSE",
+      "category": "consciousness",
+      "severity": "CRITICAL_EMERGENCY",
+      "description": "Acute loss of consciousness, unresponsiveness, or witnessed syncope/collapse.",
+      "triggers": [
+        "\\bunconscious(?:ness)?\\b",
+        "\\bunresponsive(?:ness)?\\b",
+        "\\bpassed\\s+out\\s+and\\s+(?:cannot\\s+wake|unresponsive)\\b",
+        "\\bcollapse(?:d)?\\s+and\\s+(?:not\\s+breathing|unconscious)\\b"
+      ],
+      "rationale": "Unresponsiveness and sudden collapse require immediate bystander resuscitation and emergency services activation."
+    },
+    {
+      "rule_id": "RULE-05-SEVERE-HEMORRHAGE",
+      "category": "hemorrhage",
+      "severity": "CRITICAL_EMERGENCY",
+      "description": "Massive acute bleeding, hematemesis, or massive hemoptysis.",
+      "triggers": [
+        "\\bcoughing\\s+up\\s+(?:large\\s+amounts\\s+of\\s+)?blood\\b",
+        "\\bmassive\\s+hemoptysis\\b",
+        "\\bvomiting\\s+blood\\b",
+        "\\bhematemesis\\b",
+        "\\bsevere\\s+(?:uncontrolled\\s+)?arterial\\s+bleeding\\b"
+      ],
+      "rationale": "Massive gastrointestinal, pulmonary, or arterial hemorrhage can rapidly induce hypovolemic shock."
+    }
+  ],
+  "negation_patterns": [
+    "\\bno\\s+(?:chest\\s+pain|shortness\\s+of\\s+breath|difficulty\\s+breathing|numbness|weakness)\\b",
+    "\\bwithout\\s+(?:chest\\s+pain|shortness\\s+of\\s+breath|difficulty\\s+breathing)\\b",
+    "\\bdenies\\s+(?:chest\\s+pain|shortness\\s+of\\s+breath)\\b",
+    "\\bnot\\s+experiencing\\s+(?:chest\\s+pain|shortness\\s+of\\s+breath)\\b",
+    "\\bno\\s+history\\s+of\\s+(?:heart\\s+attack|stroke|chest\\s+pain)\\b",
+    "\\bruled\\s+out\\s+(?:heart\\s+attack|stroke|pulmonary\\s+embolism)\\b"
+  ],
+  "historical_and_family_patterns": [
+    "\\b(?:years?|months?|weeks?)\\s+ago\\b",
+    "\\bin\\s+(?:19\\d\\d|20[01]\\d|202[0-4])\\b",
+    "\\bhistory\\s+of\\s+(?:chest\\s+pain|heart\\s+attack|stroke)\\b",
+    "\\bpast\\s+(?:medical\\s+)?history\\b",
+    "\\b(?:father|mother|brother|sister|parent|grandparent|family|uncle|aunt|friend)\\s+had\\s+(?:a\\s+)?(?:heart\\s+attack|stroke|chest\\s+pain)\\b",
+    "\\bfamily\\s+history\\s+of\\b"
+  ],
+  "contextual_exceptions": [
+    "\\bchest\\s+decongestant\\b",
+    "\\bchest\\s+(?:measurement|circumference)\\b",
+    "\\bstroke\\s+volume\\b",
+    "\\bpain\\s+relief\\s+(?:cream|gel|patch|ointment)\\s+for\\s+(?:knee|elbow|foot|ankle)\\b"
+  ]
+}

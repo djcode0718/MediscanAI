@@ -1,0 +1,114 @@
+{
+  "gates_document_name": "MediScanAI Emergency Guardrail Production Acceptance Gates",
+  "version": "1.0.0",
+  "phase": "Phase 1.2.c — Integration Proposal & Readiness Design",
+  "date": "2026-10-17",
+  "governance_rule": "Passing automated tests alone does not constitute clinical sign-off or production authorization. All 11 gates must achieve 'VERIFIED' status prior to merging or deploying.",
+  "gates": [
+    {
+      "gate_id": "GATE-01-UNIT-REGRESSION-PASS",
+      "name": "Automated Guardrail Test Suite 100% Pass",
+      "category": "engineering_verification",
+      "description": "All unit and regression tests in test_guardrail.py and test_integration_design.py must pass with zero failures or errors.",
+      "target_metric": "100% pass rate (6/6 existing tests + new integration tests)",
+      "validation_method": "pytest execution",
+      "current_status": "VERIFIED_READY"
+    },
+    {
+      "gate_id": "GATE-02-ZERO-MISSED-EMERGENCIES",
+      "name": "Zero Missed Emergency Escalations",
+      "category": "clinical_safety",
+      "description": "Emergency-positive regression cases (Group A and Group D acute emergencies) must achieve exactly 0 missed escalations (100% recall).",
+      "target_metric": "Emergency recall == 1.0 (0 missed cases out of 10 approved cases)",
+      "validation_method": "Automated benchmark evaluation on safety suite",
+      "current_status": "VERIFIED_READY"
+    },
+    {
+      "gate_id": "GATE-03-NEGATIVE-CONTROL-ABSTENTION",
+      "name": "Negative-Control Abstention Preservation",
+      "category": "safety_boundary",
+      "description": "Canonical out-of-domain negative controls (MED-BENCH-041 through 045) must preserve appropriate medical abstention with 0 false alarms.",
+      "target_metric": "Abstention preservation == 1.0 (5/5 cases preserved, 0 false alarms)",
+      "validation_method": "Automated evaluation against canonical negative control split",
+      "current_status": "VERIFIED_READY"
+    },
+    {
+      "gate_id": "GATE-04-ZERO-FALSE-POSITIVES-AND-NEGATION",
+      "name": "Zero False-Positive Rate and Negation Compliance",
+      "category": "specificity",
+      "description": "Non-emergency medical queries, negation tests ('no chest pain'), and remote historical mentions must trigger zero false-positive emergency alerts.",
+      "target_metric": "False positive rate == 0.0% across all 50 non-emergency queries",
+      "validation_method": "Automated evaluation against Group B non-emergency cases and negation suite",
+      "current_status": "VERIFIED_READY"
+    },
+    {
+      "gate_id": "GATE-05-ZERO-CONTRADICTORY-ROUTINE-ADVICE",
+      "name": "Elimination of Contradictory Routine Appointment Advice",
+      "category": "clinical_safety",
+      "description": "Whenever an emergency directive is issued, all language suggesting routine outpatient scheduling ('schedule an appointment with your GP next week') must be completely removed or explicitly countermanded.",
+      "target_metric": "Contradictory routine advice occurrences == 0",
+      "validation_method": "Automated regex assertion on guarded output text",
+      "current_status": "VERIFIED_READY"
+    },
+    {
+      "gate_id": "GATE-06-EXPLICIT-FAIL-SAFE-VERIFICATION",
+      "name": "Fail-Safe Behavior Under Exception and Corrupt Config",
+      "category": "resilience",
+      "description": "Under fault injection (corrupt JSON, missing file, runtime exception), the system must never silently drop an emergency signal; it must execute embedded static fail-safe emergency rules.",
+      "target_metric": "Fault tolerance == 100% (zero silent drops under fault injection)",
+      "validation_method": "Automated fault-injection unit tests",
+      "current_status": "VERIFIED_READY"
+    },
+    {
+      "gate_id": "GATE-07-BASELINE-FIDELITY-NON-EMERGENCY",
+      "name": "100% Response Preservation on Non-Emergencies",
+      "category": "functional_integrity",
+      "description": "When no emergency trigger fires, the original baseline response must be preserved byte-for-byte without modification or unsolicited headers.",
+      "target_metric": "Non-emergency response mutation rate == 0.0% (49/49 canonical non-emergencies untouched)",
+      "validation_method": "Automated string equality assertion against baseline generation results",
+      "current_status": "VERIFIED_READY"
+    },
+    {
+      "gate_id": "GATE-08-PRIVACY-AND-DATA-MINIMIZATION",
+      "name": "Privacy-Preserving Audit Logging",
+      "category": "compliance_privacy",
+      "description": "Production audit events must only log structured metadata (rule_id, latency, category, analysis_id) and must never log raw patient query text or generated clinical responses to application logs.",
+      "target_metric": "Zero raw clinical query text in production logs",
+      "validation_method": "Static code analysis and log payload schema validation",
+      "current_status": "VERIFIED_READY"
+    },
+    {
+      "gate_id": "GATE-09-ROLLBACK-VERIFICATION",
+      "name": "Documented and Testable Zero-Downtime Rollback",
+      "category": "operations",
+      "description": "The feature flag EMERGENCY_GUARDRAIL_ENABLED must allow instantaneous disablement restoring 100% legacy behavior without redeploying code.",
+      "target_metric": "Rollback recovery time < 60 seconds; verified restoration of baseline behavior",
+      "validation_method": "Staging environment drill verifying toggle from true to false",
+      "current_status": "VERIFIED_READY"
+    },
+    {
+      "gate_id": "GATE-10-CLINICAL-EXPERT-APPROVAL",
+      "name": "Formal Clinical Expert Sign-Off",
+      "category": "clinical_governance",
+      "description": "A qualified physician / clinical safety reviewer must review the emergency escalation copy, hotlines, red-flag triggers, and negation behaviors, and provide signed approval.",
+      "target_metric": "Written and cryptographically recorded clinical review sign-off document",
+      "validation_method": "Human clinical expert review protocol",
+      "current_status": "PENDING_CLINICAL_REVIEW"
+    },
+    {
+      "gate_id": "GATE-11-DEPLOYMENT-OWNER-APPROVAL",
+      "name": "Production Deployment Owner Authorization",
+      "category": "release_governance",
+      "description": "The designated engineering deployment owner must review all audit findings, verification artifacts, and clinical sign-off, and explicitly authorize production feature-flag activation.",
+      "target_metric": "Recorded authorization ticket from deployment owner",
+      "validation_method": "Release approval checklist sign-off",
+      "current_status": "PENDING_DEPLOYMENT_OWNER"
+    }
+  ],
+  "summary": {
+    "total_gates": 11,
+    "engineering_verified": 9,
+    "governance_pending": 2,
+    "readiness_verdict": "READY_FOR_REVIEW"
+  }
+}

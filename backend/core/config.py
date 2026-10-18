@@ -89,6 +89,11 @@ class Settings(BaseSettings):
     NEO4J_MAX_CONNECTION_LIFETIME_SECONDS: float = 3600.0
     NEO4J_MAX_CONNECTION_POOL_SIZE: int = 50
 
+    # Emergency Triage Guardrail Configuration (Phase 1.2.d)
+    EMERGENCY_GUARDRAIL_ENABLED: bool = False
+    EMERGENCY_GUARDRAIL_CONFIG_PATH: str = "app/guardrail_config.json"
+    EMERGENCY_GUARDRAIL_FAST_PATH: bool = True
+
     @field_validator("JWT_SECRET_KEY")
     @classmethod
     def validate_jwt_secret(cls, v: str) -> str:

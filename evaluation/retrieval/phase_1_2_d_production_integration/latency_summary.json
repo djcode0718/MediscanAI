@@ -1,0 +1,59 @@
+{
+  "platform_metadata": {
+    "os": "macOS (Darwin arm64)",
+    "python_version": "3.10.18",
+    "timer": "time.perf_counter()",
+    "measurement_date": "2026-10-17"
+  },
+  "pre_generation_detector": {
+    "sample_count": 1000,
+    "mean_ms": 0.01,
+    "p50_ms": 0.0097,
+    "p95_ms": 0.0183,
+    "p99_ms": 0.0186,
+    "min_ms": 0.0019,
+    "max_ms": 0.0283,
+    "std_dev_ms": 0.0053
+  },
+  "post_generation_enforcement": {
+    "sample_count": 1000,
+    "mean_ms": 0.0214,
+    "p50_ms": 0.018,
+    "p95_ms": 0.0411,
+    "p99_ms": 0.0418,
+    "min_ms": 0.0043,
+    "max_ms": 0.0505,
+    "std_dev_ms": 0.0136
+  },
+  "emergency_fast_path_total_pipeline": {
+    "sample_count": 100,
+    "mean_ms": 0.0631,
+    "p50_ms": 0.0513,
+    "p95_ms": 0.1305,
+    "p99_ms": 0.2695,
+    "min_ms": 0.0499,
+    "max_ms": 0.2695,
+    "std_dev_ms": 0.0344
+  },
+  "normal_path_when_enabled_overhead": {
+    "sample_count": 100,
+    "mean_ms": 0.3298,
+    "p50_ms": 0.2559,
+    "p95_ms": 0.7008,
+    "p99_ms": 2.7028,
+    "min_ms": 0.1341,
+    "max_ms": 2.7028,
+    "std_dev_ms": 0.3367
+  },
+  "disabled_mode_baseline_pipeline": {
+    "sample_count": 100,
+    "mean_ms": 0.3992,
+    "p50_ms": 0.2676,
+    "p95_ms": 0.9918,
+    "p99_ms": 7.7914,
+    "min_ms": 0.1073,
+    "max_ms": 7.7914,
+    "std_dev_ms": 0.772
+  },
+  "llm_calls_avoided_by_fast_path": "1 call avoided per critical emergency query (100% LLM compute saved)"
+}

@@ -4,20 +4,20 @@ import time
 import numpy as np
 import cv2
 
-# PaddleOCR import - your environment already has paddleocr installed
-from paddleocr import PaddleOCR
+# PaddleOCR import - lazily imported inside get_ocr_model to prevent startup dependency failure
 import threading
 
 _ocr_model = None
 _ocr_lock = threading.Lock()
 
-def get_ocr_model() -> PaddleOCR:
+def get_ocr_model():
     """Lazy initializer for PaddleOCR model. Reports initialization time on first call."""
     global _ocr_model
     if _ocr_model is None:
         with _ocr_lock:
             if _ocr_model is None:
                 _t = time.perf_counter()
+                from paddleocr import PaddleOCR
                 _ocr_model = PaddleOCR(use_textline_orientation=True, lang='en')
                 print(f"[OCR] PaddleOCR initialization: {time.perf_counter()-_t:.2f}s")
     return _ocr_model

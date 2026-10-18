@@ -1,0 +1,17 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.10.18, pytest-9.1.1, pluggy-1.6.0 -- /Users/sj/miniforge3/envs/med-env/bin/python3.10
+cachedir: .pytest_cache
+rootdir: /Users/sj/Documents/mediscanai
+configfile: pytest.ini
+plugins: cov-7.1.0, asyncio-1.4.0, anyio-4.10.0, langsmith-0.14.9
+asyncio: mode=strict, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 6 items
+
+evaluation/retrieval/phase_1_2_b_emergency_guardrail/test_guardrail.py::test_group_a_emergency_recall PASSED [ 16%]
+evaluation/retrieval/phase_1_2_b_emergency_guardrail/test_guardrail.py::test_group_b_non_emergency_precision PASSED [ 33%]
+evaluation/retrieval/phase_1_2_b_emergency_guardrail/test_guardrail.py::test_group_c_negative_controls PASSED [ 50%]
+evaluation/retrieval/phase_1_2_b_emergency_guardrail/test_guardrail.py::test_group_d_adversarial_interaction PASSED [ 66%]
+evaluation/retrieval/phase_1_2_b_emergency_guardrail/test_guardrail.py::test_med_bench_038_resolution PASSED [ 83%]
+evaluation/retrieval/phase_1_2_b_emergency_guardrail/test_guardrail.py::test_latency_overhead PASSED [100%]
+
+============================== 6 passed in 0.02s ===============================

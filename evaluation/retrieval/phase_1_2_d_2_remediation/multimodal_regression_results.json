@@ -1,0 +1,13 @@
+{
+  "total_test_cases": 10,
+  "passed_count": 10,
+  "failed_count": 0,
+  "pass_rate": 1.0,
+  "emergency_cases_evaluated": 5,
+  "emergency_cases_escalated": 5,
+  "emergency_recall": 1.0,
+  "non_emergency_false_positives": 0,
+  "ocr_failure_resilience_verified": true,
+  "image_only_emergency_fast_path_verified": true,
+  "disclaimer_preserved_across_all_cases": true
+}

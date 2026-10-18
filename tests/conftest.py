@@ -11,6 +11,7 @@ from unittest.mock import MagicMock, patch
 # Ensure project root is on sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+
 from backend.main import app
 from backend.db.base import Base
 from backend.db.session import get_db
