@@ -174,17 +174,46 @@
 
 import logging
 from typing import Optional, Dict, Any, List
+from dataclasses import asdict
 import time
 from app.ocr import extract_text_from_image, ocr_text_join
 from app.retriever import MultiRetriever
-from app.llm import generate_with_mode
+from app.llm import generate_with_mode, generate_with_mode_meta, GenerationParams
 from app.utils import normalize_text
 from app.prompt import ANALYSIS_PROMPT_TEMPLATE
 from app.formatter import build_summary_card
 from backend.core.config import get_settings, Settings
 from app.graph import GraphRetriever
+from evaluation.retrieval.pool_evidence import normalize_disease_chunk_id
 
 logger = logging.getLogger("mediscanai.rag.core")
+
+
+def extract_retrieved_ids_per_channel(retrievals_dict: Dict[str, List]) -> Dict[str, List[str]]:
+    """Normalizes retrieved items per channel into structured ID lists."""
+    channel_ids: Dict[str, List[str]] = {}
+    for ch_name, items in retrievals_dict.items():
+        ids = []
+        for key, score, obj in items:
+            if ch_name == "diseases":
+                raw_chunk_id = (obj.get("chunk", {}).get("id") if isinstance(obj, dict) else None) or key
+                ids.append(normalize_disease_chunk_id(str(raw_chunk_id)))
+            elif ch_name in ("drugs", "drugs_from_ocr"):
+                if isinstance(obj, dict) and "id" in obj:
+                    ids.append(f"drug_{obj['id']}")
+                elif str(key).startswith("drug_"):
+                    ids.append(str(key))
+                else:
+                    ids.append(f"drug_{key}")
+            elif ch_name == "drug_dict":
+                if isinstance(obj, dict) and "id" in obj:
+                    ids.append(f"drug_dict_{obj['id']}")
+                else:
+                    ids.append(str(key))
+            else:
+                ids.append(str(key))
+        channel_ids[ch_name] = ids
+    return channel_ids
 
 
 DEFAULT_INDEXES = {
@@ -250,8 +279,17 @@ class Pipeline:
                 context_str += f"* Result: {str(obj)} (Score: {score:.4f})\n"
         return context_str
 
-    def run(self, user_text: str, image_path: Optional[str] = None,
-             top_k: int = 5, llm_mode: str = "offline") -> Dict[str, Any]:
+    def run(
+        self,
+        user_text: str,
+        image_path: Optional[str] = None,
+        top_k: int = 5,
+        llm_mode: str = "offline",
+        *,
+        return_trace: bool = False,
+        ocr_text_override: Optional[str] = None,
+        gen_params: Optional[GenerationParams] = None,
+    ) -> Dict[str, Any]:
         _t_pipeline_start = time.perf_counter()
         pipeline_timings: Dict[str, int] = {}
 
@@ -262,7 +300,11 @@ class Pipeline:
         ocr_error_type = None
 
         # 1. OCR Extraction (Resilient to engine exceptions)
-        if image_path:
+        if ocr_text_override is not None:
+            ocr_text = ocr_text_override
+            pipeline_timings["ocr_total_ms"] = 0
+            print(f"📷 [Vision] OCR text override provided ({len(ocr_text)} characters).")
+        elif image_path:
             print("📷 [Vision] Running PaddleOCR on medicine image...")
             _t_ocr = time.perf_counter()
             try:
@@ -319,17 +361,44 @@ class Pipeline:
                 if ocr_failed:
                     card_meta["ocr_status"] = "FAILED"
                     card_meta["ocr_error_type"] = ocr_error_type
+                elif ocr_text_override is not None:
+                    card_meta["ocr_status"] = "SUCCESS" if ocr_text else "EMPTY"
                 elif image_path:
                     card_meta["ocr_status"] = "SUCCESS" if ocr_text else "EMPTY"
                 else:
                     card_meta["ocr_status"] = "SKIPPED"
 
                 print(f"🚨 [Emergency Guardrail] FAST-PATH ENGAGED: {final_decision.fired_rule_id} in {pipeline_timings['guardrail_fast_path_ms']}ms")
-                return {
+                fast_result = {
                     "card": card,
                     "meta": card_meta,
                     "pipeline_timings": pipeline_timings,
                 }
+                if return_trace:
+                    provider_model_tag = getattr(self.settings, "OLLAMA_MODEL", "llama3.1:8b")
+                    fast_result["trace"] = {
+                        "prompt": "",
+                        "prompt_chars": 0,
+                        "prompt_tokens_est": 0,
+                        "retrievals_per_channel": {},
+                        "retrieved_ids": {},
+                        "raw_llm_output": "",
+                        "final_output": guarded_response_str.strip(),
+                        "fast_path_fired": True,
+                        "generation_meta": None,
+                        "effective_settings": {
+                            "EVIDENCE_FORMAT": getattr(self.settings, "EVIDENCE_FORMAT", "legacy"),
+                            "params": asdict(gen_params) if gen_params else None,
+                            "top_k": top_k,
+                            "llm_mode": llm_mode,
+                            "ollama_model": provider_model_tag,
+                            "neo4j_enabled": self.settings.NEO4J_ENABLED,
+                            "emergency_guardrail_enabled": self.settings.EMERGENCY_GUARDRAIL_ENABLED,
+                            "emergency_guardrail_fast_path": self.settings.EMERGENCY_GUARDRAIL_FAST_PATH,
+                        }
+                    }
+                return fast_result
+
 
         # 1d. Safe Fallback for Unreadable / Empty Image-Only Queries (Phase 1.2.d.2)
         if image_path and not user_norm:
@@ -590,12 +659,25 @@ class Pipeline:
         )
         pipeline_timings["prompt_assembly_ms"] = int((time.perf_counter() - _t_prompt) * 1000)
 
-        provider_label = "Gemini/Groq (online)" if llm_mode == "online" else "Ollama/Mistral"
+        provider_model_tag = getattr(self.settings, "OLLAMA_MODEL", "llama3.1:8b")
+        provider_label = "Gemini/Groq (online)" if llm_mode == "online" else f"Ollama/{provider_model_tag}"
         print(f"🤖 [LLM] Requesting clinical analysis via {provider_label}...")
         _t_llm = time.perf_counter()
-        llm_response_str = generate_with_mode(full_prompt, llm_mode=llm_mode)
+
+        if return_trace:
+            raw_llm_output, gen_meta = generate_with_mode_meta(
+                full_prompt, llm_mode=llm_mode, params=gen_params
+            )
+        else:
+            raw_llm_output = generate_with_mode(
+                full_prompt, llm_mode=llm_mode, params=gen_params
+            )
+            gen_meta = None
+        llm_response_str = raw_llm_output
         pipeline_timings["llm_total_ms"] = int((time.perf_counter() - _t_llm) * 1000)
         print("   ↳ Generation completed successfully.")
+
+
 
         all_retrievals = {**retrievals_for_user_text, **retrievals_for_ocr_text}
 
@@ -631,6 +713,8 @@ class Pipeline:
         if ocr_failed:
             card_meta["ocr_status"] = "FAILED"
             card_meta["ocr_error_type"] = ocr_error_type
+        elif ocr_text_override is not None:
+            card_meta["ocr_status"] = "SUCCESS" if ocr_text else "EMPTY"
         elif image_path:
             card_meta["ocr_status"] = "SUCCESS" if ocr_text else "EMPTY"
         else:
@@ -666,9 +750,47 @@ class Pipeline:
         print("=" * 60 + "\n")
 
         print("✅ [RAG CORE] Completed execution.\n")
-        return {
+        final_result = {
             "card": card,
             "meta": card_meta,
             "pipeline_timings": pipeline_timings,
         }
+        if return_trace:
+            try:
+                import tiktoken
+                enc = tiktoken.get_encoding("cl100k_base")
+                prompt_tokens_est = len(enc.encode(full_prompt))
+            except Exception:
+                prompt_tokens_est = len(full_prompt) // 4
+
+            final_result["trace"] = {
+                "prompt": full_prompt,
+                "prompt_chars": len(full_prompt),
+                "prompt_tokens_est": prompt_tokens_est,
+                "retrievals_per_channel": {
+                    "user_text_retrievals": formatted_user_retrievals,
+                    "ocr_text_retrievals": formatted_ocr_retrievals,
+                    "channels": {
+                        chan: self._format_retrievals({chan: items})
+                        for chan, items in all_retrievals.items()
+                    }
+                },
+                "retrieved_ids": extract_retrieved_ids_per_channel(all_retrievals),
+                "raw_llm_output": raw_llm_output,
+                "final_output": llm_response_str.strip(),
+                "fast_path_fired": False,
+                "generation_meta": gen_meta,
+                "effective_settings": {
+                    "EVIDENCE_FORMAT": getattr(self.settings, "EVIDENCE_FORMAT", "legacy"),
+                    "params": asdict(gen_params) if gen_params else None,
+                    "top_k": top_k,
+                    "llm_mode": llm_mode,
+                    "ollama_model": provider_model_tag,
+                    "neo4j_enabled": self.settings.NEO4J_ENABLED,
+                    "emergency_guardrail_enabled": self.settings.EMERGENCY_GUARDRAIL_ENABLED,
+                    "emergency_guardrail_fast_path": self.settings.EMERGENCY_GUARDRAIL_FAST_PATH,
+                }
+            }
+        return final_result
+
 

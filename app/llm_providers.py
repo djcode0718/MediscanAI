@@ -9,11 +9,11 @@ Keys are NEVER logged, printed, or included in error messages.
 """
 import time
 import logging
-from typing import Optional, List
-
+from typing import Optional, List, Dict, Any, Tuple
 import requests
 
 from backend.core.config import settings, get_settings
+from app.llm import GenerationParams
 
 logger = logging.getLogger("mediscanai.llm_providers")
 
@@ -36,10 +36,14 @@ class OnlineProviderError(Exception):
 # Gemini provider
 # ---------------------------------------------------------------------------
 
-def call_gemini(prompt: str, model: str) -> str:
+def call_gemini_meta(
+    prompt: str,
+    model: str,
+    params: Optional[GenerationParams] = None,
+) -> Tuple[str, Dict[str, Any]]:
     """
-    Call Google Gemini generateContent REST API for a specific model.
-    Raises OnlineProviderError on any failure (key missing, network, API error).
+    Call Google Gemini generateContent REST API and return (text, meta).
+    Raises OnlineProviderError on any failure.
     """
     cfg = _get_cfg()
     api_key = cfg.GEMINI_API_KEY
@@ -51,17 +55,23 @@ def call_gemini(prompt: str, model: str) -> str:
             is_key_missing=True,
         )
 
-    # Key goes into URL query param only — never into logs or error messages
     real_url = (
         f"https://generativelanguage.googleapis.com/v1beta/models/"
         f"{model}:generateContent?key={api_key.strip()}"
     )
+    gen_config: Dict[str, Any] = {
+        "temperature": 0.3,
+        "maxOutputTokens": 2048,
+    }
+    if params:
+        if params.temperature is not None:
+            gen_config["temperature"] = params.temperature
+        if params.num_predict is not None:
+            gen_config["maxOutputTokens"] = params.num_predict
+
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": {
-            "temperature": 0.3,
-            "maxOutputTokens": 2048,
-        },
+        "generationConfig": gen_config,
     }
 
     r = None
@@ -97,7 +107,23 @@ def call_gemini(prompt: str, model: str) -> str:
 
     try:
         j = r.json()
-        return j["candidates"][0]["content"]["parts"][0]["text"]
+        cand = j["candidates"][0]
+        text = cand["content"]["parts"][0]["text"]
+        finish_reason = cand.get("finishReason")
+        truncated_by_length = (finish_reason in ("MAX_TOKENS", "length"))
+        usage = j.get("usageMetadata", {})
+        meta = {
+            "provider": "gemini",
+            "model": f"gemini/{model}",
+            "latency_ms": _ms,
+            "finish_reason": finish_reason,
+            "done_reason": finish_reason,
+            "prompt_eval_count": usage.get("promptTokenCount"),
+            "eval_count": usage.get("candidatesTokenCount"),
+            "truncated_by_length": truncated_by_length,
+            "likely_prompt_truncated": False,
+        }
+        return text, meta
     except (KeyError, IndexError, ValueError) as exc:
         logger.warning("Gemini/%s response parse error: %s", model, type(exc).__name__)
         raise OnlineProviderError(
@@ -105,13 +131,29 @@ def call_gemini(prompt: str, model: str) -> str:
         )
 
 
+def call_gemini(
+    prompt: str,
+    model: str,
+    params: Optional[GenerationParams] = None,
+) -> str:
+    """
+    Call Google Gemini generateContent REST API for a specific model.
+    """
+    text, _ = call_gemini_meta(prompt, model, params=params)
+    return text
+
+
 # ---------------------------------------------------------------------------
 # Groq provider
 # ---------------------------------------------------------------------------
 
-def call_groq(prompt: str, model: str) -> str:
+def call_groq_meta(
+    prompt: str,
+    model: str,
+    params: Optional[GenerationParams] = None,
+) -> Tuple[str, Dict[str, Any]]:
     """
-    Call Groq chat completions REST API (OpenAI-compatible) for a specific model.
+    Call Groq chat completions REST API (OpenAI-compatible) and return (text, meta).
     Raises OnlineProviderError on any failure.
     """
     cfg = _get_cfg()
@@ -126,16 +168,22 @@ def call_groq(prompt: str, model: str) -> str:
 
     url = "https://api.groq.com/openai/v1/chat/completions"
     headers = {
-        # Key goes in Authorization header only — never in logs
         "Authorization": f"Bearer {api_key.strip()}",
         "Content-Type": "application/json",
     }
-    payload = {
+    payload: Dict[str, Any] = {
         "model": model,
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.3,
         "max_tokens": 2048,
     }
+    if params:
+        if params.temperature is not None:
+            payload["temperature"] = params.temperature
+        if params.seed is not None:
+            payload["seed"] = params.seed
+        if params.num_predict is not None:
+            payload["max_tokens"] = params.num_predict
 
     r = None
     try:
@@ -170,7 +218,23 @@ def call_groq(prompt: str, model: str) -> str:
 
     try:
         j = r.json()
-        return j["choices"][0]["message"]["content"]
+        choice = j["choices"][0]
+        text = choice["message"]["content"]
+        finish_reason = choice.get("finish_reason")
+        truncated_by_length = (finish_reason in ("length", "max_tokens"))
+        usage = j.get("usage", {})
+        meta = {
+            "provider": "groq",
+            "model": f"groq/{model}",
+            "latency_ms": _ms,
+            "finish_reason": finish_reason,
+            "done_reason": finish_reason,
+            "prompt_eval_count": usage.get("prompt_tokens"),
+            "eval_count": usage.get("completion_tokens"),
+            "truncated_by_length": truncated_by_length,
+            "likely_prompt_truncated": False,
+        }
+        return text, meta
     except (KeyError, IndexError, ValueError) as exc:
         logger.warning("Groq/%s response parse error: %s", model, type(exc).__name__)
         raise OnlineProviderError(
@@ -178,21 +242,28 @@ def call_groq(prompt: str, model: str) -> str:
         )
 
 
+def call_groq(
+    prompt: str,
+    model: str,
+    params: Optional[GenerationParams] = None,
+) -> str:
+    """
+    Call Groq chat completions REST API (OpenAI-compatible) for a specific model.
+    """
+    text, _ = call_groq_meta(prompt, model, params=params)
+    return text
+
+
 # ---------------------------------------------------------------------------
 # Online orchestrator: Gemini-1 -> Gemini-2 -> Groq-1 -> Groq-2
 # ---------------------------------------------------------------------------
 
-def generate_online(prompt: str) -> str:
+def generate_online_meta(
+    prompt: str,
+    params: Optional[GenerationParams] = None,
+) -> Tuple[str, Dict[str, Any]]:
     """
-    Execute the 4-step online provider fallback chain:
-      1. Gemini (gemini-2.0-flash)
-      2. Gemini (gemini-1.5-flash)
-      3. Groq   (llama-3.3-70b-versatile)
-      4. Groq   (llama-3.1-8b-instant)
-
-    Each step is attempted only after the previous one fails.
-    Does NOT fall back to Ollama — online mode stays online.
-    Raises OnlineProviderError if all four attempts fail.
+    Execute online provider fallback chain returning (text, meta) from the model that answered.
     """
     cfg = _get_cfg()
     steps: List[tuple] = [
@@ -208,10 +279,10 @@ def generate_online(prompt: str) -> str:
         try:
             if provider == "gemini":
                 logger.info("Online mode: trying Gemini/%s", model)
-                return call_gemini(prompt, model)
+                return call_gemini_meta(prompt, model, params=params)
             else:
                 logger.info("Online mode: trying Groq/%s", model)
-                return call_groq(prompt, model)
+                return call_groq_meta(prompt, model, params=params)
         except OnlineProviderError as exc:
             logger.warning(
                 "Online provider %s/%s failed: %s — trying next.",
@@ -226,3 +297,15 @@ def generate_online(prompt: str) -> str:
         "Please try again later or switch to Offline mode.",
         provider="all",
     )
+
+
+def generate_online(
+    prompt: str,
+    params: Optional[GenerationParams] = None,
+) -> str:
+    """
+    Execute the 4-step online provider fallback chain.
+    """
+    text, _ = generate_online_meta(prompt, params=params)
+    return text
+
