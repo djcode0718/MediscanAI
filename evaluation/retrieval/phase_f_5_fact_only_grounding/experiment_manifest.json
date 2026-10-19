@@ -1,0 +1,26 @@
+{
+  "phase": "F.5",
+  "title": "Fact-Only Grounding and Abstention-Aware Evaluation",
+  "date": "2026-10-19",
+  "retrieval_hash": "f3937376cd191ee7",
+  "control_arm": "F5_0_control",
+  "candidate_arms": [
+    "F5_A_fact_only"
+  ],
+  "diagnostic_variant_tested": "F5_B_minimal_variant (documented in reliability report as rejected due to single-token evaluator timeouts)",
+  "model_digest": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+  "artifacts_generated": [
+    "f4_control_reconciliation.md",
+    "prompt_variants.md",
+    "evaluation_protocol.md",
+    "response_pairs.jsonl",
+    "claim_grounding_audit.jsonl",
+    "relevancy_abstention_breakdown.json",
+    "negative_control_results.json",
+    "safety_regression_results.json",
+    "evaluator_reliability_report.md",
+    "experiment_comparison.json",
+    "final_report.md",
+    "experiment_manifest.json"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "F5_0_control": {
+    "overall_cohort": {
+      "count": 30,
+      "faithfulness_mean": 0.866296,
+      "faithfulness_median": 1.0,
+      "faithfulness_std": 0.276641,
+      "answer_relevancy_mean": 0.509516,
+      "answer_relevancy_median": 0.566531,
+      "answer_relevancy_std": 0.335363
+    },
+    "answerable_only_cohort": {
+      "count": 26,
+      "faithfulness_mean": 0.897009,
+      "faithfulness_median": 1.0,
+      "answer_relevancy_mean": 0.587903,
+      "answer_relevancy_median": 0.615026
+    },
+    "unanswerable_abstention_cohort": {
+      "count": 4,
+      "faithfulness_mean": 0.666667,
+      "answer_relevancy_mean": 0.0,
+      "correct_abstention_rate": 1.0
+    }
+  },
+  "F5_A_fact_only": {
+    "overall_cohort": {
+      "count": 30,
+      "faithfulness_mean": 0.713065,
+      "faithfulness_median": 0.9,
+      "faithfulness_std": 0.338734,
+      "answer_relevancy_mean": 0.490953,
+      "answer_relevancy_median": 0.40485,
+      "answer_relevancy_std": 0.344493
+    },
+    "answerable_only_cohort": {
+      "count": 26,
+      "faithfulness_mean": 0.720203,
+      "faithfulness_median": 0.9,
+      "answer_relevancy_mean": 0.566484,
+      "answer_relevancy_median": 0.558204
+    },
+    "unanswerable_abstention_cohort": {
+      "count": 4,
+      "faithfulness_mean": 0.666667,
+      "answer_relevancy_mean": 0.0,
+      "correct_abstention_rate": 1.0
+    }
+  }
+}

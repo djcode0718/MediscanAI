@@ -1,0 +1,41 @@
+{
+  "phase": "Phase F.3 \u2014 Focused Grounding, Relevance, and Safety Separation",
+  "date": "2026-10-19",
+  "model_digest": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+  "runtime": "Ollama llama3.1:8b (Q4_K_M)",
+  "invariants": {
+    "entity_resolution_accessed": false,
+    "gold_judgments_zero_bytes": true,
+    "zero_cloud_api_calls": true,
+    "frozen_d2c_hash": "f3937376cd191ee7",
+    "production_code_modified": false,
+    "emergency_guardrail_enabled": false
+  },
+  "summary_results": {
+    "F3_0_control": {
+      "count": 30,
+      "faithfulness_mean": 0.720826,
+      "faithfulness_median": 0.861111,
+      "answer_relevancy_mean": 0.580315,
+      "answer_relevancy_median": 0.630542
+    },
+    "F3_A_direct": {
+      "count": 30,
+      "faithfulness_mean": 0.71873,
+      "faithfulness_median": 0.714286,
+      "answer_relevancy_mean": 0.400351,
+      "answer_relevancy_median": 0.329198
+    },
+    "F3_C_combined_primary": {
+      "count": 30,
+      "faithfulness_mean": 0.844074,
+      "faithfulness_median": 1.0,
+      "answer_relevancy_mean": 0.557085,
+      "answer_relevancy_median": 0.586933
+    },
+    "primary_candidate_deltas_vs_f3_0": {
+      "faithfulness_delta": 0.123248,
+      "answer_relevancy_delta": -0.02323
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "phase": "Phase F.2 \u2014 Grounded Generation and Faithfulness Evaluation Decoupling",
+  "date": "2026-10-19",
+  "git": {
+    "branch": "feat/retrieval-evaluation",
+    "commit": "40ba53b24b8afefe8ea45188f2f2eaa921d2d548"
+  },
+  "model_digest": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+  "runtime": "Ollama llama3.1:8b (Q4_K_M)",
+  "invariants": {
+    "entity_resolution_accessed": false,
+    "gold_judgments_zero_bytes": true,
+    "gold_judgments_actual_bytes": 0,
+    "zero_cloud_api_calls": true,
+    "frozen_d2c_hash": "f3937376cd191ee7",
+    "production_code_modified": false,
+    "emergency_guardrail_enabled": false
+  },
+  "summary_results": {
+    "case_count": 50,
+    "EXP_F2_0_baseline_full": {
+      "faithfulness_mean": 0.54228,
+      "faithfulness_median": 0.5,
+      "answer_relevancy_mean": 0.753188
+    },
+    "EXP_F2_A_baseline_body_only": {
+      "faithfulness_mean": 0.820723,
+      "faithfulness_median": 1.0,
+      "answer_relevancy_mean": 0.738935
+    },
+    "EXP_F2_B_strict_full": {
+      "faithfulness_mean": 0.478773,
+      "faithfulness_median": 0.428571,
+      "answer_relevancy_mean": 0.627984
+    },
+    "EXP_F2_C_strict_body_primary": {
+      "faithfulness_mean": 0.738405,
+      "faithfulness_median": 0.861111,
+      "answer_relevancy_mean": 0.58395
+    },
+    "primary_candidate_deltas_vs_f2_0": {
+      "faithfulness_delta": 0.196125,
+      "answer_relevancy_delta": -0.169238
+    }
+  }
+}

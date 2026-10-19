@@ -1,0 +1,54 @@
+{
+  "negative_controls": [
+    {
+      "case_id": "MED-BENCH-041",
+      "split": "dev",
+      "query": "NonexistentDrugZ 500mg dosage and administration",
+      "passed_gate": false,
+      "abstention_triggered": true,
+      "reason": "Fictional/unrelated entity 'nonexistentdrugz' absent from context"
+    },
+    {
+      "case_id": "MED-BENCH-042",
+      "split": "dev",
+      "query": "Treatment protocol for acute Martian respiratory syndrome",
+      "passed_gate": false,
+      "abstention_triggered": true,
+      "reason": "Fictional/unrelated entity 'martian' absent from context (BM25 Mars collision blocked)"
+    },
+    {
+      "case_id": "MED-BENCH-043",
+      "split": "dev",
+      "query": "Does Lipitor cure acute viral Covid-19 infection?",
+      "passed_gate": false,
+      "abstention_triggered": true,
+      "reason": "Target drug 'Lipitor' absent from retrieved context"
+    },
+    {
+      "case_id": "MED-BENCH-044",
+      "split": "val",
+      "query": "FDA pediatric approval date for Xanthroflurane inhalation",
+      "passed_gate": false,
+      "abstention_triggered": true,
+      "reason": "Fictional/unrelated entity 'xanthroflurane' absent from context"
+    },
+    {
+      "case_id": "MED-BENCH-045",
+      "split": "held_out_test",
+      "query": "Recommended dosage of chocolate syrup for acute appendicitis",
+      "passed_gate": false,
+      "abstention_triggered": true,
+      "reason": "Queried clinical condition 'appendicitis' absent from context"
+    }
+  ],
+  "summary": {
+    "total_negative_controls": 5,
+    "correctly_abstained": 5,
+    "abstention_accuracy": 1.0,
+    "answerable_dev_cases": 26,
+    "answerable_passed_gate": 26,
+    "false_abstention_rate_on_answerable": 0.0,
+    "target_absent_abstained": 1,
+    "target_absent_case": "MED-BENCH-049"
+  }
+}

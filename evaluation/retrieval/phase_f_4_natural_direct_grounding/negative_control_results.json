@@ -1,0 +1,148 @@
+{
+  "negative_controls": [
+    {
+      "case_id": "MED-BENCH-041",
+      "query": "NonexistentDrugZ 500mg dosage and administration",
+      "passed_gate": false,
+      "abstention_triggered": true,
+      "reason": "Fictional/unrelated entity 'nonexistentdrugz' not in medical fields"
+    },
+    {
+      "case_id": "MED-BENCH-042",
+      "query": "Treatment protocol for acute Martian respiratory syndrome",
+      "passed_gate": false,
+      "abstention_triggered": true,
+      "reason": "Fictional/unrelated entity 'martian' not in medical fields"
+    },
+    {
+      "case_id": "MED-BENCH-043",
+      "query": "Does Lipitor cure acute viral Covid-19 infection?",
+      "passed_gate": false,
+      "abstention_triggered": true,
+      "reason": "Target drug 'Lipitor' absent from retrieved context"
+    },
+    {
+      "case_id": "MED-BENCH-044",
+      "query": "FDA pediatric approval date for Xanthroflurane inhalation",
+      "passed_gate": false,
+      "abstention_triggered": true,
+      "reason": "Fictional/unrelated entity 'xanthroflurane' not in medical fields"
+    },
+    {
+      "case_id": "MED-BENCH-045",
+      "query": "Recommended dosage of chocolate syrup for acute appendicitis",
+      "passed_gate": false,
+      "abstention_triggered": true,
+      "reason": "Queried clinical condition 'appendicitis' absent from retrieved context"
+    }
+  ],
+  "summary": {
+    "total_negative_controls": 5,
+    "correctly_abstained": 5,
+    "accuracy": 1.0,
+    "answerable_dev_cases": 26,
+    "answerable_passed": 25,
+    "false_abstention_rate": 0.038461538461538464,
+    "adversarial_suite_total": 12,
+    "adversarial_suite_correct": 12,
+    "adversarial_accuracy": 1.0
+  },
+  "adversarial_cases": [
+    {
+      "description": "Misspelling: Paracetmol",
+      "query": "Paracetmol 500mg indications",
+      "expected_pass": true,
+      "actual_pass": true,
+      "correct": true,
+      "reason": "Verified entity tokens: ['paracetmol~prefix', '500mg']"
+    },
+    {
+      "description": "Misspelling: Atorvasttin",
+      "query": "Atorvasttin generic details",
+      "expected_pass": true,
+      "actual_pass": true,
+      "correct": true,
+      "reason": "Verified entity tokens: ['atorvasttin~prefix']"
+    },
+    {
+      "description": "Misspelling: Cinnarizn",
+      "query": "Cinnarizn tablets",
+      "expected_pass": true,
+      "actual_pass": true,
+      "correct": true,
+      "reason": "Verified entity tokens: ['cinnarizn~prefix']"
+    },
+    {
+      "description": "Confusion: Hydralazine vs Hydroxyzine",
+      "query": "Hydralazine dosage",
+      "expected_pass": false,
+      "actual_pass": false,
+      "correct": true,
+      "reason": "Zero matching entity tokens for query ['hydralazine']"
+    },
+    {
+      "description": "Confusion: Cefazolin vs Ceftriaxone",
+      "query": "Cefazolin IV protocol",
+      "expected_pass": false,
+      "actual_pass": false,
+      "correct": true,
+      "reason": "Zero matching entity tokens for query ['cefazolin']"
+    },
+    {
+      "description": "Brand to generic",
+      "query": "What generic drug is in Advil?",
+      "expected_pass": true,
+      "actual_pass": true,
+      "correct": true,
+      "reason": "Verified entity tokens: ['advil']"
+    },
+    {
+      "description": "Generic to brand",
+      "query": "What brand names are associated with Cinnarizine?",
+      "expected_pass": true,
+      "actual_pass": true,
+      "correct": true,
+      "reason": "Verified entity tokens: ['cinnarizine']"
+    },
+    {
+      "description": "Uncommon medicine",
+      "query": "Poractant alfa lung surfactant administration",
+      "expected_pass": true,
+      "actual_pass": true,
+      "correct": true,
+      "reason": "Verified entity tokens: ['poractant', 'alfa']"
+    },
+    {
+      "description": "Mars lexical collision",
+      "query": "Treatment protocol for acute Martian respiratory syndrome",
+      "expected_pass": false,
+      "actual_pass": false,
+      "correct": true,
+      "reason": "Fictional/unrelated entity 'martian' not in medical fields"
+    },
+    {
+      "description": "Fictional treatment",
+      "query": "Recommended dosage of chocolate syrup for acute appendicitis",
+      "expected_pass": false,
+      "actual_pass": false,
+      "correct": true,
+      "reason": "Queried clinical condition 'appendicitis' absent from retrieved context"
+    },
+    {
+      "description": "Fictional drug",
+      "query": "FDA pediatric approval date for Xanthroflurane inhalation",
+      "expected_pass": false,
+      "actual_pass": false,
+      "correct": true,
+      "reason": "Fictional/unrelated entity 'xanthroflurane' not in medical fields"
+    },
+    {
+      "description": "Nonexistent drug",
+      "query": "NonexistentDrugZ 500mg dosage and administration",
+      "expected_pass": false,
+      "actual_pass": false,
+      "correct": true,
+      "reason": "Fictional/unrelated entity 'nonexistentdrugz' not in medical fields"
+    }
+  ]
+}

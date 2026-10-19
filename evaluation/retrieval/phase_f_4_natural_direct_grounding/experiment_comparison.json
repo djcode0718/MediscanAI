@@ -1,0 +1,42 @@
+{
+  "F4_0_control": {
+    "count": 30,
+    "faithfulness_mean": 0.844074,
+    "faithfulness_median": 1.0,
+    "faithfulness_std": 0.317054,
+    "answer_relevancy_mean": 0.557085,
+    "answer_relevancy_median": 0.586933,
+    "answer_relevancy_std": 0.312605
+  },
+  "F4_A_natural_direct": {
+    "count": 30,
+    "faithfulness_mean": 0.711905,
+    "faithfulness_median": 0.775,
+    "faithfulness_std": 0.321747,
+    "answer_relevancy_mean": 0.612135,
+    "answer_relevancy_median": 0.595634,
+    "answer_relevancy_std": 0.241412
+  },
+  "F4_B_gated_control": {
+    "count": 30,
+    "faithfulness_mean": 0.866296,
+    "faithfulness_median": 1.0,
+    "faithfulness_std": 0.276641,
+    "answer_relevancy_mean": 0.509516,
+    "answer_relevancy_median": 0.566531,
+    "answer_relevancy_std": 0.335363
+  },
+  "F4_C_combined_primary": {
+    "count": 30,
+    "faithfulness_mean": 0.750794,
+    "faithfulness_median": 0.828571,
+    "faithfulness_std": 0.293027,
+    "answer_relevancy_mean": 0.504201,
+    "answer_relevancy_median": 0.479182,
+    "answer_relevancy_std": 0.298371
+  },
+  "primary_candidate_deltas_vs_f4_0": {
+    "faithfulness_delta": -0.09328,
+    "answer_relevancy_delta": -0.052884
+  }
+}

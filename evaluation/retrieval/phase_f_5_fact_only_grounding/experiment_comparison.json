@@ -1,0 +1,25 @@
+{
+  "F5_0_control": {
+    "count": 30,
+    "faithfulness_mean": 0.866296,
+    "faithfulness_median": 1.0,
+    "faithfulness_std": 0.276641,
+    "answer_relevancy_mean": 0.509516,
+    "answer_relevancy_median": 0.566531,
+    "answer_relevancy_std": 0.335363
+  },
+  "F5_A_fact_only": {
+    "count": 30,
+    "faithfulness_mean": 0.713065,
+    "faithfulness_median": 0.9,
+    "faithfulness_std": 0.338734,
+    "answer_relevancy_mean": 0.490953,
+    "answer_relevancy_median": 0.40485,
+    "answer_relevancy_std": 0.344493
+  },
+  "F5_A_deltas_vs_control": {
+    "faithfulness_delta": -0.153231,
+    "overall_answer_relevancy_delta": -0.018563,
+    "answerable_relevancy_delta": -0.021419
+  }
+}

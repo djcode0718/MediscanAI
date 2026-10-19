@@ -1,0 +1,110 @@
+{
+  "analysis_phase": "Phase F.1 \u2014 Faithfulness Failure Analysis",
+  "dataset": "Canonical Benchmark Phase A.3 (50 cases)",
+  "evaluation_sample_size": 50,
+  "aggregate_comparison": {
+    "ragas_reported_baseline_mean": 0.58347,
+    "core_factual_faithfulness_mean_excluding_disclaimer": 0.49381,
+    "disclaimer_penalty_delta": -0.08966,
+    "target_engineering_objective": "> 0.9500"
+  },
+  "claims_distribution": {
+    "total_claims_evaluated": 462,
+    "total_body_claims": 212,
+    "total_disclaimer_claims": 250,
+    "supported_body_claims": 112,
+    "supported_proportion_of_all_claims": 0.2424,
+    "supported_proportion_of_body_claims": 0.5283,
+    "unsupported_body_claims": 59,
+    "unsupported_body_proportion": 0.2783,
+    "unsupported_disclaimer_claims": 250,
+    "unsupported_disclaimer_proportion_of_all_claims": 0.5411
+  },
+  "root_cause_prevalence": {
+    "evaluation_judge_artifact_disclaimer": 50,
+    "unsupported_generation_or_model_prior": 33,
+    "prompt_or_formatting_failure": 29,
+    "retrieval_missed_necessary_evidence": 7,
+    "duplicate_conflicting_or_noisy_evidence": 5,
+    "inadequate_abstention": 4
+  },
+  "category_breakdown": {
+    "drug_brand_lookup": {
+      "case_count": 5,
+      "unsupported_body_claims": 2,
+      "supported_claims": 3,
+      "mean_ragas_faithfulness": 0.5472,
+      "mean_core_factual_faithfulness": 0.2
+    },
+    "drug_generic_lookup": {
+      "case_count": 5,
+      "unsupported_body_claims": 4,
+      "supported_claims": 10,
+      "mean_ragas_faithfulness": 0.55,
+      "mean_core_factual_faithfulness": 0.5167
+    },
+    "active_ingredient_lookup": {
+      "case_count": 5,
+      "unsupported_body_claims": 11,
+      "supported_claims": 11,
+      "mean_ragas_faithfulness": 0.4917,
+      "mean_core_factual_faithfulness": 0.3238
+    },
+    "brand_generic_ingredient_relationship": {
+      "case_count": 5,
+      "unsupported_body_claims": 2,
+      "supported_claims": 7,
+      "mean_ragas_faithfulness": 0.7167,
+      "mean_core_factual_faithfulness": 0.5667
+    },
+    "single_symptom_disease_retrieval": {
+      "case_count": 5,
+      "unsupported_body_claims": 4,
+      "supported_claims": 11,
+      "mean_ragas_faithfulness": 0.535,
+      "mean_core_factual_faithfulness": 0.59
+    },
+    "multi_symptom_disease_retrieval": {
+      "case_count": 5,
+      "unsupported_body_claims": 5,
+      "supported_claims": 11,
+      "mean_ragas_faithfulness": 0.7,
+      "mean_core_factual_faithfulness": 0.5167
+    },
+    "synonym_wording_variants": {
+      "case_count": 5,
+      "unsupported_body_claims": 9,
+      "supported_claims": 15,
+      "mean_ragas_faithfulness": 0.6219,
+      "mean_core_factual_faithfulness": 0.5676
+    },
+    "ambiguous_queries": {
+      "case_count": 5,
+      "unsupported_body_claims": 6,
+      "supported_claims": 24,
+      "mean_ragas_faithfulness": 0.7167,
+      "mean_core_factual_faithfulness": 0.75
+    },
+    "insufficient_evidence_unanswerable": {
+      "case_count": 5,
+      "unsupported_body_claims": 9,
+      "supported_claims": 6,
+      "mean_ragas_faithfulness": 0.3917,
+      "mean_core_factual_faithfulness": 0.4567
+    },
+    "graph_relevant": {
+      "case_count": 3,
+      "unsupported_body_claims": 4,
+      "supported_claims": 10,
+      "mean_ragas_faithfulness": 0.5556,
+      "mean_core_factual_faithfulness": 0.4833
+    },
+    "graph_neutral": {
+      "case_count": 2,
+      "unsupported_body_claims": 3,
+      "supported_claims": 4,
+      "mean_ragas_faithfulness": 0.5764,
+      "mean_core_factual_faithfulness": 0.4
+    }
+  }
+}

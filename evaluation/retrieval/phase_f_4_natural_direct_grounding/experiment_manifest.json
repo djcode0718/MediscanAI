@@ -1,0 +1,56 @@
+{
+  "phase": "Phase F.4 \u2014 Natural Direct Grounding and Query-Entity Gating",
+  "date": "2026-10-19",
+  "model_digest": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+  "runtime": "Ollama llama3.1:8b (Q4_K_M)",
+  "invariants": {
+    "entity_resolution_accessed": false,
+    "gold_judgments_zero_bytes": true,
+    "zero_cloud_api_calls": true,
+    "frozen_d2c_hash": "f3937376cd191ee7",
+    "production_code_modified": false,
+    "emergency_guardrail_enabled": false
+  },
+  "summary_results": {
+    "F4_0_control": {
+      "count": 30,
+      "faithfulness_mean": 0.844074,
+      "faithfulness_median": 1.0,
+      "faithfulness_std": 0.317054,
+      "answer_relevancy_mean": 0.557085,
+      "answer_relevancy_median": 0.586933,
+      "answer_relevancy_std": 0.312605
+    },
+    "F4_A_natural_direct": {
+      "count": 30,
+      "faithfulness_mean": 0.711905,
+      "faithfulness_median": 0.775,
+      "faithfulness_std": 0.321747,
+      "answer_relevancy_mean": 0.612135,
+      "answer_relevancy_median": 0.595634,
+      "answer_relevancy_std": 0.241412
+    },
+    "F4_B_gated_control": {
+      "count": 30,
+      "faithfulness_mean": 0.866296,
+      "faithfulness_median": 1.0,
+      "faithfulness_std": 0.276641,
+      "answer_relevancy_mean": 0.509516,
+      "answer_relevancy_median": 0.566531,
+      "answer_relevancy_std": 0.335363
+    },
+    "F4_C_combined_primary": {
+      "count": 30,
+      "faithfulness_mean": 0.750794,
+      "faithfulness_median": 0.828571,
+      "faithfulness_std": 0.293027,
+      "answer_relevancy_mean": 0.504201,
+      "answer_relevancy_median": 0.479182,
+      "answer_relevancy_std": 0.298371
+    },
+    "primary_candidate_deltas_vs_f4_0": {
+      "faithfulness_delta": -0.09328,
+      "answer_relevancy_delta": -0.052884
+    }
+  }
+}

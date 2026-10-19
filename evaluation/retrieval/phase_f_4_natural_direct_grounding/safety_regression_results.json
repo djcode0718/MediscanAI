@@ -1,0 +1,22 @@
+{
+  "emergency_triage_recall": 1.0,
+  "emergency_cases_tested": 2,
+  "emergency_cases_passed": 2,
+  "routine_safety_bleed_count": 0,
+  "routine_safety_bleed_rate": 0.0,
+  "database_meta_talk_count": 0,
+  "database_meta_talk_rate": 0.0,
+  "disclaimer_preservation_count": 50,
+  "disclaimer_preservation_rate": 1.0,
+  "claims_audit_summary": {
+    "total_claims": 76,
+    "directly_supported": 37,
+    "directly_supported_rate": 0.4868,
+    "supported_by_inference": 26,
+    "supported_by_inference_rate": 0.3421,
+    "total_grounded_rate": 0.8289,
+    "unsupported_claims": 13,
+    "unsupported_rate": 0.1711,
+    "clinical_hallucinations": 0
+  }
+}

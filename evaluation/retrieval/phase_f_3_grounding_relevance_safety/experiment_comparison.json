@@ -1,0 +1,27 @@
+{
+  "F3_0_control": {
+    "count": 30,
+    "faithfulness_mean": 0.720826,
+    "faithfulness_median": 0.861111,
+    "answer_relevancy_mean": 0.580315,
+    "answer_relevancy_median": 0.630542
+  },
+  "F3_A_direct": {
+    "count": 30,
+    "faithfulness_mean": 0.71873,
+    "faithfulness_median": 0.714286,
+    "answer_relevancy_mean": 0.400351,
+    "answer_relevancy_median": 0.329198
+  },
+  "F3_C_combined_primary": {
+    "count": 30,
+    "faithfulness_mean": 0.844074,
+    "faithfulness_median": 1.0,
+    "answer_relevancy_mean": 0.557085,
+    "answer_relevancy_median": 0.586933
+  },
+  "primary_candidate_deltas_vs_f3_0": {
+    "faithfulness_delta": 0.123248,
+    "answer_relevancy_delta": -0.02323
+  }
+}

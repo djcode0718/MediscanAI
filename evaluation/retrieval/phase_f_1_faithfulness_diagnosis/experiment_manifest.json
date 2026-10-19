@@ -1,0 +1,45 @@
+{
+  "phase": "Phase F.1 — Faithfulness Failure Analysis",
+  "objective": "Diagnose reasons for low RAGAS faithfulness (baseline 0.5835) and prioritize evidence-grounding experiments toward >0.9500.",
+  "timestamp_completed": "2026-10-18T19:15:00+00:00",
+  "git_metadata": {
+    "branch": "feat/retrieval-evaluation",
+    "commit": "40ba53b24b8afefe8ea45188f2f2eaa921d2d548"
+  },
+  "runtime_environment": {
+    "python": "3.10.18",
+    "ragas": "0.2.15",
+    "langchain": "1.4.6",
+    "datasets": "3.6.0",
+    "sentence_transformers": "5.1.0"
+  },
+  "verified_baseline_metrics": {
+    "dataset": "Canonical Benchmark Phase A.3",
+    "total_cases": 50,
+    "baseline_mean_faithfulness": 0.58347,
+    "baseline_median_faithfulness": 0.5,
+    "graph_assisted_mean_faithfulness": 0.570257,
+    "graph_assisted_median_faithfulness": 0.5,
+    "mean_paired_delta": -0.013213,
+    "core_factual_faithfulness_without_disclaimer": 0.49381
+  },
+  "mandatory_invariants": {
+    "entity_resolution_accessed": false,
+    "gold_judgments_zero_bytes": true,
+    "gold_judgments_actual_bytes": 0,
+    "zero_cloud_api_calls": true,
+    "frozen_d2c_hash": "f3937376cd191ee7",
+    "frozen_d2c_hash_verified": true,
+    "no_production_code_modified": true,
+    "prior_phase_artifacts_preserved": true
+  },
+  "deliverables": [
+    "evaluation/retrieval/phase_f_1_faithfulness_diagnosis/faithfulness_baseline_reconciliation.md",
+    "evaluation/retrieval/phase_f_1_faithfulness_diagnosis/per_case_failure_analysis.jsonl",
+    "evaluation/retrieval/phase_f_1_faithfulness_diagnosis/failure_taxonomy_summary.json",
+    "evaluation/retrieval/phase_f_1_faithfulness_diagnosis/evidence_grounding_examples.md",
+    "evaluation/retrieval/phase_f_1_faithfulness_diagnosis/experiment_priority_matrix.md",
+    "evaluation/retrieval/phase_f_1_faithfulness_diagnosis/evaluation_reliability_audit.md",
+    "evaluation/retrieval/phase_f_1_faithfulness_diagnosis/experiment_manifest.json"
+  ]
+}
