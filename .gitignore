@@ -113,4 +113,67 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# ============================================================
+# Additional local development and generated artifacts
+# ============================================================
+
+# Python type-checking and lint caches
+.dmypy.json
+dmypy.json
+.pyright/
+.pytype/
+
+# Local environment / IDE state
+.python-version.local
+.python_history
+
+# Temporary editor and patch files
+*.orig
+*.rej
+
+# Scratch workspace - experimental, non-production scripts
+/scratch/
+
+# Local diagnostic output
+/entity_resolution/match_diagnostics.txt
+
+# Disposable visual/audio test fixtures
+# Keep the actual test code tracked under tests/
+# Remove these rules if the fixtures are required by automated tests.
+/tests/WhatsApp Image *.jpeg
+/tests/ocr_preview*.jpg
+/tests/speech1.mp3
+/tests/speech1.wav
+
+# Timestamped evaluation execution results
+/evaluation/results/
+
+# Evaluation run state and intermediate outputs
+**/progress.json
+**/metric_failures.jsonl
+**/errors.jsonl
+**/per_case_results.jsonl
+**/retrieved_evidence.jsonl
+**/pooled_evidence_review.csv
+
+# Generated evaluation scores and run summaries
+/evaluation/ragas/phase_c_3/smoke_test_results.json
+/evaluation/ragas/phase_c_4/run_manifest.json
+/evaluation/ragas/phase_c_4/integrity_report.json
+/evaluation/ragas/phase_c_5/case_level_scores.csv
+/evaluation/ragas/phase_c_5/paired_metric_deltas.csv
+/evaluation/ragas/phase_c_5/aggregate_metrics.json
+/evaluation/ragas/phase_c_5/integrity_report.json
+
+# Local database and index artifacts
+*.sqlite-journal
+*.db-journal
+*.faiss
+*.index
+
+# Local profiling artifacts
+*.prof
+.prof
+
+
 
