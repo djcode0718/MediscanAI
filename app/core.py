@@ -662,8 +662,42 @@ class Pipeline:
 
         # 4. Assembling Prompt & generation
         _t_prompt = time.perf_counter()
-        formatted_user_retrievals = self._format_retrievals(retrievals_for_user_text)
-        formatted_ocr_retrievals = self._format_retrievals(retrievals_for_ocr_text)
+
+        evidence_trace_data = None
+        evidence_format = getattr(self.settings, "EVIDENCE_FORMAT", "legacy")
+
+        if evidence_format == "compact":
+            from app.evidence import CompactEvidenceFormatter
+            eff_num_ctx = gen_params.num_ctx if (gen_params and gen_params.num_ctx is not None) else getattr(self.settings, "OLLAMA_NUM_CTX", 8192)
+            eff_num_predict = gen_params.num_predict if (gen_params and gen_params.num_predict is not None) else getattr(self.settings, "OLLAMA_NUM_PREDICT", 700)
+            token_budget = max(200, eff_num_ctx - eff_num_predict - 256 - 500)
+
+            formatter = CompactEvidenceFormatter(
+                max_items_per_channel=getattr(self.settings, "EVIDENCE_MAX_ITEMS_PER_CHANNEL", 3),
+                drug_fields=getattr(self.settings, "EVIDENCE_DRUG_FIELDS", None),
+                field_caps=getattr(self.settings, "EVIDENCE_FIELD_CAPS", None),
+            )
+            combined_retrievals = {**retrievals_for_user_text, **retrievals_for_ocr_text}
+            rendered_evidence, evidence_trace_data = formatter.format(combined_retrievals, token_budget=token_budget)
+
+            user_chans = set(retrievals_for_user_text.keys())
+            ocr_chans = set(retrievals_for_ocr_text.keys())
+
+            blocks = [b for b in rendered_evidence.split("\n") if b.strip()]
+            user_blocks = []
+            ocr_blocks = []
+            for b, itm in zip(blocks, evidence_trace_data["evidence_items"]):
+                if itm["channel"] in user_chans:
+                    user_blocks.append(b)
+                elif itm["channel"] in ocr_chans:
+                    ocr_blocks.append(b)
+                else:
+                    user_blocks.append(b)
+            formatted_user_retrievals = "\n".join(user_blocks)
+            formatted_ocr_retrievals = "\n".join(ocr_blocks)
+        else:
+            formatted_user_retrievals = self._format_retrievals(retrievals_for_user_text)
+            formatted_ocr_retrievals = self._format_retrievals(retrievals_for_ocr_text)
 
         print("📝 [Prompt] Assembling context-grounded prompt template...")
         full_prompt = ANALYSIS_PROMPT_TEMPLATE.format(
@@ -782,6 +816,12 @@ class Pipeline:
                 "prompt": full_prompt,
                 "prompt_chars": len(full_prompt),
                 "prompt_tokens_est": prompt_tokens_est,
+                "evidence_format": evidence_format,
+                "evidence_items": evidence_trace_data["evidence_items"] if evidence_trace_data else [],
+                "total_evidence_tokens": evidence_trace_data["total_evidence_tokens"] if evidence_trace_data else None,
+                "retrieved_but_omitted_ids": evidence_trace_data["retrieved_but_omitted_ids"] if evidence_trace_data else [],
+                "evidence_trims": evidence_trace_data["trims"] if evidence_trace_data else [],
+                "cap_multiplier": evidence_trace_data["cap_multiplier"] if evidence_trace_data else 1.0,
                 "retrievals_per_channel": {
                     "user_text_retrievals": formatted_user_retrievals,
                     "ocr_text_retrievals": formatted_ocr_retrievals,
