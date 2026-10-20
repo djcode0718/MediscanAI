@@ -88,17 +88,39 @@ def strip_markdown(text: str) -> str:
     return " ".join(lines)
 
 
+def strip_evidence_tags(text: str) -> str:
+    """
+    Strips [E#] citations from text for evaluation scoring.
+    """
+    if not text:
+        return ""
+    return re.sub(r"\[E\d+\]", "", text)
+
+
+def strip_verdict_and_explanation_labels(text: str) -> str:
+    """
+    Strips 'Verdict:' and 'Explanation:' labels (including bold/markdown variants).
+    """
+    if not text:
+        return ""
+    return re.sub(r"(?i)\*{0,2}\b(?:Verdict|Explanation)\s*:\*{0,2}\s*", "", text)
+
+
 def answer_core(raw_llm_output: Optional[str]) -> str:
     """
     Extracts the sanitized core answer from RAW pre-guardrail LLM output.
     1. Removes mandatory warning (MANDATORY_HEADER onward).
-    2. Removes empty section headers.
-    3. Strips markdown formatting.
+    2. Strips [E#] evidence tags.
+    3. Strips 'Verdict:' and 'Explanation:' labels.
+    4. Removes empty section headers.
+    5. Strips markdown formatting.
     """
     if not raw_llm_output:
         return ""
     no_warning = remove_mandatory_warning(raw_llm_output)
-    no_empty_headers = remove_empty_headers(no_warning)
+    no_tags = strip_evidence_tags(no_warning)
+    no_labels = strip_verdict_and_explanation_labels(no_tags)
+    no_empty_headers = remove_empty_headers(no_labels)
     core = strip_markdown(no_empty_headers)
     return core.strip()
 

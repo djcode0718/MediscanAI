@@ -73,6 +73,21 @@ class TestSanitizer:
         assert answer_full(final) == final.strip()
         assert answer_full(None) == ""
 
+    def test_strip_evidence_tags_and_verdict_labels(self):
+        raw = (
+            "**Verdict:** The label evidence identifies Lipitor. [E1] [E2]\n"
+            "Explanation: It lists active ingredients atorvastatin. [E1]\n"
+            "### Suggested Alternatives\n"
+            "None needed."
+        )
+        core = answer_core(raw)
+        assert "[E1]" not in core
+        assert "[E2]" not in core
+        assert "Verdict:" not in core
+        assert "Explanation:" not in core
+        assert "The label evidence identifies Lipitor." in core
+        assert "It lists active ingredients atorvastatin." in core
+
     def test_is_fast_path_detection(self):
         assert is_fast_path({"fast_path_fired": True}) is True
         assert is_fast_path({"fast_path_fired": False}) is False

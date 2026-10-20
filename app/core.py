@@ -668,8 +668,8 @@ class Pipeline:
 
         if evidence_format == "compact":
             from app.evidence import CompactEvidenceFormatter
-            eff_num_ctx = gen_params.num_ctx if (gen_params and gen_params.num_ctx is not None) else getattr(self.settings, "OLLAMA_NUM_CTX", 8192)
-            eff_num_predict = gen_params.num_predict if (gen_params and gen_params.num_predict is not None) else getattr(self.settings, "OLLAMA_NUM_PREDICT", 700)
+            eff_num_ctx = (gen_params.num_ctx if (gen_params and gen_params.num_ctx is not None) else None) or getattr(self.settings, "OLLAMA_NUM_CTX", None) or 8192
+            eff_num_predict = (gen_params.num_predict if (gen_params and gen_params.num_predict is not None) else None) or getattr(self.settings, "OLLAMA_NUM_PREDICT", None) or 700
             token_budget = max(200, eff_num_ctx - eff_num_predict - 256 - 500)
 
             formatter = CompactEvidenceFormatter(
@@ -699,13 +699,40 @@ class Pipeline:
             formatted_user_retrievals = self._format_retrievals(retrievals_for_user_text)
             formatted_ocr_retrievals = self._format_retrievals(retrievals_for_ocr_text)
 
-        print("📝 [Prompt] Assembling context-grounded prompt template...")
-        full_prompt = ANALYSIS_PROMPT_TEMPLATE.format(
-            user_text=user_text,
-            ocr_text=ocr_text if ocr_text else "No image provided.",
-            retrievals_for_user_text=formatted_user_retrievals,
-            retrievals_for_ocr_text=formatted_ocr_retrievals
-        )
+        prompt_version = getattr(self.settings, "PROMPT_VERSION", "legacy")
+        system_prompt = None
+        role_separation_mode = "single_user"
+        citation_stats = None
+        case_type = None
+
+        if prompt_version == "v2":
+            from app.prompt_v2 import SYSTEM_PROMPT, build_v2_user_message
+            system_prompt = SYSTEM_PROMPT
+            role_separation_mode = "system_user"
+
+            if evidence_format == "compact":
+                v2_evidence_text = rendered_evidence
+            else:
+                ev_parts = []
+                if formatted_user_retrievals.strip():
+                    ev_parts.append(formatted_user_retrievals.strip())
+                if formatted_ocr_retrievals.strip():
+                    ev_parts.append(formatted_ocr_retrievals.strip())
+                v2_evidence_text = "\n\n".join(ev_parts)
+
+            full_prompt, case_type = build_v2_user_message(
+                user_text=user_text,
+                ocr_text=ocr_text,
+                evidence_text=v2_evidence_text
+            )
+        else:
+            print("📝 [Prompt] Assembling context-grounded prompt template...")
+            full_prompt = ANALYSIS_PROMPT_TEMPLATE.format(
+                user_text=user_text,
+                ocr_text=ocr_text if ocr_text else "No image provided.",
+                retrievals_for_user_text=formatted_user_retrievals,
+                retrievals_for_ocr_text=formatted_ocr_retrievals
+            )
         pipeline_timings["prompt_assembly_ms"] = int((time.perf_counter() - _t_prompt) * 1000)
 
         provider_model_tag = getattr(self.settings, "OLLAMA_MODEL", "llama3.1:8b")
@@ -715,18 +742,24 @@ class Pipeline:
 
         if return_trace:
             raw_llm_output, gen_meta = generate_with_mode_meta(
-                full_prompt, llm_mode=llm_mode, params=gen_params
+                full_prompt, llm_mode=llm_mode, params=gen_params, system=system_prompt
             )
         else:
             raw_llm_output = generate_with_mode(
-                full_prompt, llm_mode=llm_mode, params=gen_params
+                full_prompt, llm_mode=llm_mode, params=gen_params, system=system_prompt
             )
             gen_meta = None
-        llm_response_str = raw_llm_output
+
+        if prompt_version == "v2":
+            from app.prompt_v2 import finalize_v2_response, compute_citation_stats
+            llm_response_str = finalize_v2_response(raw_llm_output)
+            evidence_tags = [itm["tag"] for itm in evidence_trace_data["evidence_items"]] if (evidence_trace_data and "evidence_items" in evidence_trace_data) else []
+            citation_stats = compute_citation_stats(llm_response_str, evidence_tags=evidence_tags)
+        else:
+            llm_response_str = raw_llm_output
+
         pipeline_timings["llm_total_ms"] = int((time.perf_counter() - _t_llm) * 1000)
         print("   ↳ Generation completed successfully.")
-
-
 
         all_retrievals = {**retrievals_for_user_text, **retrievals_for_ocr_text}
 
@@ -747,6 +780,14 @@ class Pipeline:
             pipeline_timings["guardrail_post_gen_ms"] = int((time.perf_counter() - _t_guard_post) * 1000)
             llm_response_str = guarded_response_str
             guardrail_meta_dict = post_decision.to_dict()
+
+        if prompt_version == "v2":
+            from app.guardrail import MANDATORY_HEADER, MANDATORY_TEXT
+            if llm_response_str.count(MANDATORY_HEADER) > 1:
+                parts = llm_response_str.split(MANDATORY_HEADER)
+                llm_response_str = f"{parts[0].strip()}\n\n{MANDATORY_HEADER}\n{MANDATORY_TEXT}"
+            elif MANDATORY_HEADER not in llm_response_str:
+                llm_response_str = f"{llm_response_str.strip()}\n\n{MANDATORY_HEADER}\n{MANDATORY_TEXT}"
 
         card = build_summary_card(
             user_text=user_text,
@@ -814,14 +855,23 @@ class Pipeline:
 
             final_result["trace"] = {
                 "prompt": full_prompt,
+                "system_prompt": system_prompt,
+                "role_separation_mode": role_separation_mode,
+                "case_type": case_type,
                 "prompt_chars": len(full_prompt),
                 "prompt_tokens_est": prompt_tokens_est,
                 "evidence_format": evidence_format,
+                "prompt_version": prompt_version,
                 "evidence_items": evidence_trace_data["evidence_items"] if evidence_trace_data else [],
                 "total_evidence_tokens": evidence_trace_data["total_evidence_tokens"] if evidence_trace_data else None,
                 "retrieved_but_omitted_ids": evidence_trace_data["retrieved_but_omitted_ids"] if evidence_trace_data else [],
                 "evidence_trims": evidence_trace_data["trims"] if evidence_trace_data else [],
                 "cap_multiplier": evidence_trace_data["cap_multiplier"] if evidence_trace_data else 1.0,
+                "citation_stats": citation_stats,
+                "tags_found": citation_stats["tags_found"] if citation_stats else [],
+                "invalid_tags": citation_stats["invalid_tags"] if citation_stats else [],
+                "citation_pct": citation_stats["citation_pct"] if citation_stats else None,
+                "abstained": citation_stats["abstained"] if citation_stats else False,
                 "retrievals_per_channel": {
                     "user_text_retrievals": formatted_user_retrievals,
                     "ocr_text_retrievals": formatted_ocr_retrievals,

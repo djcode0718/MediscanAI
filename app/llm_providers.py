@@ -40,6 +40,7 @@ def call_gemini_meta(
     prompt: str,
     model: str,
     params: Optional[GenerationParams] = None,
+    system: Optional[str] = None,
 ) -> Tuple[str, Dict[str, Any]]:
     """
     Call Google Gemini generateContent REST API and return (text, meta).
@@ -69,10 +70,12 @@ def call_gemini_meta(
         if params.num_predict is not None:
             gen_config["maxOutputTokens"] = params.num_predict
 
-    payload = {
+    payload: Dict[str, Any] = {
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": gen_config,
     }
+    if system:
+        payload["systemInstruction"] = {"parts": [{"text": system}]}
 
     r = None
     try:
@@ -135,11 +138,12 @@ def call_gemini(
     prompt: str,
     model: str,
     params: Optional[GenerationParams] = None,
+    system: Optional[str] = None,
 ) -> str:
     """
     Call Google Gemini generateContent REST API for a specific model.
     """
-    text, _ = call_gemini_meta(prompt, model, params=params)
+    text, _ = call_gemini_meta(prompt, model, params=params, system=system)
     return text
 
 
@@ -151,6 +155,7 @@ def call_groq_meta(
     prompt: str,
     model: str,
     params: Optional[GenerationParams] = None,
+    system: Optional[str] = None,
 ) -> Tuple[str, Dict[str, Any]]:
     """
     Call Groq chat completions REST API (OpenAI-compatible) and return (text, meta).
@@ -171,9 +176,14 @@ def call_groq_meta(
         "Authorization": f"Bearer {api_key.strip()}",
         "Content-Type": "application/json",
     }
+    messages = []
+    if system:
+        messages.append({"role": "system", "content": system})
+    messages.append({"role": "user", "content": prompt})
+
     payload: Dict[str, Any] = {
         "model": model,
-        "messages": [{"role": "user", "content": prompt}],
+        "messages": messages,
         "temperature": 0.3,
         "max_tokens": 2048,
     }
@@ -246,11 +256,12 @@ def call_groq(
     prompt: str,
     model: str,
     params: Optional[GenerationParams] = None,
+    system: Optional[str] = None,
 ) -> str:
     """
     Call Groq chat completions REST API (OpenAI-compatible) for a specific model.
     """
-    text, _ = call_groq_meta(prompt, model, params=params)
+    text, _ = call_groq_meta(prompt, model, params=params, system=system)
     return text
 
 
@@ -261,6 +272,7 @@ def call_groq(
 def generate_online_meta(
     prompt: str,
     params: Optional[GenerationParams] = None,
+    system: Optional[str] = None,
 ) -> Tuple[str, Dict[str, Any]]:
     """
     Execute online provider fallback chain returning (text, meta) from the model that answered.
@@ -279,10 +291,10 @@ def generate_online_meta(
         try:
             if provider == "gemini":
                 logger.info("Online mode: trying Gemini/%s", model)
-                return call_gemini_meta(prompt, model, params=params)
+                return call_gemini_meta(prompt, model, params=params, system=system)
             else:
                 logger.info("Online mode: trying Groq/%s", model)
-                return call_groq_meta(prompt, model, params=params)
+                return call_groq_meta(prompt, model, params=params, system=system)
         except OnlineProviderError as exc:
             logger.warning(
                 "Online provider %s/%s failed: %s — trying next.",
@@ -302,10 +314,11 @@ def generate_online_meta(
 def generate_online(
     prompt: str,
     params: Optional[GenerationParams] = None,
+    system: Optional[str] = None,
 ) -> str:
     """
     Execute the 4-step online provider fallback chain.
     """
-    text, _ = generate_online_meta(prompt, params=params)
+    text, _ = generate_online_meta(prompt, params=params, system=system)
     return text
 

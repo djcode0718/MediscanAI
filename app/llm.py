@@ -56,6 +56,7 @@ def call_ollama_api_generate_meta(
     stream: bool = False,
     options: Optional[Dict] = None,
     params: Optional[GenerationParams] = None,
+    system: Optional[str] = None,
 ) -> Tuple[str, Dict[str, Any]]:
     """
     Call local Ollama REST generate endpoint with explicit timeouts and return (text, meta).
@@ -66,6 +67,8 @@ def call_ollama_api_generate_meta(
         "prompt": prompt,
         "stream": stream
     }
+    if system:
+        payload["system"] = system
     merged_options = dict(options) if options else {}
     if params:
         if params.temperature is not None:
@@ -177,23 +180,25 @@ def call_ollama_api_generate(
     stream: bool = False,
     options: Optional[Dict] = None,
     params: Optional[GenerationParams] = None,
+    system: Optional[str] = None,
 ) -> str:
     """
     Call local Ollama REST generate endpoint with explicit connection and read timeouts.
     """
-    text, _ = call_ollama_api_generate_meta(prompt, model=model, stream=stream, options=options, params=params)
+    text, _ = call_ollama_api_generate_meta(prompt, model=model, stream=stream, options=options, params=params, system=system)
     return text
 
 
-def call_ollama_cli_generate(prompt: str, model: str = DEFAULT_MODEL) -> str:
+def call_ollama_cli_generate(prompt: str, model: str = DEFAULT_MODEL, system: Optional[str] = None) -> str:
     """
     Fallback: call 'ollama' CLI if installed.
     """
     if shutil.which("ollama") is None:
         raise OllamaError("ollama CLI not found and REST API failed.", is_unavailable=True)
+    full_prompt = f"{system}\n\n{prompt}" if system else prompt
     try:
         proc = subprocess.run(
-            ["ollama", "run", model, prompt],
+            ["ollama", "run", model, full_prompt],
             capture_output=True,
             text=True,
             timeout=int(READ_TIMEOUT + 30),
@@ -213,16 +218,17 @@ def generate(
     model: str = DEFAULT_MODEL,
     options: Optional[Dict] = None,
     params: Optional[GenerationParams] = None,
+    system: Optional[str] = None,
 ) -> str:
     """
     High-level wrapper. Try REST API first, then CLI fallback.
     """
     try:
-        return call_ollama_api_generate(prompt, model=model, options=options, params=params)
+        return call_ollama_api_generate(prompt, model=model, options=options, params=params, system=system)
     except OllamaError as e:
         if e.is_unavailable:
             logger.info("Ollama REST endpoint unavailable, attempting CLI fallback...")
-            return call_ollama_cli_generate(prompt, model=model)
+            return call_ollama_cli_generate(prompt, model=model, system=system)
         raise
 
 
@@ -231,17 +237,18 @@ def generate_meta(
     model: str = DEFAULT_MODEL,
     options: Optional[Dict] = None,
     params: Optional[GenerationParams] = None,
+    system: Optional[str] = None,
 ) -> Tuple[str, Dict[str, Any]]:
     """
     High-level wrapper returning (text, meta). Try REST API first, then CLI fallback.
     """
     try:
-        return call_ollama_api_generate_meta(prompt, model=model, options=options, params=params)
+        return call_ollama_api_generate_meta(prompt, model=model, options=options, params=params, system=system)
     except OllamaError as e:
         if e.is_unavailable:
             logger.info("Ollama REST endpoint unavailable, attempting CLI fallback...")
             _t0 = time.perf_counter()
-            cli_text = call_ollama_cli_generate(prompt, model=model)
+            cli_text = call_ollama_cli_generate(prompt, model=model, system=system)
             _latency = int((time.perf_counter() - _t0) * 1000)
             meta = {
                 "provider": "ollama_cli",
@@ -263,6 +270,7 @@ def generate_with_mode(
     prompt: str,
     llm_mode: str = "offline",
     params: Optional[GenerationParams] = None,
+    system: Optional[str] = None,
 ) -> str:
     """
     Route LLM generation to the appropriate provider based on llm_mode.
@@ -276,17 +284,18 @@ def generate_with_mode(
     if llm_mode == "online":
         from app.llm_providers import generate_online
         logger.info("LLM mode: online (Gemini -> Grok)")
-        return generate_online(prompt, params=params)
+        return generate_online(prompt, params=params, system=system)
     else:
         configured_model = getattr(settings, "OLLAMA_MODEL", DEFAULT_MODEL)
         logger.info(f"LLM mode: offline (Ollama/{configured_model})")
-        return generate(prompt, model=configured_model, params=params)
+        return generate(prompt, model=configured_model, params=params, system=system)
 
 
 def generate_with_mode_meta(
     prompt: str,
     llm_mode: str = "offline",
     params: Optional[GenerationParams] = None,
+    system: Optional[str] = None,
 ) -> Tuple[str, Dict[str, Any]]:
     """
     Route LLM generation to the appropriate provider based on llm_mode and return (text, meta).
@@ -294,8 +303,8 @@ def generate_with_mode_meta(
     if llm_mode == "online":
         from app.llm_providers import generate_online_meta
         logger.info("LLM mode: online (Gemini -> Grok)")
-        return generate_online_meta(prompt, params=params)
+        return generate_online_meta(prompt, params=params, system=system)
     else:
         configured_model = getattr(settings, "OLLAMA_MODEL", DEFAULT_MODEL)
         logger.info(f"LLM mode: offline (Ollama/{configured_model})")
-        return generate_meta(prompt, model=configured_model, params=params)
+        return generate_meta(prompt, model=configured_model, params=params, system=system)
