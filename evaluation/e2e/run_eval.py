@@ -294,8 +294,9 @@ def run_e2e_evaluation(args):
         api_key=judge_api_key,
         model=judge_model,
         temperature=0.0,
-        max_tokens=1024,
+        max_tokens=2048,
         timeout=60,
+        max_retries=5,
     )
     judge_wrapper = LangchainLLMWrapper(judge_llm)
 
@@ -412,8 +413,10 @@ def run_e2e_evaluation(args):
                 continue
 
             # Ragas scoring
+            user_input_str = case["user_text"] if case.get("user_text") else f"Analyze medication label: {case.get('ocr_text', '')}"
             ragas_data = {
-                "user_input": [case["user_text"]],
+                "user_input": [user_input_str],
+                "question": [user_input_str],
                 "response": [ans_core if ans_core else "No answer provided."],
                 "retrieved_contexts": [retrieved_contexts_list],
                 "reference": [case["reference"]],
@@ -454,7 +457,8 @@ def run_e2e_evaluation(args):
 
                 # Evaluate answer_full faithfulness
                 ragas_full_data = {
-                    "user_input": [case["user_text"]],
+                    "user_input": [user_input_str],
+                    "question": [user_input_str],
                     "response": [ans_full if ans_full else "No answer provided."],
                     "retrieved_contexts": [retrieved_contexts_list],
                     "reference": [case["reference"]],
@@ -511,6 +515,7 @@ def run_e2e_evaluation(args):
             f_jsonl.write(json.dumps(rec) + "\n")
             f_jsonl.flush()
             eval_records.append(rec)
+            time.sleep(1.0)
 
     finally:
         f_jsonl.close()

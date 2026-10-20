@@ -1,0 +1,128 @@
+{
+  "total_records": 110,
+  "metrics": {
+    "faithfulness_core": {
+      "n": 24,
+      "nan_count": 86,
+      "mean": 0.2993,
+      "median": 0.25,
+      "p10": 0.0
+    },
+    "faithfulness_full": {
+      "n": 23,
+      "nan_count": 87,
+      "mean": 0.2953,
+      "median": 0.2857,
+      "p10": 0.0
+    },
+    "answer_relevancy": {
+      "n": 99,
+      "nan_count": 11,
+      "mean": 0.4722,
+      "median": 0.5476,
+      "p10": 0.0
+    },
+    "context_precision": {
+      "n": 77,
+      "nan_count": 33,
+      "mean": 0.6815,
+      "median": 0.8056,
+      "p10": 0.25
+    },
+    "context_recall": {
+      "n": 64,
+      "nan_count": 46,
+      "mean": 0.9062,
+      "median": 1.0,
+      "p10": 1.0
+    },
+    "id_precision_at_5": {
+      "n": 90,
+      "nan_count": 20,
+      "mean": 0.1222,
+      "median": 0.2,
+      "p10": 0.0
+    },
+    "id_recall": {
+      "n": 90,
+      "nan_count": 20,
+      "mean": 0.8722,
+      "median": 1.0,
+      "p10": 0.45
+    }
+  },
+  "prompt_tokens": {
+    "mean": 5745.6,
+    "p95": 8656.4
+  },
+  "proxy_vs_real_token_ratio": {
+    "mean": 1.0074,
+    "min": 0.9953,
+    "max": 1.339
+  },
+  "latency_ms": {
+    "mean": 92226.0,
+    "p95": 157501.9
+  },
+  "pct_likely_prompt_truncated": 0.0,
+  "pct_truncated_by_length": 12.73,
+  "emergency_fast_path_hit_rate": 0.2,
+  "per_category": {
+    "emergency": {
+      "total_cases": 10,
+      "faithfulness_core": null,
+      "faithfulness_full": null,
+      "answer_relevancy": null,
+      "id_precision_at_5": null,
+      "id_recall": null
+    },
+    "medicine_only_clean_ocr": {
+      "total_cases": 15,
+      "faithfulness_core": 0.26,
+      "faithfulness_full": 0.1779,
+      "answer_relevancy": 0.359,
+      "id_precision_at_5": 0.0,
+      "id_recall": 0.9333
+    },
+    "medicine_only_noisy_ocr": {
+      "total_cases": 15,
+      "faithfulness_core": null,
+      "faithfulness_full": null,
+      "answer_relevancy": 0.395,
+      "id_precision_at_5": 0.0,
+      "id_recall": 0.4667
+    },
+    "symptom_only": {
+      "total_cases": 25,
+      "faithfulness_core": 0.3922,
+      "faithfulness_full": 0.4053,
+      "answer_relevancy": 0.437,
+      "id_precision_at_5": 0.2,
+      "id_recall": 1.0
+    },
+    "symptom_plus_medicine_match": {
+      "total_cases": 20,
+      "faithfulness_core": 0.0,
+      "faithfulness_full": 0.0,
+      "answer_relevancy": 0.4947,
+      "id_precision_at_5": 0.18,
+      "id_recall": 0.925
+    },
+    "symptom_plus_medicine_mismatch": {
+      "total_cases": 15,
+      "faithfulness_core": 0.0,
+      "faithfulness_full": 0.0,
+      "answer_relevancy": 0.6129,
+      "id_precision_at_5": 0.16,
+      "id_recall": 0.9333
+    },
+    "unanswerable": {
+      "total_cases": 10,
+      "faithfulness_core": null,
+      "faithfulness_full": null,
+      "answer_relevancy": 0.5867,
+      "id_precision_at_5": null,
+      "id_recall": null
+    }
+  }
+}

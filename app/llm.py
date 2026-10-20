@@ -92,19 +92,21 @@ def call_ollama_api_generate_meta(
     r = None
     try:
         _t_ollama = time.perf_counter()
+        conn_to = getattr(settings, "OLLAMA_CONNECT_TIMEOUT_SECONDS", 5.0)
+        read_to = getattr(settings, "OLLAMA_READ_TIMEOUT_SECONDS", 180.0)
         r = requests.post(
             url,
             json=payload,
-            timeout=(CONNECT_TIMEOUT, READ_TIMEOUT)
+            timeout=(conn_to, read_to)
         )
         r.raise_for_status()
         _ollama_ms = int((time.perf_counter() - _t_ollama) * 1000)
         print(f"[LLM] Ollama REST generate ({model}): {_ollama_ms}ms")
     except requests.exceptions.ConnectTimeout:
-        logger.warning(f"Ollama connection timed out after {CONNECT_TIMEOUT}s.")
+        logger.warning(f"Ollama connection timed out after {conn_to}s.")
         raise OllamaError("Connection to local Ollama service timed out.", is_timeout=True, is_unavailable=True)
     except requests.exceptions.ReadTimeout:
-        logger.warning(f"Ollama inference read timed out after {READ_TIMEOUT}s.")
+        logger.warning(f"Ollama inference read timed out after {read_to}s.")
         raise OllamaError("Inference request timed out during clinical generation.", is_timeout=True)
     except requests.exceptions.ConnectionError as e:
         logger.warning(f"Ollama connection failed: {e}")
