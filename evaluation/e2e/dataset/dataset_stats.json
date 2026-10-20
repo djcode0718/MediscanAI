@@ -1,0 +1,35 @@
+{
+  "total_cases": 110,
+  "ragas_cases": 100,
+  "emergency_cases": 10,
+  "category_counts": {
+    "symptom_only": 25,
+    "medicine_only_clean_ocr": 15,
+    "medicine_only_noisy_ocr": 15,
+    "symptom_plus_medicine_match": 20,
+    "symptom_plus_medicine_mismatch": 15,
+    "unanswerable": 10,
+    "emergency": 10
+  },
+  "expected_behavior_counts": {
+    "answer": 90,
+    "abstain": 10,
+    "emergency": 10
+  },
+  "user_text_char_stats": {
+    "min": 70,
+    "mean": 132.8,
+    "max": 242
+  },
+  "ocr_text_char_stats": {
+    "min": 0,
+    "mean": 85.9,
+    "max": 562
+  },
+  "reference_char_stats": {
+    "min": 105,
+    "mean": 426.4,
+    "max": 2918
+  },
+  "random_seed": 42
+}
