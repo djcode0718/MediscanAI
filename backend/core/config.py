@@ -1,6 +1,6 @@
 # backend/core/config.py
 from pathlib import Path
-from typing import List
+from typing import List, Optional, Dict
 from dotenv import load_dotenv
 from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -94,6 +94,23 @@ class Settings(BaseSettings):
     EMERGENCY_GUARDRAIL_CONFIG_PATH: str = "app/guardrail_config.json"
     EMERGENCY_GUARDRAIL_FAST_PATH: bool = True
 
+    # Generation Hygiene & Evidence Configuration (Phase 01 Part B)
+    EVIDENCE_FORMAT: str = "legacy"  # "legacy" | "compact"
+    PROMPT_VERSION: str = "legacy"   # "legacy" | "v2"
+    GEN_TEMPERATURE: Optional[float] = None
+    GEN_SEED: Optional[int] = None
+    OLLAMA_NUM_CTX: Optional[int] = None
+    OLLAMA_NUM_PREDICT: Optional[int] = None
+    EVIDENCE_MAX_ITEMS_PER_CHANNEL: int = 3
+    EVIDENCE_DRUG_FIELDS: str = "brand_name,generic_name,active_ingredients,indications"
+    EVIDENCE_FIELD_CAPS: Dict[str, int] = {
+        "indications": 700,
+        "warnings": 300,
+        "dosage": 300,
+        "adverse_reactions": 300,
+        "symptoms": 12,
+    }
+
     @field_validator("JWT_SECRET_KEY")
     @classmethod
     def validate_jwt_secret(cls, v: str) -> str:
@@ -108,6 +125,38 @@ class Settings(BaseSettings):
         if v.lower() not in valid:
             raise ValueError(f"LLM_MODE must be one of {sorted(valid)}, got '{v}'.")
         return v.lower()
+
+    @field_validator("EVIDENCE_FORMAT")
+    @classmethod
+    def validate_evidence_format(cls, v: str) -> str:
+        valid = {"legacy", "compact"}
+        if v.lower() not in valid:
+            raise ValueError(f"EVIDENCE_FORMAT must be one of {sorted(valid)}, got '{v}'.")
+        return v.lower()
+
+    @field_validator("PROMPT_VERSION")
+    @classmethod
+    def validate_prompt_version(cls, v: str) -> str:
+        valid = {"legacy", "v2"}
+        if v.lower() not in valid:
+            raise ValueError(f"PROMPT_VERSION must be one of {sorted(valid)}, got '{v}'.")
+        return v.lower()
+
+    @field_validator("EVIDENCE_FIELD_CAPS", mode="before")
+    @classmethod
+    def parse_evidence_field_caps(cls, v):
+        import json
+        if isinstance(v, str):
+            try:
+                return json.loads(v)
+            except Exception:
+                res = {}
+                for part in v.split(","):
+                    if "=" in part:
+                        k, val = part.split("=", 1)
+                        res[k.strip()] = int(val.strip())
+                return res
+        return v
 
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod

@@ -293,6 +293,20 @@ class Pipeline:
         _t_pipeline_start = time.perf_counter()
         pipeline_timings: Dict[str, int] = {}
 
+        # Thread Pipeline.settings into GenerationParams (no module globals)
+        effective_temp = gen_params.temperature if gen_params and gen_params.temperature is not None else getattr(self.settings, "GEN_TEMPERATURE", None)
+        effective_seed = gen_params.seed if gen_params and gen_params.seed is not None else getattr(self.settings, "GEN_SEED", None)
+        effective_num_ctx = gen_params.num_ctx if gen_params and gen_params.num_ctx is not None else getattr(self.settings, "OLLAMA_NUM_CTX", None)
+        effective_num_predict = gen_params.num_predict if gen_params and gen_params.num_predict is not None else getattr(self.settings, "OLLAMA_NUM_PREDICT", None)
+
+        if any(v is not None for v in (effective_temp, effective_seed, effective_num_ctx, effective_num_predict)):
+            gen_params = GenerationParams(
+                temperature=effective_temp,
+                seed=effective_seed,
+                num_ctx=effective_num_ctx,
+                num_predict=effective_num_predict,
+            )
+
         print("\n🔍 [RAG CORE] Running MediScanAI Core Pipeline...")
         user_norm = normalize_text(user_text or "")
         ocr_text = ""
@@ -388,6 +402,7 @@ class Pipeline:
                         "generation_meta": None,
                         "effective_settings": {
                             "EVIDENCE_FORMAT": getattr(self.settings, "EVIDENCE_FORMAT", "legacy"),
+                            "PROMPT_VERSION": getattr(self.settings, "PROMPT_VERSION", "legacy"),
                             "params": asdict(gen_params) if gen_params else None,
                             "top_k": top_k,
                             "llm_mode": llm_mode,
@@ -782,6 +797,7 @@ class Pipeline:
                 "generation_meta": gen_meta,
                 "effective_settings": {
                     "EVIDENCE_FORMAT": getattr(self.settings, "EVIDENCE_FORMAT", "legacy"),
+                    "PROMPT_VERSION": getattr(self.settings, "PROMPT_VERSION", "legacy"),
                     "params": asdict(gen_params) if gen_params else None,
                     "top_k": top_k,
                     "llm_mode": llm_mode,
