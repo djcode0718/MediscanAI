@@ -92,3 +92,36 @@ def test_unanswerable_and_emergency_invariants():
     for e in emergencies:
         assert e["expected_behavior"] == "emergency"
         assert e["reference_context_ids"] == []
+
+
+def test_dev_subset_40_invariants():
+    subset_path = DATASET_PATH.parent / "dev_subset_40.json"
+    assert subset_path.exists(), f"Dev subset missing at {subset_path}"
+
+    with open(subset_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    case_ids = data.get("case_ids", [])
+    assert len(case_ids) == 40
+    assert len(set(case_ids)) == 40
+
+    with open(DATASET_PATH, "r", encoding="utf-8") as f:
+        all_cases = {json.loads(line)["case_id"]: json.loads(line) for line in f if line.strip()}
+
+    cat_counts = {}
+    for cid in case_ids:
+        assert cid in all_cases, f"Case ID {cid} not in e2e_v1.jsonl"
+        cat = all_cases[cid]["category"]
+        assert cat != "emergency", f"Emergency case {cid} found in dev subset!"
+        cat_counts[cat] = cat_counts.get(cat, 0) + 1
+
+    expected_counts = {
+        "symptom_only": 8,
+        "medicine_only_clean_ocr": 6,
+        "medicine_only_noisy_ocr": 5,
+        "symptom_plus_medicine_match": 8,
+        "symptom_plus_medicine_mismatch": 6,
+        "unanswerable": 7,
+    }
+    assert cat_counts == expected_counts
+
