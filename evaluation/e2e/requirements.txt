@@ -1,0 +1,19 @@
+# MediScanAI — Phase 01 End-to-End Evaluation Dependencies
+# Validated on Conda Environment: med-env (Python 3.10.18 on macOS arm64)
+
+ragas==0.2.15
+datasets==3.6.0
+langchain==1.4.6
+langchain-core==1.6.10
+langchain-community==0.3.31
+langchain-openai==1.7.2
+sentence-transformers==5.1.0
+transformers==4.56.1
+huggingface-hub==0.36.2
+pydantic==2.11.9
+numpy==2.2.6
+torch==2.8.0
+tiktoken==0.14.0
+nest-asyncio==1.6.0
+requests==2.34.2
+urllib3==2.8.0
