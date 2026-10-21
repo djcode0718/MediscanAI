@@ -1,0 +1,2308 @@
+{
+  "45521f5a1fffac0882a15eb864296a91480fc647ff7e2ba8a8b950322e361139": {
+    "faithfulness": 0.9167,
+    "unsupported": [
+      {
+        "case_id": "E2E-035",
+        "statement": "Deriphyllin is not suitable for treating Chest Pain symptoms.",
+        "reason": "There is no information in the context about Deriphyllin being used to treat Chest Pain symptoms. The context only mentions its indications for asthma and COPD, which does not include Chest Pain.",
+        "fuzzy_score": 0.4106
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "6c9928e8d9fba13992e2547054db50ea5d8de4039af458dd458f93f45b28e1d8": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-042",
+        "statement": "The medicine identified from the package is Ursodiol.",
+        "reason": "The context explicitly mentions that the brand of the drug is Medline and its generic name is ACETAMINOPHEN, which does not match with Ursodiol. However, there is a mention of Ursodiol in the context as a treatment for primary biliary cirrhosis (PBC).",
+        "fuzzy_score": 0.36
+      },
+      {
+        "case_id": "E2E-042",
+        "statement": "Ursodiol is not suitable for treating your symptoms of Facial Paralysis.",
+        "reason": "The context does not provide any information about Ursodiol being used to treat Facial Paralysis. However, it does mention that Ursodiol is a treatment for primary biliary cirrhosis (PBC).",
+        "fuzzy_score": 0.3951
+      },
+      {
+        "case_id": "E2E-042",
+        "statement": "SODIUM CHLORITE is used for skin care, wound cleaning, and disinfection.",
+        "reason": "The context does not provide any information about SODIUM CHLORITE being used for skin care, wound cleaning, and disinfection. However, it does mention that the indications of NARYN CARE Stick include please see the label attached, which suggests that the actual use of SODIUM CHLORITE is not explicitly stated in the context.",
+        "fuzzy_score": 0.3168
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "55a50dd955cb2cbece1b57c88d543a43edfeee781930cff1ad4788c4610e0b60": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-042",
+        "statement": "The label evidence for Ursodiol lists uses that match your symptoms.",
+        "reason": "The context mentions the indications of Ursodiol, which include treating patients with primary biliary cirrhosis (PBC). However, there is no information about the user's specific symptoms matching these indications. Therefore, it cannot be directly inferred that the label evidence for Ursodiol lists uses that match the user's symptoms.",
+        "fuzzy_score": 0.3636
+      },
+      {
+        "case_id": "E2E-042",
+        "statement": "Your symptoms were not specified, but based on the provided information, we can infer that they are looking for a medicine related to facial paralysis or pruritus.",
+        "reason": "The context mentions several diseases and conditions, including Facial Paralysis and Pruritus. However, there is no explicit mention of the user's symptoms being related to these conditions. Therefore, it cannot be directly inferred that the user is looking for a medicine related to facial paralysis or pruritus.",
+        "fuzzy_score": 0.2943
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "1d69476f34fb38d0832abdf676fbe7f2a2340262625d98657cafa62264fbecc3": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-008",
+        "statement": "The medicine identified from the package is not suitable for treating acanthosis nigricans, acne or pimples, skin growth, and skin lesion.",
+        "reason": "The context mentions a specific drug (Salicylic Acid) with indications that include the treatment of acne. However, it does not explicitly state that this medication is not suitable for these conditions. Therefore, based on the information provided, it cannot be directly inferred that the medicine identified from the package is not suitable for treating acanthosis nigricans, acne or pimples, skin growth, and skin lesion.",
+        "fuzzy_score": 0.3468
+      },
+      {
+        "case_id": "E2E-008",
+        "statement": "No image was provided for OCR scanning.",
+        "reason": "The context does not mention anything about images or OCR scanning. Therefore, it cannot be directly inferred that no image was provided for OCR scanning.",
+        "fuzzy_score": 0.3226
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "0d676160aee1f2d66bb22e9ca6a122104c6b87287a85acfe09c858878e26df73": {
+    "faithfulness": 0.5714,
+    "unsupported": [
+      {
+        "case_id": "E2E-069",
+        "statement": "Penicillin V Potassium is not suitable for treating bacteremia.",
+        "reason": "Bacteremia is a condition mentioned in the context, but there is no information about the suitability of Penicillin V Potassium for this condition. However, it is indicated that Penicillin V Potassium should be used only to treat or prevent infections due to penicillin G-sensitive microorganisms.",
+        "fuzzy_score": 0.3618
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Penicillin V Potassium is not suitable for treating abdominal tenderness.",
+        "reason": "Abdominal tenderness is a symptom mentioned in the context, but there is no information about the suitability of Penicillin V Potassium for this condition. However, it is indicated that Penicillin V Potassium should be used only to treat or prevent infections due to penicillin G-sensitive microorganisms.",
+        "fuzzy_score": 0.4301
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Penicillin V Potassium is not suitable for treating chill.",
+        "reason": "Chill is a symptom mentioned in the context, but there is no information about the suitability of Penicillin V Potassium for this condition. However, it is indicated that Penicillin V Potassium should be used only to treat or prevent infections due to penicillin G-sensitive microorganisms.",
+        "fuzzy_score": 0.3684
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Penicillin V Potassium is not suitable for treating decreased translucency.",
+        "reason": "Decreased translucency is a symptom mentioned in the context, but there is no information about the suitability of Penicillin V Potassium for this condition. However, it is indicated that Penicillin V Potassium should be used only to treat or prevent infections due to penicillin G-sensitive microorganisms.",
+        "fuzzy_score": 0.4536
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Penicillin V Potassium is not suitable for treating diarrhea.",
+        "reason": "Diarrhea is a symptom mentioned in the context, but there is no information about the suitability of Penicillin V Potassium for this condition. However, it is indicated that Penicillin V Potassium should be used only to treat or prevent infections due to penicillin G-sensitive microorganisms.",
+        "fuzzy_score": 0.4
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "The condition requires a broad spectrum of antimicrobial coverage.",
+        "reason": "The context mentions that Ciprofloxacin and Tinidazole provide a broad spectrum of antimicrobial coverage, but it does not explicitly state that the current condition requires this. However, bacteremia is mentioned as a condition, which may require a broader spectrum of treatment.",
+        "fuzzy_score": 0.8657
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "fd192a4ad214c863d6a973f98ddb10da50e6b67970e971a0682c0e785953571e": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-069",
+        "statement": "The label evidence for Penicillin V Potassium lists uses that match your symptoms.",
+        "reason": "The context mentions the indications of Penicillin V Potassium, which include treating infections due to penicillin G-sensitive microorganisms. However, there is no information about the specific symptoms mentioned in the statement being matched by the label evidence.",
+        "fuzzy_score": 0.3303
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Your symptoms are bacteremia, abdominal tenderness, chill, decreased translucency, and diarrhea.",
+        "reason": "The context lists several diseases and their corresponding symptoms. The statement mentions a combination of symptoms that can be found in multiple diseases listed in the context. Therefore, it cannot be directly inferred that these specific symptoms match any particular disease mentioned in the context.",
+        "fuzzy_score": 0.3729
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "37f689b3525e9206c2f795d2b777430832cc6370056685fa3256fce3fc7e85b0": {
+    "faithfulness": 0.8571,
+    "unsupported": [
+      {
+        "case_id": "E2E-088",
+        "statement": "Muscular dystrophy, cough, fatigue, feeling cold are symptoms that cannot be treated with Belif Dew guard - daily mineral sunscreen Broad Spectrum SPF 50 (ZINC OXIDE).",
+        "reason": "The context lists the indications for Theraflu Severe Cold Relief and other medications, but it does not mention Belif Dew guard - daily mineral sunscreen Broad Spectrum SPF 50. Therefore, it cannot be deduced that these symptoms cannot be treated with this medicine.",
+        "fuzzy_score": 0.4986
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "1bdcc9f1eb4a536e65c42c5232312a54442cfdbb908db082043fc0830f499e91": {
+    "faithfulness": 0.6667,
+    "unsupported": [
+      {
+        "case_id": "E2E-088",
+        "statement": "The label evidence for Theraflu Severe Cold Relief lists uses that match your symptoms.",
+        "reason": "The context mentions the indications of Theraflu Severe Cold Relief, which include relieving minor aches and pains, sore throat pain, headache, cough due to minor throat and bronchial irritation, and reducing fever. Since the user's symptoms (muscular dystrophy, cough, fatigue, and feeling cold) are not explicitly mentioned in the context as being relieved by Theraflu Severe Cold Relief, it cannot be directly inferred that the label evidence lists uses that match the user's symptoms.",
+        "fuzzy_score": 0.3482
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "c64e18aa2f9f4e4e88196a642ada7e0ef8771035adcf4e2f87fa711d9b824e89": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-093",
+        "statement": "Lipitor (Atorvastatin Calcium) is not suitable for treating acute viral Covid-19 infection.",
+        "reason": "The context does not mention anything about Lipitor being used to treat COVID-19, but it also doesn't explicitly state that it's not suitable. However, the indications mentioned in the context are related to cholesterol reduction and heart disease prevention, not COVID-19 treatment.",
+        "fuzzy_score": 0.2593
+      },
+      {
+        "case_id": "E2E-093",
+        "statement": "Lipitor (Atorvastatin Calcium) is not used to treat infections like COVID-19.",
+        "reason": "The context does not mention anything about Lipitor being used to treat COVID-19, but it also doesn't explicitly state that it's not suitable. However, the indications mentioned in the context are related to cholesterol reduction and heart disease prevention, not COVID-19 treatment.",
+        "fuzzy_score": 0.2979
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "1284e4ead303bf11ec4cd790b0c2dffaddf9b0f5901b5ab25b25d5b7d76b962e": {
+    "faithfulness": 0.6,
+    "unsupported": [
+      {
+        "case_id": "E2E-093",
+        "statement": "The available sources are not sufficient to compare this medicine with your symptoms.",
+        "reason": "There is no information given in the context about comparing medicines with symptoms.",
+        "fuzzy_score": 0.3333
+      },
+      {
+        "case_id": "E2E-093",
+        "statement": "The user asked about Lipitor curing acute viral Covid-19 infection.",
+        "reason": "Although Lipitor's indications are mentioned, there is no specific mention of its effectiveness against acute viral Covid-19 infection. The context only mentions its use for reducing low-density lipoprotein cholesterol and preventing heart-related conditions.",
+        "fuzzy_score": 0.3399
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "1d5bf9faee74e38f6644aadb8aa408a56d40fb273436abb94d7eabd95492194a": {
+    "faithfulness": 0.6667,
+    "unsupported": [
+      {
+        "case_id": "E2E-032",
+        "statement": "Benzalkonium Chloride is a disinfectant that kills germs and bacteria on contact.",
+        "reason": "The context does not mention Benzalkonium Chloride as an active ingredient in Hospicare 40R Adult Body Wipes. However, it is mentioned as an active ingredient in another product (ANTIBACTERIAL WET WIPES), which is consistent with the statement. Benzalkonium Chloride is indeed a disinfectant that kills germs and bacteria on contact.",
+        "fuzzy_score": 0.3938
+      },
+      {
+        "case_id": "E2E-032",
+        "statement": "Benzethonium Chloride and Didecyldimonium Chloride are antibacterial agents that help reduce bacteria on the skin.",
+        "reason": "The context mentions Benzethonium Chloride as an active ingredient in Wet wipes, which is consistent with the statement. However, it does not mention Didecyldimonium Chloride as an active ingredient in any product related to the context. Therefore, the verdict for this statement is 0.",
+        "fuzzy_score": 0.5487
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "03f88fa6865426d1fc6e79578519fd60a57b7c2daed75d914e9240b0d1718da5": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-032",
+        "statement": "The label evidence for Hospicare 40R Adult Body Wipes lists uses that match your symptoms.",
+        "reason": "The context mentions the indications listed for Hospicare 40R Adult Body Wipes, which include improving patient care and satisfaction. However, there is no information suggesting that these uses match the user's symptoms.",
+        "fuzzy_score": 0.3564
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "2c4f68c6e90f3e90365b34ecad07abb8d5e44c87ba4dc0c3333ec83cd199b395": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-044",
+        "statement": "Laura Mercier Flawless Skin Repair Day Creme Broad Spectrum SPF 15 Sunscreen is not suitable for treating Ethylene glycol poisoning-2 symptoms.",
+        "reason": "The context does not provide any information about the indications or uses of Laura Mercier Flawless Skin Repair Day Creme Broad Spectrum SPF 15 Sunscreen, so it cannot be deduced that it is not suitable for treating Ethylene glycol poisoning-2 symptoms.",
+        "fuzzy_score": 0.5904
+      },
+      {
+        "case_id": "E2E-044",
+        "statement": "OCTINOXATE is a chemical used as a sunscreen agent that prevents sunburn.",
+        "reason": "The context explicitly lists OCTINOXATE as an active ingredient of Laura Mercier Flawless Skin Repair Day Creme Broad Spectrum SPF 15 Sunscreen, but it does not provide any information about its specific use or function. Therefore, it cannot be deduced that OCTINOXATE is a chemical used as a sunscreen agent that prevents sunburn.",
+        "fuzzy_score": 0.2927
+      },
+      {
+        "case_id": "E2E-044",
+        "statement": "OXYBENZONE protects the skin from UVA rays.",
+        "reason": "The context explicitly mentions that OXYBENZONE helps prevent sunburn and decreases the risk of skin cancer and early skin aging caused by the sun, but it does not provide any information about its specific function or protection against UVA rays. Therefore, it cannot be deduced that OXYBENZONE protects the skin from UVA rays.",
+        "fuzzy_score": 0.2973
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "94c436eb67a6ad439d1c28ec3620d822bff8ed1b387f2d145dabebfa13b18820": {
+    "faithfulness": 0.6,
+    "unsupported": [
+      {
+        "case_id": "E2E-044",
+        "statement": "The label evidence for Laura Mercier Flawless Skin Repair Day Creme Broad Spectrum SPF 15 Sunscreen lists uses that match your symptoms.",
+        "reason": "The context mentions several drug labels, but only one of them is related to sunscreen. However, the statement does not specify which symptoms are being referred to, so it cannot be directly inferred from the context.",
+        "fuzzy_score": 0.5538
+      },
+      {
+        "case_id": "E2E-044",
+        "statement": "Your symptoms are not stated in the USER_TEXT.",
+        "reason": "The context mentions several drug labels and their indications, but there is no information about the user's symptoms. Therefore, it cannot be deduced that the user's symptoms are not stated in the USER_TEXT.",
+        "fuzzy_score": 0.3824
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "e483985e426fdd5456cbc4303f21ba5013d5904543e7ab28c6770d39935eb788": {
+    "faithfulness": 0.6667,
+    "unsupported": [
+      {
+        "case_id": "E2E-009",
+        "statement": "The medicine identified from the package is not suitable for treating Blindness.",
+        "reason": "The context mentions that VERTEPORFIN is used to treat patients with predominantly classic subfoveal choroidal neovascularization due to age-related macular degeneration, which includes blindness. Therefore, it cannot be deduced that the medicine identified from the package is not suitable for treating Blindness.",
+        "fuzzy_score": 0.3429
+      },
+      {
+        "case_id": "E2E-009",
+        "statement": "The medicine identified from the package is not suitable for treating Neovascularization.",
+        "reason": "The context mentions that VERTEPORFIN is used to treat patients with predominantly classic subfoveal choroidal neovascularization due to age-related macular degeneration, which includes neovascularization. Therefore, it cannot be deduced that the medicine identified from the package is not suitable for treating Neovascularization.",
+        "fuzzy_score": 0.4211
+      },
+      {
+        "case_id": "E2E-009",
+        "statement": "The medicine identified from the package is not suitable for treating Nephritis.",
+        "reason": "There is no information given in the context about VERTEPORFIN or RANIBIZUMAB being used to treat nephritis. Therefore, it cannot be deduced that the medicine identified from the package is not suitable for treating Nephritis.",
+        "fuzzy_score": 0.3286
+      },
+      {
+        "case_id": "E2E-009",
+        "statement": "The medicine identified from the package is not suitable for treating Nephrosis.",
+        "reason": "There is no information given in the context about VERTEPORFIN or RANIBIZUMAB being used to treat nephrosis. Therefore, it cannot be deduced that the medicine identified from the package is not suitable for treating Nephrosis.",
+        "fuzzy_score": 0.3286
+      },
+      {
+        "case_id": "E2E-009",
+        "statement": "There was no medicine identified from the OCR scan.",
+        "reason": "The context does not provide information about an OCR scan. Therefore, it cannot be deduced that there was no medicine identified from the OCR scan.",
+        "fuzzy_score": 0.4684
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "6f03e3694bab7b8bd0b46480555b60321fc0640fec4120a84272e37fedf67fdc": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "485f8ac69fb2f425f357d98c0e3bd685d64b1cb4f1310ae0eca6b2f571f6ab7b": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-073",
+        "statement": "MECLIZINE is an antihistamine used to treat dizziness and vertigo caused by inner ear problems.",
+        "reason": "The context does not provide information about MECLIZINE's mechanism of action or its use for treating dizziness and vertigo, so this statement cannot be directly inferred.",
+        "fuzzy_score": 0.3148
+      },
+      {
+        "case_id": "E2E-073",
+        "statement": "CHLORCYCLIZINE is a medication that is similar to meclizine, also used for treating dizziness and vertigo.",
+        "reason": "The context does not provide information about CHLORCYCLIZINE's mechanism of action or its use for treating dizziness and vertigo, so this statement cannot be directly inferred.",
+        "fuzzy_score": 0.4229
+      },
+      {
+        "case_id": "E2E-073",
+        "statement": "HOMOCHLORCYCLIZINE has a mechanism of action as chlorcyclizine.",
+        "reason": "The context does not provide information about HOMOCHLORCYCLIZINE's mechanism of action, so this statement cannot be directly inferred.",
+        "fuzzy_score": 0.3932
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "df582a46cdb107d7ccaa65229fae6279c7e04a864356c1608da9205e8157a63b": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-073",
+        "statement": "The label evidence for Meclizine Hydrochloride lists uses that match your symptoms.",
+        "reason": "The context mentions several drug labels, but only one of them is for Meclizine Hydrochloride. The statement cannot be directly inferred from the given information.",
+        "fuzzy_score": 0.3333
+      },
+      {
+        "case_id": "E2E-073",
+        "statement": "Your symptoms include Vertigo, Brain Diseases, Brain Edema, Brain Infarction, and Brain Injuries.",
+        "reason": "The context lists several diseases and conditions, but it does not explicitly state that the user's symptoms match any of them. Therefore, this statement cannot be directly inferred from the given information.",
+        "fuzzy_score": 0.3529
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "5615b595d87b77a61ff615fa64e00151d7a69e0e857b97b8d21bc7594bb0a321": {
+    "faithfulness": 0.7037,
+    "unsupported": [
+      {
+        "case_id": "E2E-008",
+        "statement": "Acanthosis nigricrans also includes acne or pimples.",
+        "reason": "The context lists acanthosis nigricans as a condition and lists acne or pimples as a symptom of seborrheic dermatitis, but not specifically for acanthosis nigricans. Therefore, it cannot be deduced that acanthosis nigricrans includes acne or pimples.",
+        "fuzzy_score": 0.4478
+      },
+      {
+        "case_id": "E2E-008",
+        "statement": "Acanthosis nigricrans also includes skin growth.",
+        "reason": "The context lists acanthosis nigricans as a condition and lists skin growth as a symptom of seborrheic keratosis, but not specifically for acanthosis nigricans. Therefore, it cannot be deduced that acanthosis nigricrans includes skin growth.",
+        "fuzzy_score": 0.3729
+      },
+      {
+        "case_id": "E2E-008",
+        "statement": "Acanthosis nigricrans also includes skin lesion.",
+        "reason": "The context lists acanthosis nigricans as a condition and lists skin lesion as a symptom of seborrheic keratosis, but not specifically for acanthosis nigricans. Therefore, it cannot be deduced that acanthosis nigricrans includes skin lesion.",
+        "fuzzy_score": 0.3729
+      },
+      {
+        "case_id": "E2E-008",
+        "statement": "Seborrheic dermatitis also includes abnormal appearing skin.",
+        "reason": "The context lists seborrheic dermatitis as a condition and lists abnormal appearing skin as a symptom of seborrheic keratosis, but not specifically for seborrheic dermatitis. Therefore, it cannot be deduced that seborrheic dermatitis includes abnormal appearing skin.",
+        "fuzzy_score": 0.5542
+      },
+      {
+        "case_id": "E2E-008",
+        "statement": "Seborrheic dermatitis also includes roughness.",
+        "reason": "The context lists seborrheic dermatitis as a condition and lists roughness as a symptom of seborrheic keratosis, but not specifically for seborrheic dermatitis. Therefore, it cannot be deduced that seborrheic dermatitis includes roughness.",
+        "fuzzy_score": 0.4138
+      },
+      {
+        "case_id": "E2E-008",
+        "statement": "Seborrheic dermatitis also includes peeling.",
+        "reason": "The context lists seborrheic dermatitis as a condition and lists peeling as a symptom of seborrheic keratosis, but not specifically for seborrheic dermatitis. Therefore, it cannot be deduced that seborrheic dermatitis includes peeling.",
+        "fuzzy_score": 0.3974
+      },
+      {
+        "case_id": "E2E-008",
+        "statement": "Seborrheic dermatitis also includes scaliness.",
+        "reason": "The context lists seborrheic dermatitis as a condition and lists scaliness as a symptom of seborrheic keratosis, but not specifically for seborrheic dermatitis. Therefore, it cannot be deduced that seborrheic dermatitis includes scaliness.",
+        "fuzzy_score": 0.3924
+      },
+      {
+        "case_id": "E2E-008",
+        "statement": "Seborrheic dermatitis also includes skin dryness.",
+        "reason": "The context lists seborrheic dermatitis as a condition and lists skin dryness as a symptom of seborrheic keratosis, but not specifically for seborrheic dermatitis. Therefore, it cannot be deduced that seborrheic dermatitis includes skin dryness.",
+        "fuzzy_score": 0.3934
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "dce7c0a690ac4226828017d1a64289ad1256404ba2ecb31781e624e2a0211bdc": {
+    "faithfulness": 0.25,
+    "unsupported": [
+      {
+        "case_id": "E2E-082",
+        "statement": "Strophanthus (STROPHANTHUS) 20mg is not suitable for treating Arthralgia, Abdominal, Abnormalities, and Abortion symptoms.",
+        "reason": "The context does not provide information about the suitability of Strophanthus (STROPHANTHUS) 20mg for treating specific conditions. However, it does mention that Evamist is an estrogen indicated for the treatment of moderate to severe vasomotor symptoms due to menopause, and Kids Relief is a homeopathic medicine used to relieve symptoms associated with colic. There is no direct information about Strophanthus (STROPHANTHUS) 20mg being suitable or not suitable for treating Arthralgia, Abdominal, Abnormalities, and Abortion symptoms.",
+        "fuzzy_score": 0.3662
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Strophanthus (STROPHANTHUS) 20mg is a cardiac glycoside used in the treatment of heart failure and certain arrhythmias.",
+        "reason": "The context explicitly mentions that Strophanthus hispidus is an active ingredient, but it does not provide information about its use in treating heart failure or arrhythmias. However, it does mention that ALDURAZYME is a hydrolytic lysosomal glycosaminoglycan-specific enzyme indicated for the treatment of adult and pediatric patients with Hurler and Hurler-Scheie forms of Mucopolysaccharidosis I (MPS I) and patients with the Scheie form of MPS I who have moderate to severe symptoms. There is no direct information about Strophanthus (STROPHANTHUS) 20mg being used in the treatment of heart failure or arrhythmias.",
+        "fuzzy_score": 0.3274
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Strophanthus (STROPHANTHUS) 20mg is not a treatment for Arthralgia, Abdominal, Abnormalities, and Abortion symptoms.",
+        "reason": "The context does not provide information about Strophanthus (STROPHANTHUS) 20mg being used to treat specific conditions. However, it does mention that Evamist is an estrogen indicated for the treatment of moderate to severe vasomotor symptoms due to menopause, and Kids Relief is a homeopathic medicine used to relieve symptoms associated with colic. There is no direct information about Strophanthus (STROPHANTHUS) 20mg being or not being a treatment for Arthralgia, Abdominal, Abnormalities, and Abortion symptoms.",
+        "fuzzy_score": 0.3669
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Dioscorea villosa tuber is used to treat various conditions, including menstrual cramps and other gynecological issues.",
+        "reason": "The context does not provide information about Dioscorea villosa tuber being used to treat specific conditions. However, it does mention that Evamist is an estrogen indicated for the treatment of moderate to severe vasomotor symptoms due to menopause, and Kids Relief is a homeopathic medicine used to relieve symptoms associated with colic. There is no direct information about Dioscorea villosa tuber being used to treat menstrual cramps or other gynecological issues.",
+        "fuzzy_score": 0.3239
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Magnesium phosphate, dibasic trihydrate is often used as a treatment for muscle cramps, spasms, and weakness.",
+        "reason": "The context does not provide information about Magnesium phosphate, dibasic trihydrate being used to treat specific conditions. However, it does mention that Evamist is an estrogen indicated for the treatment of moderate to severe vasomotor symptoms due to menopause, and Kids Relief is a homeopathic medicine used to relieve symptoms associated with colic. There is no direct information about Magnesium phosphate, dibasic trihydrate being used as a treatment for muscle cramps, spasms, and weakness.",
+        "fuzzy_score": 0.527
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Matricaria chamomilla is traditionally used to treat anxiety, insomnia, and restlessness.",
+        "reason": "The context explicitly mentions that Kids Relief is a homeopathic medicine made from a combination of ingredients traditionally used to help relieve symptoms associated with colic. However, it does not provide information about Matricaria chamomilla being specifically used to treat anxiety, insomnia, and restlessness. Therefore, the statement cannot be directly inferred based on the context.",
+        "fuzzy_score": 0.3036
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "b0dd9f0b9b96907c11183d59206cf34940c04a0593233a3da14d5cb58892894a": {
+    "faithfulness": 0.25,
+    "unsupported": [
+      {
+        "case_id": "E2E-082",
+        "statement": "The label evidence for Strophanthus lists uses that match your symptoms.",
+        "reason": "The context mentions the indications for Strophanthus hispidus and Strophanthus 6X, but they do not explicitly mention matching symptoms. Therefore, it cannot be deduced that the label evidence matches the user's symptoms.",
+        "fuzzy_score": 0.3121
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Your symptoms are Arthralgia, Abdominal pain, and induced abortion.",
+        "reason": "The context lists several diseases, but none of them match the exact combination of Arthralgia, Abdominal pain, and induced abortion. Therefore, it cannot be deduced that these symptoms are listed in the context.",
+        "fuzzy_score": 0.4138
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Another indication for Strophanthus 6X lists Directions: FOR ORAL USE ONLY which implies that this homeopathic medicine can be used orally.",
+        "reason": "The context mentions the indications for Strophanthus 6X, but it does not explicitly mention oral use. Therefore, it cannot be deduced that Strophanthus 6X can be used orally based on the context.",
+        "fuzzy_score": 0.3541
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "603f50538f5ee8639f8e29737dd4408710d6d81b00b5ed401edb37d954ed9c81": {
+    "faithfulness": 0.7,
+    "unsupported": [
+      {
+        "case_id": "E2E-100",
+        "statement": "The medicine identified from the package is Glycozempra 5mg/mL.",
+        "reason": "There is no information given in the context about the medicine identified from the package being Glycozempra 5mg/mL.",
+        "fuzzy_score": 0.3404
+      },
+      {
+        "case_id": "E2E-100",
+        "statement": "Glycozempra 5mg/mL is not suitable for treating your symptoms of Ethylene glycol poisoning-2.",
+        "reason": "The context does not provide information about the suitability of Glycozempra 5mg/mL for treating Ethylene glycol poisoning-2. However, it does mention that GLUCARPIDASE is used to reduce toxic plasma methotrexate concentration in adult and pediatric patients with delayed methotrexate clearance due to impaired renal function.",
+        "fuzzy_score": 0.3333
+      },
+      {
+        "case_id": "E2E-100",
+        "statement": "Another suggested alternative to Glycozempra 5mg/mL is MORPHINE SULFATE.",
+        "reason": "The context does not suggest MORPHINE SULFATE as an alternative to Glycozempra 5mg/mL. However, it does mention that MORPHINE SULFATE is used for the relief of moderate to severe acute and chronic pain in opioid-tolerant patients.",
+        "fuzzy_score": 0.304
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "69b2bffef1f09991df633303e5d68a9ed1fed7a25475b6a13150c065a99c7133": {
+    "faithfulness": 0.1667,
+    "unsupported": [
+      {
+        "case_id": "E2E-100",
+        "statement": "The label evidence for Glycozempra lists uses that match your symptoms.",
+        "reason": "There is no information given in the context about Glycozempra or its uses matching the user's symptoms.",
+        "fuzzy_score": 0.3263
+      },
+      {
+        "case_id": "E2E-100",
+        "statement": "You asked about pediatric weight-based dosing, which suggests you are looking to administer the medicine to a child.",
+        "reason": "The context does not mention anything about pediatric weight-based dosing or administering medicine to a child. It only lists various medications and their indications.",
+        "fuzzy_score": 0.2792
+      },
+      {
+        "case_id": "E2E-100",
+        "statement": "There is no indication of what symptoms the child is experiencing.",
+        "reason": "The context does not mention any information about a child's symptoms, but it does list several medications with their indications. There is no direct connection between the statements and the context.",
+        "fuzzy_score": 0.4362
+      },
+      {
+        "case_id": "E2E-100",
+        "statement": "Glycozempra can be identified as a match because its brand name appears in both the USERTEXT and LABELTEXT.",
+        "reason": "The context does not provide any information about Glycozempra or its brand name appearing in both the USERTEXT and LABELTEXT. The only mention of Glycozempra is in [E4] DRUG, where it is listed as a medication for reducing chronic severe drooling in patients aged 3 to 16 years with neurologic conditions associated with problem drooling.",
+        "fuzzy_score": 0.3516
+      },
+      {
+        "case_id": "E2E-100",
+        "statement": "No other medicines in the available sources are clearly labeled for these symptoms.",
+        "reason": "The context does not provide any information about the availability of sources or the labeling of medications. It only lists several medications with their indications, but it does not make a comparison between them.",
+        "fuzzy_score": 0.3509
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "4e03d18e626a5af3f4387954906a9057943c3cc735c2d647d8b20a72e24e4aae": {
+    "faithfulness": 0.2222,
+    "unsupported": [
+      {
+        "case_id": "E2E-034",
+        "statement": "Wet Wipes is not suitable for treating Chest Pain.",
+        "reason": "The context mentions that Wet Wipes are used for hand-washing to decrease bacteria on skin, but it does not provide any information about their suitability for treating specific medical conditions such as Chest Pain. Therefore, it cannot be deduced whether Wet Wipes is or is not suitable for treating Chest Pain.",
+        "fuzzy_score": 0.3571
+      },
+      {
+        "case_id": "E2E-034",
+        "statement": "Wet Wipes is not suitable for treating Coxsackievirus Infections.",
+        "reason": "The context mentions that Wet Wipes are used for hand-washing to decrease bacteria on skin, but it does not provide any information about their suitability for treating specific medical conditions such as Coxsackievirus Infections. Therefore, it cannot be deduced whether Wet Wipes is or is not suitable for treating Coxsackievirus Infections.",
+        "fuzzy_score": 0.5556
+      },
+      {
+        "case_id": "E2E-034",
+        "statement": "Wet Wipes is not suitable for treating Cranial.",
+        "reason": "The context mentions that Wet Wipes are used for hand-washing to decrease bacteria on skin, but it does not provide any information about their suitability for treating specific medical conditions such as Cranial. Therefore, it cannot be deduced whether Wet Wipes is or is not suitable for treating Cranial.",
+        "fuzzy_score": 0.3179
+      },
+      {
+        "case_id": "E2E-034",
+        "statement": "Wet Wipes is not suitable for treating Crohn Disease.",
+        "reason": "The context mentions that Wet Wipes are used for hand-washing to decrease bacteria on skin, but it does not provide any information about their suitability for treating specific medical conditions such as Crohn Disease. Therefore, it cannot be deduced whether Wet Wipes is or is not suitable for treating Crohn Disease.",
+        "fuzzy_score": 0.3939
+      },
+      {
+        "case_id": "E2E-034",
+        "statement": "Wet Wipes is not suitable for treating Cross Infection.",
+        "reason": "The context mentions that Wet Wipes are used for hand-washing to decrease bacteria on skin, but it does not provide any information about their suitability for treating specific medical conditions such as Cross Infection. Therefore, it cannot be deduced whether Wet Wipes is or is not suitable for treating Cross Infection.",
+        "fuzzy_score": 0.4286
+      },
+      {
+        "case_id": "E2E-034",
+        "statement": "Wet Wipes is not suitable for treating Cryptococcosis.",
+        "reason": "The context mentions that Wet Wipes are used for hand-washing to decrease bacteria on skin, but it does not provide any information about their suitability for treating specific medical conditions such as Cryptococcosis. Therefore, it cannot be deduced whether Wet Wipes is or is not suitable for treating Cryptococcosis.",
+        "fuzzy_score": 0.4118
+      },
+      {
+        "case_id": "E2E-034",
+        "statement": "Wet Wipes is not suitable for treating Cryptogenic Organizing Pneumonia.",
+        "reason": "The context mentions that Wet Wipes are used for hand-washing to decrease bacteria on skin, but it does not provide any information about their suitability for treating specific medical conditions such as Cryptogenic Organizing Pneumonia. Therefore, it cannot be deduced whether Wet Wipes is or is not suitable for treating Cryptogenic Organizing Pneumonia.",
+        "fuzzy_score": 0.6154
+      },
+      {
+        "case_id": "E2E-034",
+        "statement": "Wet Wipes is not suitable for treating Cutaneous.",
+        "reason": "The context mentions that Wet Wipes are used for hand-washing to decrease bacteria on skin, but it does not provide any information about their suitability for treating specific medical conditions such as Cutaneous. Therefore, it cannot be deduced whether Wet Wipes is or is not suitable for treating Cutaneous.",
+        "fuzzy_score": 0.3404
+      },
+      {
+        "case_id": "E2E-034",
+        "statement": "Wet Wipes is not suitable for treating Cystic.",
+        "reason": "The context mentions that Wet Wipes are used for hand-washing to decrease bacteria on skin, but it does not provide any information about their suitability for treating specific medical conditions such as Cystic. Therefore, it cannot be deduced whether Wet Wipes is or is not suitable for treating Cystic.",
+        "fuzzy_score": 0.3226
+      },
+      {
+        "case_id": "E2E-034",
+        "statement": "Wet Wipes is not suitable for treating Cystic Fibrosis.",
+        "reason": "The context mentions that Wet Wipes are used for hand-washing to decrease bacteria on skin, but it does not provide any information about their suitability for treating specific medical conditions such as Cystic Fibrosis. Therefore, it cannot be deduced whether Wet Wipes is or is not suitable for treating Cystic Fibrosis.",
+        "fuzzy_score": 0.4286
+      },
+      {
+        "case_id": "E2E-034",
+        "statement": "Wet Wipes is not suitable for treating Cystitis.",
+        "reason": "The context mentions that Wet Wipes are used for hand-washing to decrease bacteria on skin, but it does not provide any information about their suitability for treating specific medical conditions such as Cystitis. Therefore, it cannot be deduced whether Wet Wipes is or is not suitable for treating Cystitis.",
+        "fuzzy_score": 0.3158
+      },
+      {
+        "case_id": "E2E-034",
+        "statement": "Wet Wipes is not suitable for treating Cysts.",
+        "reason": "The context mentions that Wet Wipes are used for hand-washing to decrease bacteria on skin, but it does not provide any information about their suitability for treating specific medical conditions such as Cysts. Therefore, it cannot be deduced whether Wet Wipes is or is not suitable for treating Cysts.",
+        "fuzzy_score": 0.3261
+      },
+      {
+        "case_id": "E2E-034",
+        "statement": "Wet Wipes is not a treatment for infections or chest pain.",
+        "reason": "The context mentions that Wet Wipes are used for hand-washing to decrease bacteria on skin, but it does not provide any information about their suitability as a treatment for infections or chest pain. Therefore, it cannot be deduced whether Wet Wipes is or is not a treatment for infections or chest pain.",
+        "fuzzy_score": 0.4054
+      },
+      {
+        "case_id": "E2E-034",
+        "statement": "Sodium Chlorite is used as an antimicrobial agent to reduce bacteria on skin.",
+        "reason": "The context mentions that Sodium Chlorite is used as an antimicrobial agent, but it does not specifically mention its use for reducing bacteria on skin. Therefore, it cannot be deduced whether Sodium Chlorite is or is not used as an antimicrobial agent to reduce bacteria on skin.",
+        "fuzzy_score": 0.4868
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "16f4c7bc484614fc5e516cdd76bb2639ad0a01bf5f75ebb775e00b115667df0b": {
+    "faithfulness": 0.25,
+    "unsupported": [
+      {
+        "case_id": "E2E-034",
+        "statement": "The therapeutic indications for this drug label are not explicitly stated.",
+        "reason": "The context explicitly states the indications for each drug, including ANTIBACTERIAL WET WIPES and Wet wipes. Therefore, it can be deduced that the therapeutic indications for this drug label are explicitly stated.",
+        "fuzzy_score": 0.4096
+      },
+      {
+        "case_id": "E2E-034",
+        "statement": "The active ingredients of Wet wipes include BENZALKONIUM CHLORIDE.",
+        "reason": "The context explicitly lists the active ingredients for each drug, including Wet wipes. For Wet wipes, it mentions BENZETHONIUM CHLORIDE and DIDECYLDIMONIUM CHLORIDE as active ingredients, but not BENZALKONIUM CHLORIDE.",
+        "fuzzy_score": 0.4706
+      },
+      {
+        "case_id": "E2E-034",
+        "statement": "The uses listed for Wet wipes include hand-washing to decrease bacteria on skin.",
+        "reason": "The context explicitly lists the indications for each drug, including ANTIBACTERIAL WET WIPES and Wet wipes. For Wet wipes, it mentions 'Use Wet wipes to help reduce bacteria that potentially can cause disease.' which is related to hand-washing but not exactly as stated in the statement.",
+        "fuzzy_score": 0.3958
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "6eab0d8c38b997baaac95acac260e048ae72a6d4c87c3403797848ac3a6ef046": {
+    "faithfulness": 0.8571,
+    "unsupported": [
+      {
+        "case_id": "E2E-052",
+        "statement": "Discount Drug Mart Ear Relief Ear Drops is not suitable for treating your symptoms of Facial Paralysis.",
+        "reason": "The context does not provide information about the suitability of Discount Drug Mart Ear Relief Ear Drops for treating Facial Paralysis. However, it does mention that the medicine helps relieve ear discomfort due to water or pressure, which may be related but not directly applicable to Facial Paralysis.",
+        "fuzzy_score": 0.3794
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "2d8450ffb600067a3e4c249592dcbb36621ee6cb0030c6a1548c596abd5a6925": {
+    "faithfulness": 0.8333,
+    "unsupported": [
+      {
+        "case_id": "E2E-052",
+        "statement": "Your symptoms are related to ear issues such as fullness, sensitivity to water and drafts, and water-clogged ears.",
+        "reason": "The context does not explicitly state that the user's symptoms match those listed for Discount Drug Mart Ear Relief Ear Drops. Therefore, it cannot be deduced that the symptoms are related to ear issues.",
+        "fuzzy_score": 0.5277
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "9d9f457284efe58803aff8336e5eaf1c07854b51400c1ea2519895fce0e9d4dc": {
+    "faithfulness": 0.2727,
+    "unsupported": [
+      {
+        "case_id": "E2E-024",
+        "statement": "The medicine identified from the package is not suitable for treating cerebral palsy.",
+        "reason": "The context mentions that Cuvposa (Glycopyrrolate) is indicated to reduce chronic severe drooling in patients aged 3 to 16 years with neurologic conditions associated with problem drooling, which includes cerebral palsy. Therefore, it can be deduced that the medicine identified from the package is suitable for treating cerebral palsy.",
+        "fuzzy_score": 0.3352
+      },
+      {
+        "case_id": "E2E-024",
+        "statement": "The medicine identified from the package is not suitable for treating blindness.",
+        "reason": "There is no information given in the context about the medicine being used to treat blindness. However, it does mention that Cuvposa (Glycopyrrolate) is indicated to reduce chronic severe drooling in patients aged 3 to 16 years with neurologic conditions associated with problem drooling, which may include symptoms related to cerebral palsy or other neurological conditions, but not specifically blindness.",
+        "fuzzy_score": 0.3333
+      },
+      {
+        "case_id": "E2E-024",
+        "statement": "The medicine identified from the package is not suitable for treating cramps.",
+        "reason": "The context mentions that Cuvposa (Glycopyrrolate) is indicated to reduce chronic severe drooling in patients aged 3 to 16 years with neurologic conditions associated with problem drooling, which may include symptoms related to cerebral palsy or other neurological conditions. However, it does not specifically mention cramps as a condition treated by the medicine.",
+        "fuzzy_score": 0.3392
+      },
+      {
+        "case_id": "E2E-024",
+        "statement": "The medicine identified from the package is not suitable for treating spasms.",
+        "reason": "The context mentions that Cuvposa (Glycopyrrolate) is indicated to reduce chronic severe drooling in patients aged 3 to 16 years with neurologic conditions associated with problem drooling, which may include symptoms related to cerebral palsy or other neurological conditions. However, it does not specifically mention spasms as a condition treated by the medicine.",
+        "fuzzy_score": 0.3392
+      },
+      {
+        "case_id": "E2E-024",
+        "statement": "The medicine identified from the package is not suitable for treating infant feeding problem.",
+        "reason": "The context mentions that Cuvposa (Glycopyrrolate) is indicated to reduce chronic severe drooling in patients aged 3 to 16 years with neurologic conditions associated with problem drooling, which may include symptoms related to cerebral palsy or other neurological conditions. However, it does not specifically mention infant feeding problem as a condition treated by the medicine.",
+        "fuzzy_score": 0.3826
+      },
+      {
+        "case_id": "E2E-024",
+        "statement": "There was no image provided in the <OCRMEDICINETEXT> section to identify a specific medicine.",
+        "reason": "The context mentions that Xeomin (Botulinum Toxin Type A) is an acetylcholine release inhibitor and neuromuscular blocking agent, but it does not mention any images. However, it does provide information about the indications of the medicine, which may be used to identify a specific medicine.",
+        "fuzzy_score": 0.3223
+      },
+      {
+        "case_id": "E2E-024",
+        "statement": "There was no text provided in the <OCRMEDICINETEXT> section to identify a specific medicine.",
+        "reason": "The context mentions that Xeomin (Botulinum Toxin Type A) is an acetylcholine release inhibitor and neuromuscular blocking agent, but it does not mention any text. However, it does provide information about the indications of the medicine, which may be used to identify a specific medicine.",
+        "fuzzy_score": 0.3238
+      },
+      {
+        "case_id": "E2E-024",
+        "statement": "Botulinum Toxin Type A is used for treating excessive sweating.",
+        "reason": "The context mentions that Xeomin (Botulinum Toxin Type A) is an acetylcholine release inhibitor and neuromuscular blocking agent, but it does not mention any indications related to excessive sweating. Therefore, it cannot be deduced that Botulinum Toxin Type A is used for treating excessive sweating.",
+        "fuzzy_score": 0.3111
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "231112093ecab3a2d3d1cd44f4a24121af4b0b8bff2bd36539790e1540029f39": {
+    "faithfulness": 0.1667,
+    "unsupported": [
+      {
+        "case_id": "E2E-024",
+        "statement": "Cerebral palsy includes cerebral palsy, blindness, cramps and spasms, infant feeding problem.",
+        "reason": "The context already lists these symptoms under cerebral palsy. Therefore, it cannot be inferred that this statement is true based on the given information.",
+        "fuzzy_score": 0.3826
+      },
+      {
+        "case_id": "E2E-024",
+        "statement": "Synkinesis includes Cerebral Palsy.",
+        "reason": "According to the provided sources, Synkinesis is a condition listed separately from cerebral palsy. Therefore, it cannot be inferred that Synkinesis includes cerebral palsy based on the given information.",
+        "fuzzy_score": 0.5769
+      },
+      {
+        "case_id": "E2E-024",
+        "statement": "Neonatal jaundice includes infant feeding problem.",
+        "reason": "The context lists neonatal jaundice as a condition with symptoms including changes in stool appearance, jaundice, and lack of growth. Infant feeding problem is not listed under neonatal jaundice. Therefore, it cannot be inferred that this statement is true based on the given information.",
+        "fuzzy_score": 0.6111
+      },
+      {
+        "case_id": "E2E-024",
+        "statement": "No condition in the available sources lists these symptoms.",
+        "reason": "The context explicitly mentions that the described symptoms are associated with cerebral palsy, which is a condition listed in the provided sources. Therefore, it can be inferred that this statement is false based on the given information.",
+        "fuzzy_score": 0.4161
+      },
+      {
+        "case_id": "E2E-024",
+        "statement": "The medicine could not be identified from the available sources.",
+        "reason": "CUVPOSA is explicitly mentioned as a drug used to treat chronic severe drooling in patients with neurologic conditions associated with problem drooling, including cerebral palsy. Therefore, it can be inferred that this statement is false based on the given information.",
+        "fuzzy_score": 0.3077
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "214c0533664797eebc9f8c757c3885fa35b5367fb9b0e3c2c7d93bc6cdd1229e": {
+    "faithfulness": 0.8333,
+    "unsupported": [
+      {
+        "case_id": "E2E-062",
+        "statement": "The medicine identified from the package, which appears to be Joette Calabrese Survivalist Kit, is not suitable for treating your symptoms.",
+        "reason": "The context does not provide information about the specific symptoms or conditions that the Joette Calabrese Survivalist Kit is intended to treat. Therefore, it cannot be determined whether the medicine is suitable for treating the user's symptoms.",
+        "fuzzy_score": 0.271
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "5f829e54547e115f7e770d0e4ff6324108f6d502d11f6fc785124924e919d6a4": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-062",
+        "statement": "The label evidence for Joette Calabrese Survivalist Kit lists uses that match your symptoms.",
+        "reason": "The context mentions several indications for various drugs, but there is no information about the user's symptoms matching any of them. Therefore, it cannot be deduced that the label evidence for Joette Calabrese Survivalist Kit lists uses that match the user's symptoms.",
+        "fuzzy_score": 0.3176
+      },
+      {
+        "case_id": "E2E-062",
+        "statement": "Your symptoms include Confusion, which matches the indication listed for Ambrosia Artemisiaefolia 30C in the Joette Calabrese Survivalist Kit.",
+        "reason": "The context mentions several indications for various drugs, but there is no information about the user's symptoms matching any of them. However, it does mention that the user has Confusion as a listed symptom. Therefore, it cannot be deduced that the user's symptoms include Confusion, which matches the indication listed for Ambrosia Artemisiaefolia 30C in the Joette Calabrese Survivalist Kit.",
+        "fuzzy_score": 0.3214
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "bc6882fcc8a5c64976feb81b4186e2881518aa50f7571ddd502f1c53eb4dfc6a": {
+    "faithfulness": 0.5714,
+    "unsupported": [
+      {
+        "case_id": "E2E-076",
+        "statement": "Chantecaille Just Skin Tinted Moisturizer Sunscreen Broad Spectrum SPF 15 Shade Aura is not suitable for treating Toxoplasmosis symptoms.",
+        "reason": "The context does not provide information about the suitability of Chantecaille Just Skin Tinted Moisturizer Sunscreen Broad Spectrum SPF 15 Shade Aura for treating Toxoplasmosis symptoms. However, it does mention that Pyrimethamine is used to treat Toxoplasmosis.",
+        "fuzzy_score": 0.733
+      },
+      {
+        "case_id": "E2E-076",
+        "statement": "A sunscreen and moisturizer cannot treat infections or diseases like Toxoplasmosis.",
+        "reason": "The context does not provide information about sunscreens and moisturizers being used to treat infections or diseases. However, it does mention that Pyrimethamine is used to treat Toxoplasmosis.",
+        "fuzzy_score": 0.4192
+      },
+      {
+        "case_id": "E2E-076",
+        "statement": "ToxoPlasma Gondii DNA is a homeopathic remedy used to temporarily relieve symptoms of body aches, headache, fever, and fatigue.",
+        "reason": "The context does not provide information about ToxoPlasma Gondii DNA being used as a homeopathic remedy. However, it does mention that TOXOPLASMA GONDII is an active ingredient in the drug TOXODETOX, which is used to temporarily relieve symptoms of fever, sore throat, and acute irritation of the bladder.",
+        "fuzzy_score": 0.2936
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "b5367461ff5b334f469163429f59c9661bca51dbe50da617c983cb9ee2e43623": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "05a202aba105bd0474fde2cb9c4cc3158663121ab9d470038a158533213e6779": {
+    "faithfulness": 0.5714,
+    "unsupported": [
+      {
+        "case_id": "E2E-091",
+        "statement": "The medicine identified from the package is NonexistentDrugZ 500mg Tablets.",
+        "reason": "There is no information given in the context about a medicine called NonexistentDrugZ 500mg Tablets.",
+        "fuzzy_score": 0.4359
+      },
+      {
+        "case_id": "E2E-091",
+        "statement": "NonexistentDrugZ 500mg Tablets are not suitable for treating symptoms of Benzodiazepine Use Disorder.",
+        "reason": "There is no information given in the context about the suitability of NonexistentDrugZ 500mg Tablets for treating Benzodiazepine Use Disorder. However, it can be inferred that Alprazolam Extended Release is indicated for panic disorder with or without agoraphobia, which may include symptoms related to Benzodiazepine Use Disorder.",
+        "fuzzy_score": 0.4074
+      },
+      {
+        "case_id": "E2E-091",
+        "statement": "NonexistentDrugZ 500mg Tablets are not listed in the context for treating any of the mentioned conditions.",
+        "reason": "There is no information given in the context about NonexistentDrugZ 500mg Tablets being used to treat any condition. However, it can be inferred that Alprazolam Extended Release and Ursodiol are indicated for specific conditions.",
+        "fuzzy_score": 0.4192
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "495c3610eddb307554c0ab34d24e466687d05b941779173637bfd2595e078e0f": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-091",
+        "statement": "The available sources do not have enough information to compare NonexistentDrugZ 500mg tablets with the user's symptoms.",
+        "reason": "There is no mention of NonexistentDrugZ 500mg tablets in the context, so it cannot be inferred that the available sources have enough information to compare them with the user's symptoms.",
+        "fuzzy_score": 0.3881
+      },
+      {
+        "case_id": "E2E-091",
+        "statement": "The user's symptoms are unknown.",
+        "reason": "There is no mention of the user's symptoms in the context, so it cannot be inferred whether they are known or not.",
+        "fuzzy_score": 0.5
+      },
+      {
+        "case_id": "E2E-091",
+        "statement": "The user is asking for the dosage and administration schedule for a specific medication.",
+        "reason": "Although there are several medications mentioned in the context, none of them match the description of NonexistentDrugZ 500mg tablets. Therefore, it cannot be inferred that the user is asking for the dosage and administration schedule for this specific medication.",
+        "fuzzy_score": 0.3916
+      },
+      {
+        "case_id": "E2E-091",
+        "statement": "It is not possible to compare the indications of NonexistentDrugZ 500mg tablets with the user's symptoms.",
+        "reason": "Since there is no information about NonexistentDrugZ 500mg tablets in the context, it cannot be inferred whether their indications can be compared with the user's symptoms or not.",
+        "fuzzy_score": 0.3559
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "6ea328c8d13a464edb7433ee4eebe0be5029bd8f3bedc6f715de32f5af49c83a": {
+    "faithfulness": 0.4286,
+    "unsupported": [
+      {
+        "case_id": "E2E-036",
+        "statement": "Daystar Shade SPF Moisturizing Sunscreen is not suitable for treating your symptoms of poisoning due to antimicrobial drugs.",
+        "reason": "The context does not provide any information about the suitability of Daystar Shade SPF Moisturizing Sunscreen for treating poisoning due to antimicrobial drugs. The indications mentioned in the context are related to sun protection, not treatment of diseases.",
+        "fuzzy_score": 0.4265
+      },
+      {
+        "case_id": "E2E-036",
+        "statement": "HOMOSALATE helps protect against UVB rays.",
+        "reason": "The context does not provide any information about HOMOSALATE helping to protect against UVB rays. The indications mentioned in the context are related to sun protection, but they do not specify how each active ingredient works.",
+        "fuzzy_score": 0.4043
+      },
+      {
+        "case_id": "E2E-036",
+        "statement": "ZINC OXIDE creates a barrier on the skin's surface to prevent UV radiation from penetrating.",
+        "reason": "The context does not provide any information about ZINC OXIDE creating a barrier on the skin's surface to prevent UV radiation from penetrating. The indications mentioned in the context are related to sun protection, but they do not specify how each active ingredient works.",
+        "fuzzy_score": 0.4444
+      },
+      {
+        "case_id": "E2E-036",
+        "statement": "OCTISALATE absorbs and scatters UV radiation.",
+        "reason": "The context does not provide any information about OCTISALATE absorbing and scattering UV radiation. The indications mentioned in the context are related to sun protection, but they do not specify how each active ingredient works.",
+        "fuzzy_score": 0.3636
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "9c67e6128dbd0ae76c8773c23b117fc239e258689ae7fc2983ac93fa211bd490": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-036",
+        "statement": "The medicine treats a condition related to sun protection and skin health.",
+        "reason": "The context mentions several drugs, but only [E6], [E7], and [E8] are related to sun protection. However, the indications for these drugs do not explicitly mention treating conditions related to sun protection and skin health.",
+        "fuzzy_score": 0.3905
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "e93e192ca1bd6909ba836388671fa70bd6d78ee064c052fe3acf64b978dbecde": {
+    "faithfulness": 0.5714,
+    "unsupported": [
+      {
+        "case_id": "E2E-055",
+        "statement": "OHM Fever Relief 250mg is not suitable for treating drug poisoning or related conditions.",
+        "reason": "The context does not provide information about the suitability of OHM Fever Relief for specific medical conditions, including drug poisoning. Therefore, it cannot be deduced that it is not suitable for such conditions.",
+        "fuzzy_score": 0.3767
+      },
+      {
+        "case_id": "E2E-055",
+        "statement": "ClindaCare has antibacterial properties.",
+        "reason": "The context does not provide information about the specific properties or effects of ClindaCare. Therefore, it cannot be deduced that it has antibacterial properties.",
+        "fuzzy_score": 0.4839
+      },
+      {
+        "case_id": "E2E-055",
+        "statement": "ClindaCare has anti-inflammatory properties.",
+        "reason": "Similar to the previous statement, there is no information in the context about the specific effects or properties of ClindaCare. Therefore, it cannot be deduced that it has anti-inflammatory properties.",
+        "fuzzy_score": 0.4242
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "48ada4d246e12e221e4281e901b1dce11881722f5345b5fed8ae71f574729726": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-055",
+        "statement": "The label evidence for OHM Fever Relief lists uses that match your symptoms.",
+        "reason": "There is no information given in the context about matching symptoms or using OHM Fever Relief.",
+        "fuzzy_score": 0.3448
+      },
+      {
+        "case_id": "E2E-055",
+        "statement": "OHM Fever Relief helps the body fight viral and bacterial infections.",
+        "reason": "The context mentions that OHM Fever Relief is based on traditional homeopathic practice, not accepted medical evidence. It does not explicitly state that it helps fight viral or bacterial infections.",
+        "fuzzy_score": 0.5894
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "759cf9e9fb6c42cc0f1ca8df27757810e1311d70dae6b205e3b97b0d91d5a9a1": {
+    "faithfulness": 0.7778,
+    "unsupported": [
+      {
+        "case_id": "E2E-025",
+        "statement": "The symptoms of adhesion, breech presentation, decreased body weight, and feeling suicidal are not suitable for treating with No medicine was identified.",
+        "reason": "The context mentions several diseases and their symptoms. However, there is no information about the suitability of these symptoms for treatment with a specific medicine. The statement seems to be unrelated to the provided context.",
+        "fuzzy_score": 0.2534
+      },
+      {
+        "case_id": "E2E-025",
+        "statement": "There is no medicine information available in the OCR text.",
+        "reason": "The context contains several sections labeled as [E1], [E2], etc., which appear to contain information about diseases and their symptoms. However, there are also sections labeled as [DRUG] that provide details about various medicines. Therefore, it cannot be concluded that no medicine information is available in the OCR text.",
+        "fuzzy_score": 0.3529
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "bf6e489530655551608bf6eea64f3caaa38cf60deee110369e42e62e9f182c7f": {
+    "faithfulness": 0.7,
+    "unsupported": [
+      {
+        "case_id": "E2E-025",
+        "statement": "Adhesions are associated with breech presentation.",
+        "reason": "There is no information given in the context about adhesions being associated with breech presentation.",
+        "fuzzy_score": 0.5507
+      },
+      {
+        "case_id": "E2E-025",
+        "statement": "Adhesions are associated with decreased body weight.",
+        "reason": "Decreased body weight is listed as a symptom of the diseases mentioned in [E2] and [E3], but there is no information given about adhesions being associated with it.",
+        "fuzzy_score": 0.5753
+      },
+      {
+        "case_id": "E2E-025",
+        "statement": "Adhesions are associated with feeling suicidal.",
+        "reason": "Feeling suicidal is listed as a symptom of the diseases mentioned in [E2] and [E3], but there is no information given about adhesions being associated with it.",
+        "fuzzy_score": 0.5079
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "4573d944b7caf92e3e3f6f784252ddf94f450132bc63dfe6cc2dd0696d5b2837": {
+    "faithfulness": 0.4444,
+    "unsupported": [
+      {
+        "case_id": "E2E-059",
+        "statement": "LEVOTHYROXINE is a synthetic form of thyroxine (T4).",
+        "reason": "The context does not provide information about the chemical composition or structure of LEVOTHYROXINE, so it cannot be directly inferred that LEVOTHYROXINE is a synthetic form of T4.",
+        "fuzzy_score": 0.4483
+      },
+      {
+        "case_id": "E2E-059",
+        "statement": "LEVOTHYROXINE is used to treat hypothyroidism by replacing or supplementing the body's natural production.",
+        "reason": "The context mentions that NP Thyroid 60, which contains LEVOTHYROXINE, is indicated for replacement or supplemental therapy in patients with hypothyroidism. However, it does not explicitly state that LEVOTHYROXINE itself is used to treat hypothyroidism.",
+        "fuzzy_score": 0.4
+      },
+      {
+        "case_id": "E2E-059",
+        "statement": "LIOTHYRONINE is a synthetic form of triiodothyronine (T3).",
+        "reason": "The context does not provide information about the chemical composition or structure of LIOTHYRONINE, so it cannot be directly inferred that LIOTHYRONINE is a synthetic form of T3.",
+        "fuzzy_score": 0.459
+      },
+      {
+        "case_id": "E2E-059",
+        "statement": "LIOTHYRONINE is used to treat hypothyroidism by replacing or supplementing the body's natural production.",
+        "reason": "The context mentions that NP Thyroid 60, which contains LIOTHYRONINE, is indicated for replacement or supplemental therapy in patients with hypothyroidism. However, it does not explicitly state that LIOTHYRONINE itself is used to treat hypothyroidism.",
+        "fuzzy_score": 0.426
+      },
+      {
+        "case_id": "E2E-059",
+        "statement": "The medicine identified from the package is not suitable for treating your symptoms of subacute thyroiditis, blood in stool, pain during pregnancy, palpitations, and problems during pregnancy.",
+        "reason": "The context mentions that NP Thyroid 60 is indicated for replacement or supplemental therapy in patients with hypothyroidism, but it does not explicitly state that it is not suitable for treating the mentioned symptoms. Therefore, it cannot be directly inferred that this statement is true.",
+        "fuzzy_score": 0.3064
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "debd72d7170684b34633ac4b377995d46e429ce621bbb77739c0d24c73b3d700": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "0501ebd19927258a714e0accfe9ac5852f952c4d3dc5a4b53e089fd0fe18fde8": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "a53409f7971e79f7f23857e71a436dcfc258fd52642b54e089ad5acde3611008": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-080",
+        "statement": "The label evidence for Neomycin and Polymyxin B Sulfates and Bacitracin Zinc lists uses that match your symptoms.",
+        "reason": "The context mentions the indications of Neomycin and Polymyxin B Sulfates and Bacitracin Zinc, which include superficial infections of the external eye and its adnexa. However, it does not explicitly state that the label evidence matches the user's symptoms.",
+        "fuzzy_score": 0.5153
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "eb1ce2373acbbf9471fe9f9167e1d970eab9c3f3219737e53f06a75144290ed4": {
+    "faithfulness": 0.5556,
+    "unsupported": [
+      {
+        "case_id": "E2E-097",
+        "statement": "The medicine identified from the package is Novaproxin.",
+        "reason": "There is no information given in the context about a medicine called \"Novaproxin\". However, there are medicines with similar names such as Meloxicam and Indomethacin which are NSAIDs used to treat osteoarthritis pain.",
+        "fuzzy_score": 0.3678
+      },
+      {
+        "case_id": "E2E-097",
+        "statement": "Novaproxin is not suitable for treating your symptoms of severe chronic osteoarthritis pain.",
+        "reason": "There is no information given in the context about Novaproxin being unsuitable for treating osteoarthritis pain. However, Indomethacin and Meloxicam are mentioned as NSAIDs used to treat moderate to severe osteoarthritis pain.",
+        "fuzzy_score": 0.4314
+      },
+      {
+        "case_id": "E2E-097",
+        "statement": "Novaproxin is a non-steroidal anti-inflammatory drug (NSAID).",
+        "reason": "There is no information given in the context about Novaproxin being an NSAID. However, Meloxicam and Indomethacin are mentioned as NSAIDs used to treat osteoarthritis pain.",
+        "fuzzy_score": 0.5665
+      },
+      {
+        "case_id": "E2E-097",
+        "statement": "Novaproxin is indicated for management of osteoarthritis pain.",
+        "reason": "There is no information given in the context about Novaproxin being indicated for managing osteoarthritis pain. However, Meloxicam and Indomethacin are mentioned as NSAIDs used to treat moderate to severe osteoarthritis pain.",
+        "fuzzy_score": 0.6207
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "74471edf538bb7178845bece1b712c7aca66a9bc9ac61f4dc2a36f4320645b4c": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-097",
+        "statement": "The label evidence for Novaproxin lists uses that match your symptoms.",
+        "reason": "There is no information given in the context about Novaproxin, and it does not match any of the listed drugs or conditions.",
+        "fuzzy_score": 0.3432
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "9dbc9b9f3ee12f2ce586ffba722f4198a296dc03a499177ec89e020a22140c28": {
+    "faithfulness": 0.4286,
+    "unsupported": [
+      {
+        "case_id": "E2E-027",
+        "statement": "Acamprosate Calcium is not suitable for treating Chest Pain.",
+        "reason": "The context does not provide information about the suitability of Acamprosate Calcium for treating Chest Pain. However, it does mention that Acamprosate Calcium is indicated for the maintenance of abstinence from alcohol in patients with alcohol dependence who are abstinent at treatment initiation.",
+        "fuzzy_score": 0.3981
+      },
+      {
+        "case_id": "E2E-027",
+        "statement": "Acamprosate Calcium is primarily used as an antidote and/or antagonist in case of intoxication with and/or overdose of alcohol tropane alkaloids (hyoscyamine, atropine, scopolamine).",
+        "reason": "The context explicitly mentions that Acamprosate Calcium is indicated for the maintenance of abstinence from alcohol in patients with alcohol dependence who are abstinent at treatment initiation. It does not mention anything about it being used as an antidote and/or antagonist in case of intoxication with and/or overdose of alcohol tropane alkaloids (hyoscyamine, atropine, scopolamine).",
+        "fuzzy_score": 0.8791
+      },
+      {
+        "case_id": "E2E-027",
+        "statement": "Intoxication with and/or overdose of alcohol tropane alkaloids (hyoscyamine, atropine, scopolamine) does not match the treatment of chest pain.",
+        "reason": "The context explicitly mentions that Acamprosate Calcium is indicated for the maintenance of abstinence from alcohol in patients with alcohol dependence who are abstinent at treatment initiation. It does not mention anything about it being used to treat Chest Pain or intoxication with and/or overdose of alcohol tropane alkaloids (hyoscyamine, atropine, scopolamine).",
+        "fuzzy_score": 0.68
+      },
+      {
+        "case_id": "E2E-027",
+        "statement": "The primary use of Sodium Chlorite is not directly related to treating chest pain.",
+        "reason": "The context does not provide information about the primary use of Sodium Chlorite being directly related to treating Chest Pain. However, it does mention that Sodium Chlorite is used for various purposes including disinfection and as an ingredient in some medications.",
+        "fuzzy_score": 0.4138
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "e4b9f072de14dfc7fce26011ba2896ffbe4a1b0dabb53fe5688f49c2b4a05e0a": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-027",
+        "statement": "The label evidence for Acamprosate Calcium lists uses that match your symptoms.",
+        "reason": "The context mentions the indications of Acamprosate Calcium, which includes maintenance of abstinence from alcohol in patients with alcohol dependence. However, there is no explicit mention of matching symptoms.",
+        "fuzzy_score": 0.3911
+      },
+      {
+        "case_id": "E2E-027",
+        "statement": "Your symptoms are not explicitly stated, but based on the task, it seems you're looking for information about a specific medicine.",
+        "reason": "The context does not provide any information about the user's symptoms. The statement is an inference based on the task, which cannot be directly inferred from the context.",
+        "fuzzy_score": 0.2593
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "4bc85f0d45e43577ae0c89ff90183b817d06bed0c746f8bc8a25ecf1feda7bd2": {
+    "faithfulness": 0.2857,
+    "unsupported": [
+      {
+        "case_id": "E2E-041",
+        "statement": "The medicine identified from the package appears to be Glibenclarnide (Glyburide).",
+        "reason": "There is no information given in the context about the medicine being Glibenclarnide (Glyburide).",
+        "fuzzy_score": 0.3576
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "Glibenclarnide (Glyburide) is not suitable for treating your symptoms of drug poisoning due to medication.",
+        "reason": "The context mentions drug poisoning due to medication as a listed symptom, but there is no information about Glibenclarnide (Glyburide) being unsuitable for this condition.",
+        "fuzzy_score": 0.4197
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "Glibenclarnide (Glyburide) is a medication used to treat high blood sugar levels in people with type 2 diabetes.",
+        "reason": "There is no information given in the context about Glibenclarnide (Glyburide) being used to treat high blood sugar levels in people with type 2 diabetes.",
+        "fuzzy_score": 0.3151
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "Glibenclarnide (Glyburide) has potential side effects that could exacerbate the condition.",
+        "reason": "The context does not mention any information about Glibenclarnide (Glyburide) having potential side effects or its interactions with other conditions.",
+        "fuzzy_score": 0.3251
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "Clindamycin is an antibacterial agent effective against a wide range of bacteria.",
+        "reason": "The context does not mention any information about Clindamycin being an antibacterial agent or its effectiveness against bacteria.",
+        "fuzzy_score": 0.383
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "0f640c36e041e2d117fac65f81ccf99207927c302e23735f700aa137d92eb1fe": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-041",
+        "statement": "The label evidence for Glibenclarnide lists uses that match your symptoms.",
+        "reason": "There is no information given in the context about Glibenclarnide or its indications.",
+        "fuzzy_score": 0.3396
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "Glibenclarnide is listed as an indication for Albuminuria in EVIDENCE block.",
+        "reason": "The context mentions a disease chunk with id=disease_chunk_2438, which has Albuminuria as its condition. However, there is no information about Glibenclarnide being listed as an indication for this condition.",
+        "fuzzy_score": 0.4167
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "89879aeb4170adca2395ac6712ba28a589b657da302142e9bf047f6b8820bd2f": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-005",
+        "statement": "The medicine identified from the package is not suitable for treating Farsightedness.",
+        "reason": "The context mentions that Eye Sarcode (SUS SCROFA EYE) temporarily relieves symptoms related to blurred vision, headache, and facial pain. This implies it may be used to treat Farsightedness, but there is no explicit statement saying it's not suitable for treating Farsightedness.",
+        "fuzzy_score": 0.3649
+      },
+      {
+        "case_id": "E2E-005",
+        "statement": "Farsightedness was caused by a lack of information about the medicine.",
+        "reason": "The context does not provide any information that links Farsightedness to a lack of information about the medicine. Therefore, it cannot be deduced that Farsightedness was caused by a lack of information about the medicine.",
+        "fuzzy_score": 0.3546
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "9a61ef1f4d9dd588870f22829de6a1dbfb9e43b79aa7b2cf6c3d837fd83d2c90": {
+    "faithfulness": 0.625,
+    "unsupported": [
+      {
+        "case_id": "E2E-005",
+        "statement": "Astigmatism includes the symptoms Blurred or distorted vision, blurred vision, and eye strain.",
+        "reason": "The context explicitly lists the symptoms for Astigmatism, which partially matches the statement. However, it does not include 'Blurred or distorted vision' as a separate symptom but rather combines them. Therefore, it cannot be directly inferred that this is true.",
+        "fuzzy_score": 0.4975
+      },
+      {
+        "case_id": "E2E-005",
+        "statement": "Nearsightedness includes the symptoms Blurred vision, distorted vision, and eye strain.",
+        "reason": "The context explicitly lists the symptoms for Nearsightedness, which partially matches the statement. However, it does not include 'Blurred or distorted vision' as a separate symptom but rather combines them. Therefore, it cannot be directly inferred that this is true.",
+        "fuzzy_score": 0.4561
+      },
+      {
+        "case_id": "E2E-005",
+        "statement": "No medicine in the available sources is clearly labeled for these symptoms.",
+        "reason": "The context lists several medicines with indications including blurred vision and eye strain among others. However, it does not explicitly state that none of them are labeled for these symptoms. Therefore, it cannot be directly inferred that this is true.",
+        "fuzzy_score": 0.2989
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "d3bd8186260e0f0e71312c0f2994cf06dc3c49b18ed5bf81a2a1a87855f9dada": {
+    "faithfulness": 0.5714,
+    "unsupported": [
+      {
+        "case_id": "E2E-056",
+        "statement": "The medicine identified from the package, which appears to be ESTRADIOL VAGINAL INSERTS, is not suitable for treating your symptoms.",
+        "reason": "The context mentions that Estradiol vaginal inserts are an estrogen indicated for the treatment of atrophic vaginitis due to menopause. There is no information suggesting it's not suitable for treating this condition.",
+        "fuzzy_score": 0.3187
+      },
+      {
+        "case_id": "E2E-056",
+        "statement": "KREOSOTUM 6C is a homeopathic ingredient used for temporary relief of symptoms related to bacterial infections in the vagina.",
+        "reason": "The context mentions that KREOSOTUM 6C is an active ingredient in BiopHresh, which is indicated for the temporary relief of symptoms of bacterial vaginosis. However, it does not explicitly state that it's used for bacterial infections in the vagina.",
+        "fuzzy_score": 0.3526
+      },
+      {
+        "case_id": "E2E-056",
+        "statement": "THUJA OCCIDENTALIS 6C is a homeopathic ingredient used for temporary relief of symptoms related to bacterial infections in the vagina.",
+        "reason": "The context mentions that THUJA OCCIDENTALIS 6C is an active ingredient in BiopHresh, which is indicated for the temporary relief of symptoms of bacterial vaginosis. However, it does not explicitly state that it's used for bacterial infections in the vagina.",
+        "fuzzy_score": 0.3474
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "2e959206a75f8a248fad9bab0cbaaa73b731a34757162617d36344aa373d1713": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-056",
+        "statement": "The label evidence for ESTRADIOL VAGINAL INSERTS lists uses that match your symptoms.",
+        "reason": "The context mentions the indications listed for ESTRADIOL VAGINAL INSERTS, which include atrophic vaginitis due to menopause. However, there is no explicit mention of the symptoms matching the user's symptoms in the provided text.",
+        "fuzzy_score": 0.3852
+      },
+      {
+        "case_id": "E2E-056",
+        "statement": "Atrophic vaginitis due to menopause includes symptoms such as vaginitis and abnormal vaginal discharge.",
+        "reason": "The context explicitly mentions atrophic vaginitis due to menopause, which is treated by ESTRADIOL VAGINAL INSERTS. It also lists the symptoms of Trichomoniasis, Gonorrhea, and Chlamydia infections, but does not explicitly mention that atrophic vaginitis due to menopause includes these symptoms.",
+        "fuzzy_score": 0.4575
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "9e2425f04eeb714872adee1f53393cc9ce74c3febf646bfb0c4b9330cae93fea": {
+    "faithfulness": 0.4286,
+    "unsupported": [
+      {
+        "case_id": "E2E-081",
+        "statement": "Thymoglobulin is not suitable for treating symptoms of Headache, Spinal Osteophytosis, Spinal Stenosis, Spirurida Infections.",
+        "reason": "The context does not provide information about Thymoglobulin's suitability for these specific symptoms. Therefore, it cannot be directly inferred that this statement is true.",
+        "fuzzy_score": 0.3759
+      },
+      {
+        "case_id": "E2E-081",
+        "statement": "Glutathione is an antioxidant that helps reduce oxidative stress and inflammation.",
+        "reason": "The context mentions Glutathione as an active ingredient in the medication Mercury Plus Detox, but it does not provide information about its properties or functions. Therefore, it cannot be directly inferred that this statement is true.",
+        "fuzzy_score": 0.356
+      },
+      {
+        "case_id": "E2E-081",
+        "statement": "Thujaplicin has anti-inflammatory properties.",
+        "reason": "The context mentions Thujaplicin as an active ingredient in the medication Mercury Plus Detox, but it does not provide information about its properties or functions. Therefore, it cannot be directly inferred that this statement is true.",
+        "fuzzy_score": 0.381
+      },
+      {
+        "case_id": "E2E-081",
+        "statement": "Dimercaptopropane sulfonate is used to treat heavy metal poisoning.",
+        "reason": "The context mentions Dimercaptopropane sulfonate as an active ingredient in the medication Mercury Plus Detox, but it does not provide information about its uses or functions. Therefore, it cannot be directly inferred that this statement is true.",
+        "fuzzy_score": 0.3333
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "f442ac655a6551d6332a2705c18f6cb0f4ef08c0a673e51716822ed6a9865f96": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-081",
+        "statement": "The label evidence for Thymoglobulin lists uses that match your symptoms.",
+        "reason": "The context mentions several disease conditions, but there is no explicit mention of Thymoglobulin being used to treat these conditions. Therefore, it cannot be deduced that the label evidence for Thymoglobulin lists uses that match the user's symptoms.",
+        "fuzzy_score": 0.44
+      },
+      {
+        "case_id": "E2E-081",
+        "statement": "Thymoglobulin may also be used in conjunction with concomitant immunosuppression for other spinal cord diseases.",
+        "reason": "The context mentions Thymoglobulin being indicated for acute rejection in patients receiving a kidney transplant, but it does not explicitly mention its use for other spinal cord diseases. Therefore, it cannot be deduced that this statement is true based on the context.",
+        "fuzzy_score": 0.7831
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "9128a4b4ee79c880f98cad977c74470ac9d5ce35c8164d06b6ca82846e63d3b8": {
+    "faithfulness": 0.4,
+    "unsupported": [
+      {
+        "case_id": "E2E-094",
+        "statement": "The official FDA pediatric approval date for Xanthroflurane inhalation is not provided.",
+        "reason": "There is no information given in the context about the FDA pediatric approval date of Xanthroflurane inhalation.",
+        "fuzzy_score": 0.3708
+      },
+      {
+        "case_id": "E2E-094",
+        "statement": "Xanthroflurane Inhalation Solution is used for diagnostic studies and imaging purposes.",
+        "reason": "The context mentions that Xenon Xe 133 Gas has been shown to be valuable for diagnostic inhalation studies for the evaluation of pulmonary function, for imaging the lungs. However, it does not explicitly mention Xanthroflurane Inhalation Solution.",
+        "fuzzy_score": 0.3146
+      },
+      {
+        "case_id": "E2E-094",
+        "statement": "Xanthroflurane Inhalation Solution is not a treatment for neurological conditions like Parkinson's disease.",
+        "reason": "The context mentions several diseases and their symptoms, but it does not mention Xanthroflurane Inhalation Solution as a treatment for any of them. Therefore, it cannot be deduced that Xanthroflurane Inhalation Solution is not a treatment for neurological conditions like Parkinson's disease.",
+        "fuzzy_score": 0.3697
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "d1af915ba43362d8e2089e4f39582c1030774c16e9fdfee90b2fdb618a35b4fe": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-094",
+        "statement": "The label evidence for Xanthroflurane Inhalation Solution lists uses that match your symptoms.",
+        "reason": "There is no information given in the context about Xanthroflurane Inhalation Solution matching the user's symptoms. The statement cannot be directly inferred based on the context.",
+        "fuzzy_score": 0.3646
+      },
+      {
+        "case_id": "E2E-094",
+        "statement": "Xanthroflurane inhalation was identified as matching the name provided by the user.",
+        "reason": "The context does not provide any information about Xanthroflurane Inhalation Solution being matched with a user-provided name. The statement cannot be directly inferred based on the context.",
+        "fuzzy_score": 0.3563
+      },
+      {
+        "case_id": "E2E-094",
+        "statement": "The indications listed for this medicine are not present in the EVIDENCE blocks.",
+        "reason": "There is no information given in the context about the indications of Xanthroflurane Inhalation Solution being absent from the EVIDENCE blocks. The statement cannot be directly inferred based on the context.",
+        "fuzzy_score": 0.4561
+      },
+      {
+        "case_id": "E2E-094",
+        "statement": "There is a label text indicating \"Rx Only\" for Xanthroflurane Inhalation Solution.",
+        "reason": "The context does not provide any information about Xanthroflurane Inhalation Solution having a label text indicating \"Rx Only\". The statement cannot be directly inferred based on the context.",
+        "fuzzy_score": 0.3584
+      },
+      {
+        "case_id": "E2E-094",
+        "statement": "It can be inferred that there might be some indications or uses mentioned elsewhere in the evidence.",
+        "reason": "The context does not provide any information to support this inference. The statement cannot be directly inferred based on the context.",
+        "fuzzy_score": 0.383
+      },
+      {
+        "case_id": "E2E-094",
+        "statement": "No explicit indication of pediatric approval date for Xanthroflurane inhalation was found.",
+        "reason": "There is no information given in the context about the pediatric approval date of Xanthroflurane Inhalation Solution. The statement cannot be directly inferred based on the context.",
+        "fuzzy_score": 0.4309
+      },
+      {
+        "case_id": "E2E-094",
+        "statement": "No medicine in the available sources is clearly labeled for these symptoms.",
+        "reason": "The context does not provide any information to support this inference. However, it can be inferred that Xanthroflurane Inhalation Solution has indications listed, which might match some of the user's symptoms. Therefore, the statement cannot be directly inferred based on the context.",
+        "fuzzy_score": 0.3353
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "c14f630efafcef8f57f70ff4119bee2ac1008ab5edd9ea1d792aaee0c1249231": {
+    "faithfulness": 0.625,
+    "unsupported": [
+      {
+        "case_id": "E2E-037",
+        "statement": "Coartem is not suitable for treating your symptoms of poisoning due to antimicrobial drugs.",
+        "reason": "The context does not provide information about Coartem's suitability for treating poisoning due to antimicrobial drugs. The indications provided are specific to malaria treatment, and there's no mention of its use in such cases.",
+        "fuzzy_score": 0.3777
+      },
+      {
+        "case_id": "E2E-037",
+        "statement": "Dextromethorphan can help relieve respiratory issues.",
+        "reason": "There is no information about Dextromethorphan in the provided context. The statement cannot be directly inferred from the given data.",
+        "fuzzy_score": 0.3086
+      },
+      {
+        "case_id": "E2E-037",
+        "statement": "Menthol is used to relieve pain and reduce inflammation in the body.",
+        "reason": "Similar to Dextromethorphan, there's no mention of Menthol in the context. Therefore, this statement cannot be directly inferred from the given data.",
+        "fuzzy_score": 0.3015
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "176d1860104a0a80b96fe33cfd224ff7b2fdb5247b94c9546a856f27bd1dfb88": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-037",
+        "statement": "You did not specify your symptoms.",
+        "reason": "The context does not provide any information about the patient's symptoms. Therefore, it cannot be deduced that the patient's symptoms match the indications for Coartem.",
+        "fuzzy_score": 0.4737
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "90f225a2b2e5c1fb90a41cca98fe4196498a55811244d10f7c20afe66b0b8b47": {
+    "faithfulness": 0.4,
+    "unsupported": [
+      {
+        "case_id": "E2E-021",
+        "statement": "The condition that the symptoms could indicate is not identified.",
+        "reason": "The context explicitly lists several conditions and their corresponding symptoms. Therefore, it can be inferred that the condition that the symptoms could indicate is already identified.",
+        "fuzzy_score": 0.3879
+      },
+      {
+        "case_id": "E2E-021",
+        "statement": "There is no identifiable medicine in the OCR text.",
+        "reason": "The context contains information about several medicines, including MEDULLA OSSIS SUIS and JAYSUING Pain Relief Knee Patches. Therefore, it can be inferred that there are identifiable medicines in the OCR text.",
+        "fuzzy_score": 0.3908
+      },
+      {
+        "case_id": "E2E-021",
+        "statement": "GLYCERIN; ARTEMISIA ARGYI LEAF; CROCUS SATIVUS FLOWER; PANAX NOTOGINSENG ROOT; PIPER NIGRUM (PEPPER) SEED OIL; ZINGIBER OFFICINALE (GINGER) ROOT OIL is used for pain relief.",
+        "reason": "The context explicitly lists the active ingredients of JAYSUING Pain Relief Knee Patches, which includes GLYCERIN and other ingredients. However, it does not explicitly state that these ingredients are used for pain relief. Therefore, it cannot be inferred that they are used for pain relief.",
+        "fuzzy_score": 0.3524
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "bf31a104af003251fc800e971e2dfa87344c4c80a56ea773c5b71929c32dc221": {
+    "faithfulness": 0.4,
+    "unsupported": [
+      {
+        "case_id": "E2E-021",
+        "statement": "Kearns-Sayre Syndrome lists Gait Disorders, Neurologic; Kearns-Sayre Syndrome; Knee; Knee Injuries.",
+        "reason": "The context explicitly mentions that Kearns-Sayre Syndrome is a condition with listed symptoms. However, the statement claims that it lists Gait Disorders, Neurologic and others, which is not accurate based on the information provided. Therefore, the statement cannot be directly inferred as true.",
+        "fuzzy_score": 0.4072
+      },
+      {
+        "case_id": "E2E-021",
+        "statement": "No condition in the available sources lists these symptoms.",
+        "reason": "The context mentions multiple conditions with listed symptoms, but it does not explicitly state that none of them list the given symptoms. Therefore, the statement cannot be directly inferred as true based on the information provided.",
+        "fuzzy_score": 0.4403
+      },
+      {
+        "case_id": "E2E-021",
+        "statement": "There are no medicines in the available sources that are clearly labeled for these symptoms.",
+        "reason": "The context mentions several medications with their indications, but it does not explicitly state that none of them are labeled for the given symptoms. Therefore, the statement cannot be directly inferred as true based on the information provided.",
+        "fuzzy_score": 0.3191
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "5c277aa533cd5dd7a2e6f7b19f6a90ea1751b12032d61a41a9e60dc9247f44a1": {
+    "faithfulness": 0.7143,
+    "unsupported": [
+      {
+        "case_id": "E2E-072",
+        "statement": "METHYLPREDNISOLONE is not suitable for treating symptoms of hypercalcemia, dizziness, loss of sensation, retention of urine, weakness.",
+        "reason": "The context does not provide information about the suitability of METHYLPREDNISOLONE for these specific symptoms. However, it does mention that METHENAMINE and SODIUM PHOSPHATE are used to treat urinary tract infections and conditions related to electrolyte imbalances, respectively.",
+        "fuzzy_score": 0.3778
+      },
+      {
+        "case_id": "E2E-072",
+        "statement": "METHYLPREDNISOLONE is not used for the treatment of urinary tract infections or conditions related to electrolyte imbalances.",
+        "reason": "The context does not provide information about METHYLPREDNISOLONE being used for these specific purposes. However, it does mention that Uro-MP and UrNeva Capsules are indicated for the relief of local symptoms accompanying lower urinary tract infections, which suggests that other medications may be used for this purpose.",
+        "fuzzy_score": 0.4734
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "d4306ea6e9dede36a934e50c1c970e41398286db3e6d28acac3a2503bc6e7d1d": {
+    "faithfulness": 0.875,
+    "unsupported": [
+      {
+        "case_id": "E2E-072",
+        "statement": "The label evidence for METHYLPREDNISOLONE lists uses that match your symptoms.",
+        "reason": "The context mentions several diseases and their symptoms, but there is no information about the indications of METHYLPREDNISOLONE matching the user's symptoms.",
+        "fuzzy_score": 0.3852
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "3916392218ef828c86568ce6939070a8403c427b0cb3ca7f60cb3e8a3746ec8c": {
+    "faithfulness": 0.7222,
+    "unsupported": [
+      {
+        "case_id": "E2E-078",
+        "statement": "ATZUMI (Dihydroergotamine Mesylate) is not suitable for treating Urinary Incontinence.",
+        "reason": "The context does not provide information about the suitability of ATZUMI for treating Urinary Incontinence. However, it does mention that VESIcare (SOLIFENACIN SUCCINATE) is indicated for this condition.",
+        "fuzzy_score": 0.4365
+      },
+      {
+        "case_id": "E2E-078",
+        "statement": "ATZUMI (Dihydroergotamine Mesylate) is not suitable for treating Stress.",
+        "reason": "The context does not provide information about the suitability of ATZUMI for treating Stress. However, it does mention that VESIcare (SOLIFENACIN SUCCINATE) is indicated for this condition.",
+        "fuzzy_score": 0.4656
+      },
+      {
+        "case_id": "E2E-078",
+        "statement": "ATZUMI (Dihydroergotamine Mesylate) is not suitable for treating Kidney Diseases.",
+        "reason": "The context does not provide information about the suitability of ATZUMI for treating Kidney Diseases. However, it does mention that FUROSEMIDE (Lasix) is a potent loop diuretic used to treat fluid retention associated with Kidney Diseases.",
+        "fuzzy_score": 0.4646
+      },
+      {
+        "case_id": "E2E-078",
+        "statement": "ATZUMI (Dihydroergotamine Mesylate) is not suitable for treating Kidney Neoplasms.",
+        "reason": "The context does not provide information about the suitability of ATZUMI for treating Kidney Neoplasms. However, it does mention that FUROSEMIDE (Lasix) is a potent loop diuretic used to treat fluid retention associated with Kidney Diseases, which may include neoplasms.",
+        "fuzzy_score": 0.4422
+      },
+      {
+        "case_id": "E2E-078",
+        "statement": "ATZUMI (Dihydroergotamine Mesylate) is not suitable for treating Labor Pain.",
+        "reason": "The context does not provide information about the suitability of ATZUMI for treating Labor Pain. However, it does mention that GLUTATHIONE provides temporary relief of burning pain in the region of the kidneys, which may be related to labor pain.",
+        "fuzzy_score": 0.4492
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "5b7a9f44f7d20f1daf71058683be9fa830612fd55f6d032956c04c483f3291b5": {
+    "faithfulness": 0.7143,
+    "unsupported": [
+      {
+        "case_id": "E2E-078",
+        "statement": "The label evidence for ATZUMI lists uses that match your symptoms.",
+        "reason": "The context mentions the indications of ATZUMI, which include acute treatment of migraine with or without aura in adults. However, there is no information about ATZUMI being used to treat Urinary Incontinence, Stress, Kidney Diseases, Kidney Neoplasms, and Labor Pain.",
+        "fuzzy_score": 0.3553
+      },
+      {
+        "case_id": "E2E-078",
+        "statement": "It is not clear if ATZUMI matches any of your symptoms.",
+        "reason": "The context does not provide enough information to determine whether ATZUMI matches any of the listed symptoms. Therefore, this statement cannot be directly inferred based on the context.",
+        "fuzzy_score": 0.3289
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "7e6b4ab3abd59e9341497e6dcfca5b7b8a91ad759d112761afd9a0a48a005d3c": {
+    "faithfulness": 0.5714,
+    "unsupported": [
+      {
+        "case_id": "E2E-095",
+        "statement": "The medicine identified from the package is not suitable for treating acute appendicitis.",
+        "reason": "The context mentions that the medicine is Clemastine Fumarate, which is indicated for relieving symptoms associated with allergic rhinitis. There is no information suggesting it is used to treat acute appendicitis.",
+        "fuzzy_score": 0.3607
+      },
+      {
+        "case_id": "E2E-095",
+        "statement": "The medicine identified from the package is not a medicine at all.",
+        "reason": "The context clearly identifies Clemastine Fumarate as a medication, so this statement cannot be inferred.",
+        "fuzzy_score": 0.3495
+      },
+      {
+        "case_id": "E2E-095",
+        "statement": "No image was provided for the medicine.",
+        "reason": "There is no information in the context about an image being required or provided for the medicine. This statement cannot be directly inferred from the given text.",
+        "fuzzy_score": 0.3774
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "780e973066b6bff3cdc1321e26204c8d297bc5d4fbd762549f6e9c8cc27e2ce2": {
+    "faithfulness": 0.6667,
+    "unsupported": [
+      {
+        "case_id": "E2E-095",
+        "statement": "There is no condition listed that matches these symptoms.",
+        "reason": "The context lists several conditions and their corresponding symptoms. However, without specifying the symptoms in question, it cannot be determined if there is a match or not.",
+        "fuzzy_score": 0.4238
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "4694f0ced00dc3aecbf6f077a5496ae16c8769c3fb0aebad917018bd64990d18": {
+    "faithfulness": 0.6,
+    "unsupported": [
+      {
+        "case_id": "E2E-001",
+        "statement": "The medicine identified from the package is not suitable for treating these symptoms.",
+        "reason": "The context does not provide information about the suitability of any specific medicine for treating these symptoms. Therefore, it cannot be deduced that the medicine identified is not suitable.",
+        "fuzzy_score": 0.3649
+      },
+      {
+        "case_id": "E2E-001",
+        "statement": "There was no medicine identified from the OCR scan.",
+        "reason": "The context does mention a drug (Atorvastatin Calcium) and its indications, but it also mentions another drug (Acetylcholine Chloride) with different indications. Therefore, it cannot be deduced that there is no medicine identified.",
+        "fuzzy_score": 0.4211
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "252ef9e549c967849703184123e143e19a6d1ff2165868a3362b56bb584e3f71": {
+    "faithfulness": 0.8333,
+    "unsupported": [
+      {
+        "case_id": "E2E-001",
+        "statement": "Coronary Atherosclerosis lists chest tightness, fatigue.",
+        "reason": "The context explicitly mentions the symptoms listed by Coronary Atherosclerosis, including chest pain or discomfort (angina) and fatigue. Chest tightness is not mentioned as a symptom of Coronary Atherosclerosis.",
+        "fuzzy_score": 0.4302
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "52db8f8e11c79b7572e1c76b3d4e5f630f430f483710c97f2121db6cba85437b": {
+    "faithfulness": 0.8,
+    "unsupported": [
+      {
+        "case_id": "E2E-065",
+        "statement": "Tylenol Cold Plus Flu Severe is not suitable for treating symptoms of Cough, Spinal Stenosis, Splenic Rupture, Splenomegaly, Spondylarthritis.",
+        "reason": "The context does not provide information about the suitability of Tylenol Cold Plus Flu Severe for these specific conditions. However, it does mention that the product is used to relieve cough and other cold/flu symptoms, which implies it may not be suitable for treating more severe conditions like Spinal Stenosis or Splenic Rupture.",
+        "fuzzy_score": 0.3254
+      },
+      {
+        "case_id": "E2E-065",
+        "statement": "Tylenol Cold Plus Flu Severe does not address conditions like Spinal Stenosis, Splenic Rupture, or Spondylarthritis.",
+        "reason": "The context does not provide information about the suitability of Tylenol Cold Plus Flu Severe for these specific conditions. However, it does mention that the product is used to relieve cough and other cold/flu symptoms, which implies it may not be suitable for treating more severe conditions like Spinal Stenosis or Splenic Rupture.",
+        "fuzzy_score": 0.3505
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "17bfbfb46c7e19a87e31471bdf7333ae16ad61946abc8744afcd0c1d5103ff11": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-065",
+        "statement": "The label evidence for Tylenol Cold Plus Flu Severe lists uses that match your symptoms.",
+        "reason": "The context mentions the indications listed for Tylenol Cold Plus Flu Severe, which include minor aches and pains, headache, sore throat, nasal congestion, cough, helps loosen phlegm (mucus) and thin bronchial secretions to make coughs more productive, temporarily reduces fever. However, there is no information suggesting that the label evidence lists uses that match the given symptoms.",
+        "fuzzy_score": 0.3614
+      },
+      {
+        "case_id": "E2E-065",
+        "statement": "Your symptoms include Cough, Spinal Stenosis, Splenic Rupture, Splenomegaly, and Spondylarthritis.",
+        "reason": "The context mentions several diseases and conditions, but there is no information suggesting that the given symptoms are included in them. Therefore, it cannot be deduced that the symptoms include Cough, Spinal Stenosis, Splenic Rupture, Splenomegaly, and Spondylarthritis.",
+        "fuzzy_score": 0.3182
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "c63fd88b7a44b8f395c0a1666b694b29daad69881186695ed00ee2f4a589d44a": {
+    "faithfulness": 0.5714,
+    "unsupported": [
+      {
+        "case_id": "E2E-099",
+        "statement": "Valerionex oral suspension is a medication.",
+        "reason": "There is no information given in the context about Valerionex oral suspension. Therefore, it cannot be deduced that it is a medication.",
+        "fuzzy_score": 0.381
+      },
+      {
+        "case_id": "E2E-099",
+        "statement": "The purpose of Valerionex oral suspension is to treat various conditions.",
+        "reason": "There is no information given in the context about Valerionex oral suspension. Therefore, it cannot be deduced that its purpose is to treat various conditions.",
+        "fuzzy_score": 0.449
+      },
+      {
+        "case_id": "E2E-099",
+        "statement": "Prednisolone Sodium Phosphate is an oral solution used to treat various conditions, including hypertension.",
+        "reason": "The context mentions Prednisolone Sodium Phosphate as a generic name of the drug Prednisolone Sodium Phosphate Oral Solution, which is indicated in several conditions. However, it does not specifically mention hypertension among those indications. Therefore, it cannot be deduced that Prednisolone Sodium Phosphate is used to treat hypertension.",
+        "fuzzy_score": 0.3534
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "8e299527316ddf4bfd9bd3e6d489304a08de776f0cb2606072f2b3c3e7c7397f": {
+    "faithfulness": 0.25,
+    "unsupported": [
+      {
+        "case_id": "E2E-099",
+        "statement": "The label evidence for Valerionex Oral Suspension lists uses that match your symptoms.",
+        "reason": "There is no information given in the context about Valerionex Oral Suspension or its indications.",
+        "fuzzy_score": 0.3445
+      },
+      {
+        "case_id": "E2E-099",
+        "statement": "The indications listed for Valerionex Oral Suspension are not provided in the EVIDENCE.",
+        "reason": "The context does mention several drug labels, but it does not explicitly state that the indications for Valerionex Oral Suspension are not provided. In fact, one of the labels mentions that a certain medication is indicated for use by females of reproductive potential to prevent pregnancy, which implies that some information about indications may be present.",
+        "fuzzy_score": 0.4293
+      },
+      {
+        "case_id": "E2E-099",
+        "statement": "Valerionex Oral Suspension may be used during periods of pregnancy or lactation because it is a pediatric and adult formulation.",
+        "reason": "The context does mention several drug labels, but there is no information about Valerionex Oral Suspension being safe for use during pregnancy or lactation. In fact, one of the labels mentions that a certain medication is indicated for use by females of reproductive potential to prevent pregnancy, which suggests that medications may not be recommended for use during pregnancy.",
+        "fuzzy_score": 0.3284
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "ba3e0457a6e55b3835381d28435d03d84398249e02b9b446cef187a51b15d9ae": {
+    "faithfulness": 0.7333,
+    "unsupported": [
+      {
+        "case_id": "E2E-004",
+        "statement": "The medicine identified from the package is not suitable for treating your symptoms of myoclonus.",
+        "reason": "The context mentions that the medicine identified from the package is Triazolam, which is indicated for short-term treatment of insomnia. There is no information suggesting it is used to treat myoclonus.",
+        "fuzzy_score": 0.3448
+      },
+      {
+        "case_id": "E2E-004",
+        "statement": "The medicine identified from the package is not suitable for treating your symptoms of abnormal involuntary movements.",
+        "reason": "The context mentions that the medicine identified from the package is Triazolam, which is indicated for short-term treatment of insomnia. There is no information suggesting it is used to treat abnormal involuntary movements.",
+        "fuzzy_score": 0.4054
+      },
+      {
+        "case_id": "E2E-004",
+        "statement": "The medicine identified from the package is not suitable for treating your symptoms of muscle swelling.",
+        "reason": "There is no information given in the context about Triazolam being used to treat muscle swelling.",
+        "fuzzy_score": 0.3556
+      },
+      {
+        "case_id": "E2E-004",
+        "statement": "The medicine identified from the package is not a treatment specifically designed for neurological conditions like myoclonus.",
+        "reason": "There is no information given in the context about Triazolam being used to treat neurological conditions like myoclonus.",
+        "fuzzy_score": 0.3168
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "132dde4491f6e1853b198d714f76476a43159c1d703cdbbd9c88982f5c009000": {
+    "faithfulness": 0.8,
+    "unsupported": [
+      {
+        "case_id": "E2E-004",
+        "statement": "Torticollis lists abnormal involuntary movements and muscle swelling as its symptoms.",
+        "reason": "The context explicitly mentions torticollis as a condition with listed symptoms including abnormal involuntary movements, but it does not mention muscle swelling. Therefore, this statement cannot be directly inferred from the context.",
+        "fuzzy_score": 0.5217
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "f571663a554fe27f16547ff25adf69f0e9b191d8cd03ea0c70d4d783a39cc93d": {
+    "faithfulness": 0.6667,
+    "unsupported": [
+      {
+        "case_id": "E2E-063",
+        "statement": "EPOETIN ALFA-EPBX is a suggested alternative for treating anemia due to CKD.",
+        "reason": "The context does not explicitly mention EPOETIN ALFA-EPBX as a suggested alternative, but it is mentioned as an option for treating anemia due to CKD. However, there is no information about it being a suggested alternative.",
+        "fuzzy_score": 0.2421
+      },
+      {
+        "case_id": "E2E-063",
+        "statement": "EPOETIN ALFA is an erythropoietin-stimulating agent used to treat anemia due to CKD and other conditions.",
+        "reason": "The context mentions that EPOGEN (EPOETIN ALFA) is indicated for the treatment of anemia due to several conditions, including CKD. However, it does not explicitly mention that it is used to treat anemia due to CKD and other conditions.",
+        "fuzzy_score": 0.2927
+      },
+      {
+        "case_id": "E2E-063",
+        "statement": "EPOETIN ALFA is a suggested alternative for treating anemia due to CKD and other conditions.",
+        "reason": "The context does not explicitly mention EPOETIN ALFA as a suggested alternative, but it is mentioned as an option for treating anemia due to several conditions. However, there is no information about it being a suggested alternative.",
+        "fuzzy_score": 0.309
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "4388ed1eaeb6c1eab74dcf0431e4224486ccf553f32b8ea3f27d29a86674dfa5": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-063",
+        "statement": "The label evidence for PROCRIT lists uses that match your symptoms.",
+        "reason": "The context mentions several diseases and their symptoms, but it does not explicitly mention the indications of PROCRIT. Therefore, it cannot be deduced that the label evidence for PROCRIT lists uses that match the given symptoms.",
+        "fuzzy_score": 0.3175
+      },
+      {
+        "case_id": "E2E-063",
+        "statement": "PROCRIT is indicated for the treatment of anemia due to Chronic Kidney Disease (CKD), including patients on dialysis and not on dialysis to decrease the need for red blood cell transfusion.",
+        "reason": "The context mentions several indications of PROCRIT, but it does not explicitly mention that it is indicated for the treatment of anemia due to CKD in patients who are not on dialysis. Therefore, it cannot be deduced that this statement is true based on the given context.",
+        "fuzzy_score": 0.6629
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "bde71ad33bfa69f95a086aec189c785d1c6813836127559d9e2030ec0449afee": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-005",
+        "statement": "The medicine identified from the package is not suitable for treating Farsightedness.",
+        "reason": "The context mentions that the medicine in question is used to temporarily relieve symptoms related to blurred vision, which suggests it may be suitable for treating Farsightedness.",
+        "fuzzy_score": 0.3649
+      },
+      {
+        "case_id": "E2E-005",
+        "statement": "The medicine in question does not have any identifiable active ingredients.",
+        "reason": "The context lists several substances and their indications and usage. While the list is extensive, it does not explicitly state that there are no identifiable active ingredients.",
+        "fuzzy_score": 0.3289
+      },
+      {
+        "case_id": "E2E-005",
+        "statement": "The purpose of the medicine in question is unclear.",
+        "reason": "The context provides a detailed description of the medicine's indications and usage, which suggests its purpose is to temporarily relieve symptoms related to eye problems.",
+        "fuzzy_score": 0.375
+      },
+      {
+        "case_id": "E2E-005",
+        "statement": "Allium Cepa is a homeopathic remedy used to treat eye problems such as conjunctivitis, keratitis and uveitis.",
+        "reason": "The context lists Allium Cepa as one of the substances in the medicine, but it does not explicitly state that it is used to treat conjunctivitis, keratitis, or uveitis. However, it does mention eye problems in general.",
+        "fuzzy_score": 0.3763
+      },
+      {
+        "case_id": "E2E-005",
+        "statement": "Argentum Nitricum is a homeopathic remedy used to treat eye strain, fatigue, and emotional disturbances.",
+        "reason": "The context lists Argentum Nitricum as one of the substances in the medicine, but it does not explicitly state that it is used to treat eye strain, fatigue, or emotional disturbances. However, it does mention eye problems in general.",
+        "fuzzy_score": 0.3757
+      },
+      {
+        "case_id": "E2E-005",
+        "statement": "EYE (Suis) is a homeopathic remedy used to treat vision disorders including blurred vision, dimness of vision, double vision and defective vision.",
+        "reason": "The context lists EYE (Suis) as one of the substances in the medicine, and it does mention that it is used to temporarily relieve symptoms related to blurred vision. However, it does not explicitly state that it is used to treat dimness of vision, double vision, or defective vision.",
+        "fuzzy_score": 0.3548
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "d203f38992534a08d38d38f4d37a6b9b5121821a4f4fdb86b8ee0fad97d68195": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-021",
+        "statement": "The information provided does not include an image of any medicine.",
+        "reason": "There is no mention of images in the context, so it cannot be inferred that there is no image of a medicine.",
+        "fuzzy_score": 0.2449
+      },
+      {
+        "case_id": "E2E-021",
+        "statement": "There is no suitable medicine identified from the package to treat Gait Disorders, Neurologic, Kearns-Sayre Syndrome, Knee, or Knee Injuries.",
+        "reason": "The context does mention several diseases and symptoms, but it does not explicitly state that there is no suitable medicine for these conditions. Therefore, this statement cannot be directly inferred based on the context.",
+        "fuzzy_score": 0.2353
+      },
+      {
+        "case_id": "E2E-021",
+        "statement": "It is a lack of data about any specific medicine, not a treatment for these conditions.",
+        "reason": "The context does mention several diseases and symptoms, but it does not explicitly state that there is a lack of data about specific medicines. Therefore, this statement cannot be directly inferred based on the context.",
+        "fuzzy_score": 0.2182
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "16a365f163a74f633dffeabe0108839ef29c0b1a94267d4afeb9af4183cfec0b": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-025",
+        "statement": "These symptoms do not match the treatment of a vitamin supplement.",
+        "reason": "The context does not provide information about the treatment of a vitamin supplement, but rather lists various diseases and their symptoms. Therefore, it cannot be directly inferred that these symptoms do not match the treatment of a vitamin supplement.",
+        "fuzzy_score": 0.3803
+      },
+      {
+        "case_id": "E2E-025",
+        "statement": "A vitamin supplement is not suitable for treating infections or conditions related to pregnancy and mental health.",
+        "reason": "The context does not provide information about the suitability of a vitamin supplement for treating infections or conditions related to pregnancy and mental health. Therefore, it cannot be directly inferred that a vitamin supplement is not suitable for these conditions.",
+        "fuzzy_score": 0.3923
+      },
+      {
+        "case_id": "E2E-025",
+        "statement": "Active Ingredients VINCETOXICUM HIRUNDINARIA ROOT supports immune function.",
+        "reason": "The context lists 'VINCETOXICUM HIRUNDINARIA ROOT' as an active ingredient in a drug, but does not explicitly state that it supports immune function. Therefore, it cannot be directly inferred that this ingredient supports immune function.",
+        "fuzzy_score": 0.3101
+      },
+      {
+        "case_id": "E2E-025",
+        "statement": "SULFUR helps in treating various symptoms including cough, fever, and body aches.",
+        "reason": "The context lists 'SULFUR' as an active ingredient in a drug, but does not explicitly state that it helps in treating various symptoms including cough, fever, and body aches. Therefore, it cannot be directly inferred that SULFUR has this effect.",
+        "fuzzy_score": 0.3167
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "84a09b94bc3f62f15aabca81f5f622cd5080a79fbb962aeb9b4a7ca734d72a37": {
+    "faithfulness": 0.1333,
+    "unsupported": [
+      {
+        "case_id": "E2E-032",
+        "statement": "Hospicare 40R Adult Body Wipes is not suitable for treating your symptoms of poisoning due to antimicrobial drugs.",
+        "reason": "The context does not provide any information about Hospicare 40R Adult Body Wipes being used to treat poisoning due to antimicrobial drugs. The result with id 2837 mentions 'poisoning due to antimicrobial drugs' as a symptom, but there is no indication that the medicine can be used for this condition.",
+        "fuzzy_score": 0.3111
+      },
+      {
+        "case_id": "E2E-032",
+        "statement": "Hospicare 40R Adult Body Wipes is not suitable for treating your symptoms of abnormal involuntary movements.",
+        "reason": "The context does not provide any information about Hospicare 40R Adult Body Wipes being used to treat abnormal involuntary movements. The result with id 523 mentions 'difficulty swallowing' as a symptom, but there is no indication that the medicine can be used for this condition.",
+        "fuzzy_score": 0.3187
+      },
+      {
+        "case_id": "E2E-032",
+        "statement": "Hospicare 40R Adult Body Wipes is not suitable for treating your symptoms of allergic reaction.",
+        "reason": "The context does not provide any information about Hospicare 40R Adult Body Wipes being used to treat allergic reactions. The result with id 523 mentions 'hives' as a symptom, but there is no indication that the medicine can be used for this condition.",
+        "fuzzy_score": 0.315
+      },
+      {
+        "case_id": "E2E-032",
+        "statement": "Hospicare 40R Adult Body Wipes is not suitable for treating your symptoms of peripheral edema.",
+        "reason": "The context does not provide any information about Hospicare 40R Adult Body Wipes being used to treat peripheral edema. The result with id 523 mentions 'swelling' as a symptom, but there is no indication that the medicine can be used for this condition.",
+        "fuzzy_score": 0.3298
+      },
+      {
+        "case_id": "E2E-032",
+        "statement": "Hospicare 40R Adult Body Wipes is not suitable for treating your symptoms of problems with movement.",
+        "reason": "The context does not provide any information about Hospicare 40R Adult Body Wipes being used to treat problems with movement. The result with id 523 mentions 'difficulty breathing' as a symptom, but there is no indication that the medicine can be used for this condition.",
+        "fuzzy_score": 0.3333
+      },
+      {
+        "case_id": "E2E-032",
+        "statement": "Hospicare 40R Adult Body Wipes is not suitable for treating your symptoms of shortness of breath.",
+        "reason": "The context does not provide any information about Hospicare 40R Adult Body Wipes being used to treat shortness of breath. The result with id 523 mentions 'difficulty breathing' as a symptom, but there is no indication that the medicine can be used for this condition.",
+        "fuzzy_score": 0.3226
+      },
+      {
+        "case_id": "E2E-032",
+        "statement": "Hospicare 40R Adult Body Wipes is not suitable for treating your symptoms of skin rash.",
+        "reason": "The context does not provide any information about Hospicare 40R Adult Body Wipes being used to treat skin rashes. The result with id 523 mentions 'hives' as a symptom, but there is no indication that the medicine can be used for this condition.",
+        "fuzzy_score": 0.366
+      },
+      {
+        "case_id": "E2E-032",
+        "statement": "Hospicare 40R Adult Body Wipes is not a treatment for infections.",
+        "reason": "The context does not provide any information about Hospicare 40R Adult Body Wipes being used to treat infections. The result with id 67173 mentions 'Use Wet wipes to help reduce bacteria that potentially can cause disease.', but this suggests that the medicine may be used to prevent infections, rather than treat them.",
+        "fuzzy_score": 0.3711
+      },
+      {
+        "case_id": "E2E-032",
+        "statement": "Hospicare 40R Adult Body Wipes is not a treatment for drug-related conditions.",
+        "reason": "The context does not provide any information about Hospicare 40R Adult Body Wipes being used to treat drug-related conditions. The result with id 23195 mentions 'Allergic states : Control of severe or incapacitating allergic conditions intractable to adequate trials of conventional treatment', but this suggests that the medicine may be used to treat allergies, rather than drug-related conditions.",
+        "fuzzy_score": 0.3273
+      },
+      {
+        "case_id": "E2E-032",
+        "statement": "Dextromethorphan is an antitussive agent that suppresses cough.",
+        "reason": "The context does not provide any information about dextromethorphan being used to treat cough. The result with id 347 mentions 'Hyperhidrosis', but there is no indication that the medicine can be used for this condition.",
+        "fuzzy_score": 0.3796
+      },
+      {
+        "case_id": "E2E-032",
+        "statement": "Menthol is a topical analgesic and anti-inflammatory used to relieve pain.",
+        "reason": "The context does not provide any information about menthol being used to treat pain. The result with id 347 mentions 'Hyperhidrosis', but there is no indication that the medicine can be used for this condition.",
+        "fuzzy_score": 0.378
+      },
+      {
+        "case_id": "E2E-032",
+        "statement": "Lidocaine is a local anesthetic used for temporary relief of minor pain or discomfort.",
+        "reason": "The context does not provide any information about lidocaine being used to treat pain. The result with id 347 mentions 'Hyperhidrosis', but there is no indication that the medicine can be used for this condition.",
+        "fuzzy_score": 0.35
+      },
+      {
+        "case_id": "E2E-032",
+        "statement": "Ibuprofen is a nonsteroidal anti-inflammatory drug (NSAID) that relieves pain, reduces inflammation, and fever.",
+        "reason": "The context does not provide any information about ibuprofen being used to treat pain. The result with id 347 mentions 'Hyperhidrosis', but there is no indication that the medicine can be used for this condition.",
+        "fuzzy_score": 0.3085
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "3fe170fd1c12ac0eb0585977d77c142ae68a0b9eac13ca7b9c20ee51a5579c2c": {
+    "faithfulness": 0.5714,
+    "unsupported": [
+      {
+        "case_id": "E2E-044",
+        "statement": "Laura Mercier Flawless Skin Repair Day Creme Br0ad Spectrum SPF 15 Sunscreen is not suitable for treating Ethylene glycol poisoning-2 symptoms.",
+        "reason": "The context does not mention any information about the suitability of Laura Mercier Flawless Skin Repair Day Creme Broad Spectrum SPF 15 Sunscreen for treating Ethylene glycol poisoning-2 symptoms. Therefore, it cannot be deduced that it is not suitable.",
+        "fuzzy_score": 0.372
+      },
+      {
+        "case_id": "E2E-044",
+        "statement": "OCTINOXATE helps stabilize the UV-absorbing agents in the sunscreen, preventing them from breaking down when exposed to sunlight.",
+        "reason": "The context mentions that OCTINOXATE is a substance name in Laura Mercier Flawless Skin Repair Day Creme Broad Spectrum SPF 15 Sunscreen. However, it does not mention any information about its function or purpose.",
+        "fuzzy_score": 0.3084
+      },
+      {
+        "case_id": "E2E-044",
+        "statement": "OXYBENZONE is a broad-spectrum sunscreen agent that helps prevent sunburn caused by UVA and UVB rays.",
+        "reason": "The context mentions that OXYBENZONE is a substance name in Laura Mercier Flawless Skin Repair Day Creme Broad Spectrum SPF 15 Sunscreen. However, it does not mention any information about its function or purpose.",
+        "fuzzy_score": 0.3646
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "8e10b0ad08415a8822cc43edeaba01a094b32a5416b8c70c3c98567ba9869fb9": {
+    "faithfulness": 0.2727,
+    "unsupported": [
+      {
+        "case_id": "E2E-052",
+        "statement": "Discount Drug Mart Ear Relief Ear Drops is not suitable for treating Facial Paralysis, Pruritus, and Diarrhea.",
+        "reason": "The context does not provide information about the suitability of Discount Drug Mart Ear Relief Ear Drops for treating these conditions. Therefore, it cannot be deduced that it is not suitable.",
+        "fuzzy_score": 0.3102
+      },
+      {
+        "case_id": "E2E-052",
+        "statement": "Discount Drug Mart Ear Relief Ear Drops is not a treatment for infections or paralytic conditions.",
+        "reason": "The context does not provide information about the specific indications of Discount Drug Mart Ear Relief Ear Drops. Therefore, it cannot be deduced that it is not a treatment for these conditions.",
+        "fuzzy_score": 0.3681
+      },
+      {
+        "case_id": "E2E-052",
+        "statement": "MATRICARIA CHAMOMILLA WHOLE, MERCURIUS SOLUBILIS, and SULFUR are typically used for their anti-inflammatory and antiseptic properties in ear drops.",
+        "reason": "The context does not provide information about the typical uses of MATRICARIA CHAMOMILLA WHOLE, MERCURIUS SOLUBILIS, and SULFUR. Therefore, it cannot be deduced that they are typically used for these purposes.",
+        "fuzzy_score": 0.243
+      },
+      {
+        "case_id": "E2E-052",
+        "statement": "Dextromethorphan is an antitussive agent that suppresses coughs.",
+        "reason": "The context does not mention Dextromethorphan. Therefore, it cannot be deduced that it is an antitussive agent.",
+        "fuzzy_score": 0.2751
+      },
+      {
+        "case_id": "E2E-052",
+        "statement": "Dextromethorphan may be helpful in controlling the urge to cough associated with respiratory infections.",
+        "reason": "The context does not mention Dextromethorphan. Therefore, it cannot be deduced that it may be helpful in controlling the urge to cough associated with respiratory infections.",
+        "fuzzy_score": 0.355
+      },
+      {
+        "case_id": "E2E-052",
+        "statement": "Menthol is a topical analgesic and anti-inflammatory agent used for relieving pain in minor conditions such as headache, backache, and colds.",
+        "reason": "The context does not mention Menthol. Therefore, it cannot be deduced that it is a topical analgesic and anti-inflammatory agent used for relieving pain in these conditions.",
+        "fuzzy_score": 0.3486
+      },
+      {
+        "case_id": "E2E-052",
+        "statement": "Ephedrine stimulates the heart by increasing cardiac output.",
+        "reason": "The context does not mention Ephedrine. Therefore, it cannot be deduced that it stimulates the heart by increasing cardiac output.",
+        "fuzzy_score": 0.368
+      },
+      {
+        "case_id": "E2E-052",
+        "statement": "Ephedrine is sometimes used in combination with other medications to treat asthma or chronic bronchitis.",
+        "reason": "The context does not mention Ephedrine. Therefore, it cannot be deduced that it is sometimes used in combination with other medications to treat these conditions.",
+        "fuzzy_score": 0.3392
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "6f27c013b896c1d0e973d44a694448be9a1aec1c7ef5b42e9c844541f8b57cc4": {
+    "faithfulness": 0.2857,
+    "unsupported": [
+      {
+        "case_id": "E2E-069",
+        "statement": "Penicillin V Potassium is suitable for treating bacteremia.",
+        "reason": "The context does not provide information about the suitability of Penicillin V Potassium for treating bacteremia. However, it does mention that penicillin G-sensitive microorganisms are likely the cause of bacteremia, and Penicillin V Potassium targets these microorganisms.",
+        "fuzzy_score": 0.4196
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Penicillin V Potassium is suitable for treating abdominal tenderness.",
+        "reason": "The context does not provide information about the suitability of Penicillin V Potassium for treating abdominal tenderness. However, it does mention that penicillin G-sensitive microorganisms are likely the cause of abdominal tenderness, and Penicillin V Potassium targets these microorganisms.",
+        "fuzzy_score": 0.4017
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Penicillin V Potassium is suitable for treating chill.",
+        "reason": "The context does not provide information about the suitability of Penicillin V Potassium for treating chill. However, it does mention that penicillin G-sensitive microorganisms are likely the cause of chill, and Penicillin V Potassium targets these microorganisms.",
+        "fuzzy_score": 0.4071
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Penicillin V Potassium is suitable for treating decreased translucency.",
+        "reason": "The context does not provide information about the suitability of Penicillin V Potassium for treating decreased translucency. However, it does mention that penicillin G-sensitive microorganisms are likely the cause of decreased translucency, and Penicillin V Potassium targets these microorganisms.",
+        "fuzzy_score": 0.3898
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Penicillin V Potassium is suitable for treating diarrhea.",
+        "reason": "The context does not provide information about the suitability of Penicillin V Potassium for treating diarrhea. However, it does mention that penicillin G-sensitive microorganisms are likely the cause of diarrhea, and Penicillin V Potassium targets these microorganisms.",
+        "fuzzy_score": 0.4054
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Penicillin G-sensitive microorganisms are likely the cause of bacteremia.",
+        "reason": "The context does not provide information about the likelihood of penicillin G-sensitive microorganisms being the cause of bacteremia. However, it does mention that Penicillin V Potassium is suitable for treating bacteremia and targets these microorganisms.",
+        "fuzzy_score": 0.3707
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Penicillin G-sensitive microorganisms are likely the cause of abdominal tenderness.",
+        "reason": "The context does not provide information about the likelihood of penicillin G-sensitive microorganisms being the cause of abdominal tenderness. However, it does mention that Penicillin V Potassium is suitable for treating abdominal tenderness and targets these microorganisms.",
+        "fuzzy_score": 0.3733
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Penicillin G-sensitive microorganisms are likely the cause of chill.",
+        "reason": "The context does not provide information about the likelihood of penicillin G-sensitive microorganisms being the cause of chill. However, it does mention that Penicillin V Potassium is suitable for treating chill and targets these microorganisms.",
+        "fuzzy_score": 0.3627
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Penicillin G-sensitive microorganisms are likely the cause of decreased translucency.",
+        "reason": "The context does not provide information about the likelihood of penicillin G-sensitive microorganisms being the cause of decreased translucency. However, it does mention that Penicillin V Potassium is suitable for treating decreased translucency and targets these microorganisms.",
+        "fuzzy_score": 0.3654
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Penicillin G-sensitive microorganisms are likely the cause of diarrhea.",
+        "reason": "The context does not provide information about the likelihood of penicillin G-sensitive microorganisms being the cause of diarrhea. However, it does mention that Penicillin V Potassium is suitable for treating diarrhea and targets these microorganisms.",
+        "fuzzy_score": 0.3711
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Doxycycline is an antibiotic used to treat bacterial infections.",
+        "reason": "The context does not provide information about Doxycycline being used to treat bacterial infections. However, it does mention that Doxycycline works by inhibiting protein synthesis in bacteria, which suggests its use as an antibiotic.",
+        "fuzzy_score": 0.4
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Metronidazole is an antibiotic that targets anaerobic microorganisms.",
+        "reason": "The context does not provide information about Metronidazole targeting anaerobic microorganisms. However, it does mention that Metronidazole is often used to treat abdominal cavity infections, which suggests its use as an antibiotic.",
+        "fuzzy_score": 0.3636
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Metronidazole is often used to treat skin infections.",
+        "reason": "The context does not provide information about Metronidazole being used to treat skin infections. However, it does mention that Metronidazole targets anaerobic microorganisms and is often used to treat various types of infections.",
+        "fuzzy_score": 0.4425
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Metronidazole is often used to treat mucous membrane infections.",
+        "reason": "The context does not provide information about Metronidazole being used to treat mucous membrane infections. However, it does mention that Metronidazole targets anaerobic microorganisms and is often used to treat various types of infections.",
+        "fuzzy_score": 0.4032
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Ciprofloxacin is commonly prescribed for infections caused by susceptible pathogens.",
+        "reason": "The context does not provide information about Ciprofloxacin being commonly prescribed for infections caused by susceptible pathogens. However, it does mention that Ciprofloxacin targets aerobic bacteria and is commonly prescribed for gastrointestinal infections.",
+        "fuzzy_score": 0.5574
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "d3b5c22c4019c41fd373c8428c8755dfbd5f1c00bf9d5924bd2dd3c361406ee5": {
+    "faithfulness": 0.4,
+    "unsupported": [
+      {
+        "case_id": "E2E-076",
+        "statement": "The medicine Chantecaille Just Skin Tinted Moisturizer Sunscreen Broad Spectrum SPF 15 Shade Aura is not suitable for treating Toxoplasmosis.",
+        "reason": "There is no information in the context that suggests this product is used to treat Toxoplasmosis. In fact, it's a sunscreen with Titanium Dioxide as its active ingredient.",
+        "fuzzy_score": 0.445
+      },
+      {
+        "case_id": "E2E-076",
+        "statement": "The ingredient TOXOPLASMA GONDII DNA in Chantecaille Just Skin Tinted Moisturizer Sunscreen Broad Spectrum SPF 15 Shade Aura works by targeting the Toxoplasma gondii parasite.",
+        "reason": "This statement is incorrect. The context shows that Chantecaille Just Skin Tinted Moisturizer Sunscreen Broad Spectrum SPF 15 Shade Aura contains Titanium Dioxide, not TOXOPLASMA GONDII DNA.",
+        "fuzzy_score": 0.4188
+      },
+      {
+        "case_id": "E2E-076",
+        "statement": "PYRIMETHAMINE functions by interfering with folic acid synthesis in the parasite.",
+        "reason": "The context does not provide information on how Pyrimethamine works. It only mentions its use as a treatment for Toxoplasmosis, but it does not explain its mechanism of action.",
+        "fuzzy_score": 0.4321
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "26127bf10f98c91fea0e2851bdff1dcf9213e733aa0f5173c5be5445b32b80dc": {
+    "faithfulness": 0.4,
+    "unsupported": [
+      {
+        "case_id": "E2E-082",
+        "statement": "Arthralgia, Abdominal, Abnormalities, and Abortion are not suitable symptoms for Strophanthus (STROPHANTHUS) 20mg treatment.",
+        "reason": "The context does not provide information about the specific indications or contraindications of Strophanthus (STROPHANTHUS) 20mg. Therefore, it cannot be deduced that these symptoms are not suitable for its treatment.",
+        "fuzzy_score": 0.3618
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Larixin is a medication used to treat cardiovascular diseases by reducing cardiac workload.",
+        "reason": "The context does not mention Larixin or any information about a medication with this name. Therefore, it cannot be deduced that Larixin is a medication used to treat cardiovascular diseases.",
+        "fuzzy_score": 0.4368
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Estriol is an estrogen replacement therapy for menopausal women which can help alleviate vasomotor symptoms and support bone health.",
+        "reason": "The context mentions Evamist, which contains ESTRADIOL (not Estriol), as a treatment for moderate to severe vasomotor symptoms due to menopause. Therefore, it cannot be deduced that Estriol is an estrogen replacement therapy for menopausal women.",
+        "fuzzy_score": 0.4478
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "c2a158b7e9aa123a7d6e0e21852ba810b25c9359bf56192f27660a885d06950e": {
+    "faithfulness": 0.4667,
+    "unsupported": [
+      {
+        "case_id": "E2E-088",
+        "statement": "Dextromethorphan reduces the urge to cough.",
+        "reason": "The context does not mention dextromethorphan as a treatment for cough symptoms. However, one of the results mentions that it is part of the generic name of Theraflu Severe Cold Relief Combo Pack, which temporarily relieves these symptoms due to a cold: \u2022 minor aches and pains \u2022 minor sore throat pain \u2022 headache \u2022 cough due to minor throat and bronchial irritation.",
+        "fuzzy_score": 0.3421
+      },
+      {
+        "case_id": "E2E-088",
+        "statement": "Acetaminophen treats headaches.",
+        "reason": "The context does not mention acetaminophen as a treatment for headaches. However, one of the results mentions that it is part of the generic name of Theraflu Severe Cold Relief Combo Pack, which temporarily relieves these symptoms due to a cold: \u2022 minor aches and pains \u2022 minor sore throat pain \u2022 headache.",
+        "fuzzy_score": 0.3571
+      },
+      {
+        "case_id": "E2E-088",
+        "statement": "Acetaminophen treats toothaches.",
+        "reason": "The context does not mention acetaminophen as a treatment for toothaches. However, one of the results mentions that it is part of the generic name of Theraflu Severe Cold Relief Combo Pack, which temporarily relieves these symptoms due to a cold: \u2022 minor aches and pains.",
+        "fuzzy_score": 0.3214
+      },
+      {
+        "case_id": "E2E-088",
+        "statement": "Acetaminophen treats minor aches and pains.",
+        "reason": "The context does not mention acetaminophen as a treatment for minor aches and pains. However, one of the results mentions that it is part of the generic name of Theraflu Severe Cold Relief Combo Pack, which temporarily relieves these symptoms due to a cold: \u2022 minor aches and pains.",
+        "fuzzy_score": 0.374
+      },
+      {
+        "case_id": "E2E-088",
+        "statement": "Ibuprofen treats headaches.",
+        "reason": "The context does not mention ibuprofen as a treatment for headaches. However, one of the results mentions that it is part of the generic name of Ibuprofen Fast relief medicine for pain, which temporarily relieves minor aches and pains due to: headache toothache backache menstrual cramps.",
+        "fuzzy_score": 0.4
+      },
+      {
+        "case_id": "E2E-088",
+        "statement": "Ibuprofen treats backache.",
+        "reason": "The context does not mention ibuprofen as a treatment for backache. However, one of the results mentions that it is part of the generic name of Ibuprofen Fast relief medicine for pain, which temporarily relieves minor aches and pains due to: headache toothache backache menstrual cramps.",
+        "fuzzy_score": 0.4082
+      },
+      {
+        "case_id": "E2E-088",
+        "statement": "Ibuprofen treats menstrual cramps.",
+        "reason": "The context does not mention ibuprofen as a treatment for menstrual cramps. However, one of the results mentions that it is part of the generic name of Ibuprofen Fast relief medicine for pain, which temporarily relieves minor aches and pains due to: headache toothache backache menstrual cramps.",
+        "fuzzy_score": 0.4211
+      },
+      {
+        "case_id": "E2E-088",
+        "statement": "Ibuprofen treats minor pain due to cold.",
+        "reason": "The context does not mention ibuprofen as a treatment for minor pain due to cold. However, one of the results mentions that it is part of the generic name of Ibuprofen Fast relief medicine for pain, which temporarily relieves minor aches and pains due to: headache toothache backache menstrual cramps.",
+        "fuzzy_score": 0.3878
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "37d748cd174e406135c9aaab52ebf411d5867b630f8646d632509485c1bc43eb": {
+    "faithfulness": 0.4,
+    "unsupported": [
+      {
+        "case_id": "E2E-093",
+        "statement": "Lipitor (Atorvastatin Calcium) is not suitable for treating acute viral Covid-19 infection.",
+        "reason": "The context does not mention the use of Lipitor in treating Covid-19, but it does indicate that Lipitor is used to lower cholesterol levels and prevent cardiovascular disease. There is no information suggesting it is not suitable for treating acute viral Covid-19 infection.",
+        "fuzzy_score": 0.5171
+      },
+      {
+        "case_id": "E2E-093",
+        "statement": "Nirmatrelvir has potential for Covid-19 treatment.",
+        "reason": "The context does not explicitly mention Nirmatrelvir as a treatment for Covid-19, but it is mentioned in the context of drugs related to Covid-19. However, there is no information suggesting its effectiveness or potential for treating Covid-19.",
+        "fuzzy_score": 0.3721
+      },
+      {
+        "case_id": "E2E-093",
+        "statement": "Pemivibart is a monoclonal antibody against Covid-19.",
+        "reason": "The context does not explicitly mention Pemivibart as a monoclonal antibody against Covid-19. While it mentions Pemivibart in the context of drugs related to Covid-19, there is no information suggesting its mechanism or use as a monoclonal antibody.",
+        "fuzzy_score": 0.3455
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "b648ae00bf9d6d10daefb497dd35eb89104aefe33c969d0f1afaab3296aa6a5a": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-100",
+        "statement": "The pediatric weight-based dosing for Glycozempra 5mg/mL solution is not provided.",
+        "reason": "There is no information given in the context about Glycozempra or its pediatric weight-based dosing.",
+        "fuzzy_score": 0.3832
+      },
+      {
+        "case_id": "E2E-100",
+        "statement": "Glycozempra is a medication used to reduce salivary and tracheobronchial secretions during anesthesia.",
+        "reason": "The context mentions several medications, but Glycozempra is not mentioned. Therefore, it cannot be deduced that Glycozempra is used for this purpose.",
+        "fuzzy_score": 0.3931
+      },
+      {
+        "case_id": "E2E-100",
+        "statement": "Glycozempra is not suitable for treating Ethylene glycol poisoning-2 symptoms.",
+        "reason": "The context mentions several diseases and their treatments, but there is no information about Glycozempra being used to treat Ethylene glycol poisoning-2. Therefore, it cannot be deduced that Glycozempra is not suitable for this purpose.",
+        "fuzzy_score": 0.3974
+      }
+    ],
+    "nan_reasons": {}
+  }
+}
