@@ -101,6 +101,10 @@ class Settings(BaseSettings):
     GEN_SEED: Optional[int] = None
     OLLAMA_NUM_CTX: Optional[int] = None
     OLLAMA_NUM_PREDICT: Optional[int] = None
+    # Development trace (opt-in; off by default). Text is redacted unless DEV_TRACE_INCLUDE_TEXT=true.
+    DEV_TRACE_ENABLED: bool = False
+    DEV_TRACE_INCLUDE_TEXT: bool = False
+    DEV_TRACE_DIR: Optional[str] = None
     EVIDENCE_MAX_ITEMS_PER_CHANNEL: int = 3
     EVIDENCE_DRUG_FIELDS: str = "brand_name,generic_name,active_ingredients,indications"
     EVIDENCE_FIELD_CAPS: Dict[str, int] = {

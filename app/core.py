@@ -480,11 +480,22 @@ class Pipeline:
         # 2. Retrievals for Symptom Text
         print(f"🔎 [Retrieval] Running Hybrid Search (FAISS + BM25 + RRF + Cross-Encoder) for symptom query ({len(user_norm)} chars)...")
         _t_ret_symptoms = time.perf_counter()
-        diseases_retrieved = self.retriever.search_specific('diseases', user_norm, top_k=top_k)
+        _dev_trace_on = bool(getattr(self.settings, "DEV_TRACE_ENABLED", False))
+        retrieval_debug: Dict[str, Dict[str, Any]] = {}
+
+        def _search(label: str, index_name: str, text: str):
+            if not _dev_trace_on:
+                return self.retriever.search_specific(index_name, text, top_k=top_k)
+            dbg: Dict[str, Any] = {}
+            res = self.retriever.search_specific(index_name, text, top_k=top_k, debug=dbg)
+            retrieval_debug[label] = dbg
+            return res
+
+        diseases_retrieved = _search('diseases', 'diseases', user_norm)
         pipeline_timings["retrieval_diseases_ms"] = int((time.perf_counter() - _t_ret_symptoms) * 1000)
 
         _t_ret_drugs = time.perf_counter()
-        drugs_retrieved = self.retriever.search_specific('drugs', user_norm, top_k=top_k)
+        drugs_retrieved = _search('drugs', 'drugs', user_norm)
         pipeline_timings["retrieval_drugs_ms"] = int((time.perf_counter() - _t_ret_drugs) * 1000)
 
         print(f"   ↳ Diseases index matches (fused & reranked):")
@@ -507,11 +518,11 @@ class Pipeline:
         if ocr_text:
             print(f"🔎 [Retrieval] Running Hybrid Search (FAISS + BM25 + RRF + Cross-Encoder) for OCR label ({len(ocr_text)} chars)...")
             _t_ret_drug_dict = time.perf_counter()
-            drug_dict_retrieved = self.retriever.search_specific('drug_dict', ocr_text, top_k=top_k)
+            drug_dict_retrieved = _search('drug_dict', 'drug_dict', ocr_text)
             pipeline_timings["retrieval_drug_dict_ms"] = int((time.perf_counter() - _t_ret_drug_dict) * 1000)
 
             _t_ret_drugs_ocr = time.perf_counter()
-            drugs_from_ocr_retrieved = self.retriever.search_specific('drugs', ocr_text, top_k=top_k)
+            drugs_from_ocr_retrieved = _search('drugs_from_ocr', 'drugs', ocr_text)
             pipeline_timings["retrieval_drugs_from_ocr_ms"] = int((time.perf_counter() - _t_ret_drugs_ocr) * 1000)
 
             print(f"   ↳ Drug Dictionary index matches (fused & reranked):")
@@ -662,6 +673,7 @@ class Pipeline:
 
         # 4. Assembling Prompt & generation
         _t_prompt = time.perf_counter()
+        token_budget = None
 
         evidence_trace_data = None
         evidence_format = getattr(self.settings, "EVIDENCE_FORMAT", "legacy")
@@ -740,7 +752,7 @@ class Pipeline:
         print(f"🤖 [LLM] Requesting clinical analysis via {provider_label}...")
         _t_llm = time.perf_counter()
 
-        if return_trace:
+        if return_trace or _dev_trace_on:
             raw_llm_output, gen_meta = generate_with_mode_meta(
                 full_prompt, llm_mode=llm_mode, params=gen_params, system=system_prompt
             )
@@ -897,6 +909,43 @@ class Pipeline:
                     "emergency_guardrail_fast_path": self.settings.EMERGENCY_GUARDRAIL_FAST_PATH,
                 }
             }
+        if _dev_trace_on:
+            from app.dev_trace import build_dev_trace, write_dev_trace
+            _eff = {
+                "num_ctx": (gen_params.num_ctx if gen_params else None),
+                "num_predict": (gen_params.num_predict if gen_params else None),
+                "temperature": (gen_params.temperature if gen_params else None),
+                "seed": (gen_params.seed if gen_params else None),
+                "model": provider_model_tag,
+                "llm_mode": llm_mode,
+                "top_k": top_k,
+                "EVIDENCE_FORMAT": evidence_format,
+                "PROMPT_VERSION": prompt_version,
+                "evidence_max_items_per_channel": getattr(self.settings, "EVIDENCE_MAX_ITEMS_PER_CHANNEL", 3),
+            }
+            dev_trace = build_dev_trace(
+                user_text=user_text or "",
+                ocr_text=ocr_text or "",
+                system_prompt=system_prompt,
+                full_prompt=full_prompt,
+                evidence_trace=evidence_trace_data,
+                retrieval_debug=retrieval_debug,
+                retrieved_ids=extract_retrieved_ids_per_channel(all_retrievals),
+                effective=_eff,
+                token_budget=token_budget,
+                max_items_per_channel=getattr(self.settings, "EVIDENCE_MAX_ITEMS_PER_CHANNEL", 3),
+                case_type=case_type,
+                generation_meta=gen_meta,
+                include_text=bool(getattr(self.settings, "DEV_TRACE_INCLUDE_TEXT", False)),
+            )
+            final_result["dev_trace"] = dev_trace
+            _trace_dir = getattr(self.settings, "DEV_TRACE_DIR", None)
+            if _trace_dir:
+                import hashlib as _hl
+                write_dev_trace(
+                    dev_trace, _trace_dir,
+                    _hl.sha256((user_text or "").encode("utf-8") + (ocr_text or "").encode("utf-8")).hexdigest()[:12],
+                )
         return final_result
 
 

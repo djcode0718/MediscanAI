@@ -262,10 +262,26 @@ class MultiRetriever:
         self.reranker.load_model()
         print(f"[STARTUP] CrossEncoder model: {time.perf_counter()-_t_ce:.2f}s")
 
-    def search_specific(self, index_name: str, text: str, top_k: int = 3) -> List[Tuple[str, float, dict]]:
+    def search_specific(
+        self,
+        index_name: str,
+        text: str,
+        top_k: int = 3,
+        *,
+        candidate_pool_size: int = None,
+        rerank_depth: int = None,
+        debug: dict = None,
+    ) -> List[Tuple[str, float, dict]]:
         """
         Given text, compute embedding and run search on a single, specific index.
+
+        Optional experiment parameters (defaults reproduce the original behavior exactly):
+          candidate_pool_size: depth of the dense and BM25 candidate lists (default max(15, 3*top_k)).
+          rerank_depth: number of RRF-fused candidates passed to the cross-encoder
+                        (default = candidate_pool_size).
+          debug: if a dict is supplied, per-stage (key, score) lists are recorded in it.
         """
+
         if index_name not in self.idx_wrappers:
             raise ValueError(f"Index '{index_name}' not found in retriever configuration.")
 
@@ -277,7 +293,8 @@ class MultiRetriever:
         wrapper = self.idx_wrappers[index_name]
 
         # 1. Retrieve candidates via Dense Vector Search
-        candidate_pool_size = max(15, top_k * 3)
+        if candidate_pool_size is None:
+            candidate_pool_size = max(15, top_k * 3)
         _t_faiss = time.perf_counter()
         dense_results = wrapper.search(emb, top_k=candidate_pool_size)
         _faiss_ms = int((time.perf_counter() - _t_faiss) * 1000)
@@ -301,10 +318,24 @@ class MultiRetriever:
         _rrf_ms = int((time.perf_counter() - _t_rrf) * 1000)
 
         # 4. Rerank using Cross-Encoder
-        rerank_pool = fused_candidates[:candidate_pool_size]
+        rerank_pool = fused_candidates[: (rerank_depth if rerank_depth is not None else candidate_pool_size)]
         _t_rerank = time.perf_counter()
         final_results = self.reranker.rerank(text, rerank_pool, index_name, top_k=top_k)
         _rerank_ms = int((time.perf_counter() - _t_rerank) * 1000)
+
+        if debug is not None:
+            debug.update({
+                "index": index_name,
+                "candidate_pool_size": candidate_pool_size,
+                "rerank_depth": len(rerank_pool),
+                "top_k": top_k,
+                "dense": [(str(k), float(s)) for k, s, _ in dense_results],
+                "bm25": [(str(k), float(s)) for k, s, _ in bm25_results],
+                "fused": [(str(k), float(s)) for k, s, _ in fused_candidates],
+                "reranked": [(str(k), float(s)) for k, s, _ in final_results],
+                "timings_ms": {"embed": _embed_ms, "faiss": _faiss_ms, "bm25": _bm25_ms,
+                               "rrf": _rrf_ms, "rerank": _rerank_ms},
+            })
 
         print(
             f"[RETRIEVAL] index={index_name!r} "
