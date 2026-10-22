@@ -230,3 +230,65 @@ def test_disease_chunk_id_extract_matches_corpus_and_reference():
     assert "[E1] DISEASE | id=disease_chunk_1 |" in rendered
     assert trace["evidence_items"][0]["id"] == "disease_chunk_1"
     assert trace["evidence_items"][0]["covers_ids"] == ["disease_chunk_1"]
+
+
+def test_query_aware_disease_omission():
+    """
+    Tests that when query_aware_filtering is enabled on medicine-directed queries,
+    disease symptom blocks with no overlap to user symptoms are omitted from shown evidence.
+    When query_aware_filtering is disabled (default/legacy), they remain included.
+    """
+    formatter = CompactEvidenceFormatter()
+    disease_rec = {
+        "id": 10,
+        "chunk": {
+            "id": "chunk_11",
+            "disease": "Acute Chest Syndrome",
+            "symptoms": ["chest pain", "shortness of breath", "fever"]
+        }
+    }
+    drug_rec = {
+        "id": 101,
+        "brand_name": "Tylenol",
+        "generic_name": "Acetaminophen",
+        "substance_name": ["Acetaminophen"],
+        "indications_and_usage": "Pain reliever and fever reducer."
+    }
+    retrievals = {
+        "diseases": [("chunk_11", 0.9, disease_rec)],
+        "drugs": [("drug_101", 0.95, drug_rec)]
+    }
+
+    # 1. Default / legacy behavior: disease block is included even for medicine queries
+    rendered_default, trace_default = formatter.format(retrievals, query_aware_filtering=False)
+    types_default = [it["item_type"] for it in trace_default["evidence_items"]]
+    assert "DISEASE" in types_default
+    assert "DRUG" in types_default
+
+    # 2. Query-aware filtering on medicine-directed query with no user symptoms:
+    # Disease block with no symptom overlap is omitted
+    med_user_text = "Please provide the therapeutic indications, active ingredients, and important warnings for this scanned drug label."
+    rendered_filtered, trace_filtered = formatter.format(
+        retrievals,
+        query_aware_filtering=True,
+        user_text=med_user_text,
+        is_medicine_directed=True,
+    )
+    types_filtered = [it["item_type"] for it in trace_filtered["evidence_items"]]
+    assert "DISEASE" not in types_filtered
+    assert "DRUG" in types_filtered
+    assert "disease_chunk_11" in trace_filtered["retrieved_but_omitted_ids"]
+
+    # 3. Query-aware filtering when user DOES have symptoms matching the disease:
+    # Disease block IS kept
+    sym_user_text = "I am experiencing severe chest pain and high fever. Can I take this?"
+    rendered_sym, trace_sym = formatter.format(
+        retrievals,
+        query_aware_filtering=True,
+        user_text=sym_user_text,
+        is_medicine_directed=True,
+    )
+    types_sym = [it["item_type"] for it in trace_sym["evidence_items"]]
+    assert "DISEASE" in types_sym
+    assert "DRUG" in types_sym
+

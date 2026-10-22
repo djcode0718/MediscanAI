@@ -251,15 +251,36 @@ class CompactEvidenceFormatter:
         self,
         all_retrievals: Dict[str, List[Any]],
         token_budget: Optional[int] = None,
+        *,
+        query_aware_filtering: bool = False,
+        user_text: Optional[str] = None,
+        is_medicine_directed: bool = False,
     ) -> Tuple[str, Dict[str, Any]]:
         """
         Formats all retrievals into compact evidence blocks.
+        When query_aware_filtering=True:
+            - If is_medicine_directed=True or no actual patient symptoms were presented,
+              disease blocks with zero symptom overlap with actual patient symptoms are omitted
+              so they do not masquerade as evidence of medicine indications.
         Returns:
             formatted_text: str (tagged blocks)
             evidence_trace: dict (metadata, covers_ids, trimmed items, token counts)
         """
         evidence_items: List[EvidenceItem] = []
         omitted_ids: List[str] = []
+
+        # Extract meaningful symptom query tokens if symptoms were presented
+        symptom_tokens = set()
+        if query_aware_filtering and user_text:
+            import re
+            words = re.findall(r"[a-z]{4,}", user_text.lower())
+            stop_words = {
+                "experiencing", "suffering", "recently", "developed", "feeling", "several", "doctor",
+                "condition", "indicate", "medical", "illness", "causing", "matches", "associated",
+                "symptoms", "could", "might", "would", "about", "please", "medicine", "medication",
+                "label", "scanned", "bottle", "container", "treats", "precautions", "warnings"
+            }
+            symptom_tokens = {w for w in words if w not in stop_words}
 
         channel_order = [
             "diseases",
@@ -340,6 +361,15 @@ class CompactEvidenceFormatter:
                         symptoms_raw = [s.strip() for s in symptoms_raw.split(",") if s.strip()]
                     symptoms_capped = [clean_text_field(s) for s in symptoms_raw if clean_text_field(s)]
                     symptoms_capped = symptoms_capped[: self.field_caps.get("symptoms", 12)]
+
+                    # Under query-aware filtering for medicine-directed queries or queries with no symptoms presented:
+                    # omit disease blocks that do not overlap with actual patient symptoms
+                    if query_aware_filtering and is_medicine_directed:
+                        dis_words = set(re.findall(r"[a-z]{4,}", f"{cond_name} {' '.join(symptoms_capped)}".lower()))
+                        overlap = dis_words.intersection(symptom_tokens)
+                        if not overlap:
+                            omitted_ids.append(raw_id)
+                            continue
 
                     fields = {}
                     if cond_name:

@@ -703,8 +703,21 @@ class Pipeline:
                 drug_fields=getattr(self.settings, "EVIDENCE_DRUG_FIELDS", None),
                 field_caps=getattr(self.settings, "EVIDENCE_FIELD_CAPS", None),
             )
+            routing_version = getattr(self.settings, "ROUTING_VERSION", "legacy")
+            is_med_dir = False
+            if routing_version == "v2":
+                from app.prompt_v2 import classify_intent_v2
+                intent_detected = classify_intent_v2(user_text, ocr_text)
+                is_med_dir = intent_detected in ("MEDICINE_ONLY", "UNANSWERABLE")
+
             combined_retrievals = {**retrievals_for_user_text, **retrievals_for_ocr_text}
-            rendered_evidence, evidence_trace_data = formatter.format(combined_retrievals, token_budget=token_budget)
+            rendered_evidence, evidence_trace_data = formatter.format(
+                combined_retrievals,
+                token_budget=token_budget,
+                query_aware_filtering=(routing_version == "v2"),
+                user_text=user_text,
+                is_medicine_directed=is_med_dir,
+            )
 
             user_chans = set(retrievals_for_user_text.keys())
             ocr_chans = set(retrievals_for_ocr_text.keys())
