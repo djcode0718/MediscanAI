@@ -190,3 +190,43 @@ def test_legacy_format_remains_unchanged():
     legacy_text = pipeline._format_retrievals(sample_retrievals)
     assert "-- Retrieved from DISEASES --" in legacy_text
     assert "* Result: {'chunk': {'disease': 'Flu', 'symptoms': ['fever']}} (Score: 0.9500)" in legacy_text
+
+
+def test_disease_chunk_id_extract_matches_corpus_and_reference():
+    """
+    Regression test for the 0-based vs 1-based disease chunk ID mismatch.
+    In data/diseases_faiss_data.jsonl, line 0 has id=0 and chunk={'id': 'chunk_1', ...}.
+    The corpus and dataset reference use 'disease_chunk_1', not 'disease_chunk_0'.
+    """
+    from app.evidence import extract_item_id
+
+    # Case 1: Record has chunk.id = "chunk_1" and record id = 0
+    rec_with_chunk = {
+        "id": 0,
+        "chunk": {
+            "id": "chunk_1",
+            "disease": "Gestational Cholestasis",
+            "symptoms": ["Itchy skin"]
+        }
+    }
+    canonical_id = extract_item_id(rec_with_chunk, "line_0", "diseases")
+    assert canonical_id == "disease_chunk_1"
+
+    # Case 2: E2E-035 disease chunk (record id=2111, chunk.id="chunk_2112")
+    e2e_35_rec = {
+        "id": 2111,
+        "chunk": {
+            "id": "chunk_2112",
+            "disease": "Chest Pain",
+            "symptoms": ["Chest Pain"]
+        }
+    }
+    assert extract_item_id(e2e_35_rec, "line_2111", "diseases") == "disease_chunk_2112"
+
+    # Case 3: Formatted compact block uses canonical ID
+    formatter = CompactEvidenceFormatter()
+    retrievals = {"diseases": [("line_0", 0.95, rec_with_chunk)]}
+    rendered, trace = formatter.format(retrievals)
+    assert "[E1] DISEASE | id=disease_chunk_1 |" in rendered
+    assert trace["evidence_items"][0]["id"] == "disease_chunk_1"
+    assert trace["evidence_items"][0]["covers_ids"] == ["disease_chunk_1"]

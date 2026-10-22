@@ -79,10 +79,16 @@ def extract_item_id(item_obj: Any, key: Any, channel: str) -> str:
     if isinstance(item_obj, dict):
         if channel == "diseases":
             chunk = item_obj.get("chunk", {})
-            if isinstance(chunk, dict) and "chunk_id" in chunk:
-                return f"disease_chunk_{chunk['chunk_id']}"
+            if isinstance(chunk, dict):
+                # Prioritize chunk['id'] (e.g. 'chunk_2112') or chunk['chunk_id'] (e.g. 2112)
+                chunk_val = chunk.get("id") or chunk.get("chunk_id")
+                if chunk_val is not None:
+                    match = re.search(r"\d+", str(chunk_val))
+                    if match:
+                        return f"disease_chunk_{match.group(0)}"
             if "id" in item_obj:
-                return f"disease_chunk_{item_obj['id']}"
+                # If only 0-based record ID is present, note that chunk id is id + 1
+                return f"disease_chunk_{int(item_obj['id']) + 1}"
         elif "id" in item_obj:
             return f"drug_{item_obj['id']}"
     return str(key)
