@@ -1,0 +1,80 @@
+{
+  "git_commit": "1467cdc6b140cb9942703d9bc04bc9763882afde",
+  "branch": "exp/ragas-opt",
+  "dev_subset": "evaluation/e2e/dataset/dev_subset_40.json",
+  "dev_subset_sha256": "0fe04836c87168ee",
+  "dataset_sha256": "f0de53c33cb587cd",
+  "grid": {
+    "P": [
+      15,
+      30,
+      60
+    ],
+    "R": [
+      5,
+      10,
+      15,
+      30,
+      60
+    ],
+    "top_k": [
+      2,
+      3,
+      5,
+      8
+    ]
+  },
+  "baseline": {
+    "P": 15,
+    "R": 15,
+    "top_k": 5,
+    "cap": 3,
+    "mode": "rrf+rerank"
+  },
+  "embedding_model": "app.embeddings.embed_texts",
+  "reranker": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+  "parity": {
+    "comparisons": 284,
+    "mismatches": 1
+  },
+  "latency_subset_ms": {
+    "P15_R15": {
+      "n_cases": 10,
+      "mean_ms": 1260.8,
+      "p95_ms": 1874.1,
+      "median_ms": 1407.3
+    },
+    "P30_R15": {
+      "n_cases": 10,
+      "mean_ms": 1260.0,
+      "p95_ms": 1876.6,
+      "median_ms": 1446.1
+    },
+    "P30_R30": {
+      "n_cases": 10,
+      "mean_ms": 2540.3,
+      "p95_ms": 3810.1,
+      "median_ms": 2748.0
+    },
+    "P60_R15": {
+      "n_cases": 10,
+      "mean_ms": 1271.6,
+      "p95_ms": 1868.8,
+      "median_ms": 1398.3
+    },
+    "P60_R30": {
+      "n_cases": 10,
+      "mean_ms": 2745.4,
+      "p95_ms": 4006.2,
+      "median_ms": 2688.4
+    },
+    "P60_R60": {
+      "n_cases": 10,
+      "mean_ms": 5214.6,
+      "p95_ms": 6859.6,
+      "median_ms": 5491.4
+    }
+  },
+  "n_configs": 49,
+  "llm_calls": 0
+}
