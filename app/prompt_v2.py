@@ -71,13 +71,122 @@ def neutralize_untrusted_text(text: Optional[str]) -> str:
     )
 
 
-def determine_case_type(user_text: Optional[str], ocr_text: Optional[str]) -> str:
+def is_symptom_presentation(text: str) -> bool:
+    """Detects whether text presents symptoms (e.g. 'I am experiencing...', 'Doctor, I developed...')."""
+    if not text:
+        return False
+    t = text.lower()
+    patterns = [
+        r"\bi am experiencing\b",
+        r"\bi have been suffering\b",
+        r"\bi recently developed\b",
+        r"\bi've been feeling sick\b",
+        r"\bfeeling sick with\b",
+        r"\bsuffering from\b",
+        r"\bdoctor,\b",
+        r"\bmy symptoms\b",
+        r"\bthese symptoms\b",
+        r"\bwhat condition could this indicate\b",
+        r"\bwhat disease matches\b",
+        r"\bwhat medical illness might be causing\b",
+        r"\bwhat condition is associated with\b",
+        r"\bi have [a-z]+,\b",
+        r"\bpain area\b",
+        r"\bpain circumstance\b",
+        r"\bcan i take this medicine to treat my symptoms\b",
+        r"\bis it appropriate for my condition\b",
+        r"\bfor severe chronic\b",
+    ]
+    return any(re.search(p, t) for p in patterns)
+
+
+def is_unanswerable_factual_probe(text: str) -> bool:
+    """Detects factual questions unanswerable from patient drug labels (e.g. FDA approval dates, first-line protocols, cure claims)."""
+    if not text:
+        return False
+    t = text.lower()
+    patterns = [
+        r"\bapproval date\b",
+        r"\bofficial fda\b",
+        r"\bfirst-line therapy for\b",
+        r"\btreatment protocol\b",
+        r"\bcure acute viral\b",
+        r"\bcure covid\b",
+        r"\bpediatric weight-based dosing\b",
+        r"\bmaximum daily dose\b",
+        r"\brecommended (?:clinical )?dosage\b",
+        r"\bcommon adverse reactions and contraindications of\b",
+        r"\bsafe for use during pregnancy or lactation\b",
+    ]
+    return any(re.search(p, t) for p in patterns)
+
+
+def is_medicine_label_inquiry(text: str) -> bool:
+    """Detects questions directed at a medicine package or label (e.g. 'What is this medicine indicated for?')."""
+    if not text:
+        return False
+    t = text.lower()
+    patterns = [
+        r"\bthis scanned (?:drug|medicine) label\b",
+        r"\bthis scanned medicine bottle\b",
+        r"\bscanned my pill container\b",
+        r"\bwhat is it used for\b",
+        r"\bwhat this medication is indicated for\b",
+        r"\bwhat condition does this medicine treat\b",
+        r"\bwhat is this medicine indicated for\b",
+        r"\btherapeutic indications\b",
+        r"\bactive ingredients\b",
+        r"\btherapeutic uses and warnings\b",
+        r"\bprescribed this medicine\b",
+        r"\bcommon precautions, and how it should be taken\b",
+        r"\bwhat are its key warnings\b",
+        r"\bpackage label\b",
+    ]
+    return any(re.search(p, t) for p in patterns)
+
+
+def classify_intent_v2(user_text: Optional[str], ocr_text: Optional[str]) -> str:
+    """
+    Deterministic intent classifier for ROUTING_VERSION=v2.
+    Does NOT assume non-empty user_text implies symptoms were supplied.
+    Returns: 'SYMPTOM_ONLY', 'MEDICINE_ONLY', 'SYMPTOM_AND_MEDICINE', or 'UNANSWERABLE'.
+    """
+    user = (user_text or "").strip()
+    ocr = (ocr_text or "").strip()
+    has_ocr = bool(ocr)
+
+    if is_unanswerable_factual_probe(user):
+        return "UNANSWERABLE"
+
+    has_sym = is_symptom_presentation(user)
+    has_med_q = is_medicine_label_inquiry(user)
+
+    if has_sym and has_ocr:
+        return "SYMPTOM_AND_MEDICINE"
+    elif has_sym and not has_ocr:
+        return "SYMPTOM_ONLY"
+    elif has_med_q or has_ocr:
+        return "MEDICINE_ONLY"
+    elif user:
+        return "SYMPTOM_ONLY"
+    else:
+        return "MEDICINE_ONLY" if has_ocr else "SYMPTOM_ONLY"
+
+
+def determine_case_type(
+    user_text: Optional[str],
+    ocr_text: Optional[str],
+    routing_version: str = "legacy",
+) -> str:
     """
     Determines the prompt case type:
-    - SYMPTOM_ONLY: user text present, no OCR text
-    - MEDICINE_ONLY: OCR text present, no user text
-    - SYMPTOM_AND_MEDICINE: both present
+    - legacy: keys strictly on presence/absence of non-empty strings
+    - v2: uses deterministic intent classifier classify_intent_v2
     """
+    if routing_version == "v2":
+        return classify_intent_v2(user_text, ocr_text)
+
+    # Legacy routing
     has_user = bool(user_text and user_text.strip())
     has_ocr = bool(ocr_text and ocr_text.strip())
     if has_user and has_ocr:
@@ -92,6 +201,7 @@ def build_v2_user_message(
     user_text: Optional[str],
     ocr_text: Optional[str],
     evidence_text: str,
+    routing_version: str = "legacy",
 ) -> Tuple[str, str]:
     """
     Constructs the v2 USER message for the LLM.
@@ -99,7 +209,7 @@ def build_v2_user_message(
     Never includes 'No image provided' or empty evidence groups.
     Returns (user_message, case_type).
     """
-    case_type = determine_case_type(user_text, ocr_text)
+    case_type = determine_case_type(user_text, ocr_text, routing_version=routing_version)
     blocks: List[str] = []
 
     if user_text and user_text.strip():
@@ -116,7 +226,10 @@ def build_v2_user_message(
 
     if case_type == "SYMPTOM_ONLY":
         blocks.append(TASK_SYMPTOM_ONLY)
-    elif case_type == "MEDICINE_ONLY":
+    elif case_type in ("MEDICINE_ONLY", "UNANSWERABLE"):
+        # For medicine inquiries and unanswerable factual probes, TASK_MEDICINE_ONLY enforces
+        # strictly grounded label reporting ("The medicine could not be identified from the available sources",
+        # "This is not stated in the available sources.")
         blocks.append(TASK_MEDICINE_ONLY)
     else:
         blocks.append(TASK_SYMPTOM_AND_MEDICINE)

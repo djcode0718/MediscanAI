@@ -97,6 +97,7 @@ class Settings(BaseSettings):
     # Generation Hygiene & Evidence Configuration (Phase 01 Part B)
     EVIDENCE_FORMAT: str = "legacy"  # "legacy" | "compact"
     PROMPT_VERSION: str = "legacy"   # "legacy" | "v2"
+    ROUTING_VERSION: str = "legacy"  # "legacy" | "v2"
     GEN_TEMPERATURE: Optional[float] = None
     GEN_SEED: Optional[int] = None
     OLLAMA_NUM_CTX: Optional[int] = None
@@ -144,6 +145,14 @@ class Settings(BaseSettings):
         valid = {"legacy", "v2"}
         if v.lower() not in valid:
             raise ValueError(f"PROMPT_VERSION must be one of {sorted(valid)}, got '{v}'.")
+        return v.lower()
+
+    @field_validator("ROUTING_VERSION")
+    @classmethod
+    def validate_routing_version(cls, v: str) -> str:
+        valid = {"legacy", "v2"}
+        if v.lower() not in valid:
+            raise ValueError(f"ROUTING_VERSION must be one of {sorted(valid)}, got '{v}'.")
         return v.lower()
 
     @field_validator("EVIDENCE_FIELD_CAPS", mode="before")

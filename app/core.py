@@ -481,6 +481,7 @@ class Pipeline:
         print(f"🔎 [Retrieval] Running Hybrid Search (FAISS + BM25 + RRF + Cross-Encoder) for symptom query ({len(user_norm)} chars)...")
         _t_ret_symptoms = time.perf_counter()
         _dev_trace_on = bool(getattr(self.settings, "DEV_TRACE_ENABLED", False))
+        routing_version = getattr(self.settings, "ROUTING_VERSION", "legacy")
         retrieval_debug: Dict[str, Dict[str, Any]] = {}
 
         def _search(label: str, index_name: str, text: str):
@@ -491,7 +492,20 @@ class Pipeline:
             retrieval_debug[label] = dbg
             return res
 
-        diseases_retrieved = _search('diseases', 'diseases', user_norm)
+        # Under ROUTING_VERSION=v2, if the query is an unanswerable probe or a medicine-label query
+        # with no symptoms presented, skip disease retrieval on the generic question text
+        skip_disease_search = False
+        if routing_version == "v2" and user_norm:
+            from app.prompt_v2 import classify_intent_v2
+            detected_intent = classify_intent_v2(user_text, ocr_text)
+            if detected_intent in ("MEDICINE_ONLY", "UNANSWERABLE"):
+                skip_disease_search = True
+                print(f"   ℹ️ [Routing v2] Intent detected as '{detected_intent}'. Skipping disease index search for medicine/probe query.")
+
+        if not skip_disease_search:
+            diseases_retrieved = _search('diseases', 'diseases', user_norm)
+        else:
+            diseases_retrieved = []
         pipeline_timings["retrieval_diseases_ms"] = int((time.perf_counter() - _t_ret_symptoms) * 1000)
 
         _t_ret_drugs = time.perf_counter()
@@ -732,10 +746,12 @@ class Pipeline:
                     ev_parts.append(formatted_ocr_retrievals.strip())
                 v2_evidence_text = "\n\n".join(ev_parts)
 
+            routing_version = getattr(self.settings, "ROUTING_VERSION", "legacy")
             full_prompt, case_type = build_v2_user_message(
                 user_text=user_text,
                 ocr_text=ocr_text,
-                evidence_text=v2_evidence_text
+                evidence_text=v2_evidence_text,
+                routing_version=routing_version,
             )
         else:
             print("📝 [Prompt] Assembling context-grounded prompt template...")

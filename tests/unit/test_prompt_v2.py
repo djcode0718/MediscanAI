@@ -37,6 +37,32 @@ class TestPromptV2StructureAndNeutralization:
         assert determine_case_type("", "Advil 200mg") == "MEDICINE_ONLY"
         assert determine_case_type("fever", "Advil 200mg") == "SYMPTOM_AND_MEDICINE"
 
+    def test_routing_v2_intent_classification(self):
+        # 1. Medicine-only queries (even with generic questions in user_text)
+        med_q = "Please provide the therapeutic indications, active ingredients, and important warnings for this scanned drug label."
+        ocr = "Deriphyllin (Etofylline/Theophylline) 20mg"
+        # Under legacy routing, non-empty user_text + OCR incorrectly routes to SYMPTOM_AND_MEDICINE
+        assert determine_case_type(med_q, ocr, routing_version="legacy") == "SYMPTOM_AND_MEDICINE"
+        # Under v2 routing, it correctly recognizes a medicine label inquiry
+        assert determine_case_type(med_q, ocr, routing_version="v2") == "MEDICINE_ONLY"
+
+        # 2. Symptom presentations
+        sym_q = "I am experiencing Coronary Atherosclerosis, Chest pain, dizziness"
+        assert determine_case_type(sym_q, "", routing_version="v2") == "SYMPTOM_ONLY"
+        assert determine_case_type(sym_q, ocr, routing_version="v2") == "SYMPTOM_AND_MEDICINE"
+
+        # 3. Unanswerable factual probes
+        probe_q = "What is the official FDA pediatric approval date for Xanthroflurane inhalation?"
+        assert determine_case_type(probe_q, "Xanthroflurane", routing_version="v2") == "UNANSWERABLE"
+        probe_q2 = "What is the recommended clinical dosage of chocolate syrup for treating acute appendicitis?"
+        assert determine_case_type(probe_q2, "", routing_version="v2") == "UNANSWERABLE"
+
+        # 4. Task rendering under v2 routing
+        msg, ctype = build_v2_user_message(med_q, ocr, "[E1] DRUG | Brand: Deriphyllin", routing_version="v2")
+        assert ctype == "MEDICINE_ONLY"
+        assert TASK_MEDICINE_ONLY in msg
+        assert "uses that match your symptoms" not in msg
+
     def test_symptom_only_renders_correct_blocks_and_task(self):
         user_msg, case_type = build_v2_user_message(
             user_text="Headache and fever",
