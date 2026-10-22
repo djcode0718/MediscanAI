@@ -181,13 +181,14 @@ def run_generation_experiment(
     evidence_format: str,
     prompt_version: str,
     cases: List[Dict[str, Any]],
+    routing_version: str = "legacy",
 ) -> List[Dict[str, Any]]:
     """
     Executes sequential generation on the 40 dev subset cases for a specific configuration.
     """
     print(f"\n========================================================")
     print(f"🚀 Starting Generation Run: {config_name}")
-    print(f"   EVIDENCE_FORMAT={evidence_format}, PROMPT_VERSION={prompt_version}")
+    print(f"   EVIDENCE_FORMAT={evidence_format}, PROMPT_VERSION={prompt_version}, ROUTING_VERSION={routing_version}")
     print(f"   Settings: temp=0, seed=42, num_ctx=8192, num_predict=700")
     print(f"========================================================")
 
@@ -201,6 +202,7 @@ def run_generation_experiment(
         JWT_SECRET_KEY="test_secret_for_unit_tests_only_32_bytes_long!!",
         EVIDENCE_FORMAT=evidence_format,
         PROMPT_VERSION=prompt_version,
+        ROUTING_VERSION=routing_version,
         GEN_TEMPERATURE=0.0,
         GEN_SEED=42,
         OLLAMA_NUM_CTX=8192,
@@ -251,7 +253,7 @@ def run_generation_experiment(
             total_ev_tokens = sum(itm.get("tokens", 0) for itm in evidence_items)
 
         # Contexts shown to LLM: exactly the evidence strings shown to the LLM
-        if prompt_version == "v2":
+        if prompt_version in ("v2", "v3"):
             prompt_str = trace.get("prompt", "")
             if "EVIDENCE:\n" in prompt_str:
                 ev_part = prompt_str.split("EVIDENCE:\n")[1].split("TASK:")[0].strip()
@@ -271,6 +273,8 @@ def run_generation_experiment(
 
         # Citation stats
         cit_stats = trace.get("citation_stats") or {}
+        shown_ids = [itm.get("id") for itm in evidence_items]
+        omitted_ids = trace.get("retrieved_but_omitted_ids", [])
 
         record = {
             "case_id": cid,
@@ -285,6 +289,7 @@ def run_generation_experiment(
             "system_prompt": trace.get("system_prompt"),
             "role_separation_mode": trace.get("role_separation_mode", "single_user"),
             "case_type": trace.get("case_type"),
+            "routing_class": trace.get("case_type"),
             "raw_llm_output": raw_output,
             "final_output": final_output,
             "answer_core": ans_core,
@@ -296,15 +301,20 @@ def run_generation_experiment(
             "evidence_tokens": total_ev_tokens,
             "truncated_by_length": gen_meta.get("truncated_by_length", False),
             "likely_prompt_truncated": gen_meta.get("likely_prompt_truncated", False),
+            "generation_error": gen_meta.get("error"),
             "fast_path_fired": trace.get("fast_path_fired", False),
             "raw_retrieved_ids": raw_ids_flat,
+            "retrieved_evidence_ids": raw_ids_flat,
             "shown_evidence_items": evidence_items,
+            "shown_evidence_ids": shown_ids,
+            "omitted_evidence_ids": omitted_ids,
             "retrieved_contexts": retrieved_contexts,
             "citation_stats": cit_stats,
             "tags_found": cit_stats.get("tags_found", trace.get("tags_found", [])),
             "invalid_tags": cit_stats.get("invalid_tags", trace.get("invalid_tags", [])),
             "citation_pct": cit_stats.get("citation_pct", trace.get("citation_pct", 0.0)),
             "abstained": cit_stats.get("abstained", trace.get("abstained", False)),
+            "effective_runtime_config": trace.get("effective_settings", {}),
         }
         records.append(record)
         print(f"done ({wall_time_ms}ms, prompt_eval={gen_meta.get('prompt_eval_count')}, eval={gen_meta.get('eval_count')})")
@@ -325,6 +335,7 @@ def run_generation_experiment(
         "config_name": config_name,
         "evidence_format": evidence_format,
         "prompt_version": prompt_version,
+        "routing_version": routing_version,
         "total_cases": len(records),
         "total_wall_seconds": round(total_wall_sec, 2),
         "avg_latency_ms": round(sum(r["latency_ms"] for r in records) / len(records), 1),
@@ -341,29 +352,62 @@ def run_generation_experiment(
 
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="MediScanAI Generation Runner")
+    parser.add_argument(
+        "--run",
+        choices=["all", "R0s", "A1", "A2", "A3", "A4"],
+        default="A4",
+        help="Which configuration to run (default: A4)",
+    )
+    args = parser.parse_args()
+
     cases = load_dev_subset_cases()
     print(f"Loaded {len(cases)} cases from dev_subset_40.json.")
 
-    # 1. R0s
-    assemble_r0s_records(cases)
+    if args.run in ("all", "R0s"):
+        # 1. R0s
+        assemble_r0s_records(cases)
 
-    # 2. A1
-    run_generation_experiment(
-        config_name="A1",
-        evidence_format="compact",
-        prompt_version="legacy",
-        cases=cases,
-    )
+    if args.run in ("all", "A1"):
+        # 2. A1
+        run_generation_experiment(
+            config_name="A1",
+            evidence_format="compact",
+            prompt_version="legacy",
+            cases=cases,
+        )
 
-    # 3. A2
-    run_generation_experiment(
-        config_name="A2",
-        evidence_format="compact",
-        prompt_version="v2",
-        cases=cases,
-    )
+    if args.run in ("all", "A2"):
+        # 3. A2
+        run_generation_experiment(
+            config_name="A2",
+            evidence_format="compact",
+            prompt_version="v2",
+            cases=cases,
+        )
 
-    print("\n🎉 STEP 5 COMPLETE: All generation runs (R0s, A1, A2) finished successfully!")
+    if args.run in ("all", "A3"):
+        # 4. A3: EVIDENCE_FORMAT=compact, PROMPT_VERSION=v2, ROUTING_VERSION=v2
+        run_generation_experiment(
+            config_name="A3",
+            evidence_format="compact",
+            prompt_version="v2",
+            routing_version="v2",
+            cases=cases,
+        )
+
+    if args.run in ("all", "A4"):
+        # 5. A4: EVIDENCE_FORMAT=compact, PROMPT_VERSION=v3, ROUTING_VERSION=v2
+        run_generation_experiment(
+            config_name="A4",
+            evidence_format="compact",
+            prompt_version="v3",
+            routing_version="v2",
+            cases=cases,
+        )
+
+    print(f"\n🎉 Generation run '{args.run}' finished successfully!")
 
 
 if __name__ == "__main__":

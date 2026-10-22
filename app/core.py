@@ -744,9 +744,9 @@ class Pipeline:
         citation_stats = None
         case_type = None
 
-        if prompt_version == "v2":
-            from app.prompt_v2 import SYSTEM_PROMPT, build_v2_user_message
-            system_prompt = SYSTEM_PROMPT
+        if prompt_version in ("v2", "v3"):
+            from app.prompt_v2 import SYSTEM_PROMPT, SYSTEM_PROMPT_V3, build_v2_user_message
+            system_prompt = SYSTEM_PROMPT_V3 if prompt_version == "v3" else SYSTEM_PROMPT
             role_separation_mode = "system_user"
 
             if evidence_format == "compact":
@@ -765,6 +765,7 @@ class Pipeline:
                 ocr_text=ocr_text,
                 evidence_text=v2_evidence_text,
                 routing_version=routing_version,
+                prompt_version=prompt_version,
             )
         else:
             print("📝 [Prompt] Assembling context-grounded prompt template...")
@@ -791,7 +792,7 @@ class Pipeline:
             )
             gen_meta = None
 
-        if prompt_version == "v2":
+        if prompt_version in ("v2", "v3"):
             from app.prompt_v2 import finalize_v2_response, compute_citation_stats
             llm_response_str = finalize_v2_response(raw_llm_output)
             evidence_tags = [itm["tag"] for itm in evidence_trace_data["evidence_items"]] if (evidence_trace_data and "evidence_items" in evidence_trace_data) else []
@@ -822,7 +823,7 @@ class Pipeline:
             llm_response_str = guarded_response_str
             guardrail_meta_dict = post_decision.to_dict()
 
-        if prompt_version == "v2":
+        if prompt_version in ("v2", "v3"):
             from app.guardrail import MANDATORY_HEADER, MANDATORY_TEXT
             if llm_response_str.count(MANDATORY_HEADER) > 1:
                 parts = llm_response_str.split(MANDATORY_HEADER)
@@ -929,6 +930,7 @@ class Pipeline:
                 "effective_settings": {
                     "EVIDENCE_FORMAT": getattr(self.settings, "EVIDENCE_FORMAT", "legacy"),
                     "PROMPT_VERSION": getattr(self.settings, "PROMPT_VERSION", "legacy"),
+                    "ROUTING_VERSION": getattr(self.settings, "ROUTING_VERSION", "legacy"),
                     "params": asdict(gen_params) if gen_params else None,
                     "top_k": top_k,
                     "llm_mode": llm_mode,

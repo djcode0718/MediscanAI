@@ -38,7 +38,7 @@ def test_settings_validation_constraints():
     with pytest.raises(ValueError, match="PROMPT_VERSION"):
         Settings(
             JWT_SECRET_KEY="test_secret_for_unit_tests_only_32_bytes_long!!",
-            PROMPT_VERSION="v3"
+            PROMPT_VERSION="v4"
         )
 
 

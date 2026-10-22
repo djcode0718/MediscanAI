@@ -310,3 +310,93 @@ class TestPipelinePromptVersionIntegration:
         assert final_out.count(MANDATORY_HEADER) == 1
         assert MANDATORY_TEXT in final_out
         assert trace["final_output"] == final_out
+
+
+class TestPromptV3Enhancements:
+    def test_v3_task_templates_rendered_when_prompt_version_v3(self):
+        from app.prompt_v2 import (
+            TASK_SYMPTOM_ONLY_V3,
+            TASK_MEDICINE_ONLY_V3,
+            TASK_SYMPTOM_AND_MEDICINE_V3,
+            TASK_UNANSWERABLE_V3,
+            SYSTEM_PROMPT_V3,
+        )
+
+        # 1. Symptom and Medicine Match/Mismatch
+        msg_match, ctype = build_v2_user_message(
+            user_text="I am experiencing severe joint pain, fever",
+            ocr_text="Advil 200mg",
+            evidence_text="[E1] DRUG | Brand: Advil | Indications: Pain and fever relief.",
+            routing_version="v2",
+            prompt_version="v3",
+        )
+        assert ctype == "SYMPTOM_AND_MEDICINE"
+        assert TASK_SYMPTOM_AND_MEDICINE_V3 in msg_match
+        assert "<Brand/Generic> is labeled for <exact phrase from Indications in E#>" in msg_match
+        assert "State the user's symptoms" not in msg_match
+
+        # 2. Symptom only
+        msg_sym, ctype = build_v2_user_message(
+            user_text="Headache and fever",
+            ocr_text=None,
+            evidence_text="[E1] DISEASE | Condition: Flu | Listed symptoms: headache; fever",
+            routing_version="v2",
+            prompt_version="v3",
+        )
+        assert ctype == "SYMPTOM_ONLY"
+        assert TASK_SYMPTOM_ONLY_V3 in msg_sym
+        assert "overlapping symptoms: <1-3 symptoms" in msg_sym
+
+        # 3. Medicine only
+        msg_med, ctype = build_v2_user_message(
+            user_text="What is this medicine indicated for?",
+            ocr_text="Advil 200mg",
+            evidence_text="[E1] DRUG | Brand: Advil | Generic: Ibuprofen",
+            routing_version="v2",
+            prompt_version="v3",
+        )
+        assert ctype == "MEDICINE_ONLY"
+        assert TASK_MEDICINE_ONLY_V3 in msg_med
+
+        # 4. Unanswerable probe
+        msg_unans, ctype = build_v2_user_message(
+            user_text="What was the official FDA approval date for Advil?",
+            ocr_text="Advil 200mg",
+            evidence_text="[E1] DRUG | Brand: Advil",
+            routing_version="v2",
+            prompt_version="v3",
+        )
+        assert ctype == "UNANSWERABLE"
+        assert TASK_UNANSWERABLE_V3 in msg_unans
+
+    @patch("app.core.generate_with_mode_meta")
+    def test_pipeline_threads_prompt_v3_settings(self, mock_gen):
+        from app.prompt_v2 import SYSTEM_PROMPT_V3
+        mock_gen.return_value = (
+            "**Verdict:** Advil is labeled for pain relief. [E1]\nExplanation: Treats pain. [E1]",
+            {"model": "llama3.1:8b"}
+        )
+        s = Settings(
+            JWT_SECRET_KEY="test_secret_for_unit_tests_only_32_bytes_long!!",
+            PROMPT_VERSION="v3",
+            ROUTING_VERSION="v2",
+            EVIDENCE_FORMAT="compact",
+            EMERGENCY_GUARDRAIL_ENABLED=False,
+        )
+        pipeline = Pipeline(indexes_config={}, retriever=MagicMock(), settings=s)
+        pipeline.retriever.search_specific.return_value = [
+            ("drug_1", 0.9, {
+                "id": 1,
+                "brand_name": "Advil",
+                "generic_name": "Ibuprofen",
+                "substance_name": ["Ibuprofen"],
+                "indications_and_usage": "Pain relief."
+            })
+        ]
+
+        res = pipeline.run("headache", return_trace=True)
+        trace = res["trace"]
+        assert trace["prompt_version"] == "v3"
+        assert trace["system_prompt"] == SYSTEM_PROMPT_V3
+        assert "Do not state standalone assertions about the user's symptoms" in trace["system_prompt"]
+
