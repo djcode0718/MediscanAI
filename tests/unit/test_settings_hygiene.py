@@ -38,8 +38,14 @@ def test_settings_validation_constraints():
     with pytest.raises(ValueError, match="PROMPT_VERSION"):
         Settings(
             JWT_SECRET_KEY="test_secret_for_unit_tests_only_32_bytes_long!!",
-            PROMPT_VERSION="v4"
+            PROMPT_VERSION="v99"
         )
+
+    s_v4 = Settings(
+        JWT_SECRET_KEY="test_secret_for_unit_tests_only_32_bytes_long!!",
+        PROMPT_VERSION="v4"
+    )
+    assert s_v4.PROMPT_VERSION == "v4"
 
 
 def test_settings_field_caps_string_parser():

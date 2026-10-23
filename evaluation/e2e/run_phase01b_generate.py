@@ -356,9 +356,9 @@ def main():
     parser = argparse.ArgumentParser(description="MediScanAI Generation Runner")
     parser.add_argument(
         "--run",
-        choices=["all", "R0s", "A1", "A2", "A3", "A4"],
-        default="A4",
-        help="Which configuration to run (default: A4)",
+        choices=["all", "R0s", "A1", "A2", "A3", "A4", "A5"],
+        default="A5",
+        help="Which configuration to run (default: A5)",
     )
     args = parser.parse_args()
 
@@ -403,6 +403,16 @@ def main():
             config_name="A4",
             evidence_format="compact",
             prompt_version="v3",
+            routing_version="v2",
+            cases=cases,
+        )
+
+    if args.run in ("all", "A5"):
+        # 6. A5: EVIDENCE_FORMAT=compact, PROMPT_VERSION=v4, ROUTING_VERSION=v2
+        run_generation_experiment(
+            config_name="A5",
+            evidence_format="compact",
+            prompt_version="v4",
             routing_version="v2",
             cases=cases,
         )
