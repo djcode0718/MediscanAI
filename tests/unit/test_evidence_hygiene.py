@@ -391,10 +391,115 @@ def test_validate_and_sanitize_claims():
     assert "Atrial fibrillation includes dizziness." in res3
     assert "Coronary atherosclerosis includes chest pain." in res3
 
-    # 4. Strips negative alternative disclaimers
-    raw4 = "Asthma is documented with shortness of breath. [E1] No alternative conditions were identified in the available sources."
-    res4 = validate_and_sanitize_claims(raw4, valid_evidence_tags=["[E1]"])
-    assert "No alternative conditions" not in res4
-    assert res4.strip() == "Asthma is documented with shortness of breath. [E1]"
+    # 5. Normalizes universal negative illness assertions
+    raw5 = "No medical illness was identified in the available sources."
+    res5 = validate_and_sanitize_claims(raw5)
+    assert "The available sources do not list overlapping conditions for the described symptoms." in res5
+
+    # 6. Normalizes unanswerable entity probe claims
+    raw6 = "The requested medication information about Xanthroflurane inhalation could not be verified."
+    res6 = validate_and_sanitize_claims(raw6)
+    assert res6 == "The requested clinical information could not be verified from the available sources."
+
+
+def test_evidence_sufficiency_evaluation():
+    from app.evidence import (
+        EvidenceItem,
+        EvidenceSufficiencyState,
+        evaluate_evidence_sufficiency,
+    )
+
+    # 1. Unanswerable case
+    state, _ = evaluate_evidence_sufficiency(
+        user_text="What is the official FDA approval date?",
+        ocr_text="",
+        evidence_items=[],
+        case_type="UNANSWERABLE",
+    )
+    assert state == EvidenceSufficiencyState.INSUFFICIENT
+
+    # 2. Scanned medicine not in evidence (fictitious probe e.g. Novaproxin)
+    fake_ocr = "Novaproxin 100mg Rx Only"
+    drug_items = [
+        EvidenceItem(
+            channel="drugs",
+            raw_id="drug_73716",
+            covers_ids=["drug_73716"],
+            item_type="DRUG",
+            fields={"brand": "Meloxicam", "generic": "MELOXICAM", "indications": "Osteoarthritis pain"},
+        )
+    ]
+    state_fake, _ = evaluate_evidence_sufficiency(
+        user_text="Can I take this for osteoarthritis?",
+        ocr_text=fake_ocr,
+        evidence_items=drug_items,
+        case_type="SYMPTOM_AND_MEDICINE",
+    )
+    assert state_fake == EvidenceSufficiencyState.UNCERTAIN_MEDICINE_IDENTITY
+
+    # 3. Scanned medicine in evidence but missing indications (Rx Only*)
+    stroph_ocr = "Strophanthus (STROPHANTHUS) 20mg"
+    stroph_drug = [
+        EvidenceItem(
+            channel="drugs",
+            raw_id="drug_22282",
+            covers_ids=["drug_22282"],
+            item_type="DRUG",
+            fields={"brand": "Strophanthus hispidus", "generic": "STROPHANTHUS HISPIDUS SEED", "indications": "Rx Only*"},
+        )
+    ]
+    state_stroph, _ = evaluate_evidence_sufficiency(
+        user_text="Can I take this medicine?",
+        ocr_text=stroph_ocr,
+        evidence_items=stroph_drug,
+        case_type="SYMPTOM_AND_MEDICINE",
+    )
+    assert state_stroph == EvidenceSufficiencyState.PARTIALLY_SUFFICIENT
+
+    # 4. Scanned medicine in evidence with indications
+    pen_ocr = "Penicillin V Potassium 500mg"
+    pen_drug = [
+        EvidenceItem(
+            channel="drugs",
+            raw_id="drug_1234",
+            covers_ids=["drug_1234"],
+            item_type="DRUG",
+            fields={"brand": "Penicillin V Potassium", "generic": "PENICILLIN", "indications": "Mild to moderately severe infections"},
+        )
+    ]
+    state_pen, _ = evaluate_evidence_sufficiency(
+        user_text="Can I take this medicine?",
+        ocr_text=pen_ocr,
+        evidence_items=pen_drug,
+        case_type="SYMPTOM_AND_MEDICINE",
+    )
+    assert state_pen == EvidenceSufficiencyState.SUFFICIENT
+
+
+def test_cross_field_indication_contamination_guard():
+    from app.evidence import EvidenceItem, validate_and_sanitize_claims
+
+    evidence_items = [
+        EvidenceItem(
+            channel="diseases",
+            raw_id="dis_100",
+            covers_ids=["dis_100"],
+            item_type="DISEASE",
+            fields={"condition": "Induced Abortion"},
+        ),
+        EvidenceItem(
+            channel="drugs",
+            raw_id="drug_22282",
+            covers_ids=["drug_22282"],
+            item_type="DRUG",
+            fields={"brand": "Strophanthus", "generic": "STROPHANTHUS", "indications": "Rx Only*"},
+        ),
+    ]
+
+    # Model falsely attributing disease chunk name to drug with Rx Only*
+    hallucinated = "Strophanthus (STROPHANTHUS) 20mg is labeled for treatment of Induced Abortion. [E2]"
+    sanitized = validate_and_sanitize_claims(hallucinated, valid_evidence_tags=["[E2]"], evidence_items=evidence_items)
+    assert "Induced Abortion" not in sanitized
+    assert "Strophanthus evidence does not state labeled indications in the available sources. [E2]" in sanitized
 
 

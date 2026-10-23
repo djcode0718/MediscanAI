@@ -745,9 +745,14 @@ class Pipeline:
         citation_stats = None
         case_type = None
 
-        if prompt_version in ("v2", "v3", "v4", "v5"):
-            from app.prompt_v2 import SYSTEM_PROMPT, SYSTEM_PROMPT_V3, SYSTEM_PROMPT_V4, SYSTEM_PROMPT_V5, build_v2_user_message
-            if prompt_version == "v5":
+        if prompt_version in ("v2", "v3", "v4", "v5", "v6", "v7"):
+            from app.prompt_v2 import (
+                SYSTEM_PROMPT, SYSTEM_PROMPT_V3, SYSTEM_PROMPT_V4, SYSTEM_PROMPT_V5, SYSTEM_PROMPT_V6,
+                build_v2_user_message
+            )
+            if prompt_version in ("v6", "v7"):
+                system_prompt = SYSTEM_PROMPT_V6
+            elif prompt_version == "v5":
                 system_prompt = SYSTEM_PROMPT_V5
             elif prompt_version == "v4":
                 system_prompt = SYSTEM_PROMPT_V4
@@ -800,10 +805,15 @@ class Pipeline:
             )
             gen_meta = None
 
-        if prompt_version in ("v2", "v3", "v4", "v5"):
+        if prompt_version in ("v2", "v3", "v4", "v5", "v6", "v7"):
             from app.prompt_v2 import finalize_v2_response, compute_citation_stats
-            evidence_tags = [itm["tag"] for itm in evidence_trace_data["evidence_items"]] if (evidence_trace_data and "evidence_items" in evidence_trace_data) else []
-            llm_response_str = finalize_v2_response(raw_llm_output, valid_evidence_tags=evidence_tags)
+            evidence_items_data = evidence_trace_data.get("evidence_items", []) if evidence_trace_data else []
+            evidence_tags = [itm["tag"] for itm in evidence_items_data]
+            llm_response_str = finalize_v2_response(
+                raw_llm_output,
+                valid_evidence_tags=evidence_tags,
+                evidence_items=evidence_items_data,
+            )
             citation_stats = compute_citation_stats(llm_response_str, evidence_tags=evidence_tags)
         else:
             llm_response_str = raw_llm_output

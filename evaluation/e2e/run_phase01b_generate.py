@@ -253,7 +253,7 @@ def run_generation_experiment(
             total_ev_tokens = sum(itm.get("tokens", 0) for itm in evidence_items)
 
         # Contexts shown to LLM: exactly the evidence strings shown to the LLM
-        if prompt_version in ("v2", "v3", "v4", "v5"):
+        if prompt_version in ("v2", "v3", "v4", "v5", "v6", "v7"):
             prompt_str = trace.get("prompt", "")
             if "EVIDENCE:\n" in prompt_str:
                 ev_part = prompt_str.split("EVIDENCE:\n")[1].split("TASK:")[0].strip()
@@ -356,9 +356,9 @@ def main():
     parser = argparse.ArgumentParser(description="MediScanAI Generation Runner")
     parser.add_argument(
         "--run",
-        choices=["all", "R0s", "A1", "A2", "A3", "A4", "A5", "A6"],
-        default="A6",
-        help="Which configuration to run (default: A6)",
+        choices=["all", "R0s", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"],
+        default="A7",
+        help="Which configuration to run (default: A7)",
     )
     args = parser.parse_args()
 
@@ -423,6 +423,26 @@ def main():
             config_name="A6",
             evidence_format="compact",
             prompt_version="v5",
+            routing_version="v2",
+            cases=cases,
+        )
+
+    if args.run in ("all", "A7"):
+        # 8. A7: EVIDENCE_FORMAT=compact, PROMPT_VERSION=v6, ROUTING_VERSION=v2
+        run_generation_experiment(
+            config_name="A7",
+            evidence_format="compact",
+            prompt_version="v6",
+            routing_version="v2",
+            cases=cases,
+        )
+
+    if args.run in ("all", "A8"):
+        # 9. A8: EVIDENCE_FORMAT=compact, PROMPT_VERSION=v7, ROUTING_VERSION=v2
+        run_generation_experiment(
+            config_name="A8",
+            evidence_format="compact",
+            prompt_version="v7",
             routing_version="v2",
             cases=cases,
         )

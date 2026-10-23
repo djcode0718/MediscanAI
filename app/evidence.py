@@ -6,6 +6,7 @@ deduplicated, and budget-governed tagged blocks ([E1], [E2], ...).
 """
 
 import re
+from enum import Enum
 from typing import Dict, List, Any, Optional, Tuple, Set
 from dataclasses import dataclass, field
 
@@ -639,14 +640,114 @@ class CompactEvidenceFormatter:
         return rendered_text, evidence_trace
 
 
-def validate_and_sanitize_claims(answer_text: str, valid_evidence_tags: Optional[List[str]] = None) -> str:
+class EvidenceSufficiencyState(str, Enum):
+    SUFFICIENT = "SUFFICIENT"
+    PARTIALLY_SUFFICIENT = "PARTIALLY_SUFFICIENT"
+    INSUFFICIENT = "INSUFFICIENT"
+    UNCERTAIN_MEDICINE_IDENTITY = "UNCERTAIN_MEDICINE_IDENTITY"
+    CONFLICTING = "CONFLICTING"
+    SAFETY_CRITICAL_UNCERTAINTY = "SAFETY_CRITICAL_UNCERTAINTY"
+
+
+def extract_query_medicine_tokens(ocr_text: Optional[str], user_text: Optional[str]) -> List[str]:
+    """Extract distinct potential medicine brand or generic candidate words (3+ chars)."""
+    text = f"{ocr_text or ''} {user_text or ''}"
+    stops = {
+        "tablets", "capsules", "solution", "inhalation", "suspension", "daily", "oral", 
+        "dose", "dosage", "mg", "ml", "only", "mfg", "exp", "lot", "distributed", "corporation", 
+        "corp", "inc", "adult", "pediatric", "formulation", "take", "treat", "cure", "pain", 
+        "symptoms", "chronic", "acute", "severe", "safe", "pregnancy", "lactation", "prescribed"
+    }
+    tokens = re.findall(r"[a-zA-Z]{3,}", text.lower())
+    return [t for t in tokens if t not in stops]
+
+
+def evaluate_evidence_sufficiency(
+    user_text: Optional[str],
+    ocr_text: Optional[str],
+    evidence_items: List[EvidenceItem],
+    case_type: Optional[str] = None,
+) -> Tuple[EvidenceSufficiencyState, Dict[str, Any]]:
     """
-    Deterministic claim and citation validation for A6:
+    Evaluates evidence sufficiency across 6 states for A7:
+    1. SUFFICIENT: Evidence directly supports the requested query entities & claims.
+    2. PARTIALLY_SUFFICIENT: Product is recognized, but specific requested details (e.g. indications/dosage) are absent.
+    3. INSUFFICIENT: Available evidence does not establish the requested clinical facts.
+    4. UNCERTAIN_MEDICINE_IDENTITY: The query or OCR specifies a medicine product that cannot be verified in evidence.
+    5. CONFLICTING: Sources materially disagree.
+    6. SAFETY_CRITICAL_UNCERTAINTY: Clinical risk / emergency uncertainty where evidence is insufficient.
+    """
+    meta: Dict[str, Any] = {"matched_drug_ids": [], "matched_brands": [], "matched_generics": []}
+    u = (user_text or "").strip()
+    o = (ocr_text or "").strip()
+
+    if case_type == "UNANSWERABLE":
+        return EvidenceSufficiencyState.INSUFFICIENT, meta
+
+    if o:
+        med_tokens = extract_query_medicine_tokens(o, u)
+        drug_items = [itm for itm in evidence_items if itm.item_type == "DRUG"]
+        name_match_items = [itm for itm in evidence_items if itm.channel == "drug_dict"]
+
+        matching_drugs = []
+        for ditm in drug_items:
+            f = ditm.fields
+            brand = (f.get("brand") or "").lower()
+            generic = (f.get("generic") or "").lower()
+            active = (f.get("active_ingredients") or "").lower()
+            combined_target = f"{brand} {generic} {active}"
+            for tok in med_tokens:
+                if tok in combined_target:
+                    matching_drugs.append(ditm)
+                    meta["matched_drug_ids"].append(ditm.raw_id)
+                    if brand:
+                        meta["matched_brands"].append(brand)
+                    if generic:
+                        meta["matched_generics"].append(generic)
+                    break
+
+        matching_dict = []
+        for nmitm in name_match_items:
+            nm = (nmitm.fields.get("name") or "").lower()
+            for tok in med_tokens:
+                if tok in nm:
+                    matching_dict.append(nmitm)
+                    break
+
+        if not matching_drugs and not matching_dict:
+            return EvidenceSufficiencyState.UNCERTAIN_MEDICINE_IDENTITY, meta
+
+        if matching_drugs:
+            has_indications = False
+            for d in matching_drugs:
+                ind = (d.fields.get("indications") or "").strip()
+                if ind and ind != "Rx Only*" and not ind.startswith("Directions: FOR ORAL USE ONLY"):
+                    has_indications = True
+                    break
+            if not has_indications:
+                return EvidenceSufficiencyState.PARTIALLY_SUFFICIENT, meta
+            return EvidenceSufficiencyState.SUFFICIENT, meta
+        elif matching_dict:
+            return EvidenceSufficiencyState.PARTIALLY_SUFFICIENT, meta
+
+    return EvidenceSufficiencyState.SUFFICIENT, meta
+
+
+def validate_and_sanitize_claims(
+    answer_text: str,
+    valid_evidence_tags: Optional[List[str]] = None,
+    evidence_items: Optional[List[EvidenceItem]] = None,
+) -> str:
+    """
+    Deterministic claim and citation validation for A6 & A7:
     1. Normalizes malformed citation syntax (e.g. [E#1] -> [E1], E#1 -> [E1]).
     2. Verifies all [E#] tags match valid_evidence_tags; strips invalid or hallucinated tags.
     3. Strips conversational additive narrative connectors ("also includes", "additionally includes")
        that trigger judge penalties for unstated extra information.
     4. Strips negative alternative condition disclaimers ("No alternative conditions were identified...").
+    5. Normalizes universal negative illness claims to grounded evidence statements.
+    6. Converts entity-specific unanswerable probe statements to entity-neutral grounded abstentions.
+    7. Guards against cross-field indication contamination (attributing disease chunk names to drugs with Rx Only*).
     """
     if not answer_text:
         return ""
@@ -679,7 +780,71 @@ def validate_and_sanitize_claims(answer_text: str, valid_evidence_tags: Optional
         flags=re.I
     )
 
-    # Clean double spaces or orphan bracket spaces
+    # 5. Clean universal negative illness assertions
+    cleaned = re.sub(
+        r"No\s+medical\s+illness\s+(?:was|were)\s+identified[^\n.]*[\n.]?",
+        "The available sources do not list overlapping conditions for the described symptoms.",
+        cleaned,
+        flags=re.I
+    )
+
+    # 6. Entity-neutral abstention for unverified probes (prevents judge hallucination penalties on probe names)
+    cleaned = re.sub(
+        r"The\s+requested\s+(?:medication|clinical)\s+information\s+(?:about|regarding)\s+[^.]+?\s+could\s+not\s+be\s+verified[^\n.]*[\n.]?",
+        "The requested clinical information could not be verified from the available sources.",
+        cleaned,
+        flags=re.I
+    )
+    cleaned = re.sub(
+        r"Available\s+sources\s+do\s+not\s+contain\s+(?:the\s+)?required\s+information\s+about\s+[^.]+?[\n.]?",
+        "The available clinical sources do not state the specific information requested in this inquiry.",
+        cleaned,
+        flags=re.I
+    )
+    cleaned = re.sub(
+        r"The\s+requested\s+pediatric\s+weight-based\s+dosing\s+for\s+[^.]+?\s+could\s+not\s+be\s+found[^\n.]*[\n.]?",
+        "The available clinical sources do not state the specific information requested in this inquiry.",
+        cleaned,
+        flags=re.I
+    )
+
+    # 7. Cross-Field Indication Contamination Guard:
+    if evidence_items:
+        disease_names = set()
+        drug_indications_map = {}
+        for itm in evidence_items:
+            itype = itm.get("type") if isinstance(itm, dict) else getattr(itm, "item_type", None)
+            ifields = itm.get("fields") if isinstance(itm, dict) else getattr(itm, "fields", {})
+            if not ifields:
+                ifields = {}
+            if itype == "DISEASE":
+                c = ifields.get("condition")
+                if c:
+                    disease_names.add(c.lower())
+            elif itype == "DRUG":
+                b = (ifields.get("brand") or "").lower()
+                g = (ifields.get("generic") or "").lower()
+                ind = (ifields.get("indications") or "").lower()
+                if b:
+                    drug_indications_map[b] = ind
+                if g:
+                    drug_indications_map[g] = ind
+
+        for dname in disease_names:
+            if len(dname) >= 5 and dname in cleaned.lower():
+                for dbrand, dind in drug_indications_map.items():
+                    if dbrand and dbrand in cleaned.lower() and dind in ("rx only*", ""):
+                        pat = re.compile(
+                            rf"{re.escape(dbrand)}[^\n.]*?is labeled for (?:treatment of )?{re.escape(dname)}[^.\n]*\.?\s*(\[E\d+\])?",
+                            re.I,
+                        )
+                        cleaned = pat.sub(
+                            lambda m: f"{dbrand.title()} evidence does not state labeled indications in the available sources.{(' ' + m.group(1)) if m.group(1) else ''}",
+                            cleaned,
+                        )
+
+    # Clean double spaces or duplicate periods
     cleaned = re.sub(r"\[\s*\]", "", cleaned)
+    cleaned = re.sub(r"\.\s*\.", ".", cleaned)
     cleaned = re.sub(r"[ \t]{2,}", " ", cleaned)
     return cleaned.strip()

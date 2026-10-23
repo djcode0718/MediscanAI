@@ -142,7 +142,7 @@ class Settings(BaseSettings):
     @field_validator("PROMPT_VERSION")
     @classmethod
     def validate_prompt_version(cls, v: str) -> str:
-        valid = {"legacy", "v2", "v3", "v4", "v5"}
+        valid = {"legacy", "v2", "v3", "v4", "v5", "v6", "v7"}
         if v.lower() not in valid:
             raise ValueError(f"PROMPT_VERSION must be one of {sorted(valid)}, got '{v}'.")
         return v.lower()
