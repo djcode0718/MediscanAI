@@ -2304,5 +2304,1128 @@
       }
     ],
     "nan_reasons": {}
+  },
+  "5071fc46044326d1bdc58d47fe6df34178a4b8f3b15a3a34fc88e97587e308cb": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "b253144a1dfbeb0326a72abea07e8de9ca5ecaf04af1b09742042ecb16aeb3d2": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "ab0dc21e4013e58f1d7619911b078d7fce41b2beae706a93e42cef7565819ea5": {
+    "faithfulness": 0.7037,
+    "unsupported": [
+      {
+        "case_id": "E2E-008",
+        "statement": "Acanthosis nigricrans also includes acne or pimples.",
+        "reason": "The context lists acanthosis nigricans as a condition and lists acne or pimples as a symptom of seborrheic dermatitis, but not specifically for acanthosis nigricans. Therefore, it cannot be deduced that acanthosis nigricrans includes acne or pimples.",
+        "fuzzy_score": 0.4478
+      },
+      {
+        "case_id": "E2E-008",
+        "statement": "Acanthosis nigricrans also includes skin growth.",
+        "reason": "The context lists acanthosis nigricans as a condition and lists skin growth as a symptom of seborrheic keratosis, but not specifically for acanthosis nigricans. Therefore, it cannot be deduced that acanthosis nigricrans includes skin growth.",
+        "fuzzy_score": 0.3729
+      },
+      {
+        "case_id": "E2E-008",
+        "statement": "Acanthosis nigricrans also includes skin lesion.",
+        "reason": "The context lists acanthosis nigricans as a condition and lists skin lesion as a symptom of seborrheic keratosis, but not specifically for acanthosis nigricans. Therefore, it cannot be deduced that acanthosis nigricrans includes skin lesion.",
+        "fuzzy_score": 0.3729
+      },
+      {
+        "case_id": "E2E-008",
+        "statement": "Seborrheic dermatitis also includes abnormal appearing skin.",
+        "reason": "The context lists seborrheic dermatitis as a condition and lists abnormal appearing skin as a symptom of seborrheic keratosis, but not specifically for seborrheic dermatitis. Therefore, it cannot be deduced that seborrheic dermatitis includes abnormal appearing skin.",
+        "fuzzy_score": 0.5542
+      },
+      {
+        "case_id": "E2E-008",
+        "statement": "Seborrheic dermatitis also includes roughness.",
+        "reason": "The context lists seborrheic dermatitis as a condition and lists roughness as a symptom of seborrheic keratosis, but not specifically for seborrheic dermatitis. Therefore, it cannot be deduced that seborrheic dermatitis includes roughness.",
+        "fuzzy_score": 0.4138
+      },
+      {
+        "case_id": "E2E-008",
+        "statement": "Seborrheic dermatitis also includes peeling.",
+        "reason": "The context lists seborrheic dermatitis as a condition and lists peeling as a symptom of seborrheic keratosis, but not specifically for seborrheic dermatitis. Therefore, it cannot be deduced that seborrheic dermatitis includes peeling.",
+        "fuzzy_score": 0.3974
+      },
+      {
+        "case_id": "E2E-008",
+        "statement": "Seborrheic dermatitis also includes scaliness.",
+        "reason": "The context lists seborrheic dermatitis as a condition and lists scaliness as a symptom of seborrheic keratosis, but not specifically for seborrheic dermatitis. Therefore, it cannot be deduced that seborrheic dermatitis includes scaliness.",
+        "fuzzy_score": 0.3924
+      },
+      {
+        "case_id": "E2E-008",
+        "statement": "Seborrheic dermatitis also includes skin dryness.",
+        "reason": "The context lists seborrheic dermatitis as a condition and lists skin dryness as a symptom of seborrheic keratosis, but not specifically for seborrheic dermatitis. Therefore, it cannot be deduced that seborrheic dermatitis includes skin dryness.",
+        "fuzzy_score": 0.3934
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "fa3f3f9e5b76c0385a47f241b8796fba8e8b409e4a5de110a1e5f9361b7aa631": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-069",
+        "statement": "The label evidence for Penicillin V Potassium lists uses that match your symptoms.",
+        "reason": "The context mentions the indications of Penicillin V Potassium, which include treating infections due to penicillin G-sensitive microorganisms. However, there is no information about the specific symptoms mentioned in the statement being matched by the label evidence.",
+        "fuzzy_score": 0.3303
+      },
+      {
+        "case_id": "E2E-069",
+        "statement": "Your symptoms are bacteremia, abdominal tenderness, chill, decreased translucency, and diarrhea.",
+        "reason": "The context lists several diseases and their corresponding symptoms. The statement mentions a combination of symptoms that can be found in multiple diseases listed in the context. Therefore, it cannot be directly inferred that these specific symptoms match any particular disease mentioned in the context.",
+        "fuzzy_score": 0.3729
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "fe3ee8d9bda602d4bfd329c60254092c0a6b0c401a8508664f6a952a7983f41c": {
+    "faithfulness": 0.6667,
+    "unsupported": [
+      {
+        "case_id": "E2E-088",
+        "statement": "The label evidence for Theraflu Severe Cold Relief lists uses that match your symptoms.",
+        "reason": "The context mentions the indications of Theraflu Severe Cold Relief, which include relieving minor aches and pains, sore throat pain, headache, cough due to minor throat and bronchial irritation, and reducing fever. Since the user's symptoms (muscular dystrophy, cough, fatigue, and feeling cold) are not explicitly mentioned in the context as being relieved by Theraflu Severe Cold Relief, it cannot be deduced that the label evidence lists uses that match the user's symptoms.",
+        "fuzzy_score": 0.3482
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "45300f1c6db743647487636a2f28314a34c2bf7a3cf9ea6763428c52ac459b98": {
+    "faithfulness": 0.875,
+    "unsupported": [
+      {
+        "case_id": "E2E-093",
+        "statement": "Lipitor is also used to reduce LDL-C in adults and pediatric patients 10 years of age or older with heterozygous familial hypercholesterolemia.",
+        "reason": "The context does not mention this specific indication for Lipitor, so it cannot be directly inferred from the given text.",
+        "fuzzy_score": 0.2667
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "cbc91af79aa743e4877b6c8a9a4131110dcbbe44b492e0e50a4bd253e68e3428": {
+    "faithfulness": 0.8571,
+    "unsupported": [
+      {
+        "case_id": "E2E-032",
+        "statement": "Hospicare 40R Adult Body Wipes is used for surface cleaning and is gentle on skin.",
+        "reason": "The context mentions that Hospicare 40R Adult Body Wipes are 'Improves patient care and satisfaction \u25cfEliminates odour associated with incontinence changes \u25cfEliminates use of harsh soaps, rough washcloths and towel drying \u25cfHelps you stay cool, clean, comfortable and refreshed anytime, anywhere'. Although it does not explicitly mention surface cleaning, the context implies that it is used for cleaning purposes. However, there is no information suggesting it is gentle on skin.",
+        "fuzzy_score": 0.2857
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "c9b429d398b436b833ad0964ab5c4d97ed4c85e8289b6adfec8d517d29082665": {
+    "faithfulness": 0.6,
+    "unsupported": [
+      {
+        "case_id": "E2E-044",
+        "statement": "The label evidence lists active ingredients AVOBENZONE, OCTINOXATE, AND OXYBENZONE.",
+        "reason": "The context does not provide a list of active ingredients for Laura Mercier Flawless Skin Repair Day Creme Broad Spectrum SPF 15 Sunscreen. However, it is mentioned in the indications section that the product helps prevent sunburn if used as directed with other sun protection measures (see Directions ).",
+        "fuzzy_score": 0.3971
+      },
+      {
+        "case_id": "E2E-044",
+        "statement": "Using Laura Mercier Flawless Skin Repair Day Creme Broad Spectrum SPF 15 Sunscreen decreases the risk of skin cancer.",
+        "reason": "The context mentions that using the product helps prevent sunburn and decreases the risk of early skin aging caused by the sun, but it does not explicitly state that it decreases the risk of skin cancer.",
+        "fuzzy_score": 0.5817
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "ac64d440f0486fd783eae6676cb15c9ba87068bc1f7397fbeaf1bfbfca3de46e": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "d7f599c1d347e785ff4ef2a14430b4c01f46c6ffef68e1306868028efc712575": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-073",
+        "statement": "The label evidence for Meclizine Hydrochloride lists uses that match your symptoms.",
+        "reason": "The context mentions several drug labels, but only one of them is for Meclizine Hydrochloride. The statement cannot be directly inferred from the given information.",
+        "fuzzy_score": 0.3333
+      },
+      {
+        "case_id": "E2E-073",
+        "statement": "Your symptoms include Vertigo, Brain Diseases, Brain Edema, Brain Infarction, and Brain Injuries.",
+        "reason": "The context lists several diseases and conditions, but it does not explicitly state that the user's symptoms match any of them. Therefore, this statement cannot be directly inferred from the given information.",
+        "fuzzy_score": 0.3529
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "f50efbb28576106a11ecb0b02a61ad37be76127834b021ec5034045e91e41b40": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-082",
+        "statement": "The label evidence for Strophanthus lists uses that match your symptoms.",
+        "reason": "The context mentions several drug labels, but none of them explicitly mention matching symptoms. Therefore, it cannot be deduced that the label evidence for Strophanthus lists uses that match the user's symptoms.",
+        "fuzzy_score": 0.3121
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Your symptoms are Arthralgia, Abdominal pain, and induced abortion.",
+        "reason": "The context mentions several disease labels, but none of them explicitly mention all three symptoms. The label for [E3] DISEASE | id=disease_chunk_2722 | Condition: induced abortion does list induced abortion as a symptom, but it also lists other symptoms that are not mentioned in the statement.",
+        "fuzzy_score": 0.4138
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "a045bca03172b2a04f0dcb94e89372d8e7b55245fe556cfff8b11eabf540f28c": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "0b72884abeb66096b9f426db631e14f85766e8c65e5b209e8f47d983107aa67f": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-034",
+        "statement": "ANTICHOLIUM's label evidence lists active ingredients PHYSOSTIGMINE SALICYLATE.",
+        "reason": "The context explicitly mentions that ANTICHOLIUM is indicated for the use as an antidote and/or antagonist in case of intoxication with and/or overdose of alcohol tropane alkaloids (hyoscyamine, atropine, scopolamine). However, it does not mention PHYSOSTIGMINE SALICYLATE as an active ingredient. Therefore, it cannot be deduced that ANTICHOLIUM's label evidence lists active ingredients PHYSOSTIGMINE SALICYLATE.",
+        "fuzzy_score": 0.3977
+      },
+      {
+        "case_id": "E2E-034",
+        "statement": "ANTICHOLIUM's label evidence indicates its use as an antidote and/or antagonist in case of overdose of alcohol tropane alkaloids (hyoscyamine, atropine, scopolamine).",
+        "reason": "The context explicitly mentions that ANTICHOLIUM is indicated for the use as an antidote and/or antagonist in case of intoxication with and/or overdose of alcohol tropane alkaloids (hyoscyamine, atropine, scopolamine). However, it does not mention overdose specifically. Therefore, it cannot be deduced that ANTICHOLIUM's label evidence indicates its use as an antidote and/or antagonist in case of overdose of alcohol tropane alkaloids (hyoscyamine, atropine, scopolamine).",
+        "fuzzy_score": 0.774
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "423291a1fb252d18f6704159f8085144abbbd87fca918a33035f4296f1e87109": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "c0a1fc54526141aa2289916e369872e7a997b07d4dd3bf2313942a121cca3751": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-024",
+        "statement": "Cerebral palsy includes cerebral palsy, blindness, cramps and spasms, infant feeding problem.",
+        "reason": "The context already lists these symptoms under the condition of cerebral palsy. Therefore, it cannot be deduced that this is an inclusion statement.",
+        "fuzzy_score": 0.3826
+      },
+      {
+        "case_id": "E2E-024",
+        "statement": "Synkinesis includes Cerebral Palsy.",
+        "reason": "The context explicitly mentions Synkinesis as a separate condition in [E2], and does not indicate that it includes cerebral palsy. Therefore, this cannot be directly inferred from the given information.",
+        "fuzzy_score": 0.5769
+      },
+      {
+        "case_id": "E2E-024",
+        "statement": "Neonatal jaundice includes infant feeding problem.",
+        "reason": "The context lists neonatal jaundice as a condition in [E3] and does not indicate that it includes infant feeding problem. Therefore, this cannot be directly inferred from the given information.",
+        "fuzzy_score": 0.6111
+      },
+      {
+        "case_id": "E2E-024",
+        "statement": "The medicine could not be identified from the available sources.",
+        "reason": "The context does mention Xeomin and Cuvposa as drugs in [E4] and [E5], but it does not provide information about identifying medicines. Therefore, this cannot be directly inferred from the given information.",
+        "fuzzy_score": 0.3077
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "fdf6cdf0009e23c521fbd5427764b15f869d4e1aef61516978915deebb529742": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-062",
+        "statement": "The label evidence for Joette Calabrese Survivalist Kit lists uses that match your symptoms.",
+        "reason": "The context mentions several indications for various drugs, but there is no information about the user's symptoms matching any of them. Therefore, it cannot be deduced that the label evidence for Joette Calabrese Survivalist Kit lists uses that match the user's symptoms.",
+        "fuzzy_score": 0.3176
+      },
+      {
+        "case_id": "E2E-062",
+        "statement": "Your symptoms include Confusion, which matches the indication listed for Ambrosia Artemisiaefolia 30C in the Joette Calabrese Survivalist Kit.",
+        "reason": "The context mentions several indications for various drugs, but there is no information about the user's symptoms matching any of them. However, it does mention that the user has Confusion as a listed symptom. Therefore, it cannot be deduced that the user's symptoms include Confusion, which matches the indication listed for Ambrosia Artemisiaefolia 30C in the Joette Calabrese Survivalist Kit.",
+        "fuzzy_score": 0.3214
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "c191c0fd8fd619427900948d53854c29b187c561860807870fd0dfb813a96c16": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "fa5c4b9c3f7e45f47f740eade6e540ba824ff8eca9d17066399cdbd93e86baa1": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-091",
+        "statement": "The medicine could not be identified.",
+        "reason": "The context explicitly mentions that alprazolam extended-release tablets are indicated for the treatment of panic disorder with or without agoraphobia, and ursodiol tablets are indicated for the treatment of patients with primary biliary cholangitis (PBC) or primary biliary cirrhosis (PBC). This implies that the medicine could be identified based on the given information.",
+        "fuzzy_score": 0.3333
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "01c008d838cc6f9954b3fd161ffd6a835cfbb5fd9152fdf0d6d39a90b8cbbf62": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "be75d0c8f2a5aa6060568c5ece925d845240265499137eeecd70eb2efd981957": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-055",
+        "statement": "The active ingredients of OHM Fever Relief temporarily relieve fever symptoms.",
+        "reason": "The context states that the active ingredients help the body fight viral and bacterial infections, but it does not explicitly mention temporary relief of fever symptoms. Therefore, this statement cannot be directly inferred from the context.",
+        "fuzzy_score": 0.4615
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "232215374db3a5c41a2d1e1ac4bb5a2f0e53349d02196b428650ef656bae8d14": {
+    "faithfulness": 0.7,
+    "unsupported": [
+      {
+        "case_id": "E2E-025",
+        "statement": "Adhesions are associated with breech presentation.",
+        "reason": "There is no information given in the context about adhesions being associated with breech presentation.",
+        "fuzzy_score": 0.5507
+      },
+      {
+        "case_id": "E2E-025",
+        "statement": "Adhesions are associated with decreased body weight.",
+        "reason": "Decreased body weight is listed as a symptom of the diseases mentioned in [E2] and [E3], but there is no information given about adhesions being associated with it.",
+        "fuzzy_score": 0.5753
+      },
+      {
+        "case_id": "E2E-025",
+        "statement": "Adhesions are associated with feeling suicidal.",
+        "reason": "Feeling suicidal is listed as a symptom of the diseases mentioned in [E2] and [E3], but there is no information given about adhesions being associated with it.",
+        "fuzzy_score": 0.5079
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "47427adc9ad9cf3a2a0ea03fbb72f7c1190a3ce212401ebf491c783fcc973507": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "a97be2e6b552e1d7d10f2435d5bef78255345f854d8f5fba95bd5fb2f2d2b59e": {
+    "faithfulness": 0.25,
+    "unsupported": [
+      {
+        "case_id": "E2E-080",
+        "statement": "The label evidence for Neomycin and Polymyxin B Sulfates and Bacitracin Zinc lists uses that match your symptoms.",
+        "reason": "The context mentions the indications of Neomycin and Polymyxin B Sulfates and Bacitracin Zinc, which include superficial infections of the external eye and its adnexa. However, it does not explicitly mention Insomnia or any other symptom listed in the statement as a matching use.",
+        "fuzzy_score": 0.5153
+      },
+      {
+        "case_id": "E2E-080",
+        "statement": "Your symptoms are Insomnia, depression, headache, irritability.",
+        "reason": "The context lists several diseases and their corresponding symptoms. However, it does not explicitly mention that the given symptoms match any of the listed conditions.",
+        "fuzzy_score": 0.3333
+      },
+      {
+        "case_id": "E2E-080",
+        "statement": "Such infections encompass conjunctivitis, keratitis and keratoconjunctivitis, blepharitis and blepharoconjunctivitis.",
+        "reason": "The context mentions that Neomycin and Polymyxin B Sulfates and Bacitracin Zinc is indicated for the topical treatment of superficial infections of the external eye and its adnexa. However, it does not explicitly mention that these specific conditions are included in the indications.",
+        "fuzzy_score": 0.9957
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "69c90f99326cc2001e0c665ea107a1500502137cf347a8be6cff2efb1d5f80f3": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-097",
+        "statement": "The label evidence for Novaproxin lists uses that match your symptoms.",
+        "reason": "There is no information given in the context about Novaproxin, and it does not match any of the listed drugs or conditions.",
+        "fuzzy_score": 0.3432
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "2636278fb26826469c7c71c2bfbae91050d183f9d33133e018250a7896d55ef6": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "41f44c085eb810a16dda7dcbcf84b978969a347f8a31a12124b03eca454b4d6c": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-041",
+        "statement": "The text on the pill container label identifies Glibenclarnide as the medication.",
+        "reason": "There is no mention of Glibenclarnide in the context, but there is a DRUG_NAME_MATCH with id=3489 and name: glyburide. However, this does not directly imply that the text on the pill container label identifies Glibenclarnide as the medication.",
+        "fuzzy_score": 0.377
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "The available sources do not provide information about the indications for this medication.",
+        "reason": "The context contains several drug labels with their indications, but there is no explicit statement that the available sources do not provide information about the indications for this medication. However, it can be inferred that the indications are provided in the context itself.",
+        "fuzzy_score": 0.4
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "18f389b38f4138b496782b19a3a316713e02d52455ff71eca782d77f4a26bf86": {
+    "faithfulness": 0.625,
+    "unsupported": [
+      {
+        "case_id": "E2E-005",
+        "statement": "Astigmatism includes the symptoms Blurred or distorted vision, blurred vision, and eye strain.",
+        "reason": "The context explicitly lists the symptoms for Astigmatism, which partially matches the statement. However, it does not include 'Blurred or distorted vision' as a separate symptom but rather combines them. Therefore, it cannot be directly inferred that this is true.",
+        "fuzzy_score": 0.4975
+      },
+      {
+        "case_id": "E2E-005",
+        "statement": "Nearsightedness includes the symptoms Blurred vision, distorted vision, and eye strain.",
+        "reason": "The context explicitly lists the symptoms for Nearsightedness, which partially matches the statement. However, it does not include 'Blurred or distorted vision' as a separate symptom but rather combines them. Therefore, it cannot be directly inferred that this is true.",
+        "fuzzy_score": 0.4561
+      },
+      {
+        "case_id": "E2E-005",
+        "statement": "No medicine in the available sources is clearly labeled for these symptoms.",
+        "reason": "The context lists several medicines with indications including blurred vision and eye strain among others. However, it does not explicitly state that none of them are labeled for these symptoms. Therefore, it cannot be directly inferred that this is true.",
+        "fuzzy_score": 0.2989
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "6ad2993e7692af468397807ebbdb1c4a554daf67f6037a39b6dae73e9921a26c": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-056",
+        "statement": "The label evidence for ESTRADIOL VAGINAL INSERTS lists uses that match your symptoms.",
+        "reason": "The context mentions the indications listed for ESTRADIOL VAGINAL INSERTS, which include atrophic vaginitis due to menopause. However, there is no explicit mention of the symptoms matching the user's symptoms in the provided text.",
+        "fuzzy_score": 0.3852
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "ef65396990d54b4b87a6d00a9745caf6cc11ebe35b552eedfbb4195f8ea74cd2": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-081",
+        "statement": "The label evidence for Thymoglobulin lists uses that match your symptoms.",
+        "reason": "The context mentions several disease conditions, but there is no explicit mention of Thymoglobulin being used to treat these conditions. Therefore, it cannot be deduced that the label evidence for Thymoglobulin lists uses that match the user's symptoms.",
+        "fuzzy_score": 0.44
+      },
+      {
+        "case_id": "E2E-081",
+        "statement": "Thymoglobulin may also be used in conjunction with concomitant immunosuppression for other spinal cord diseases.",
+        "reason": "The context mentions Thymoglobulin being indicated for acute rejection in patients receiving a kidney transplant, but it does not explicitly mention its use for other spinal cord diseases. Therefore, it cannot be deduced that this statement is true based on the context.",
+        "fuzzy_score": 0.7831
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "15fd3dd3c80a0eff9cf91c2ae5d3efb3543fc745b46416051687dec7e7b2acff": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-094",
+        "statement": "The medicine could not be identified.",
+        "reason": "The context provides detailed information about various medications, including their brand names, generic names, active ingredients, and indications. Therefore, it can be inferred that the available sources were used to identify the medicines mentioned in the context.",
+        "fuzzy_score": 0.3023
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "dff4e6bf299670f082f7089b4040ef343ef65b9a3488bf008ea38fbc76fef4a9": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "2d15dff56bae60cd987ab69a175b2c70e04a592864d5db72d873549b42730cfd": {
+    "faithfulness": 0.4,
+    "unsupported": [
+      {
+        "case_id": "E2E-021",
+        "statement": "Kearns-Sayre Syndrome lists Gait Disorders, Neurologic; Kearns-Sayre Syndrome; Knee; Knee Injuries.",
+        "reason": "The context explicitly mentions that Kearns-Sayre Syndrome is a condition with listed symptoms. However, the statement claims that it lists Gait Disorders, Neurologic and others, which is not accurate based on the information provided. Therefore, the statement cannot be directly inferred as true.",
+        "fuzzy_score": 0.4072
+      },
+      {
+        "case_id": "E2E-021",
+        "statement": "No condition in the available sources lists these symptoms.",
+        "reason": "The context mentions multiple conditions with listed symptoms, but it does not explicitly state that none of them list the given symptoms. Therefore, the statement cannot be directly inferred as true based on the information provided.",
+        "fuzzy_score": 0.4403
+      },
+      {
+        "case_id": "E2E-021",
+        "statement": "There are no medicines in the available sources that are clearly labeled for these symptoms.",
+        "reason": "The context mentions several medications with their indications, but it does not explicitly state that none of them are labeled for the given symptoms. Therefore, the statement cannot be directly inferred as true based on the information provided.",
+        "fuzzy_score": 0.3191
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "02cd63a0ba25f928cfc41b2aef312bd57661b600fab1620910760c660e1c635f": {
+    "faithfulness": 0.875,
+    "unsupported": [
+      {
+        "case_id": "E2E-072",
+        "statement": "The label evidence for METHYLPREDNISOLONE lists uses that match your symptoms.",
+        "reason": "The context mentions several diseases and their symptoms, but there is no information about the indications of METHYLPREDNISOLONE matching the user's symptoms.",
+        "fuzzy_score": 0.3852
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "d99c94394946048c262fb441cd3db5716825c278287d2f15f32f3f7e8118e427": {
+    "faithfulness": 0.7143,
+    "unsupported": [
+      {
+        "case_id": "E2E-078",
+        "statement": "The label evidence for ATZUMI lists uses that match your symptoms.",
+        "reason": "The context mentions the indications of ATZUMI, which include acute treatment of migraine with or without aura in adults. However, there is no information about ATZUMI being used to treat Urinary Incontinence, Stress, Kidney Diseases, Kidney Neoplasms, and Labor Pain.",
+        "fuzzy_score": 0.3553
+      },
+      {
+        "case_id": "E2E-078",
+        "statement": "It is not clear if ATZUMI matches any of your symptoms.",
+        "reason": "The context does not provide enough information to determine whether ATZUMI matches any of the listed symptoms. Therefore, this statement cannot be directly inferred based on the context.",
+        "fuzzy_score": 0.3289
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "31e374879b03443728aba6e26dbb6f7f4c3be043dbdde831ad6237aa87a54bc7": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "04f976d06effe1353b4efa396b55a974d224ef0524c268c1fb1536db01e21b3e": {
+    "faithfulness": 0.8333,
+    "unsupported": [
+      {
+        "case_id": "E2E-001",
+        "statement": "Coronary Atherosclerosis lists chest tightness, fatigue.",
+        "reason": "The context explicitly mentions that Coronary Atherosclerosis has listed symptoms including Chest pain or discomfort (angina); dizziness; fatigue; heart attack (when a coronary artery becomes completely blocked); irregular heartbeat; jaw or arm pain (in some cases); nausea; shortness of breath; sweating. However, chest tightness is not mentioned as one of the symptoms.",
+        "fuzzy_score": 0.4302
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "959362960feab6497264f2342f690aa4fd5fdd6b83fc0bf9112dda2ec68b9bba": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-065",
+        "statement": "The label evidence for Tylenol Cold Plus Flu Severe lists uses that match your symptoms.",
+        "reason": "The context mentions the indications listed for Tylenol Cold Plus Flu Severe, which include minor aches and pains, headache, sore throat, nasal congestion, cough, helps loosen phlegm (mucus) and thin bronchial secretions to make coughs more productive, temporarily reduces fever. However, there is no information suggesting that the label evidence lists uses that match the given symptoms.",
+        "fuzzy_score": 0.3614
+      },
+      {
+        "case_id": "E2E-065",
+        "statement": "Your symptoms include Cough, Spinal Stenosis, Splenic Rupture, Splenomegaly, and Spondylarthritis.",
+        "reason": "The context mentions several diseases and conditions, but there is no information suggesting that the given symptoms are included in them. Therefore, it cannot be deduced that the symptoms include Cough, Spinal Stenosis, Splenic Rupture, Splenomegaly, and Spondylarthritis.",
+        "fuzzy_score": 0.3182
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "b0d77ee87e0b42be499781873f4dc7742d4dea53b55e727c6c4cbf4102304db6": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-099",
+        "statement": "The medicine could not be identified.",
+        "reason": "The context contains detailed information about several medications, including their brand names, generic names, active ingredients, and indications. Therefore, it can be inferred that the medicine in question has been identified based on this information.",
+        "fuzzy_score": 0.3944
+      },
+      {
+        "case_id": "E2E-099",
+        "statement": "Available sources do not contain information about the medicine.",
+        "reason": "The context contains detailed information about several medications, including their brand names, generic names, active ingredients, and indications. Therefore, it can be inferred that available sources do contain information about the medicine in question.",
+        "fuzzy_score": 0.3673
+      },
+      {
+        "case_id": "E2E-099",
+        "statement": "It is unknown whether Valerionex oral suspension is safe for use during pregnancy or lactation.",
+        "reason": "The context does not mention Valerionex oral suspension at all. Therefore, it cannot be inferred that the safety of this medicine during pregnancy or lactation is unknown based on the provided information.",
+        "fuzzy_score": 0.4255
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "63dde00765b8f95a2b6b89060f72242b5f7c8e13f6041ab931363046c50f265f": {
+    "faithfulness": 0.8,
+    "unsupported": [
+      {
+        "case_id": "E2E-004",
+        "statement": "Torticollis lists abnormal involuntary movements and muscle swelling as its symptoms.",
+        "reason": "The context explicitly mentions torticollis as a condition with listed symptoms including abnormal involuntary movements, but it does not mention muscle swelling. Therefore, this statement cannot be directly inferred from the context.",
+        "fuzzy_score": 0.5217
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "bfa487630436d3876a5f0ad5eb7083d6e31f349baa660cc7c3d78db15d3fc9a4": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-063",
+        "statement": "The label evidence for PROCRIT lists uses that match your symptoms.",
+        "reason": "The context mentions several diseases and their symptoms, but it does not explicitly mention the indications of PROCRIT. Therefore, it cannot be deduced that the label evidence for PROCRIT lists uses that match the given symptoms.",
+        "fuzzy_score": 0.3175
+      },
+      {
+        "case_id": "E2E-063",
+        "statement": "PROCRIT is indicated for the treatment of anemia due to Chronic Kidney Disease (CKD), including patients on dialysis and not on dialysis to decrease the need for red blood cell transfusion.",
+        "reason": "The context mentions several indications of PROCRIT, but it does not explicitly mention that it is indicated for the treatment of anemia due to CKD in patients who are not on dialysis. Therefore, it cannot be deduced that this statement is true.",
+        "fuzzy_score": 0.6629
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "93f3427f9fd79a4ba9b7b7a616fc160461d115960fee96a76624eaf273bdd952": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "ba3cce50b12ae11ec8a8dde03918c5e433b7b275eaedfb1e71d77a859a926bff": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "9961e143c3f3c5e38ce7bae49350433b73acb953d1927daf7aa48552c741c766": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-008",
+        "statement": "Seborrheic dermatitis includes acne or pimples, skin growth and skin lesion as its symptoms.",
+        "reason": "The context explicitly lists the symptoms of Seborrheic dermatitis, which include seborrheic dermatitis, abnormal appearing skin, acne or pimples, dry or flaky scalp, irregular appearing scalp, itching of skin, or roughness, peeling, scaliness, skin dryness, skin growth, skin lesion. However, it does not explicitly mention acne or pimples, skin growth and skin lesion as its symptoms.",
+        "fuzzy_score": 0.3333
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "c5291182eb072d5e66ff0bcc2901bb47703b98eeb63e32bf733193e4f77aa9f0": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "7105a6a1e52d77e66c3a5ada1798807f777a14f2e1d049d1557453ead9add57a": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "cffc54cfa4bbf5a83dcc2cccc8aa6d767b72ce252e17f29fbf0f31abeb3732cf": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "2307f98d52ef91eb990be80862e57ff99834eaeffd586f616450b238599c61de": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "62b55d6e8657c9492a261a0e2c73051a57859c3f000b5337da0a28c66ac7b022": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "8aab591d31ef9d43053857b2d2a4d652816845535b2370feb75bc8d43755746b": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "1e0a1fcc5647e691198f4ed65dd8ac1beeeb4b5a68564b85b2eb0cfa098a3f43": {
+    "faithfulness": 0.25,
+    "unsupported": [
+      {
+        "case_id": "E2E-073",
+        "statement": "The indications for Meclizine Hydrochloride are stated in EVIDENCE block",
+        "reason": "While the context does contain information about Meclizine Hydrochloride's indications, it is not explicitly stated that this information can be found in an 'EVIDENCE' block. The indications are mentioned in several evidence blocks, but the specific wording of the statement cannot be directly inferred from the context.",
+        "fuzzy_score": 0.3834
+      },
+      {
+        "case_id": "E2E-073",
+        "statement": "EVIDENCE block states that Meclizine Hydrochloride is indicated for the treatment of vertigo associated with diseases affecting the vestibular system",
+        "reason": "The context does contain information about Meclizine Hydrochloride's indications, but it is not explicitly stated in an 'EVIDENCE' block. The statement can be found in several evidence blocks, including E5, E6, and E8.",
+        "fuzzy_score": 0.476
+      },
+      {
+        "case_id": "E2E-073",
+        "statement": "Vertigo associated with diseases affecting the vestibular system matches one of the described conditions (Vertigo) in USER_TEXT",
+        "reason": "The context does contain information about vertigo being a condition that can be treated by Meclizine Hydrochloride, but it is not explicitly stated as matching one of the described conditions in 'USER_TEXT'. The statement can be found in several evidence blocks, including E5, E6, and E8.",
+        "fuzzy_score": 0.3791
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "2306309b24ff7acd259135289ab39adad1ce23cbfb427288de186968a7dfc89f": {
+    "faithfulness": 0.1667,
+    "unsupported": [
+      {
+        "case_id": "E2E-082",
+        "statement": "The available sources do not mention the uses of Strophanthus for treating Arthralgia symptoms.",
+        "reason": "The context mentions Arthralgia under disease chunk 2102, but there is no information about its treatment with Strophanthus.",
+        "fuzzy_score": 0.3027
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "The available sources do not mention the uses of Strophanthus for treating Abdominal symptoms.",
+        "reason": "The context mentions several diseases and conditions, including induced abortion, which has abdominal pain as a symptom. However, there is no information about using Strophanthus to treat this symptom.",
+        "fuzzy_score": 0.2826
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "The available sources do not mention the uses of Strophanthus for treating Abnormalities symptoms.",
+        "reason": "There is no information in the context about Strophanthus being used to treat abnormalities, and it's unlikely that a medication would be labeled as Rx Only without any therapeutic use.",
+        "fuzzy_score": 0.266
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "The available sources do not mention the uses of Strophanthus for treating Abortion symptoms.",
+        "reason": "The context mentions induced abortion under disease chunk 100 and 2722, but there is no information about using Strophanthus to treat this symptom.",
+        "fuzzy_score": 0.3103
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Strophanthus is labeled as \"Rx Only\", which means it does not provide information on its therapeutic use.",
+        "reason": "The context explicitly states that Strophanthus hispidus and Strophanthus 4X are labeled as Rx Only, indicating they require a prescription but do not provide information on their therapeutic use.",
+        "fuzzy_score": 0.2817
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "dcf36de8f2f15114809ebd6683f95a87a519822c2dd0017aec870ccd77961ee3": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-100",
+        "statement": "The pediatric weight-based dosing for Glycozempra 5mg/mL solution is not stated.",
+        "reason": "There is no information given in the context about the pediatric weight-based dosing for Glycozempra 5mg/mL solution. However, there is a mention of Glycopyrrolate Oral Solution which has similar name but different indication and dosage.",
+        "fuzzy_score": 0.3317
+      },
+      {
+        "case_id": "E2E-100",
+        "statement": "The available sources do not state the pediatric weight-based dosing for Glycozempra 5mg/mL solution.",
+        "reason": "This statement is a rephrased version of the first statement, and it also cannot be directly inferred from the context.",
+        "fuzzy_score": 0.296
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "c790092427f9b5f6ac071c9ca1af4bbf5b8d5869761981c97eed629c258184b3": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-034",
+        "statement": "The scanned drug label also mentions overdosing on alcohol tropane alkaloids (hyoscyamine, atropine, scopolamine) as a reason to use ANTICHOLIUM.",
+        "reason": "The context explicitly mentions that ANTICHOLIUM is indicated for the use as an antidote and/or antagonist in case of intoxication with alcohol tropane alkaloids (hyoscyamine, atropine, scopolamine). However, it does not mention overdosing on these substances as a reason to use ANTICHOLIUM. Therefore, it cannot be directly inferred that the scanned drug label also mentions overdosing on alcohol tropane alkaloids (hyoscyamine, atropine, scopolamine) as a reason to use ANTICHOLIUM.",
+        "fuzzy_score": 0.596
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "11b561484436b40a4a4ac47813dc0857bb6ec2c324ee09a71027ebc51679ab1b": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "a30db855a618937c2188c2c5e9a609fc710a9f65f20de92281bf34872167f052": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-024",
+        "statement": "Neonatal jaundice is a condition that lists overlapping symptoms such as infant feeding problem.",
+        "reason": "The context mentions the symptoms of neonatal jaundice, which include changes in stool appearance and lack of growth. However, it does not mention infant feeding problem as one of its symptoms. Therefore, this statement cannot be directly inferred from the context.",
+        "fuzzy_score": 0.4086
+      },
+      {
+        "case_id": "E2E-024",
+        "statement": "No alternative medical illnesses were identified in the available sources.",
+        "reason": "The context mentions multiple diseases and their corresponding symptoms, but it does not provide any information about whether these conditions are the only possible explanations for the described symptoms. Therefore, this statement cannot be directly inferred from the context.",
+        "fuzzy_score": 0.3193
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "e3bb76044f8a91a11bf59f9ab41888997e22db89d7c9306d1aaa1a40616c94f5": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-062",
+        "statement": "The Joette Calabrese Survivalist Kit is also labeled for dairy intolerance.",
+        "reason": "There is no information given in the context about the kit being labeled for dairy intolerance. AGNUS CASTUS 200C is listed as an active ingredient, but it is indicated for impotence/absentmindedness, not dairy intolerance.",
+        "fuzzy_score": 0.3284
+      },
+      {
+        "case_id": "E2E-062",
+        "statement": "The Joette Calabrese Survivalist Kit is also labeled for fever/glands.",
+        "reason": "There is no information given in the context about the kit being labeled for fever/glands. AILANTHUS GLANDULOSUS 30C is listed as an active ingredient, but it is indicated for fever/glands, not that the kit is labeled for it.",
+        "fuzzy_score": 0.3297
+      },
+      {
+        "case_id": "E2E-062",
+        "statement": "The Joette Calabrese Survivalist Kit is also labeled for itchy eyelids.",
+        "reason": "There is no information given in the context about the kit being labeled for itchy eyelids. AMBROSIA ARTEMISIAEFOLIA 30C is listed as an active ingredient, but it is indicated for itchy eyelids, not that the kit is labeled for it.",
+        "fuzzy_score": 0.3261
+      },
+      {
+        "case_id": "E2E-062",
+        "statement": "The Joette Calabrese Survivalist Kit is also labeled for breathing.",
+        "reason": "There is no information given in the context about the kit being labeled for breathing. AMMONIUM CARBONATE is listed as an active ingredient, but it is indicated for breathing, not that the kit is labeled for it.",
+        "fuzzy_score": 0.3409
+      },
+      {
+        "case_id": "E2E-062",
+        "statement": "The Joette Calabrese Survivalist Kit is also labeled for rash.",
+        "reason": "There is no information given in the context about the kit being labeled for rash. ANTIMONIUM CRUDUM 6C, 200C is listed as an active ingredient, but it is indicated for rash, not that the kit is labeled for it.",
+        "fuzzy_score": 0.3636
+      },
+      {
+        "case_id": "E2E-062",
+        "statement": "The kit also contains ingredients for associated symptoms such as dryness.",
+        "reason": "According to the context, the kit contains ingredients for various symptoms including dryness, irritation, inflammation, pain and hoarseness. However, there is no specific information about Aconitum NaPELLUS 1M being used for dryness.",
+        "fuzzy_score": 0.4623
+      },
+      {
+        "case_id": "E2E-062",
+        "statement": "The kit also contains ingredients for associated symptoms such as irritation.",
+        "reason": "According to the context, the kit contains ingredients for various symptoms including dryness, irritation, inflammation, pain and hoarseness. However, there is no specific information about Aconitum NaPELLUS 1M being used for irritation.",
+        "fuzzy_score": 0.4837
+      },
+      {
+        "case_id": "E2E-062",
+        "statement": "The kit also contains ingredients for associated symptoms such as inflammation.",
+        "reason": "According to the context, the kit contains ingredients for various symptoms including dryness, irritation, inflammation, pain and hoarseness. However, there is no specific information about Aconitum NaPELLUS 1M being used for inflammation.",
+        "fuzzy_score": 0.4977
+      },
+      {
+        "case_id": "E2E-062",
+        "statement": "The kit also contains ingredients for associated symptoms such as pain.",
+        "reason": "According to the context, the kit contains ingredients for various symptoms including dryness, irritation, inflammation, pain and hoarseness. However, there is no specific information about Aconitum NaPELLUS 1M being used for pain.",
+        "fuzzy_score": 0.4402
+      },
+      {
+        "case_id": "E2E-062",
+        "statement": "The kit also contains ingredients for associated symptoms such as hoarseness.",
+        "reason": "According to the context, the kit contains ingredients for various symptoms including dryness, irritation, inflammation, pain and hoarseness. However, there is no specific information about Aconitum NaPELLUS 1M being used for hoarseness.",
+        "fuzzy_score": 0.4837
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "1a7df9ad1cf28d646015e78c117a1935b6902cdb8da627557dcfff3aae52ea03": {
+    "faithfulness": 0.8889,
+    "unsupported": [
+      {
+        "case_id": "E2E-076",
+        "statement": "The described condition in the user's query matches one of the labeled indications for Pyrimethamine.",
+        "reason": "There is no explicit match between the context and the statement. The context describes Toxoplasmosis, but it does not explicitly state that this condition matches any of the labeled indications for Pyrimethamine.",
+        "fuzzy_score": 0.3438
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "985f8026473f1930e7574682cf303147c63b2ce650a2b1e42bcc93d2a62f6d55": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-091",
+        "statement": "The information about NonexistentDrugZ 500mg tablets was not found.",
+        "reason": "There is no mention of NonexistentDrugZ in the context, so it cannot be determined if the information about its 500mg tablets was found or not.",
+        "fuzzy_score": 0.4189
+      },
+      {
+        "case_id": "E2E-091",
+        "statement": "There is no statement about the recommended dosage and administration schedule for NonexistentDrugZ 500mg tablets.",
+        "reason": "The context only provides information about Alprazolam Extended Release and Ursodiol, but does not mention NonexistentDrugZ. Therefore, it cannot be determined if there is a statement about its recommended dosage and administration schedule.",
+        "fuzzy_score": 0.441
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "208af5499b26b39ffe0ddcaffe0a072cf9891a43d9fc09cbf1fc5e67af1d081d": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "077fd6ec08cbfd35a40fa626f2e64bb0cc47d1590c1fa86a75933db05d18ac4f": {
+    "faithfulness": 0.8333,
+    "unsupported": [
+      {
+        "case_id": "E2E-055",
+        "statement": "The purpose of OHM Fever Relief is to help the body fight viral infections.",
+        "reason": "The context does not mention anything about OHM Fever Relief helping with viral infections, only that it may be used for associated symptoms such as aches, chills, fatigue, sweating, nausea and loss of appetite. Therefore, this statement cannot be directly inferred from the context.",
+        "fuzzy_score": 0.5164
+      },
+      {
+        "case_id": "E2E-055",
+        "statement": "The purpose of OHM Fever Relief is to help the body fight bacterial infections.",
+        "reason": "The context does not mention anything about OHM Fever Relief helping with bacterial infections, only that it may be used for associated symptoms such as aches, chills, fatigue, sweating, nausea and loss of appetite. Therefore, this statement cannot be directly inferred from the context.",
+        "fuzzy_score": 0.5438
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "5f9252df227b1d71cd4fb42436ddb8a06dc0643be990df55cd34fcb70a47edb5": {
+    "faithfulness": 0.8,
+    "unsupported": [
+      {
+        "case_id": "E2E-025",
+        "statement": "These conditions are listed below.",
+        "reason": "The context lists several diseases with their symptoms, but it does not explicitly state that they are the only matching conditions or provide a comprehensive list.",
+        "fuzzy_score": 0.4364
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "3209b48112061b79c178d27b056e5fb619bf70840c0fe6ed5694d7656a97f5a4": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "d47af3136610c5a2f979a47ed7b12cf4be6d1c5f07ca8e01fe91d40b5a4a28b2": {
+    "faithfulness": 0.6,
+    "unsupported": [
+      {
+        "case_id": "E2E-080",
+        "statement": "One of the described symptoms matches the indication for Temazepam.",
+        "reason": "Upon reviewing the context, it is clear that the indications for Temazepam are explicitly stated as including the short-term treatment of insomnia. However, there is no direct mention of a symptom matching this indication. Therefore, this statement cannot be directly inferred from the given information.",
+        "fuzzy_score": 0.3458
+      },
+      {
+        "case_id": "E2E-080",
+        "statement": "Temazepam's active ingredients are TEMAZEPAM.",
+        "reason": "The context lists Temazepam as an active ingredient under its generic name, but it does not explicitly state that its active ingredients are TEMAZEPAM. This statement cannot be directly inferred from the given information.",
+        "fuzzy_score": 0.3154
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "2591c5a7f3476a09fc288d59e1ed3d2bfbfc76d6f2e3a751e833d2fdcd68612f": {
+    "faithfulness": 0.6667,
+    "unsupported": [
+      {
+        "case_id": "E2E-097",
+        "statement": "Novaproxin is labeled for management of osteoarthritis pain.",
+        "reason": "There is no information given in the context about Novaproxin. The only mention of a drug related to osteoarthritis pain is Meloxicam.",
+        "fuzzy_score": 0.5698
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "1c254a861a79400aaa495452bfb3732fc02eace1450ad01314f80bc419cd24c2": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "c0586964307da9d190131dc8b7ad3ad4072e860b2d51b1b6da6bb6629448897f": {
+    "faithfulness": 0.1667,
+    "unsupported": [
+      {
+        "case_id": "E2E-041",
+        "statement": "The label text identifies Glibenclarnide (Glyburide).",
+        "reason": "There is no mention of Glibenclarnide or Glyburide in the context.",
+        "fuzzy_score": 0.3366
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "Glibenclarnide (Glyburide) is a medication.",
+        "reason": "The context does not explicitly state that Glibenclarnide or Glyburide is a medication, but it does mention several medications. However, there is no information about Glibenclarnide or Glyburide in the provided text.",
+        "fuzzy_score": 0.4048
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "The active ingredients listed on the label for Glibenclarnide (Glyburide) include:",
+        "reason": "There is no mention of Glibenclarnide or Glyburide in the context, so it cannot be determined what active ingredients are listed for this medication.",
+        "fuzzy_score": 0.384
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "ALLOPURINOL is not an ingredient of Glibenclarnide (Glyburide).",
+        "reason": "The context does mention Allopurinol, but it does not provide information about its ingredients or whether it is related to Glibenclarnide or Glyburide.",
+        "fuzzy_score": 0.3939
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "This information about indications is not stated in the available sources.",
+        "reason": "The context does provide information about indications for several medications, but it does not explicitly state that this information is not available. Therefore, this statement cannot be directly inferred from the context.",
+        "fuzzy_score": 0.4304
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "2a5282c46c8e1caa33eb0eb2208cb1ab0867e7598a0124f15d402af6e9ef9b85": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-005",
+        "statement": "No alternative medical illness was identified in the available sources.",
+        "reason": "Although the context provides information about specific diseases and their symptoms, there is no explicit mention of an alternative medical illness being identified. Therefore, it cannot be directly inferred that this statement is true based on the given information.",
+        "fuzzy_score": 0.3563
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "983e04d792473fc779b377f88699729ca66b87fe72616a629c9a77660496b729": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "4ae6681ff86860001b4433e88ec9bc167b0775e5664f23bf85571bfb95fe755f": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-081",
+        "statement": "The medicine Thymoglobulin contains Anti-Thymocyte Globulin.",
+        "reason": "The context explicitly mentions that THYMOGLOBULIN is an immunoglobulin G indicated for the prophylaxis and treatment of acute rejection in patients receiving a kidney transplant, which includes information about its active ingredients. However, it does not specifically mention Anti-Thymocyte Globulin as one of its active ingredients.",
+        "fuzzy_score": 0.438
+      },
+      {
+        "case_id": "E2E-081",
+        "statement": "This medicine is not labeled for treating Headache, Spinal Osteophytosis, Spinal Stenosis, or Spirurida Infections.",
+        "reason": "The context does not provide information about the indications of Thymoglobulin. However, it does mention several diseases and conditions in the context, but there is no direct connection between these conditions and the use of Thymoglobulin.",
+        "fuzzy_score": 0.3628
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "cba3cf5d7ea9383012bf77025261d5a34d4faa55ffcaddcf7bd528871b7e0bf7": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-094",
+        "statement": "The official FDA pediatric approval date for Xanthroflurane inhalation is not stated.",
+        "reason": "There is no information given in the context about Xanthroflurane or its pediatric approval date.",
+        "fuzzy_score": 0.375
+      },
+      {
+        "case_id": "E2E-094",
+        "statement": "The available sources do not state the official FDA pediatric approval date for Xanthroflurane inhalation.",
+        "reason": "There is no information given in the context about Xanthroflurane or its pediatric approval date. The statement is a rephrased version of the first one, but it still cannot be deduced from the context.",
+        "fuzzy_score": 0.335
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "1e6720042e646396a58d09e74244d1a395afb6fa0b2b0f9d334c2b463dde23f3": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "39a36b5db8eaa9228c629bd607457ed364a43f29ae8e7a2f31ebd771e009d24c": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-021",
+        "statement": "Metatarsalgia is a condition that lists overlapping symptoms, including Knee Injuries.",
+        "reason": "The context mentions Metatarsalgia as having listed symptoms but does not explicitly mention Knee Injuries among them. Therefore, it cannot be directly inferred from the given information.",
+        "fuzzy_score": 0.4301
+      },
+      {
+        "case_id": "E2E-021",
+        "statement": "No alternative conditions were identified in the available sources.",
+        "reason": "The context provides a list of diseases with their symptoms but does not explicitly state that no other conditions are related to the described symptoms. Therefore, it cannot be directly inferred from the given information.",
+        "fuzzy_score": 0.3473
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "967db795444ff13884f622af916bff1722194107df7d509a06cb45cfd5a6e1f9": {
+    "faithfulness": 0.6,
+    "unsupported": [
+      {
+        "case_id": "E2E-072",
+        "statement": "Methylprednisolone is also labeled for acute and subacute bursitis.",
+        "reason": "The context mentions that methylprednisolone acetate is indicated for the treatment of acute gouty arthritis, but it does not mention anything about acute and subacute bursitis. Therefore, it cannot be deduced that Methylprednisolone is labeled for this condition.",
+        "fuzzy_score": 0.3547
+      },
+      {
+        "case_id": "E2E-072",
+        "statement": "Methylprednisolone is also labeled for acute nonspecific tenosynovitis.",
+        "reason": "The context mentions that methylprednisolone acetate is indicated for the treatment of acute gouty arthritis, but it does not mention anything about acute nonspecific tenosynovitis. Therefore, it cannot be deduced that Methylprednisolone is labeled for this condition.",
+        "fuzzy_score": 0.3689
+      },
+      {
+        "case_id": "E2E-072",
+        "statement": "Methylprednisolone is also labeled for epicondylitis.",
+        "reason": "The context mentions that methylprednisolone acetate is indicated for the treatment of acute gouty arthritis, but it does not mention anything about epicondylitis. Therefore, it cannot be deduced that Methylprednisolone is labeled for this condition.",
+        "fuzzy_score": 0.3582
+      },
+      {
+        "case_id": "E2E-072",
+        "statement": "Methylprednisolone is also labeled for synovitis of osteoarthritis.",
+        "reason": "The context mentions that methylprednisolone acetate is indicated for the treatment of acute gouty arthritis, but it does not mention anything about synovitis of osteoarthritis. Therefore, it cannot be deduced that Methylprednisolone is labeled for this condition.",
+        "fuzzy_score": 0.3636
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "3ee388eb0a9816c9b6772a0961b9a33d53525e0ed4f56b2c341a9280a8b07b80": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "e5580ddf553364c912973fca3b0a7f32afa0add473b49ccf2bd90ab57991c549": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "f1db6540d18bd24ee6b527106d4c1cb8f2d17bdce2514a67f8a0644b76bc76da": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "7102babe39216b081efbddc0847ac5a0d40379bee420f361a1312c1deb549696": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "153d46c6de1bcce9f04acb085fe55503209420327a1b73ba062ea4ec9db2bc93": {
+    "faithfulness": 0.6667,
+    "unsupported": [
+      {
+        "case_id": "E2E-099",
+        "statement": "The medicine could not be identified from the available sources.",
+        "reason": "There is no information given in the context about identifying a medicine.",
+        "fuzzy_score": 0.4082
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "dc2ed6aeee5af10505928a124c89969da9b4c962870d54e84b3a53614d677de5": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-004",
+        "statement": "No other alternative conditions were identified in the available sources.",
+        "reason": "Given that two of the diseases listed (epilepsy and torticollis) have overlapping symptoms, it's reasonable to conclude that there are indeed alternative conditions mentioned in the context.",
+        "fuzzy_score": 0.358
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "8f3a7ff321ff5a51d36746fd4cdaf29064f51b041e81069f584d33d01c9b2059": {
+    "faithfulness": 0.8,
+    "unsupported": [
+      {
+        "case_id": "E2E-063",
+        "statement": "The described condition in USER_TEXT matches one of PROCRIT's indications.",
+        "reason": "There is no information given in the context about the described condition matching any indication for PROCRIT.",
+        "fuzzy_score": 0.383
+      }
+    ],
+    "nan_reasons": {}
   }
 }
