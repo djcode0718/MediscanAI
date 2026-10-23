@@ -716,6 +716,7 @@ class Pipeline:
                 token_budget=token_budget,
                 query_aware_filtering=(routing_version == "v2"),
                 user_text=user_text,
+                ocr_text=ocr_text,
                 is_medicine_directed=is_med_dir,
             )
 
@@ -744,9 +745,14 @@ class Pipeline:
         citation_stats = None
         case_type = None
 
-        if prompt_version in ("v2", "v3"):
-            from app.prompt_v2 import SYSTEM_PROMPT, SYSTEM_PROMPT_V3, build_v2_user_message
-            system_prompt = SYSTEM_PROMPT_V3 if prompt_version == "v3" else SYSTEM_PROMPT
+        if prompt_version in ("v2", "v3", "v4"):
+            from app.prompt_v2 import SYSTEM_PROMPT, SYSTEM_PROMPT_V3, SYSTEM_PROMPT_V4, build_v2_user_message
+            if prompt_version == "v4":
+                system_prompt = SYSTEM_PROMPT_V4
+            elif prompt_version == "v3":
+                system_prompt = SYSTEM_PROMPT_V3
+            else:
+                system_prompt = SYSTEM_PROMPT
             role_separation_mode = "system_user"
 
             if evidence_format == "compact":
@@ -792,7 +798,7 @@ class Pipeline:
             )
             gen_meta = None
 
-        if prompt_version in ("v2", "v3"):
+        if prompt_version in ("v2", "v3", "v4"):
             from app.prompt_v2 import finalize_v2_response, compute_citation_stats
             llm_response_str = finalize_v2_response(raw_llm_output)
             evidence_tags = [itm["tag"] for itm in evidence_trace_data["evidence_items"]] if (evidence_trace_data and "evidence_items" in evidence_trace_data) else []

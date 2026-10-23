@@ -225,6 +225,58 @@ def build_evidence_item_block(
     return " | ".join(parts)
 
 
+def parse_multi_ingredient_formulations(
+    indications_text: str,
+    query_tokens: Optional[Set[str]] = None,
+) -> Optional[str]:
+    """
+    Parses multi-ingredient formulation/purpose mappings
+    (e.g., 'PURPOSE**: INGREDIENT 1 (purpose 1), INGREDIENT 2 (purpose 2)...')
+    into bounded, independently identifiable formulation items.
+    If query_tokens are provided, prioritizes matching formulation(s).
+    """
+    if not indications_text or ("PURPOSE" not in indications_text.upper() and "(" not in indications_text):
+        return None
+
+    raw = indications_text
+    purpose_idx = raw.upper().find("PURPOSE")
+    if purpose_idx != -1:
+        colon_idx = raw.find(":", purpose_idx)
+        if colon_idx != -1:
+            raw = raw[colon_idx + 1:]
+
+    pattern = re.compile(r"([A-Za-z0-9\s,\.-]+?(?:\d+[A-Za-z]+)?)\s*\(([^)]+)\)")
+    matches = pattern.findall(raw)
+    valid_pairs = []
+    for ing, purpose in matches:
+        ing_clean = ing.strip().lstrip(",").strip()
+        purp_clean = purpose.strip()
+        if not ing_clean or len(ing_clean) < 2 or ing_clean.upper() in ("ACTIVE INGREDIENTS", "SECTION", "NOTE"):
+            continue
+        if len(purp_clean) < 2:
+            continue
+        valid_pairs.append((ing_clean, purp_clean))
+
+    if len(valid_pairs) < 2:
+        return None
+
+    if query_tokens:
+        matching = []
+        non_matching = []
+        for ing, purp in valid_pairs:
+            p_words = set(re.findall(r"[a-z]{3,}", f"{ing} {purp}".lower()))
+            if p_words.intersection(query_tokens):
+                matching.append((ing, purp))
+            else:
+                non_matching.append((ing, purp))
+        ordered_pairs = matching + non_matching
+    else:
+        ordered_pairs = valid_pairs
+
+    formatted_items = [f"{ing} (purpose: {purp})" for ing, purp in ordered_pairs]
+    return "; ".join(formatted_items)
+
+
 class CompactEvidenceFormatter:
     """
     Orchestrates compact evidence generation with deduplication, sentence-boundary caps,
@@ -254,6 +306,7 @@ class CompactEvidenceFormatter:
         *,
         query_aware_filtering: bool = False,
         user_text: Optional[str] = None,
+        ocr_text: Optional[str] = None,
         is_medicine_directed: bool = False,
     ) -> Tuple[str, Dict[str, Any]]:
         """
@@ -262,6 +315,8 @@ class CompactEvidenceFormatter:
             - If is_medicine_directed=True or no actual patient symptoms were presented,
               disease blocks with zero symptom overlap with actual patient symptoms are omitted
               so they do not masquerade as evidence of medicine indications.
+            - If ocr_text has a strong brand match with a drug retrieved in drugs_from_ocr,
+              unrelated drug cross-retrievals are omitted to prevent spurious cross-contamination.
         Returns:
             formatted_text: str (tagged blocks)
             evidence_trace: dict (metadata, covers_ids, trimmed items, token counts)
@@ -303,21 +358,57 @@ class CompactEvidenceFormatter:
                 )
                 omitted_ids.extend(chan_omitted)
 
+                # Under query_aware_filtering for drugs_from_ocr:
+                # If any candidate drug has a strong brand name match present in ocr_text,
+                # retain only matching brand candidate(s) to prevent false-positive cross-retrievals
+                if chan == "drugs_from_ocr" and query_aware_filtering and ocr_text:
+                    ocr_lower = ocr_text.lower()
+                    matching_reps = [
+                        r for r in deduped
+                        if len(r["primary_brand"]) >= 4 and r["primary_brand"].lower() in ocr_lower
+                    ]
+                    if matching_reps:
+                        kept_ids = {r["raw_id"] for r in matching_reps}
+                        for r in deduped:
+                            if r["raw_id"] not in kept_ids:
+                                omitted_ids.extend(r["covers_ids"])
+                        deduped = matching_reps
+
                 for rep in deduped:
                     obj = rep["obj"]
                     fields = {}
                     if rep["primary_brand"]:
                         fields["brand_name"] = rep["primary_brand"]
                     if rep["generic_name"]:
-                        fields["generic_name"] = rep["generic_name"]
+                        gen_val = rep["generic_name"]
+                        gen_tokens = gen_val.split()
+                        if len(gen_tokens) > 10:
+                            fields["generic_name"] = " ".join(gen_tokens[:6]) + " ..."
+                        else:
+                            fields["generic_name"] = gen_val
                     if rep["also_marketed_as"]:
                         fields["also_marketed_as"] = "; ".join(rep["also_marketed_as"])
                     if rep["substances"]:
-                        fields["active_ingredients"] = "; ".join(rep["substances"])
+                        subs = rep["substances"]
+                        if len(subs) > 6:
+                            if symptom_tokens:
+                                m_subs = [s for s in subs if set(re.findall(r"[a-z]{3,}", s.lower())).intersection(symptom_tokens)]
+                                nm_subs = [s for s in subs if s not in m_subs]
+                                ordered_subs = m_subs + nm_subs
+                            else:
+                                ordered_subs = subs
+                            fields["active_ingredients"] = "; ".join(ordered_subs[:5]) + f"; ... ({len(subs)} active ingredients total)"
+                        else:
+                            fields["active_ingredients"] = "; ".join(subs)
 
                     ind_raw = clean_text_field(obj.get("indications_and_usage"))
                     if ind_raw:
-                        fields["indications"] = strip_boilerplate_prefix(ind_raw)
+                        clean_ind = strip_boilerplate_prefix(ind_raw)
+                        parsed_formulations = parse_multi_ingredient_formulations(clean_ind, query_tokens=symptom_tokens)
+                        if parsed_formulations:
+                            fields["indications"] = parsed_formulations
+                        else:
+                            fields["indications"] = clean_ind
 
                     warn_raw = clean_text_field(obj.get("warnings_and_cautions") or obj.get("warnings"))
                     if warn_raw:

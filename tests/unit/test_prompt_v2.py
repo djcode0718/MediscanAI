@@ -400,3 +400,54 @@ class TestPromptV3Enhancements:
         assert trace["system_prompt"] == SYSTEM_PROMPT_V3
         assert "Do not state standalone assertions about the user's symptoms" in trace["system_prompt"]
 
+    def test_prompt_v4_templates_and_structure(self):
+        from app.prompt_v2 import (
+            SYSTEM_PROMPT_V4,
+            TASK_SYMPTOM_ONLY_V4,
+            TASK_MEDICINE_ONLY_V4,
+            TASK_SYMPTOM_AND_MEDICINE_V4,
+            TASK_UNANSWERABLE_V4,
+            build_v2_user_message,
+        )
+
+        assert "Never output prompt meta-words like \"EVIDENCE block\"" in SYSTEM_PROMPT_V4
+        assert "multi-ingredient products or kits" in TASK_SYMPTOM_AND_MEDICINE_V4
+        assert "primary medicine being evaluated is the scanned medicine" in TASK_SYMPTOM_AND_MEDICINE_V4
+
+        # 1. Symptom and medicine
+        msg_match, ctype = build_v2_user_message(
+            user_text="I am experiencing Confusion.",
+            ocr_text="Joette Calabrese Survivalist Kit",
+            evidence_text="[E1] DRUG | Brand: Joette Calabrese Survivalist Kit",
+            routing_version="v2",
+            prompt_version="v4",
+        )
+        assert ctype == "SYMPTOM_AND_MEDICINE"
+        assert TASK_SYMPTOM_AND_MEDICINE_V4 in msg_match
+
+        # 2. Unanswerable probe
+        msg_unans, ctype = build_v2_user_message(
+            user_text="What is the official FDA pediatric approval date for Xanthroflurane inhalation?",
+            ocr_text="Xanthroflurane",
+            evidence_text="[E1] DRUG | Brand: Xenon",
+            routing_version="v2",
+            prompt_version="v4",
+        )
+        assert ctype == "UNANSWERABLE"
+        assert TASK_UNANSWERABLE_V4 in msg_unans
+
+    def test_finalize_v2_sanitizes_template_meta_tokens(self):
+        from app.prompt_v2 import finalize_v2_response
+
+        raw_output = (
+            "**Verdict:** Glibenclamide is identified from the label text. [E#7]\n\n"
+            "Explanation: EVIDENCE block states that Meclizine matches USER_TEXT. [E#]\n"
+        )
+        finalized = finalize_v2_response(raw_output)
+        assert "E#7" not in finalized
+        assert "[E7]" in finalized
+        assert "[E#]" not in finalized
+        assert "EVIDENCE block" not in finalized
+        assert "USER_TEXT" not in finalized
+        assert "evidence states that Meclizine matches your query" in finalized
+

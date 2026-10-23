@@ -292,3 +292,77 @@ def test_query_aware_disease_omission():
     assert "DISEASE" in types_sym
     assert "DRUG" in types_sym
 
+
+def test_parse_multi_ingredient_formulations():
+    from app.evidence import parse_multi_ingredient_formulations
+
+    text = "ACTIVE INGREDIENTS (HPUS*) PURPOSE**: ABROTANUM 6C (intestines), ACONITUM NAPELLUS 1M (shock), AETHUSA CYNAPIUM 200C (dairy intolerance), AMBRA GRISEA 30C (confusion/memory), ANTIMONIUM CRUDUM 6C (rash)"
+    # Without query tokens: preserves all valid formulation-purpose mappings
+    parsed = parse_multi_ingredient_formulations(text)
+    assert parsed is not None
+    assert "ABROTANUM 6C (purpose: intestines)" in parsed
+    assert "AMBRA GRISEA 30C (purpose: confusion/memory)" in parsed
+
+    # With query token 'confusion': prioritizes matching formulation first
+    parsed_prioritized = parse_multi_ingredient_formulations(text, query_tokens={"confusion"})
+    assert parsed_prioritized is not None
+    assert parsed_prioritized.startswith("AMBRA GRISEA 30C (purpose: confusion/memory)")
+
+    # Standard non-kit text returns None
+    assert parse_multi_ingredient_formulations("For temporary relief of minor aches and pains.") is None
+    assert parse_multi_ingredient_formulations(None) is None
+
+
+def test_multi_ingredient_kit_attribution_and_ocr_brand_filtering():
+    formatter = CompactEvidenceFormatter()
+
+    kit_rec = {
+        "id": 41438,
+        "brand_name": "Joette Calabrese Survivalist Kit",
+        "generic_name": "ABROT ACON AGN AIL AMBR AMBRO AM-C ANT-C APIS ARN ARS AUR-A AUR BAPT BAR-C BELL BB",
+        "substance_name": ["ACONITUM NAPELLUS", "AETHUSA CYNAPIUM", "AMBERGRIS", "AMBRA GRISEA", "APIS MELLIFERA", "ARNICA MONTANA", "BELLADONNA", "CHAMOMILLA"],
+        "indications_and_usage": "ACTIVE INGREDIENTS (HPUS*) PURPOSE**: ACONITUM NAPELLUS 1M (shock), AMBRA GRISEA 30C (confusion/memory), ANTIMONIUM CRUDUM 6C (rash)"
+    }
+    unrelated_drug = {
+        "id": 7378,
+        "brand_name": "Throat Care",
+        "generic_name": "ECHINACEA, ACONITUM NAP., APIS MEL.",
+        "substance_name": ["ACONITUM NAPELLUS", "ECHINACEA"],
+        "indications_and_usage": "Formulated for associated symptoms such as dryness and hoarseness."
+    }
+
+    retrievals = {
+        "drugs_from_ocr": [
+            ("drug_41438", 0.95, kit_rec),
+            ("drug_7378", 0.85, unrelated_drug),
+        ]
+    }
+
+    # 1. When OCR clearly contains the brand "Joette Calabrese Survivalist Kit":
+    # Strong-brand filtering keeps the Kit and omits unrelated "Throat Care"
+    rendered, trace = formatter.format(
+        retrievals,
+        query_aware_filtering=True,
+        user_text="I am experiencing Confusion.",
+        ocr_text="Joette Calabrese Survivalist Kit 500mg Rx Only",
+    )
+
+    items = trace["evidence_items"]
+    assert len(items) == 1
+    assert items[0]["id"] == "41438"
+    assert "7378" in trace["retrieved_but_omitted_ids"]
+    assert "Throat Care" not in rendered
+
+    # Formulation parsing prioritized the matching confusion formulation
+    assert "AMBRA GRISEA 30C (purpose: confusion/memory)" in rendered
+
+    # 2. Fallback behavior: when OCR text does not match any brand, keep all retrieved drugs
+    rendered_fallback, trace_fallback = formatter.format(
+        retrievals,
+        query_aware_filtering=True,
+        user_text="I am experiencing symptoms.",
+        ocr_text="Unreadable label 500mg",
+    )
+    assert len(trace_fallback["evidence_items"]) == 2
+
+
