@@ -747,10 +747,12 @@ class Pipeline:
 
         if prompt_version in ("v2", "v3", "v4", "v5", "v6", "v7"):
             from app.prompt_v2 import (
-                SYSTEM_PROMPT, SYSTEM_PROMPT_V3, SYSTEM_PROMPT_V4, SYSTEM_PROMPT_V5, SYSTEM_PROMPT_V6,
+                SYSTEM_PROMPT, SYSTEM_PROMPT_V3, SYSTEM_PROMPT_V4, SYSTEM_PROMPT_V5, SYSTEM_PROMPT_V6, SYSTEM_PROMPT_V7,
                 build_v2_user_message
             )
-            if prompt_version in ("v6", "v7"):
+            if prompt_version == "v7":
+                system_prompt = SYSTEM_PROMPT_V7
+            elif prompt_version == "v6":
                 system_prompt = SYSTEM_PROMPT_V6
             elif prompt_version == "v5":
                 system_prompt = SYSTEM_PROMPT_V5
