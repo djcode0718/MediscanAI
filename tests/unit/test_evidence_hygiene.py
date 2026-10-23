@@ -366,3 +366,35 @@ def test_multi_ingredient_kit_attribution_and_ocr_brand_filtering():
     assert len(trace_fallback["evidence_items"]) == 2
 
 
+def test_validate_and_sanitize_claims():
+    from app.evidence import validate_and_sanitize_claims
+
+    # 1. Normalizes syntax
+    raw = "Condition A [E#1] and Condition B E#2 are listed [E#]."
+    res = validate_and_sanitize_claims(raw, valid_evidence_tags=["[E1]", "[E2]"])
+    assert "[E1]" in res
+    assert "[E2]" in res
+    assert "[E#1]" not in res
+    assert "[E#]" not in res
+
+    # 2. Removes invalid tags not present in evidence
+    raw2 = "This statement cites [E1] and hallucinated [E99]."
+    res2 = validate_and_sanitize_claims(raw2, valid_evidence_tags=["[E1]"])
+    assert "[E1]" in res2
+    assert "[E99]" not in res2
+
+    # 3. Strips additive narrative modifiers ("also includes")
+    raw3 = "Atrial fibrillation also includes dizziness. Coronary atherosclerosis additionally includes chest pain."
+    res3 = validate_and_sanitize_claims(raw3)
+    assert "also includes" not in res3
+    assert "additionally includes" not in res3
+    assert "Atrial fibrillation includes dizziness." in res3
+    assert "Coronary atherosclerosis includes chest pain." in res3
+
+    # 4. Strips negative alternative disclaimers
+    raw4 = "Asthma is documented with shortness of breath. [E1] No alternative conditions were identified in the available sources."
+    res4 = validate_and_sanitize_claims(raw4, valid_evidence_tags=["[E1]"])
+    assert "No alternative conditions" not in res4
+    assert res4.strip() == "Asthma is documented with shortness of breath. [E1]"
+
+
