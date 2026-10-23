@@ -363,9 +363,12 @@ def generate_comparison_report(
         f.write(f"- **{base_name}:** `{base_diag['routing_distribution']}`\n")
         f.write(f"- **{cand_name}:** `{cand_diag['routing_distribution']}`\n\n")
 
+        base_unsupp_file = RESULTS_DIR / base_name / "unsupported_statements.jsonl"
+        base_unsupp_count = sum(1 for _ in open(base_unsupp_file)) if base_unsupp_file.exists() else "N/A"
+
         f.write(f"## 4. Unsupported Statements Analysis ({len(unsupported_items)} statements)\n\n")
         if unsupported_items:
-            f.write(f"Found {len(unsupported_items)} unsupported statements flagged by judge in {cand_name} (vs 87 in {base_name}).\n\n")
+            f.write(f"Found {len(unsupported_items)} unsupported statements flagged by judge in {cand_name} (vs {base_unsupp_count} in {base_name}).\n\n")
             f.write("| Case ID | Statement | Reason | Fuzzy Overlap |\n")
             f.write("|---|---|---|---|\n")
             for u in unsupported_items[:25]:  # list top 25

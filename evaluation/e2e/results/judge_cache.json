@@ -3878,5 +3878,394 @@
     "faithfulness": 1.0,
     "unsupported": [],
     "nan_reasons": {}
+  },
+  "eb736ae25f944bd9cf37f1efa968223bac475cecbee2f88f7add3f3a55033b7d": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "0fc8e10e0caa9d255436c9f81eb7d83ef59c70174c965ff131e72d76f86d73da": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "9a2c6f91bc2fcd08492f2eb8eb43c177d30d565b7ffd99f593936d9ecfc4626c": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-069",
+        "statement": "Mild to moderately severe infections are caused by penicillin G-sensitive microorganisms.",
+        "reason": "The context mentions that Penicillin V Potassium should be used only to treat or prevent infections that are proven or strongly suspected to be caused by susceptible bacteria, and it specifically states that the medication is indicated for mild to moderately severe infections due to penicillin G-sensitive microorganisms. However, this does not directly imply that all mild to moderately severe infections are caused by penicillin G-sensitive microorganisms.",
+        "fuzzy_score": 0.6844
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "34afc0956b625fa4208068f5a8f09928d433b0760526fc460f61ecf8fc7a193b": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "91a5b5bb9d151c868006dc9acaaba3dfe8c33f232d64c5042235fee7fc167181": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "b8bfbc26eeb115bbf629d2ba02e475252790317bd2eb323f8b94c6b21addf6b5": {
+    "faithfulness": 0.8,
+    "unsupported": [
+      {
+        "case_id": "E2E-009",
+        "statement": "No medical illness was identified in the available sources.",
+        "reason": "The context lists several conditions and their associated symptoms, but there is no information suggesting that none of these conditions match the described symptoms. Therefore, it cannot be inferred that no medical illness was identified.",
+        "fuzzy_score": 0.3393
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "e2645da8addbdfae24f2b41b87668809f013f0d1030f92eb69a8ef427aa03e68": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "beecdd10c7e9c0b50799485889baee38ad1f458dee65f4710be4759b7e39399e": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-082",
+        "statement": "The medicine Strophanthus (STROPHANTHUS) 20mg is labeled for treatment of induced abortion.",
+        "reason": "There is no information given in the context about Strophanthus being used to treat induced abortion. The context mentions several diseases and medications, but none of them are related to Strophanthus or induced abortion.",
+        "fuzzy_score": 0.4585
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "STROPHANTHUS HISPIDUS SEED is labeled for the treatment of induced abortion.",
+        "reason": "There is no information given in the context about STROPHANTHUS HISPIDUS SEED being used to treat induced abortion. The context mentions several diseases and medications, but none of them are related to STROPHANTHUS HISPIDUS SEED or induced abortion.",
+        "fuzzy_score": 0.3697
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "261980cae32e57e92e2c7e9f24cc82927752a63a8445fcdf53625ee56cc26d4e": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-100",
+        "statement": "The requested medication information about Glycozempra 5mg/mL solution could not be verified.",
+        "reason": "There is no mention of Glycozempra 5mg/mL solution in the provided context, so it cannot be deduced that the requested medication information was found or not.",
+        "fuzzy_score": 0.3302
+      },
+      {
+        "case_id": "E2E-100",
+        "statement": "The pediatric weight-based dosing for Glycozempra 5mg/mL solution was not found in the provided evidence.",
+        "reason": "There is no mention of Glycozempra 5mg/mL solution in the provided context, so it cannot be deduced that the pediatric weight-based dosing was found or not.",
+        "fuzzy_score": 0.3478
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "31917fadcbb063f255936c11c98cff90f3ed1eb5d66f3328b8449dc73821412c": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "02f181c28b355ce534ddfbca1d8a6de3b09f934863fa68a7917c1e147d6c3ce2": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "782790c5810963c54c2a0a6d8e8c831bc781c8426e9f21ba9c16aca099a69c5a": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-062",
+        "statement": "ACONITUM NAPELLUS is labeled for confusion/memory.",
+        "reason": "The context mentions that ACONITUM NAPELLUS is indicated for shock, but it does not mention any indication of confusion/memory. Therefore, this statement cannot be directly inferred from the given context.",
+        "fuzzy_score": 0.5057
+      },
+      {
+        "case_id": "E2E-062",
+        "statement": "According to its indications, it is labeled for various conditions.",
+        "reason": "The context mentions that the Joette Calabrese Survivalist Kit has multiple indications, but it does not specify what these conditions are. Therefore, this statement cannot be directly inferred from the given context.",
+        "fuzzy_score": 0.4359
+      },
+      {
+        "case_id": "E2E-062",
+        "statement": "Confusion/memory is one of these various conditions.",
+        "reason": "The context explicitly mentions that ACONITUM NAPELLUS is indicated for shock, but it does not mention any indication of confusion/memory. Therefore, this statement cannot be directly inferred from the given context.",
+        "fuzzy_score": 0.3231
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "793b6c95a3b61be5376d6156564226292c68f397e9fe04f04e1e4b0ac87d110c": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "c85935708681c7eb524490a946065f194559380f5673a955f825a58d8da3d679": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "2478b6f7e652411a0be2e190a6790a335408bfe746d9f8fe22a9d34f1c24ab28": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "d21c92373b595d9a167b2ff59a6e96dee5baf0fd513d82060dc317a531ca26db": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "99cb589187f71d9d735448deb78055859b711f0eaf9427a4307bb57793b9f650": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "65511795f24aba68a1c5d94b858d31639776e2574b9ac5d40758e9241f6a9e4f": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "7b5386a3e413572fe3de396f45445375c1003dd2dedb4e27b58cfe4fe4da6979": {
+    "faithfulness": 0.25,
+    "unsupported": [
+      {
+        "case_id": "E2E-097",
+        "statement": "The Novaproxin capsules are labeled for managing osteoarthritis pain.",
+        "reason": "There is no information given in the context about Novaproxin capsules. However, Meloxicam capsules are mentioned as being indicated for management of osteoarthritis pain.",
+        "fuzzy_score": 0.5746
+      },
+      {
+        "case_id": "E2E-097",
+        "statement": "The scanned medicine, Novaproxin 100mg (Novapharma Inc), is a non-steroidal anti-inflammatory drug.",
+        "reason": "Although Meloxicam capsules are mentioned as being indicated for management of osteoarthritis pain and are classified as a non-steroidal anti-inflammatory drug, there is no information given in the context about Novaproxin 100mg (Novapharma Inc).",
+        "fuzzy_score": 0.4739
+      },
+      {
+        "case_id": "E2E-097",
+        "statement": "The active ingredient of the scanned medicine, Novaproxin 100mg (Novapharma Inc), is Meloxicam.",
+        "reason": "There is no information given in the context about the active ingredient of Novaproxin 100mg (Novapharma Inc). However, it is mentioned that Meloxicam capsules are indicated for management of osteoarthritis pain and contain Meloxicam as an active ingredient.",
+        "fuzzy_score": 0.3056
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "67454e23b2506a44dd0974179e19af9f8bfa7b7c46b164bb4cabc89a1194c13a": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-041",
+        "statement": "The label text identifies Glibenclarnide.",
+        "reason": "There is no information given in the context about Glibenclarnide. The context only mentions Allopurinol and other medications, but not Glibenclarnide.",
+        "fuzzy_score": 0.381
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "Glibenclarnide is also known as Glyburide.",
+        "reason": "The context contains a Drug Name Match with id=3489, which has the name glyburide. This implies that Glibenclarnide and Glyburide are related, but it does not explicitly state that they are the same medication.",
+        "fuzzy_score": 0.3556
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "Glibenclarnide contains active ingredients glyburide.",
+        "reason": "The context contains a Drug Name Match with id=3489, which has the name glyburide. This implies that Glibenclarnide and Glyburide are related, but it does not explicitly state that Glibenclarnide contains glyburide as an active ingredient.",
+        "fuzzy_score": 0.5208
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "Glibenclarnide is used to treat indications.",
+        "reason": "The context mentions Allopurinol, which has several indications listed. However, it does not explicitly state that Glibenclarnide is used to treat any of these indications.",
+        "fuzzy_score": 0.4
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "This medication is not innocuous.",
+        "reason": "The context mentions Allopurinol, which has a warning stating 'This is not an innocuous drug.' This implies that the medication in question (Allopurinol) is not innocuous. However, it does not explicitly state that Glibenclarnide is not innocuous.",
+        "fuzzy_score": 0.3429
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "It is not recommended for the treatment of asymptomatic hyperuricemia.",
+        "reason": "The context mentions Allopurinol, which has a warning stating 'It is not recommended for the treatment of asymptomatic hyperuricemia.' This implies that Allopurinol should not be used to treat asymptomatic hyperuricemia. However, it does not explicitly state that Glibenclarnide should not be used to treat this condition.",
+        "fuzzy_score": 0.9928
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "Allopurinol tablets, USP reduces serum and urinary uric acid concentrations.",
+        "reason": "The context mentions Allopurinol, which has a description stating 'reduces serum and urinary uric acid concentrations.' This implies that Allopurinol has this effect. However, it does not explicitly state that Glibenclarnide reduces serum and urinary uric acid concentrations.",
+        "fuzzy_score": 0.9934
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "The use of this medication should be individualized for each patient.",
+        "reason": "The context mentions Allopurinol, which has a description stating 'Its use should be individualized for each patient.' This implies that the use of Allopurinol should be individualized. However, it does not explicitly state that Glibenclarnide's use should be individualized.",
+        "fuzzy_score": 0.3977
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "Understanding its mode of action is required.",
+        "reason": "The context mentions Allopurinol, which has a description stating 'Its mode of action and pharmacokinetics (see CLINICAL PHARMACOLOGY, CONTRAINDICATIONS, WARNINGS, and PRECAUTIONS) should be understood.' This implies that understanding the mode of action of Allopurinol is required. However, it does not explicitly state that understanding Glibenclarnide's mode of action is required.",
+        "fuzzy_score": 0.3421
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "Understanding its pharmacokinetics is also required.",
+        "reason": "The context mentions Allopurinol, which has a description stating 'Its mode of action and pharmacokinetics (see CLINICAL PHARMACOLOGY, CONTRAINDICATIONS, WARNINGS, and PRECAUTIONS) should be understood.' This implies that understanding the pharmacokinetics of Allopurinol is required. However, it does not explicitly state that understanding Glibenclarnide's pharmacokinetics is required.",
+        "fuzzy_score": 0.3636
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "89f59aa126a0f3ad08df9e8545562406a9d563bd0247bfc15bc0e123f79a1142": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "28ac7f12b2bf3ac971cc47c914244e297777c91cf3c553b60d46a41d74cb6d9e": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "d9fcc9a0d446c8424083062b7bd9924256fe38104acab4d988039320b53b4727": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "eb4d0fc679111795c91eaff5f20095bd99dce536211a306d46f48156e1f4ff93": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-094",
+        "statement": "The requested medication information is not verifiable.",
+        "reason": "The context provides detailed information about various medications, but it does not address the issue of verifiability or lack thereof. Therefore, it cannot be deduced that the requested medication information is not verifiable.",
+        "fuzzy_score": 0.3613
+      },
+      {
+        "case_id": "E2E-094",
+        "statement": "Available sources do not contain the required information about Xanthroflurane inhalation.",
+        "reason": "The context does not mention Xanthroflurane inhalation, but it does provide detailed information about other medications. However, upon closer inspection, there is no indication that Xanthroflurane inhalation is mentioned or discussed in the provided text. Therefore, it cannot be deduced that available sources do not contain the required information about Xanthroflurane inhalation.",
+        "fuzzy_score": 0.3121
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "ee8f05d530da311fdc05565577742fb8269a8c3da7e2665aad9b3fb54ee55f36": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "597ef9652ea30c25959b99abb97b0fdb60117e6dbce3ac7b04382d3130dcb7fe": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-021",
+        "statement": "No alternative conditions were identified in the available sources.",
+        "reason": "The context only provides information about specific diseases and their symptoms, but does not provide a comprehensive list of all possible conditions. Therefore, it cannot be inferred that no alternative conditions exist.",
+        "fuzzy_score": 0.3473
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "ca87f780382e8ce5f1912af03ab18a53e9e6a54dd58778adc60400f4604c528a": {
+    "faithfulness": 0.875,
+    "unsupported": [
+      {
+        "case_id": "E2E-072",
+        "statement": "The scanned medicine, Methylprednisolone (METHYLPREDNISOLONE), has various uses for inflammatory conditions.",
+        "reason": "The context does not provide specific information about the uses of methylprednisolone acetate injectable suspension beyond what is mentioned in the indications section.",
+        "fuzzy_score": 0.3273
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "74562397801e2e8f25def9077bfdd3d36bd8733f730380af49b9669b0fc34e42": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "67e4a372aeb7acb65ecf769fb97611b0a2c6fbe222d1c0cfcf1f5bb301780305": {
+    "faithfulness": 0.6667,
+    "unsupported": [
+      {
+        "case_id": "E2E-095",
+        "statement": "The clinical dosage of chocolate syrup is not recommended for treating acute appendicitis.",
+        "reason": "There is no information about the clinical dosage of chocolate syrup or its use in treating acute appendicitis. The context only mentions three drugs and their indications, with no mention of chocolate syrup.",
+        "fuzzy_score": 0.4236
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "a24ecc3bd1dd458b8c5624b53ae916fd4e96a8e0d5dffe692a19b824b407fc29": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-001",
+        "statement": "Atrial Fibrillation is documented and has overlapping symptoms.",
+        "reason": "The context explicitly lists Atrial Fibrillation as a condition. However, it does not provide an exhaustive list of its symptoms in the given snippet. Therefore, we cannot directly infer that this condition has overlapping symptoms based on the provided information.",
+        "fuzzy_score": 0.4
+      },
+      {
+        "case_id": "E2E-001",
+        "statement": "The overlapping symptoms for Atrial Fibrillation are: Chest pain or discomfort, dizziness or lightheadedness, fatigue.",
+        "reason": "The context lists some of the symptoms of Atrial Fibrillation. However, it does not provide an exhaustive list in the given snippet. The statement mentions three symptoms that match those listed, but we cannot confirm if these are all the overlapping symptoms based on the provided information.",
+        "fuzzy_score": 0.3836
+      },
+      {
+        "case_id": "E2E-001",
+        "statement": "No other conditions were identified in the available sources.",
+        "reason": "The context does not provide a comprehensive list of all possible conditions. Therefore, it is impossible to confirm if there are no other conditions with overlapping symptoms based on the provided information.",
+        "fuzzy_score": 0.3871
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "2b44d7ecdd979dc9e193369e9abae83ee1141e54d8cf4eee9329a5b9c91f18fc": {
+    "faithfulness": 0.9091,
+    "unsupported": [
+      {
+        "case_id": "E2E-065",
+        "statement": "The scanned medicine contains Phenylephrine Hydrochloride as an active ingredient.",
+        "reason": "According to the context, the active ingredients of Tylenol Cold Plus Flu Severe do not include Phenylephrine Hydrochloride.",
+        "fuzzy_score": 0.4388
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "922e0c1c6e20e8b206b02156b11db5e4b67100ca30eb3d40174c4b857e3b9731": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-099",
+        "statement": "The requested medication information about Valerionex oral suspension could not be verified.",
+        "reason": "There is no mention of Valerionex oral suspension in the provided context, which consists of medication information for various drugs. Therefore, it cannot be deduced that the requested medication information about Valerionex oral suspension could not be verified.",
+        "fuzzy_score": 0.4343
+      },
+      {
+        "case_id": "E2E-099",
+        "statement": "The requested medication information about Valerionex oral suspension could not be verified.",
+        "reason": "There is no mention of Valerionex oral suspension in the provided context, which consists of medication information for various drugs. Therefore, it cannot be deduced that the requested medication information about Valerionex oral suspension could not be verified.",
+        "fuzzy_score": 0.4343
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "2f36fec5ee7ff3d669882254ae726092b4dc19874268516e7c15161717baef91": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-004",
+        "statement": "No other conditions have been identified in the available sources.",
+        "reason": "The context does not provide information about the exhaustiveness of its search or the availability of all relevant medical literature, making it impossible to assert that no other conditions exist based on this information alone.",
+        "fuzzy_score": 0.3421
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "36c642a13eaa8f414765813980163f8ce7bc7b2ad9661a07260f3be15c8105c7": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
   }
 }
