@@ -1,0 +1,18 @@
+{
+  "config_name": "A5",
+  "evidence_format": "compact",
+  "prompt_version": "v4",
+  "routing_version": "v2",
+  "total_cases": 40,
+  "total_wall_seconds": 974.34,
+  "avg_latency_ms": 24339.1,
+  "avg_prompt_tokens": 946.1,
+  "avg_eval_count": 102.8,
+  "truncated_count": 0,
+  "ollama_ps_at_finish": {
+    "raw": "NAME           ID              SIZE      PROCESSOR    CONTEXT    UNTIL              \nllama3.1:8b    46e0c10c039e    5.8 GB    100% GPU     8192       4 minutes from now",
+    "size": "5.8 GB",
+    "context": "8192",
+    "model": "llama3.1:8b"
+  }
+}

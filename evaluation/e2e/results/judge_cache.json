@@ -3427,5 +3427,456 @@
       }
     ],
     "nan_reasons": {}
+  },
+  "2f31e0f5d5134535c36d90e4af58e0b58d38486618067cacebedf32ece8e5750": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "9b11561b88e6d7788454d173361fbbdb7150b78af3f6f45f1bd64c55e5e62a3f": {
+    "faithfulness": 0.6667,
+    "unsupported": [
+      {
+        "case_id": "E2E-008",
+        "statement": "Seborrheic dermatitis includes acne or pimples, skin growth and skin lesion as symptoms.",
+        "reason": "The context lists the symptoms of Seborrheic dermatitis, but it does not explicitly mention acne or pimples, skin growth, and skin lesion. However, it does list seborrheic dermatitis, abnormal appearing skin, dry or flaky scalp, irregular appearing scalp, itching of skin, or roughness, peeling, scaliness, skin dryness, skin irritation, skin moles, skin rash, skin swelling, and warts as symptoms.",
+        "fuzzy_score": 0.34
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "fad9028656573afba9a537c4f00e5b124477692df46615d042f3c3a3ec5254be": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-069",
+        "statement": "The symptoms of bacteremia, abdominal tenderness, chill, decreased translucency, and diarrhea are consistent with a condition that can be treated with Penicillin V Potassium.",
+        "reason": "Bacteremia is mentioned as a condition in the context, but it does not explicitly state that these symptoms are consistent with a condition that can be treated with Penicillin V Potassium. Therefore, this statement cannot be directly inferred from the context.",
+        "fuzzy_score": 0.3297
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "25c349db45be5e611df490410e4dac39c18172dea7a642fe17e8b6bdf234c766": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "12bf5bfaa2832ae7ed86686b0c2ac14b06ca9952800a36f64e5a68e34b41d1b4": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "64b7f5eb73f39e8347c08b40c1c4db50eb55d7691e8c78fdaf8ce8070f5c1e5a": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "977b6478eac833e23cc6cf330a8f356a4455e229273d6b893d3f644fea8606d1": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "9fe4c628bec1bd8630c1d0c297aadc31aea290591df28f44bc87521e10cb4ac5": {
+    "faithfulness": 0.8,
+    "unsupported": [
+      {
+        "case_id": "E2E-009",
+        "statement": "Nephrosis lists overlapping symptoms: Nephritis; Neovascularization .",
+        "reason": "The context lists the symptoms of Blindness and Proteinuria, but it does not explicitly state that Nephrosis lists these symptoms. Therefore, it cannot be deduced.",
+        "fuzzy_score": 0.4262
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "247076000c051dcb0b353c9f15172bf59229df943f2798f8417bcd21d9417139": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "16887014fef77a0974b1f49df427059885e178955854b899b39906da2455aea8": {
+    "faithfulness": 0.6667,
+    "unsupported": [
+      {
+        "case_id": "E2E-082",
+        "statement": "The medicine Strophanthus (STROPHANTHUS) 20mg is labeled for prescription only.",
+        "reason": "There is no information given in the context about the labeling of Strophanthus (STROPHANTHUS) 20mg being for prescription only. However, it can be inferred that since there are several other medicines with similar indications and \"Rx Only*\" labels, this medicine might also require a prescription.",
+        "fuzzy_score": 0.4398
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "ab143668fca28add4a924a0dc1a75c825560ade06b5934ae05435ddbfbb1b451": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-100",
+        "statement": "The statement that the Glycozempra 5mg/mL solution evidence does not state the pediatric weight-based dosing information is a single statement.",
+        "reason": "There is no mention of Glycozempra 5mg/mL solution in the context, so it cannot be inferred that this statement is true or false based on the given text.",
+        "fuzzy_score": 0.3435
+      },
+      {
+        "case_id": "E2E-100",
+        "statement": "The statement that the Glycozempra 5mg/mL solution evidence does not state the pediatric weight-based dosing information can be broken down into two statements: The Glycozempra 5mg/mL solution evidence does not exist, and this evidence does not state the pediatric weight-based dosing information.",
+        "reason": "The context mentions several drugs, but there is no mention of Glycozempra 5mg/mL solution. Therefore, it cannot be inferred that this statement is true or false based on the given text.",
+        "fuzzy_score": 0.2794
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "ec46bbc63bc7e8d331f3b6626ef765848510b64228b046f41f45e0b9a9617f3b": {
+    "faithfulness": 0.8,
+    "unsupported": [
+      {
+        "case_id": "E2E-034",
+        "statement": "ANTICHOLIUM is used to treat amantadine and diphenhydramine.",
+        "reason": "The context explicitly mentions that ANTICHOLIUM is indicated for treating amanita pantherina and amanita muscaria tricyclic antidepressants, which includes amitriptyline, imipramine, trimipramine, clomipramine, and doxepine. However, it does not explicitly mention the treatment of amantadine and diphenhydramine.",
+        "fuzzy_score": 0.4138
+      },
+      {
+        "case_id": "E2E-034",
+        "statement": "ANTICHOLIUM is used to treat baclofen and 4-hydroxybutyric acid (GHB).",
+        "reason": "The context explicitly mentions that ANTICHOLIUM is indicated for treating amanita pantherina and amanita muscaria tricyclic antidepressants, which includes amitriptyline, imipramine, trimipramine, clomipramine, and doxepine. However, it does not explicitly mention the treatment of baclofen and 4-hydroxybutyric acid (GHB).",
+        "fuzzy_score": 0.4783
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "21107abd7650fb72e9be440091f172838e2c85099ba6c229ddf487efa8fa31ed": {
+    "faithfulness": 0.4,
+    "unsupported": [
+      {
+        "case_id": "E2E-024",
+        "statement": "The symptoms you describe overlap with the conditions listed below.",
+        "reason": "The context explicitly mentions that the symptoms described are related to specific conditions, but it does not provide a direct comparison or mention of overlapping symptoms. Therefore, this statement cannot be directly inferred from the given context.",
+        "fuzzy_score": 0.3273
+      },
+      {
+        "case_id": "E2E-024",
+        "statement": "Cerebral palsy lists overlapping symptoms: cerebral palsy; blindness; cramps and spasms.",
+        "reason": "The context explicitly mentions that cerebral palsy is a condition with listed symptoms, but it does not provide information about the specific symptoms being mentioned in this statement. Therefore, this statement cannot be directly inferred from the given context.",
+        "fuzzy_score": 0.4839
+      },
+      {
+        "case_id": "E2E-024",
+        "statement": "Xeomin is labeled for upper limb spasticity in pediatric patients 2 to 17 years of age, excluding spasticity caused by cerebral palsy.",
+        "reason": "The context explicitly mentions that Xeomin is indicated for upper limb spasticity in pediatric patients, but it does not provide information about the exclusion criteria. Therefore, this statement cannot be directly inferred from the given context.",
+        "fuzzy_score": 0.5818
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "2383a7bafb7b8543ca906757730a540557858106b94e64eac48e5fc58c27dc5b": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-062",
+        "statement": "The Joette Calabrese Survivalist Kit is labeled for confusion/memory.",
+        "reason": "The context mentions that the kit contains various homeopathic remedies with specific indications, and one of them is AMBRA GRISEA 30C which is indicated for confusion/memory. However, it does not explicitly state that the entire kit is labeled for this purpose.",
+        "fuzzy_score": 0.5233
+      },
+      {
+        "case_id": "E2E-062",
+        "statement": "ACONITUM NAPELLUS is labeled for shock, but also AMBRA GRISEA 30C, which is specifically indicated for confusion/memory.",
+        "reason": "The context lists the indications for ACONITUM NAPELLUS as shock, and it does not mention any indication of confusion/memory. However, it does mention that AMBRA GRISEA 30C is labeled for this purpose.",
+        "fuzzy_score": 0.4019
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "2a2c0a9524ad65c04ea76c536dec739f403519ebb268d77a35fc4013f8a57a2a": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "9cdb628eec72b16b4e828cb8405f2a9b4b5b7065e3bf6a44afa441165aa345bd": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-091",
+        "statement": "The information about the medicine could not be found.",
+        "reason": "The context explicitly mentions information about Alprazolam Extended Release and Ursodiol, but there is no mention of NonexistentDrugZ 500mg tablets. Therefore, it cannot be deduced that the information about this drug could not be found.",
+        "fuzzy_score": 0.2637
+      },
+      {
+        "case_id": "E2E-091",
+        "statement": "NonexistentDrugZ 500mg tablets were not mentioned in any available sources.",
+        "reason": "The context does mention Ursodiol and Alprazolam Extended Release, but there is no information about NonexistentDrugZ 500mg tablets. This statement cannot be directly inferred from the given context.",
+        "fuzzy_score": 0.3495
+      },
+      {
+        "case_id": "E2E-091",
+        "statement": "There is no evidence that NonexistentDrugZ 500mg tablets exist.",
+        "reason": "The context does not provide any information about the existence or non-existence of NonexistentDrugZ 500mg tablets. This statement cannot be directly inferred from the given context.",
+        "fuzzy_score": 0.4028
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "8bd74df7ce44928e91be9197f66a25ea9177166ea07cd82a44ebd4af26f2b0fa": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "edddf9e9334b6290ecfabc2ac7c28f790e26084b18e23e4d7ce449cd84de74e2": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "7d722c2957ff3b6bc3df1eff44f9a5040ce235a738b80f44bff38a997a8f4c9f": {
+    "faithfulness": 0.8,
+    "unsupported": [
+      {
+        "case_id": "E2E-025",
+        "statement": "Breech presentation and adhesion are also mentioned as symptoms of HIV infections.",
+        "reason": "The context does not mention breech presentation or adhesion as symptoms of HIV infections. Breech presentation is actually listed under a different disease, and adhesion is listed under another disease with the same condition ID as HIV. Therefore, it cannot be directly inferred that these symptoms are associated with HIV infections.",
+        "fuzzy_score": 0.4881
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "e7a39cf1e24460ac99c213dd08298e3db035239ffe65c4338463a87536e7cfcc": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "34b10c829570b94bf2cbcd866179806560ce50898f42b85821527dad1b832cda": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-080",
+        "statement": "The indications on the label of the medicine Neomycin and Polymyxin B Sulfates and Bacitracin Zinc do not include treating depression.",
+        "reason": "There is no information in the context about the indications for treating depression, but it does mention insomnia as a condition related to one of the drugs (Temazepam).",
+        "fuzzy_score": 0.481
+      },
+      {
+        "case_id": "E2E-080",
+        "statement": "The indications on the label of the medicine Neomycin and Polymyxin B Sulfates and Bacitracin Zinc do not include treating headache.",
+        "reason": "There is no information in the context about the indications for treating headache, but it does mention insomnia as a condition related to one of the drugs (Temazepam).",
+        "fuzzy_score": 0.4777
+      },
+      {
+        "case_id": "E2E-080",
+        "statement": "The indications on the label of the medicine Neomycin and Polymyxin B Sulfates and Bacitracin Zinc do not include treating irritability.",
+        "reason": "There is no information in the context about the indications for treating irritability, but it does mention insomnia as a condition related to one of the drugs (Temazepam).",
+        "fuzzy_score": 0.4717
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "ca430fc631de9724018b9f66193a9917295eb781cdacdfd2a4eee2d5fe2c1527": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-097",
+        "statement": "Novaproxin is labeled for the management of osteoarthritis pain.",
+        "reason": "There is no information given in the context about Novaproxin, but Meloxicam is mentioned as an active ingredient and it is indeed used to manage osteoarthritis pain. However, there is no direct mention of Novaproxin.",
+        "fuzzy_score": 0.5568
+      },
+      {
+        "case_id": "E2E-097",
+        "statement": "The medicine Novaproxin contains Meloxicam as its active ingredient.",
+        "reason": "There is no information given in the context about Novaproxin's composition. However, it does mention that Meloxicam is an active ingredient of a drug (Meloxicam capsules) used to manage osteoarthritis pain.",
+        "fuzzy_score": 0.3208
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "1e5eb4c53afccc42b06b13698a70afa58251f51852afebdf1d3c898c7d611ed4": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "ae158e182bf9e7cb6d3055123db2fd448d8db7fe2df529518e1908287049ca42": {
+    "faithfulness": 0.6667,
+    "unsupported": [
+      {
+        "case_id": "E2E-041",
+        "statement": "The label text identifies Glibenclarnide.",
+        "reason": "There is no information given in the context about Glibenclarnide. The only mention of a medication with a similar name (Glyburide) is in id=3489, but it's not explicitly stated as Glibenclarnide.",
+        "fuzzy_score": 0.381
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "The active ingredients of Glibenclarnide include ALLOPURINOL is not stated in the available sources.",
+        "reason": "There is no information given in the context about the active ingredients of Glibenclarnide. The only mention of Allopurinol is in id=24160, but it's a separate medication with its own indications and warnings.",
+        "fuzzy_score": 0.4476
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "Allopurinol tablets, USP reduces serum and urinary uric acid concentrations.",
+        "reason": "The context mentions that 'Allopurinol tablets, USP reduces serum and urinary uric acid concentrations' for Allopurinol in id=24160. This is a specific action of the medication and does not necessarily apply to Glibenclarnide if it were mentioned.",
+        "fuzzy_score": 0.9934
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "08f97c858e4a477bfae9563e4a8f8b8ba7f86453a3e9972e60bf1b6aec544f37": {
+    "faithfulness": 0.8,
+    "unsupported": [
+      {
+        "case_id": "E2E-005",
+        "statement": "No alternative medical illness was identified in the available sources.",
+        "reason": "The context does not provide any information about identifying or ruling out alternative medical illnesses. Therefore, it cannot be inferred that no alternative medical illness was identified.",
+        "fuzzy_score": 0.3563
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "861b18fb537911062dd5c34e6c5504fbd87cfe3667bf0ce73b93a2455bb83878": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "2c8b1d21dca7b2e3b3c4aa8612bd7cee56fc374fa15867ea12fc319cd882105d": {
+    "faithfulness": 0.6667,
+    "unsupported": [
+      {
+        "case_id": "E2E-081",
+        "statement": "The symptoms described are not labeled for the use of Thymoglobulin.",
+        "reason": "The context does not provide any information about the symptoms that are or are not labeled for the use of Thymoglobulin. Therefore, this statement cannot be directly inferred from the given information.",
+        "fuzzy_score": 0.437
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "0941d6045f21c209766c7c9978d3949f61e64db10cc96ea5243c956ed079a380": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-094",
+        "statement": "The available sources do not provide information about the official FDA pediatric approval date for Xanthroflurane inhalation.",
+        "reason": "There is no mention of Xanthroflurane in the context, let alone its pediatric approval date.",
+        "fuzzy_score": 0.3451
+      },
+      {
+        "case_id": "E2E-094",
+        "statement": "Xanthroflurane inhalation evidence does not state the official FDA pediatric approval date.",
+        "reason": "The context does not provide any information about Xanthroflurane's pediatric approval date, so it cannot be inferred that the evidence does or does not mention this date.",
+        "fuzzy_score": 0.356
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "1b3a4785ca6ae75aab39ee5480bf3a47abd249b12d1a780233b5865fd0302ece": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "ca42a4c556a23e796a8038feb270db762a1e52aa58b39d944ac964b3950efeb1": {
+    "faithfulness": 0.8,
+    "unsupported": [
+      {
+        "case_id": "E2E-021",
+        "statement": "No alternative conditions were identified in the available sources.",
+        "reason": "The context does not provide information about identifying alternative conditions. It only lists specific diseases and their symptoms.",
+        "fuzzy_score": 0.3473
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "582f592f059196811669f9a4fd785eb1da3e3352fa926aca161b7f2bd4f7fe5d": {
+    "faithfulness": 0.8,
+    "unsupported": [
+      {
+        "case_id": "E2E-072",
+        "statement": "The medication Methylprednisolone is used to treat various inflammatory conditions.",
+        "reason": "The context mentions that the medications indicated for treating symptoms of irritative voiding, lower urinary tract infections, and diagnostic procedures are for relief of local symptoms such as inflammation. However, it does not explicitly mention methylprednisolone being used to treat various inflammatory conditions.",
+        "fuzzy_score": 0.3857
+      },
+      {
+        "case_id": "E2E-072",
+        "statement": "Rheumatoid arthritis is an inflammatory condition that can be treated with the medication Methylprednisolone.",
+        "reason": "The context mentions that methylprednisolone acetate injectable suspension is indicated for the treatment of rheumatoid arthritis, but it does not explicitly state that rheumatoid arthritis is an inflammatory condition or that methylprednisolone can be used to treat it.",
+        "fuzzy_score": 0.3855
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "bd7198b1b0439e4048d77f47ff108c4ebc0af5139a75bafc1c0642905b82bebc": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "0765e2481daaf74aab8e8430b032c1699b34781dc8f577bdc72026ba72ca9e24": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "30806ecf4f590815eaf6e33f42b88ee704243704169109c2ba2be78447b9b497": {
+    "faithfulness": 0.2857,
+    "unsupported": [
+      {
+        "case_id": "E2E-001",
+        "statement": "Coronary Atherosclerosis also includes dizziness.",
+        "reason": "The context lists dizziness as a symptom of Coronary Atherosclerosis. However, the word 'also' implies additional information not present in the context. Therefore, it cannot be directly inferred that this statement is true.",
+        "fuzzy_score": 0.4
+      },
+      {
+        "case_id": "E2E-001",
+        "statement": "Coronary Atherosclerosis also includes fatigue.",
+        "reason": "The context lists fatigue as a symptom of Coronary Atherosclerosis. However, the word 'also' implies additional information not present in the context. Therefore, it cannot be directly inferred that this statement is true.",
+        "fuzzy_score": 0.3926
+      },
+      {
+        "case_id": "E2E-001",
+        "statement": "Atrial Fibrillation includes Chest pain or discomfort.",
+        "reason": "The context lists Chest pain or discomfort as a symptom of Atrial Fibrillation. However, the word 'includes' implies additional information not present in the context. Therefore, it cannot be directly inferred that this statement is true.",
+        "fuzzy_score": 0.6154
+      },
+      {
+        "case_id": "E2E-001",
+        "statement": "Atrial Fibrillation also includes dizziness or lightheadedness.",
+        "reason": "The context lists dizziness or lightheadedness as a symptom of Atrial Fibrillation. However, the word 'also' implies additional information not present in the context. Therefore, it cannot be directly inferred that this statement is true.",
+        "fuzzy_score": 0.6154
+      },
+      {
+        "case_id": "E2E-001",
+        "statement": "Atrial Fibrillation also includes fatigue.",
+        "reason": "The context lists fatigue as a symptom of Atrial Fibrillation. However, the word 'also' implies additional information not present in the context. Therefore, it cannot be directly inferred that this statement is true.",
+        "fuzzy_score": 0.4051
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "222714dd196a753a83ae8873b78fe4c763912890c05c2a24c7f131a75e0f382a": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "571df22fd54e1cdeb461de4f98560402a22aa3134bd9054be6b98dde10d92a47": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-099",
+        "statement": "Available sources do not provide specific information about using Valerionex oral suspension during pregnancy.",
+        "reason": "The context does not mention anything about Valerionex oral suspension, so it cannot be determined if there is any information about its use during pregnancy.",
+        "fuzzy_score": 0.375
+      },
+      {
+        "case_id": "E2E-099",
+        "statement": "Available sources do not provide specific information about using Valerionex oral suspension during lactation.",
+        "reason": "The context does not mention anything about Valerionex oral suspension, so it cannot be determined if there is any information about its use during lactation.",
+        "fuzzy_score": 0.3542
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "c496ed62cbad36c6f950ca371b5a49926cb39f5cfedcb819630f9d90af4ecaca": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-004",
+        "statement": "No alternative conditions were identified in the available sources.",
+        "reason": "The context does not provide information about identifying or ruling out alternative conditions, making this statement unverifiable based on the given text.",
+        "fuzzy_score": 0.3399
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "65aa05484a78c876e97b11b78c7b0957b9030e25764791edd45232f1856a8a99": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
   }
 }
