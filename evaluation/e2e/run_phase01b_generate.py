@@ -14,7 +14,7 @@ import json
 import time
 import subprocess
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO_ROOT))
@@ -182,9 +182,10 @@ def run_generation_experiment(
     prompt_version: str,
     cases: List[Dict[str, Any]],
     routing_version: str = "legacy",
+    out_dir: Optional[Path] = None,
 ) -> List[Dict[str, Any]]:
     """
-    Executes sequential generation on the 40 dev subset cases for a specific configuration.
+    Executes sequential generation on the dev or held-out cases for a specific configuration.
     """
     print(f"\n========================================================")
     print(f"🚀 Starting Generation Run: {config_name}")
@@ -192,7 +193,7 @@ def run_generation_experiment(
     print(f"   Settings: temp=0, seed=42, num_ctx=8192, num_predict=700")
     print(f"========================================================")
 
-    out_dir = RESULTS_DIR / config_name
+    out_dir = out_dir or (RESULTS_DIR / config_name)
     out_dir.mkdir(parents=True, exist_ok=True)
     out_file = out_dir / "generated_cases.jsonl"
     metadata_file = out_dir / "generation_metadata.json"
