@@ -4267,5 +4267,650 @@
     "faithfulness": 1.0,
     "unsupported": [],
     "nan_reasons": {}
+  },
+  "0d19658358025de97335eda3118ae00b45b98fdfc1cd79f4597e4a57a199489e": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "0ee89b2f43e7dd65026b84026aca12ab3d0ec0335d5db688386f071f72f91f8a": {
+    "faithfulness": 0.8,
+    "unsupported": [
+      {
+        "case_id": "E2E-042",
+        "statement": "Labeled indications are not stated in the available sources.",
+        "reason": "The context explicitly mentions that labeled indications are mentioned for [E3] DRUG | id=36354 | Brand: Ursodiol | Generic: URSODIOL, which contradicts the statement.",
+        "fuzzy_score": 0.4295
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "aa9c8f051af1cdf6d3d9a371f190f180b29af4e10ac33db77176dd8cf75948dd": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "5b2f16678410121f4b5f2b6f7769e525d88995afeb2ad52fa5734c1ff9fa2e28": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-069",
+        "statement": "The symptoms of bacteremia, abdominal tenderness, chill, decreased translucency, and diarrhea are consistent with a condition that can be treated with Penicillin V Potassium.",
+        "reason": "Bacteremia is mentioned as a condition in the context, but it does not explicitly state that these symptoms are consistent with a condition that can be treated with Penicillin V Potassium. Therefore, this statement cannot be directly inferred from the context.",
+        "fuzzy_score": 0.3297
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "7fbbcc27095415953773b3bedb7aa6d08c3a3d3f0fb348b11a16e53b231dac87": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-088",
+        "statement": "The available sources do not state that this product treats cough.",
+        "reason": "There is no information in the context about the product treating cough. The context only mentions symptoms treated by other products.",
+        "fuzzy_score": 0.2857
+      },
+      {
+        "case_id": "E2E-088",
+        "statement": "The available sources do not state that this product treats fatigue.",
+        "reason": "Similar to the previous statement, there is no information in the context about the product treating fatigue.",
+        "fuzzy_score": 0.2807
+      },
+      {
+        "case_id": "E2E-088",
+        "statement": "The available sources do not state that this product treats feeling cold.",
+        "reason": "Again, there is no information in the context about the product treating feeling cold.",
+        "fuzzy_score": 0.2824
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "a9e51cd9a32555705690f77f0a07b8bcdc037561a1d6a3bd58405f2a0b2d8d32": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-093",
+        "statement": "Clinical information about taking Lipitor to cure acute viral Covid-19 infection could not be verified.",
+        "reason": "The context mentions the indications for Lipitor, which include myocardial infarction, stroke, and angina in adults with multiple risk factors for coronary heart disease. However, it does not mention anything about treating acute viral Covid-19 infection. Therefore, it cannot be deduced that clinical information about taking Lipitor to cure acute viral Covid-19 infection could not be verified.",
+        "fuzzy_score": 0.3725
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "aa0290eac73330d4603e42404b92209f450b174ec459bc6dd451ed9486f5872a": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-032",
+        "statement": "The labeled indications for this medicine are not stated.",
+        "reason": "The context provides information about the indications for several medicines, but it does not explicitly state that the indications for Hospicare 40R Adult Body Wipes are not stated. In fact, there is no mention of the indications for this specific medicine in the provided text.",
+        "fuzzy_score": 0.2959
+      },
+      {
+        "case_id": "E2E-032",
+        "statement": "The precautions for this medicine are not stated.",
+        "reason": "Similar to the previous statement, the context does provide information about the precautions for several medicines, but it does not explicitly state that the precautions for Hospicare 40R Adult Body Wipes are not stated. In fact, there is no mention of the precautions for this specific medicine in the provided text.",
+        "fuzzy_score": 0.2947
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "19c67963dc46b5f129581abd57804650f9decfd63ed19861c792335608829f61": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-044",
+        "statement": "The indications of this medicine are not stated in the available sources.",
+        "reason": "The context does mention the indications for several medicines, but it does not explicitly state that the indications for Laura Mercier Flawless Skin Repair Day Creme Broad Spectrum SPF 15 Sunscreen are not stated. Therefore, we cannot directly infer this statement from the given context.",
+        "fuzzy_score": 0.3309
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "a506c4156803cabc70e27328c5bafbf2a272b8b3d1ccb9b650fc7eff379cd6e4": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-009",
+        "statement": "Neovascularization Proteinuria is a condition that has overlapping symptoms.",
+        "reason": "The context lists Neovascularization and Proteinuria as separate conditions, but does not explicitly state that they have overlapping symptoms. Therefore, it cannot be directly inferred.",
+        "fuzzy_score": 0.4167
+      },
+      {
+        "case_id": "E2E-009",
+        "statement": "Nephritis is a condition that has overlapping symptoms.",
+        "reason": "Nephritis is listed as a symptom of several conditions in the context, but not explicitly stated to have overlapping symptoms. Therefore, it cannot be directly inferred.",
+        "fuzzy_score": 0.4218
+      },
+      {
+        "case_id": "E2E-009",
+        "statement": "Nephrosis is a condition that has overlapping symptoms.",
+        "reason": "Nephrosis is listed as a symptom of several conditions in the context, but not explicitly stated to have overlapping symptoms. Therefore, it cannot be directly inferred.",
+        "fuzzy_score": 0.4218
+      },
+      {
+        "case_id": "E2E-009",
+        "statement": "No alternative medical illness was identified in the available sources.",
+        "reason": "The context lists multiple diseases and their symptoms, indicating that there are indeed conditions being discussed. However, it does not explicitly state that no alternative medical illnesses were found. Therefore, it cannot be directly inferred.",
+        "fuzzy_score": 0.3469
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "6c1fccc26c00719d4e652bcfe1e0599084363eb8513e23f7b7b66bce418dfc57": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-073",
+        "statement": "The scanned medicine contains meclizine hydrochloride as its active ingredient.",
+        "reason": "The context does not provide information about the active ingredients of the scanned medicine, so it cannot be inferred that meclizine hydrochloride is present.",
+        "fuzzy_score": 0.3874
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "8779e4e57bdc229e063d943ebe1bf9dc34dd0b2e88d17368dd89eb4e114816dc": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-082",
+        "statement": "Strophanthus (STROPHANTHUS) 20mg is labeled for relieving intestinal gas.",
+        "reason": "The context mentions that Strophanthus hispidus and its derivatives are indicated for various purposes, but it does not explicitly mention relieving intestinal gas as one of them.",
+        "fuzzy_score": 0.383
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Strophanthus (STROPHANTHUS) 20mg is labeled for relieving abdominal pain.",
+        "reason": "The context mentions that Strophanthus hispidus and its derivatives are indicated for various purposes, but it does not explicitly mention relieving abdominal pain as one of them. However, the medicine Kids Relief contains ingredients traditionally used to help relieve symptoms associated with colic, including abdominal pain.",
+        "fuzzy_score": 0.4301
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Strophanthus (STROPHANTHUS) 20mg is labeled for relieving bloating.",
+        "reason": "The context mentions that Strophanthus hispidus and its derivatives are indicated for various purposes, but it does not explicitly mention relieving bloating as one of them. However, the medicine Kids Relief contains ingredients traditionally used to help relieve symptoms associated with colic, including bloating.",
+        "fuzzy_score": 0.3843
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Strophanthus (STROPHANTHUS) 20mg is labeled for relieving nausea.",
+        "reason": "The context mentions that Strophanthus hispidus and its derivatives are indicated for various purposes, but it does not explicitly mention relieving nausea as one of them. However, the medicine Kids Relief contains ingredients traditionally used to help relieve symptoms associated with colic, including nausea.",
+        "fuzzy_score": 0.3877
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Strophanthus (STROPHANTHUS) 20mg is labeled for relieving burping.",
+        "reason": "The context mentions that Strophanthus hispidus and its derivatives are indicated for various purposes, but it does not explicitly mention relieving burping as one of them. However, the medicine Kids Relief contains ingredients traditionally used to help relieve symptoms associated with colic, including burping.",
+        "fuzzy_score": 0.3772
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "The medicine Strophanthus (STROPHANTHUS) 20mg contains CITRULLUS COLOCYNTHIS FRUIT PULP as an active ingredient.",
+        "reason": "The context mentions that the medicine Kids Relief contains CITRULLUS COLOCYNTHIS FRUIT PULP, but it does not explicitly mention Strophanthus (STROPHANTHUS) 20mg containing this ingredient.",
+        "fuzzy_score": 0.4234
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "The medicine Strophanthus (STROPHANTHUS) 20mg contains DIOSCOREA VILLOSA TUBER as an active ingredient.",
+        "reason": "The context mentions that the medicine Kids Relief contains DIOSCOREA VILLOSA TUBER, but it does not explicitly mention Strophanthus (STROPHANTHUS) 20mg containing this ingredient.",
+        "fuzzy_score": 0.4151
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "The medicine Strophanthus (STROPHANTHUS) 20mg contains MAGNESIUM PHOSPHATE, DIBASIC TRIHYDRATE as an active ingredient.",
+        "reason": "The context mentions that the medicine Kids Relief contains MAGNESIUM PHOSPHATE, DIBASIC TRIHYDRATE, but it does not explicitly mention Strophanthus (STROPHANTHUS) 20mg containing this ingredient.",
+        "fuzzy_score": 0.4937
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "The medicine Strophanthus (STROPHANTHUS) 20mg contains MATRICARIA CHAMOMILLA as an active ingredient.",
+        "reason": "The context mentions that the medicine Kids Relief contains MATRICARIA CHAMOMILLA, but it does not explicitly mention Strophanthus (STROPHANTHUS) 20mg containing this ingredient.",
+        "fuzzy_score": 0.4106
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Strophanthus (STROPHANTHUS) 20mg is indicated for relieving symptoms associated with colic, including intestinal gas.",
+        "reason": "The context mentions that the medicine Kids Relief contains ingredients traditionally used to help relieve symptoms associated with colic, including intestinal gas. However, it does not explicitly mention Strophanthus (STROPHANTHUS) 20mg being indicated for this purpose.",
+        "fuzzy_score": 0.3398
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Strophanthus (STROPHANTHUS) 20mg is indicated for relieving symptoms associated with colic, including abdominal pain.",
+        "reason": "The context mentions that the medicine Kids Relief contains ingredients traditionally used to help relieve symptoms associated with colic, including abdominal pain. However, it does not explicitly mention Strophanthus (STROPHANTHUS) 20mg being indicated for this purpose.",
+        "fuzzy_score": 0.3392
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Strophanthus (STROPHANTHUS) 20mg is indicated for relieving symptoms associated with colic, including bloating.",
+        "reason": "The context mentions that the medicine Kids Relief contains ingredients traditionally used to help relieve symptoms associated with colic, including bloating. However, it does not explicitly mention Strophanthus (STROPHANTHUS) 20mg being indicated for this purpose.",
+        "fuzzy_score": 0.3399
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Strophanthus (STROPHANTHUS) 20mg is indicated for relieving symptoms associated with colic, including nausea.",
+        "reason": "The context mentions that the medicine Kids Relief contains ingredients traditionally used to help relieve symptoms associated with colic, including nausea. However, it does not explicitly mention Strophanthus (STROPHANTHUS) 20mg being indicated for this purpose.",
+        "fuzzy_score": 0.3564
+      },
+      {
+        "case_id": "E2E-082",
+        "statement": "Strophanthus (STROPHANTHUS) 20mg is indicated for relieving symptoms associated with colic, including burping.",
+        "reason": "The context mentions that the medicine Kids Relief contains ingredients traditionally used to help relieve symptoms associated with colic, including burping. However, it does not explicitly mention Strophanthus (STROPHANTHUS) 20mg being indicated for this purpose.",
+        "fuzzy_score": 0.3651
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "7ca433d867eb64406b1987f03c3dc09407b592e1bce3e28382eaccb7b27027db": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-100",
+        "statement": "The pediatric weight-based dosing for Glycozempra 5mg/mL solution could not be verified.",
+        "reason": "There is no information given in the context about Glycozempra 5mg/mL solution, let alone its pediatric weight-based dosing.",
+        "fuzzy_score": 0.3188
+      },
+      {
+        "case_id": "E2E-100",
+        "statement": "The available clinical sources do not provide the specific information about the pediatric weight-based dosing for Glycozempra 5mg/mL solution.",
+        "reason": "There is no information given in the context about Glycozempra 5mg/mL solution, let alone its pediatric weight-based dosing. The statement is a paraphrase of the first statement, but it's still not directly inferable from the context.",
+        "fuzzy_score": 0.2776
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "ee86aa90b4948c69c53c3c48ad0a3222a11941a0befe44c3c372d44a14d861b5": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-034",
+        "statement": "The labeled indications are not stated in the available sources.",
+        "reason": "The context does mention that the labeled indications are listed as 'please see the label attached', but it does not explicitly state that these indications are not mentioned in the available sources. Therefore, this statement cannot be directly inferred from the context.",
+        "fuzzy_score": 0.4231
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "47621244e08a0d8b3517cafdf388d5ac493889db23ee1935c54b3e8bd17ff2f7": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-052",
+        "statement": "Labeled indications for this medicine are not stated in the available sources.",
+        "reason": "Although there is a mention of indications for some ear relief drops, it does not explicitly state which one is being referred to. Therefore, it cannot be deduced that labeled indications for this medicine are not stated in the available sources.",
+        "fuzzy_score": 0.3832
+      },
+      {
+        "case_id": "E2E-052",
+        "statement": "Precautions for this medicine are not stated in the available sources.",
+        "reason": "There is no information given in the context about precautions for any of the mentioned medicines, including Discount Drug Mart Ear Relief Ear Drops. Therefore, it cannot be deduced that precautions for this medicine are not stated in the available sources.",
+        "fuzzy_score": 0.3145
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "54961ea25712c4086b95d412c73f4b70b1290a82a13f7c0b522cb056fd12d5f3": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-024",
+        "statement": "No alternative medical illness was identified in the available sources.",
+        "reason": "The context does not provide information about identifying or ruling out alternative medical illnesses. Therefore, it cannot be directly inferred that no alternative medical illness was identified.",
+        "fuzzy_score": 0.3455
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "b7dce6438bd51e3fa6a48484c9a1a3ad91587caee569dab6e752af4aaeb70e36": {
+    "faithfulness": 0.6667,
+    "unsupported": [
+      {
+        "case_id": "E2E-062",
+        "statement": "The medication Joette Calabrese Survivalist Kit is intended to treat confusion.",
+        "reason": "The context mentions that the kit contains ACONITUM NAPELLUS, which has an indication of \"confusion/memory\", but it does not explicitly state that the entire kit is intended for treating confusion. Therefore, this statement cannot be directly inferred from the context.",
+        "fuzzy_score": 0.5824
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "482f169dc6f558c07ae37830ea9518f220b9e109bd4dd56768d74349a1207432": {
+    "faithfulness": 0.9,
+    "unsupported": [
+      {
+        "case_id": "E2E-076",
+        "statement": "Chantecaille Just Skin Tinted Moisturizer Sunscreen Broad Spectrum SPF 15 Shade Aura does not treat Toxoplasmosis symptoms such as body aches, headache, fever, or fatigue.",
+        "reason": "The context explicitly mentions the indication of Chantecaille Just Skin Tinted Moisturizer Sunscreen Broad Spectrum SPF 15 Shade Aura in [E7] DRUG | id=1 and it does not mention treating Toxoplasmosis symptoms",
+        "fuzzy_score": 0.6353
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "e392b4768724412b01a18e83da026845b67340c2079afafa6fbb638b7c4b8b2a": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-091",
+        "statement": "The requested clinical information about NonexistentDrugZ 500mg tablets could not be verified.",
+        "reason": "There is no mention of NonexistentDrugZ in the context, so it cannot be inferred that the clinical information for this drug could not be verified.",
+        "fuzzy_score": 0.4457
+      },
+      {
+        "case_id": "E2E-091",
+        "statement": "Available clinical sources do not state the specific dosage for NonexistentDrugZ 500mg tablets.",
+        "reason": "The context mentions the indications and dosages for Alprazolam Extended Release (1775) and Ursodiol (5508, 36354), but there is no information about NonexistentDrugZ. Therefore, it cannot be inferred that available clinical sources do not state the specific dosage for this drug.",
+        "fuzzy_score": 0.4545
+      },
+      {
+        "case_id": "E2E-091",
+        "statement": "Available clinical sources do not state the specific administration schedule for NonexistentDrugZ 500mg tablets.",
+        "reason": "The context mentions the administration instructions for Alprazolam Extended Release (1775), but there is no information about NonexistentDrugZ. Therefore, it cannot be inferred that available clinical sources do not state the specific administration schedule for this drug.",
+        "fuzzy_score": 0.4041
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "2f484e199c352c8a8a82597bdbaf5d586182d4321881f64c4e0b9704ab4765e7": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-036",
+        "statement": "Labeled indications for this medicine are not stated.",
+        "reason": "The context explicitly states several labeled indications for the drug, including depression, allergic states, dermatologic diseases, etc. Therefore, it can be deduced that the statement is false.",
+        "fuzzy_score": 0.254
+      },
+      {
+        "case_id": "E2E-036",
+        "statement": "Precautions for this medicine are not stated.",
+        "reason": "The context explicitly mentions a warning about hepatic failure associated with nefazodone hydrochloride treatment. Therefore, it can be deduced that precautions for the drug are indeed stated.",
+        "fuzzy_score": 0.2909
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "2f94dfad7700b88c898d8053460d72aeb256f04091a7441846cb6bafa933c469": {
+    "faithfulness": 0.9167,
+    "unsupported": [
+      {
+        "case_id": "E2E-055",
+        "statement": "Labeled indications are not stated in the available sources.",
+        "reason": "The context does mention labeled indications, but it is referring to a different drug (Allopurinol) and not OHM Fever Relief. Therefore, this statement cannot be directly inferred from the given context.",
+        "fuzzy_score": 0.4306
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "f956d7b6559ededc2c34c400f0475f5b63e3a88a63130067cb9a6d5f0d37d6b3": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-025",
+        "statement": "No disease matching all described symptoms could be verified from available sources.",
+        "reason": "Given the multiple diseases listed, it's possible that one of them matches the described symptoms. However, without further information or a more detailed analysis, it cannot be definitively concluded that no disease matches all described symptoms.",
+        "fuzzy_score": 0.4118
+      },
+      {
+        "case_id": "E2E-025",
+        "statement": "No alternative diseases were identified in the available sources.",
+        "reason": "Similar to the previous statement, given the multiple diseases listed, it's possible that one of them is an alternative match for the described symptoms. However, without further information or a more detailed analysis, it cannot be definitively concluded that no alternative disease was identified.",
+        "fuzzy_score": 0.4
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "6725c9950995eb10167be69f4457efdf37cc4f561625f7667327ccdcfbc200d0": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "35613ea6702160cf972b150fa0b0e9d659edb37f07aacc4dbc191311f7f48ec9": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "c38af9b32bf80fc7753cf1de20c406d6f964106817b17a2bb461134568f372a0": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-097",
+        "statement": "The requested clinical information about Novaproxin capsules for severe chronic osteoarthritis pain could not be verified from the available sources.",
+        "reason": "There is no mention of Novaproxin in the context, only Meloxicam and Indomethacin are mentioned as treatments for osteoarthritis pain.",
+        "fuzzy_score": 0.3731
+      },
+      {
+        "case_id": "E2E-097",
+        "statement": "The available clinical sources do not state the specific information requested about using Novaproxin capsules for severe chronic osteoarthritis pain.",
+        "reason": "Similar to the previous statement, there is no mention of Novaproxin in the context. The only relevant information is about Meloxicam and Indomethacin.",
+        "fuzzy_score": 0.3902
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "a962151966b0a3fb2b74f20f6d6433261d9e1b8be42640d4e5ca0ec65ddf040f": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "93c9235bea898f1cb0ff832fb9deb7f5c2557ceed8d5fd67da401d57c0326bb6": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-041",
+        "statement": "The label text identifies Glibenclarnide.",
+        "reason": "There is no information given in the context about Glibenclarnide. The only mention of a similar name is Glyburide, but it's not explicitly stated as Glibenclarnide.",
+        "fuzzy_score": 0.381
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "Glibenclarnide is also known as Glyburide.",
+        "reason": "The context mentions that id=3489 has a name of glyburide, which is similar to Glibenclarnide. However, it's not explicitly stated that they are the same drug.",
+        "fuzzy_score": 0.3556
+      },
+      {
+        "case_id": "E2E-041",
+        "statement": "Labeled indications are not stated in the available sources.",
+        "reason": "The context contains several labeled indications for different drugs, such as Allopurinol and ClindaCare. Therefore, it can be inferred that labeled indications are indeed stated in the available sources.",
+        "fuzzy_score": 0.4444
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "f983c55fa82f34a203d52283e9787c686cb433df109920bad6e6f89842b47ca0": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "fb2768b7f764a1cbbc116254091c440f494d1edea3ab6c992df2cc970ddc302f": {
+    "faithfulness": 0.6667,
+    "unsupported": [
+      {
+        "case_id": "E2E-081",
+        "statement": "The symptoms Headache, Spinal Osteophytosis, Spinal Stenosis, Spirurida Infections are not treated by Thymoglobulin (ANTI-THYMOCYTE GLOBULIN (RABBIT)).",
+        "reason": "The context does not provide information about the specific indications or treatments of Thymoglobulin. Therefore, it cannot be deduced that these symptoms are not treated by Thymoglobulin.",
+        "fuzzy_score": 0.3208
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "8a0ed1b09c10ea7015d399e377350d1490dc2473a730b584925963caf95590d2": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-094",
+        "statement": "The official FDA pediatric approval date for Xanthroflurane inhalation is not verified.",
+        "reason": "There is no information given in the context about Xanthroflurane or its pediatric approval status.",
+        "fuzzy_score": 0.3743
+      },
+      {
+        "case_id": "E2E-094",
+        "statement": "Available clinical sources do not provide the specific information about the official FDA pediatric approval date for Xanthroflurane inhalation.",
+        "reason": "The context does mention several drugs and their indications, but there is no mention of Xanthroflurane or its pediatric approval status. Therefore, it cannot be deduced that available clinical sources do not provide this information.",
+        "fuzzy_score": 0.3545
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "0c5ea6e1c9ab5c3621e5e9611e0e65f1da73b798faa0e2ff5828868724d34fcc": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "bc5748d523f773f8e8229e94e7360912fd49bec79927c4f8226aa81bac6c3da0": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-021",
+        "statement": "No alternative conditions were identified in the available sources.",
+        "reason": "The context only provides information about specific diseases and their symptoms, but does not provide a comprehensive list of all possible conditions. Therefore, it cannot be inferred that no alternative conditions exist.",
+        "fuzzy_score": 0.3473
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "f0feec213a79b59cc2726dec3877dc54cea879b6e8841c45c9a0f65bf464f0eb": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-072",
+        "statement": "Methylprednisolone (METHYLPREDNISOLONE) 25mg is used to treat acute gouty arthritis.",
+        "reason": "The context mentions that Methylprednisolone acetate injectable suspension is indicated for the treatment of acute gouty arthritis, but it does not specify a dosage of 25mg. Therefore, it cannot be deduced that Methylprednisolone (METHYLPREDNISOLONE) 25mg is used to treat acute gouty arthritis.",
+        "fuzzy_score": 0.3545
+      },
+      {
+        "case_id": "E2E-072",
+        "statement": "Methylprednisolone (METHYLPREDNISOLONE) 25mg is used to treat acute and subacute bursitis.",
+        "reason": "The context mentions that Methylprednisolone acetate injectable suspension is indicated for the treatment of acute and subacute bursitis, but it does not specify a dosage of 25mg. Therefore, it cannot be deduced that Methylprednisolone (METHYLPREDNISOLONE) 25mg is used to treat acute and subacute bursitis.",
+        "fuzzy_score": 0.3097
+      },
+      {
+        "case_id": "E2E-072",
+        "statement": "Methylprednisolone (METHYLPREDNISOLONE) 25mg is used to treat acute nonspecific tenosynovitis.",
+        "reason": "The context mentions that Methylprednisolone acetate injectable suspension is indicated for the treatment of acute nonspecific tenosynovitis, but it does not specify a dosage of 25mg. Therefore, it cannot be deduced that Methylprednisolone (METHYLPREDNISOLONE) 25mg is used to treat acute nonspecific tenosynovitis.",
+        "fuzzy_score": 0.3043
+      },
+      {
+        "case_id": "E2E-072",
+        "statement": "Methylprednisolone (METHYLPREDNISOLONE) 25mg is used to treat epicondylitis.",
+        "reason": "The context mentions that Methylprednisolone acetate injectable suspension is indicated for the treatment of epicondylitis, but it does not specify a dosage of 25mg. Therefore, it cannot be deduced that Methylprednisolone (METHYLPREDNISOLONE) 25mg is used to treat epicondylitis.",
+        "fuzzy_score": 0.3302
+      },
+      {
+        "case_id": "E2E-072",
+        "statement": "Methylprednisolone (METHYLPREDNISOLONE) 25mg is used to treat rheumatoid arthritis.",
+        "reason": "The context mentions that Methylprednisolone acetate injectable suspension is indicated for the treatment of rheumatoid arthritis, but it does not specify a dosage of 25mg. Therefore, it cannot be deduced that Methylprednisolone (METHYLPREDNISOLONE) 25mg is used to treat rheumatoid arthritis.",
+        "fuzzy_score": 0.3379
+      },
+      {
+        "case_id": "E2E-072",
+        "statement": "Methylprednisolone (METHYLPREDNISOLONE) 25mg is used to treat synovitis of osteoarthritis.",
+        "reason": "The context mentions that Methylprednisolone acetate injectable suspension is indicated for the treatment of synovitis of osteoarthritis, but it does not specify a dosage of 25mg. Therefore, it cannot be deduced that Methylprednisolone (METHYLPREDNISOLONE) 25mg is used to treat synovitis of osteoarthritis.",
+        "fuzzy_score": 0.3805
+      },
+      {
+        "case_id": "E2E-072",
+        "statement": "The active ingredient in Methylprednisolone (METHYLPREDNISOLONE) 25mg is METHYLPREDNISOLONE ACETATE.",
+        "reason": "The context mentions that the active ingredients of several drugs include METHYLPREDNISOLONE ACETATE, but it does not specify a dosage of 25mg. Therefore, it cannot be deduced that the active ingredient in Methylprednisolone (METHYLPREDNISOLONE) 25mg is METHYLPREDNISOLONE ACETATE.",
+        "fuzzy_score": 0.4113
+      },
+      {
+        "case_id": "E2E-072",
+        "statement": "Methylprednisolone (METHYLPREDNISOLONE) 25mg is used to treat various inflammatory conditions.",
+        "reason": "The context mentions that Methylprednisolone acetate injectable suspension is indicated for the treatment of several inflammatory conditions, but it does not specify a dosage of 25mg. Therefore, it cannot be deduced that Methylprednisolone (METHYLPREDNISOLONE) 25mg is used to treat various inflammatory conditions.",
+        "fuzzy_score": 0.2957
+      },
+      {
+        "case_id": "E2E-072",
+        "statement": "Rheumatoid arthritis may be related to the described symptoms of hypercalcemia.",
+        "reason": "The context mentions that rheumatoid arthritis is a condition treated by Methylprednisolone acetate injectable suspension, and it also lists several symptoms associated with hypercalcemia. While there may be some connection between rheumatoid arthritis and hypercalcemia, the context does not explicitly state this relationship.",
+        "fuzzy_score": 0.3953
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "987af79d5429032680f274caf7501d02df281ea319d7dc4018ced1b59119738a": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-078",
+        "statement": "The symptoms Urinary Incontinence, Stress, Kidney Diseases, Kidney Neoplasms, Labor Pain are not covered by the indication of ATZUMI.",
+        "reason": "The context does mention various diseases and conditions, but it does not explicitly state that ATZUMI is indicated for these specific symptoms. Therefore, it cannot be deduced that these symptoms are not covered by the indication of ATZUMI.",
+        "fuzzy_score": 0.4093
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "75bf21e8f57f89fe9546df956aceeb1f65c338f2f881524ff86ac810033f431a": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "b2651c44c937c27e52d5a5f0a2feabb5470470579c9c106432ba2aad41f78c08": {
+    "faithfulness": 0.7778,
+    "unsupported": [
+      {
+        "case_id": "E2E-001",
+        "statement": "Dizziness is a symptom of Coronary Atherosclerosis.",
+        "reason": "The context does not explicitly list Dizziness as a symptom of Coronary Atherosclerosis. However, it is listed under another disease (Atrial Fibrillation) and also mentioned in the description of symptoms for Coronary Atherosclerosis, which might imply some connection but not direct evidence.",
+        "fuzzy_score": 0.4557
+      },
+      {
+        "case_id": "E2E-001",
+        "statement": "Dizziness or lightheadedness is a symptom of Atrial Fibrillation.",
+        "reason": "Similar to Dizziness in relation to Coronary Atherosclerosis, this symptom is listed under Atrial Fibrillation but not explicitly mentioned as a symptom of Coronary Atherosclerosis. However, it's worth noting that the context does mention dizziness in relation to both diseases, which might suggest some overlap or connection.",
+        "fuzzy_score": 0.6022
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "768c1047f04d50c1ea9e614332a4a6474feab328c9e6833c191d7d56f0ed4ce3": {
+    "faithfulness": 0.875,
+    "unsupported": [
+      {
+        "case_id": "E2E-065",
+        "statement": "Dextromethorphan Hydrobromide is labeled for cough relief.",
+        "reason": "The context mentions that Tylenol Cold Plus Flu Severe has indications including helping to loosen phlegm (mucus) and thin bronchial secretions to make coughs more productive. This indirectly supports the statement, but it's not explicitly mentioned as a label for Dextromethorphan Hydrobromide.",
+        "fuzzy_score": 0.6667
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "a20f9ac90e21fe0508f06e41b1a3841ad2a3db98bb7198d99f74c38cceca2758": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-099",
+        "statement": "Available sources do not provide information about the use of Valerionex oral suspension during pregnancy.",
+        "reason": "There is no mention of Valerionex oral suspension in the context, so it cannot be inferred that available sources do not provide information about its use during pregnancy.",
+        "fuzzy_score": 0.3617
+      },
+      {
+        "case_id": "E2E-099",
+        "statement": "Clinical sources do not mention Valerionex oral suspension.",
+        "reason": "The context does not explicitly state that clinical sources do not mention Valerionex oral suspension, but it also does not provide any information about its use or safety. Therefore, the statement cannot be directly inferred from the context.",
+        "fuzzy_score": 0.3598
+      },
+      {
+        "case_id": "E2E-099",
+        "statement": "The safety of Valerionex oral suspension during lactation cannot be verified.",
+        "reason": "There is no mention of Valerionex oral suspension in the context, so it cannot be inferred that its safety during lactation cannot be verified.",
+        "fuzzy_score": 0.4481
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "5e8921377bd0b978229092c43b227d052c87a4c7f03c5d444edc98cc25db134e": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-004",
+        "statement": "No alternative conditions were identified in the available sources.",
+        "reason": "The context does not provide information about identifying or ruling out alternative conditions. It only lists several diseases and their symptoms, making it impossible to determine if any alternative conditions exist based on this information alone.",
+        "fuzzy_score": 0.3399
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "cfbee254cfd691ceed2a03c685c4d6b87f3dbec507f103b090cf1dd5c7768af7": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
   }
 }
