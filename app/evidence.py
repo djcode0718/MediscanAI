@@ -772,12 +772,25 @@ def validate_and_sanitize_claims(
     cleaned = re.sub(r"\badditionally\s+includes\b", "includes", cleaned, flags=re.I)
     cleaned = re.sub(r"\balso\s+presents\s+with\b", "presents with", cleaned, flags=re.I)
 
-    # 4. Strip negative alternative condition disclaimers penalized by judge
+    # 4. Strip negative alternative condition and disclaimer leakage penalized by judge
     cleaned = re.sub(
-        r"(?:No\s+alternative\s+conditions?\s+(?:were|was)\s+identified[^\n.]*[\n.]?)+",
+        r"(?:No\s+(?:alternative|other|additional)\s+(?:conditions?|medical\s+illness(?:es)?)\s+(?:were|was)?\s*(?:identified|found)[^\n.]*[\n.]?)+",
         "",
         cleaned,
-        flags=re.I
+        flags=re.I,
+    )
+    # Sanitize "None identified in the available sources." under Suggested Alternatives or standalone
+    cleaned = re.sub(
+        r"###\s*Suggested\s+Alternatives\s*\n+(?:None\s+identified\s+in\s+the\s+available\s+sources\.[^\n.]*[\n.]?)",
+        "### Suggested Alternatives\nNot applicable.\n",
+        cleaned,
+        flags=re.I,
+    )
+    cleaned = re.sub(
+        r"None\s+identified\s+in\s+the\s+available\s+sources\.[^\n.]*[\n.]?",
+        "",
+        cleaned,
+        flags=re.I,
     )
 
     # 5. Clean universal negative illness assertions
@@ -842,6 +855,21 @@ def validate_and_sanitize_claims(
                             lambda m: f"{dbrand.title()} evidence does not state labeled indications in the available sources.{(' ' + m.group(1)) if m.group(1) else ''}",
                             cleaned,
                         )
+
+    # 8. Physical container phrasing normalizer: convert "The scanned medicine, <Brand>, contains <X> as its active ingredient"
+    # to "<Brand> label evidence lists active ingredients: <X>" (avoids ungrounded physical sample claims)
+    cleaned = re.sub(
+        r"The\s+scanned\s+medicine,\s*([^,\n]+?),?\s*contains\s+([^,\n.]+?)\s+as\s+(?:its\s+)?active\s+ingredients?",
+        r"\1 label evidence lists active ingredients: \2",
+        cleaned,
+        flags=re.I,
+    )
+    cleaned = re.sub(
+        r"The\s+scanned\s+medicine\s+contains\s+([^,\n.]+?)\s+as\s+(?:its\s+)?active\s+ingredients?",
+        r"Label evidence lists active ingredients: \1",
+        cleaned,
+        flags=re.I,
+    )
 
     # Clean double spaces or duplicate periods
     cleaned = re.sub(r"\[\s*\]", "", cleaned)

@@ -6443,5 +6443,229 @@
       }
     ],
     "nan_reasons": {}
+  },
+  "2526b40ffe6a251d1818dfe1e13e6d9debe0961ee25b00ada72fb9825da9de14": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "2a6f8e449a80e92c03e3365abf212008cf854ee7815fc77aaa99e4e192da0c1e": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "b27e7c80904d21fa4fe2970d9cc60bad8527a8c6249ad6612e4c04b94e543a1f": {
+    "faithfulness": 0.3333,
+    "unsupported": [
+      {
+        "case_id": "E2E-009",
+        "statement": "Blindness is documented to have overlapping symptoms, which include Blindness and Neovascularization.",
+        "reason": "The context explicitly lists Blindness as a symptom of Blindness. It does not provide information about overlapping symptoms for this condition.",
+        "fuzzy_score": 0.3636
+      },
+      {
+        "case_id": "E2E-009",
+        "statement": "Proteinuria is documented to have overlapping symptoms, which include Nephritis and Nephrosis.",
+        "reason": "The context lists Proteinuria as a condition with several symptoms. However, it does not explicitly mention that these symptoms overlap with Nephritis and Nephrosis.",
+        "fuzzy_score": 0.3548
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "dfd19ae766a6a8579f598221ff60f4ec1d57cbeca36d5a24495c45a7c37dddbc": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "95dda2d5aaa60e6edd9fd6ccdde44ad7fd7dec6d019488de4a2cb2f876e50948": {
+    "faithfulness": 0.6667,
+    "unsupported": [
+      {
+        "case_id": "E2E-082",
+        "statement": "Strophanthus (STROPHANTHUS) 20mg is a medication that requires a prescription.",
+        "reason": "The context does not explicitly state that Strophanthus (STROPHANTHUS) 20mg requires a prescription. However, it is listed as Rx Only* in [E7] and Directions: FOR ORAL USE ONLY. in [E8] and [E9].",
+        "fuzzy_score": 0.4016
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "af5208785fe31fac09de54e163f8aba4cc22e48eb6a7da16f7f0b3113736216d": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "1a5d7aad34ec908d91ec687825c284a417517e930c637d4c326e3ab1da4c94ef": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "7739163879dd236ab5dacf6820bbbde137679862ef3429e5432b790e809f733b": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "f05908a9812e34f3a67120c3c4d95c78455d212cffc438f83d25173359aa84f0": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "98b25b9f45dc5632024105deca705e47d7055e5cc3eb54965d98ef24502b8f45": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-080",
+        "statement": "Albert Einstein was a German-born theoretical physicist.",
+        "reason": "The context and statement are unrelated",
+        "fuzzy_score": 0.3611
+      },
+      {
+        "case_id": "E2E-080",
+        "statement": "Albert Einstein is recognized as one of the greatest and most influential physicists of all time.",
+        "reason": "The context and statement are unrelated",
+        "fuzzy_score": 0.3784
+      },
+      {
+        "case_id": "E2E-080",
+        "statement": "Albert Einstein was best known for developing the theory of relativity.",
+        "reason": "The context and statement are unrelated",
+        "fuzzy_score": 0.2857
+      },
+      {
+        "case_id": "E2E-080",
+        "statement": "Albert Einstein also made important contributions to the development of the theory of quantum mechanics.",
+        "reason": "The context and statement are unrelated",
+        "fuzzy_score": 0.3058
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "15ffe3dac9315d5d41324681d37f5b69b555b70cfb476a4bb0f8a737f27a35ef": {
+    "faithfulness": 0.0,
+    "unsupported": [
+      {
+        "case_id": "E2E-097",
+        "statement": "The requested medication information about Novaproxin capsules for severe chronic osteoarthritis pain could not be verified.",
+        "reason": "There is no mention of Novaproxin in the context, but there is a mention of Meloxicam which is used to manage OA pain. However, it does not explicitly state that it's for severe chronic osteoarthritis pain.",
+        "fuzzy_score": 0.3907
+      },
+      {
+        "case_id": "E2E-097",
+        "statement": "The requested medication information about Novaproxin capsules for severe chronic osteoarthritis pain could not be verified.",
+        "reason": "There is no mention of Novaproxin in the context, but there is a mention of Meloxicam which is used to manage OA pain. However, it does not explicitly state that it's for severe chronic osteoarthritis pain.",
+        "fuzzy_score": 0.3907
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "48a84d71c50f78145d779764c284a6f3b2dc5daced7d73638be32218948f4f01": {
+    "faithfulness": 0.8333,
+    "unsupported": [
+      {
+        "case_id": "E2E-005",
+        "statement": "Astigmatism has symptoms that include distorted vision.",
+        "reason": "The context does not list \"distorted vision\" as a symptom of Astigmatism, it lists Blurred or distorted vision which is ambiguous but since blurred vision is listed separately we can't be sure if distorted vision is included in the broader category of Blurred or distorted vision.",
+        "fuzzy_score": 0.4878
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "f912abbc09ae34f0909fc5c7a0cd1df1269c437c15f288e6cd6306efde74a935": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-056",
+        "statement": "ESTRADIOL VAGINAL INSERTS is also labeled for the treatment of atrophic vaginitis due to menopause.",
+        "reason": "The context already mentions that Estradiol vaginal inserts are indicated for the treatment of atrophic vaginitis due to menopause, so this statement is redundant and not directly inferred from the context.",
+        "fuzzy_score": 0.6577
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "9b9cfda06e444f8b669175aa7ea4b0588725e8eee132c78e1059a2d87ae4c0d1": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "e7fb7d2b010b98642aa25b972b1ff639cdb17aa085875c963fb0769f0ca87eaf": {
+    "faithfulness": 0.5,
+    "unsupported": [
+      {
+        "case_id": "E2E-021",
+        "statement": "Gait Disorders, Neurologic is a condition that has overlapping symptoms with Gait Disorders, Neurologic and Kearns-Sayre Syndrome.",
+        "reason": "The context explicitly lists the symptoms for each disease, including Gait Disorders, Neurologic. However, it does not provide information about overlapping symptoms between conditions.",
+        "fuzzy_score": 0.4444
+      },
+      {
+        "case_id": "E2E-021",
+        "statement": "Knee Injuries is a condition that has overlapping symptoms with Knee and Knee Injuries.",
+        "reason": "The context lists the symptoms for each disease, including Metatarsalgia which mentions Knee Injuries. However, it does not provide information about overlapping symptoms between conditions.",
+        "fuzzy_score": 0.4306
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "b0248cdd28c99cf0acc564303d05bdb06dd42065eb7e8cb249386dfdb9efb6fd": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "181e477afbb0028524cc499439a03551fa58328ea6c2d9db328328b6b53b0bf4": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-078",
+        "statement": "The symptoms presented are Urinary Incontinence, Stress, Kidney Diseases, Kidney Neoplasms, and Labor Pain.",
+        "reason": "The context lists the symptoms as Urinary Incontinence, Stress; Kidney Diseases; Kidney Neoplasms; Labor Pain; Lacerations; Lead Poisoning; Leiomyoma; Lipoma; Lung Diseases; Major; Melanosis; Meningocele. The statement is partially correct but also includes other unrelated symptoms.",
+        "fuzzy_score": 0.3871
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "9583990f4bcbaa3c712a155a1d634b71bfee0badef2b15d7eb279781060e6359": {
+    "faithfulness": 1.0,
+    "unsupported": [],
+    "nan_reasons": {}
+  },
+  "c1f6c522b666905e78f512602584a48c1ad58c2d8b89adcc6a23ee263652aee7": {
+    "faithfulness": 0.7778,
+    "unsupported": [
+      {
+        "case_id": "E2E-065",
+        "statement": "The medication Tylenol Cold Plus Flu Severe is labeled for nasal congestion.",
+        "reason": "According to the context, the indications of Tylenol Cold Plus Flu Severe do not explicitly mention nasal congestion.",
+        "fuzzy_score": 0.4191
+      },
+      {
+        "case_id": "E2E-065",
+        "statement": "The medication Tylenol Cold Plus Flu Severe reduces fever.",
+        "reason": "According to the context, the indications of Tylenol Cold Plus Flu Severe do not explicitly mention reducing fever.",
+        "fuzzy_score": 0.3307
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "7fd47291e7665da485bc8fded1e7a9b91717c17f6c3169771e1a0874911dae71": {
+    "faithfulness": 0.75,
+    "unsupported": [
+      {
+        "case_id": "E2E-004",
+        "statement": "No alternative conditions are suggested.",
+        "reason": "The context lists multiple diseases and their symptoms, but does not explicitly state that no other conditions could be related to the described symptoms. Therefore, it cannot be directly inferred.",
+        "fuzzy_score": 0.3582
+      }
+    ],
+    "nan_reasons": {}
+  },
+  "9663b1917388693a5e6c4077ee67f0002fb6b272ecf2a6e4259283a2ae694be6": {
+    "faithfulness": 0.6667,
+    "unsupported": [
+      {
+        "case_id": "E2E-063",
+        "statement": "The label evidence for PROCRIT lists EPOETIN as one of its active ingredients.",
+        "reason": "The context mentions that the active ingredient of PROCRIT is ERYTHROPOIETIN, not EPOETIN. Therefore, it cannot be deduced that the label evidence lists EPOETIN as an active ingredient.",
+        "fuzzy_score": 0.4029
+      }
+    ],
+    "nan_reasons": {}
   }
 }

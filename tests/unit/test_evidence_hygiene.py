@@ -503,3 +503,59 @@ def test_cross_field_indication_contamination_guard():
     assert "Strophanthus evidence does not state labeled indications in the available sources. [E2]" in sanitized
 
 
+def test_negative_disclaimer_sanitization_and_alternatives_normalizer():
+    from app.evidence import validate_and_sanitize_claims
+
+    # Case 1: Suggested Alternatives with "None identified in the available sources."
+    raw1 = (
+        "Explanation:\n"
+        "Gynecomastia is documented with overlapping symptoms: back pain. [E1]\n\n"
+        "### Suggested Alternatives\n"
+        "None identified in the available sources."
+    )
+    sanitized1 = validate_and_sanitize_claims(raw1)
+    assert "None identified in the available sources." not in sanitized1
+    assert "### Suggested Alternatives\nNot applicable." in sanitized1
+
+    # Case 2: Standalone "No other conditions were identified in the available sources."
+    raw2 = (
+        "Malignant neoplasm of breast is documented with overlapping symptoms: dyspnea. [E1]\n"
+        "No other conditions were identified in the available sources."
+    )
+    sanitized2 = validate_and_sanitize_claims(raw2)
+    assert "No other conditions were identified" not in sanitized2
+
+    # Case 3: "No alternative conditions were identified in the available sources."
+    raw3 = "No alternative conditions were identified in the available sources."
+    sanitized3 = validate_and_sanitize_claims(raw3)
+    assert sanitized3 == ""
+
+    # Case 4: "No other medical illness was identified in the available sources as causing these symptoms."
+    raw4 = "No other medical illness was identified in the available sources as causing these symptoms."
+    sanitized4 = validate_and_sanitize_claims(raw4)
+    assert sanitized4 == ""
+
+
+def test_physical_container_phrasing_normalizer():
+    from app.evidence import validate_and_sanitize_claims
+
+    # Case 1: Named scanned medicine with generic
+    raw1 = "The scanned medicine, AMVUTTRA (VUTRISIRAN), contains VUTRISIRAN SODIUM as its active ingredient."
+    sanitized1 = validate_and_sanitize_claims(raw1)
+    assert "The scanned medicine" not in sanitized1
+    assert "AMVUTTRA (VUTRISIRAN) label evidence lists active ingredients: VUTRISIRAN SODIUM" in sanitized1
+
+    # Case 2: Named scanned medicine single entity
+    raw2 = "The scanned medicine, Pentoxifylline, contains PENTOXIFYLLINE as its active ingredient and is indicated to improve blood flow."
+    sanitized2 = validate_and_sanitize_claims(raw2)
+    assert "The scanned medicine" not in sanitized2
+    assert "Pentoxifylline label evidence lists active ingredients: PENTOXIFYLLINE and is indicated to improve blood flow." in sanitized2
+
+    # Case 3: Generic scanned medicine without name
+    raw3 = "The scanned medicine contains PENTOXIFYLLINE as its active ingredient."
+    sanitized3 = validate_and_sanitize_claims(raw3)
+    assert "The scanned medicine contains" not in sanitized3
+    assert "Label evidence lists active ingredients: PENTOXIFYLLINE." in sanitized3
+
+
+

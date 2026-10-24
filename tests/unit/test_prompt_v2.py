@@ -451,3 +451,22 @@ class TestPromptV3Enhancements:
         assert "USER_TEXT" not in finalized
         assert "evidence states that Meclizine matches your query" in finalized
 
+    def test_prompt_v5_v6_v7_positive_indication_and_alternatives(self):
+        from app.prompt_v2 import (
+            TASK_SYMPTOM_ONLY_V5,
+            TASK_SYMPTOM_AND_MEDICINE_V5,
+            TASK_SYMPTOM_AND_MEDICINE_V6,
+            TASK_SYMPTOM_AND_MEDICINE_V7,
+        )
+
+        # 1. Symptom only prompt specifies "Not applicable." rather than "None identified..."
+        assert 'write: "Not applicable."' in TASK_SYMPTOM_ONLY_V5
+        assert "None identified in the available sources." not in TASK_SYMPTOM_ONLY_V5
+
+        # 2. Symptom and medicine prompts enforce product-level indication binding & container neutrality
+        for t in (TASK_SYMPTOM_AND_MEDICINE_V5, TASK_SYMPTOM_AND_MEDICINE_V6, TASK_SYMPTOM_AND_MEDICINE_V7):
+            assert "<Brand/Generic from E#> is labeled for <exact phrase from Indications in E#>. [E#]" in t
+            assert "Never write \"The scanned medicine contains...\"" in t
+            assert "contains <specific ingredient from E#>, which is labeled for" not in t
+
+

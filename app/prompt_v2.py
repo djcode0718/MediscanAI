@@ -166,7 +166,7 @@ Explanation: For up to 2 conditions in EVIDENCE that share symptoms with USER_TE
 "<Condition> is documented with overlapping symptoms: <1-3 symptoms that appear in both USER_TEXT and that condition's listed symptoms in E#>. [E#]"
 Do not use words like "also includes" or "additionally includes". State only the exact shared symptoms. Do not make negative claims about other conditions or alternative diagnoses.
 ### Suggested Alternatives
-List up to 2 medicines from EVIDENCE: "<Brand/Generic> is labeled for <wording from its Indications>. [E#]". If no medicine in EVIDENCE is labeled for these symptoms, write: "None identified in the available sources.\""""
+List up to 2 medicines from EVIDENCE: "<Brand/Generic> is labeled for <wording from its Indications>. [E#]". If no medicine in EVIDENCE is labeled for these symptoms, write: "Not applicable.\""""
 
 TASK_MEDICINE_ONLY_V5 = """TASK: Write exactly this format.
 **Verdict:** one sentence: either "The label text identifies <Brand/Generic from E#>. [E#]" or "The medicine could not be identified from the available sources."
@@ -179,15 +179,14 @@ The primary medicine being evaluated is the scanned medicine from LABEL_TEXT. In
 
 **Verdict:** one sentence:
  (a) If the scanned medicine is labeled for the described condition:
-     - For single-ingredient products: "<Brand/Generic> is labeled for <exact phrase from Indications in E#>. [E#]"
-     - For multi-ingredient products or kits: "<Brand/Generic> contains <specific ingredient from E#>, which is labeled for <exact phrase from Indications in E#>. [E#]"
+     "<Brand/Generic from E#> is labeled for <exact phrase from Indications in E#>. [E#]"
  (b) If the scanned medicine is NOT labeled for the described condition:
      "<Brand/Generic from E#> is labeled for <exact phrase from Indications in E#>, which does not cover the presented symptoms. [E#]"
  (c) If the scanned medicine is not identified in the evidence blocks or its indications are missing:
      "The available sources do not state labeled indications for this medicine."
 
-Explanation: 1-2 sentences. Directly state the labeled indications and active ingredients of the scanned medicine from [E#].
-CRITICAL: Never list symptoms or diseases that the medicine does NOT treat. Do not say "does not treat X, Y, Z". Simply state what it IS labeled for [E#]. Do not attribute indications across different medicines or kit formulations.
+Explanation: 1-2 sentences. Directly state: "<Brand/Generic from E#> label evidence lists active ingredients: <ingredients from E#> and is labeled for <exact phrase from Indications in E#>. [E#]". Never write "The scanned medicine contains..." or assert what physical scanned containers contain.
+CRITICAL: Never list symptoms or diseases that the medicine does NOT treat. Do not say "does not treat X, Y, Z". Simply state what it IS labeled for [E#]. Do not attribute indications across different medicines or attribute whole-product indications to an individual constituent ingredient unless explicitly stated in that ingredient's purpose.
 
 ### Suggested Alternatives
 If the scanned medicine does not treat the symptoms, list up to 2 other medicines from EVIDENCE labeled for those symptoms: "<Brand/Generic> is labeled for <wording from Indications>. [E#]". Otherwise write: "Not applicable.\""""
@@ -236,12 +235,11 @@ The primary medicine being evaluated is the scanned medicine in LABEL_TEXT. In V
  (b) If the scanned medicine's indications in EVIDENCE are missing, 'Rx Only*', or 'Directions: FOR ORAL USE ONLY':
      "<Brand/Generic from E#> evidence does not state labeled indications in the available sources. [E#]"
  (c) If the scanned medicine's labeled indications treat the described condition:
-     - For single-ingredient products: "<Brand/Generic> is labeled for <exact phrase from Indications in E#>. [E#]"
-     - For multi-ingredient products: "<Brand/Generic> contains <specific ingredient from E#>, which is labeled for <exact phrase from Indications in E#>. [E#]"
+     "<Brand/Generic from E#> is labeled for <exact phrase from Indications in E#>. [E#]"
  (d) If the scanned medicine's labeled indications do NOT treat the described condition:
      "<Brand/Generic from E#> is labeled for <exact phrase from Indications in E#>, which does not cover the presented symptoms. [E#]"
 
-Explanation: 1-2 sentences. Directly state the labeled indications and active ingredients of the scanned medicine from [E#].
+Explanation: 1-2 sentences. Directly state: "<Brand/Generic from E#> label evidence lists active ingredients: <ingredients from E#> and is labeled for <exact phrase from Indications in E#>. [E#]". Never write "The scanned medicine contains..." or assert what physical scanned containers contain.
 CRITICAL RULES:
 - Never attribute indications from another medicine or disease block to the scanned medicine.
 - Never list symptoms that the medicine does NOT treat. Do not say "does not treat X, Y, Z".
@@ -286,17 +284,16 @@ The primary medicine being evaluated is the scanned medicine identified in LABEL
 
 **Verdict:** one sentence:
  (a) If the scanned medicine is labeled for the described condition:
-     - For single-ingredient products: "<Brand/Generic> is labeled for <exact phrase from Indications in E#>. [E#]"
-     - For multi-ingredient products or kits: "<Brand/Generic> contains <specific ingredient from E#>, which is labeled for <exact phrase from Indications in E#>. [E#]"
+     "<Brand/Generic from E#> is labeled for <exact phrase from Indications in E#>. [E#]"
  (b) If the scanned medicine is NOT labeled for the described condition:
      "<Brand/Generic from E#> is labeled for <exact phrase from Indications in E#>, which does not cover the presented symptoms. [E#]"
  (c) If the scanned medicine is not identified in the evidence blocks or its indications are missing:
      "The available sources do not state labeled indications for this medicine."
 
-Explanation: 1-2 sentences. Directly state the labeled indications and active ingredients of the scanned medicine from [E#].
+Explanation: 1-2 sentences. Directly state: "<Brand/Generic from E#> label evidence lists active ingredients: <ingredients from E#> and is labeled for <exact phrase from Indications in E#>. [E#]". Never write "The scanned medicine contains..." or assert what physical scanned containers contain.
 CRITICAL RULES:
 - Never list symptoms or diseases that the medicine does NOT treat. Do not say "does not treat X, Y, Z". Simply state what it IS labeled for [E#].
-- Under no circumstances attribute indications or ingredients from another medicine or disease block to the scanned medicine.
+- Under no circumstances attribute indications or ingredients from another medicine or disease block to the scanned medicine, or attribute whole-product indications to an individual constituent ingredient unless explicitly stated in that ingredient's purpose.
 
 ### Suggested Alternatives
 If the scanned medicine does not treat the symptoms, list up to 2 other medicines from EVIDENCE labeled for those symptoms: "<Brand/Generic> is labeled for <wording from Indications>. [E#]". Otherwise write: "Not applicable.\""""
