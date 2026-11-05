@@ -37,8 +37,127 @@ from evaluation.e2e.score_phase01b_faithfulness import (
     JUDGE_CONFIG,
     get_stratified_order,
 )
+from evaluation.e2e.eval_status import CaseResult, EvalStatus, aggregate_results
+from evaluation.e2e.strict_scoring import score_case_strict
+from evaluation.e2e.cache_v2 import CacheV2, build_cache_key_v2
+from evaluation.e2e.manifest import RunManifest
+from evaluation.e2e.reporting import generate_evaluation_markdown, load_scored_jsonl
 
 RESULTS_DIR = REPO_ROOT / "evaluation/e2e/results"
+
+
+def score_faithfulness_strict_candidate(
+    record: Dict[str, Any],
+    custom_faithfulness: TraceableFaithfulness,
+    judge_wrapper: LangchainLLMWrapper,
+    cache: Optional[Dict[str, Any]] = None,
+    *,
+    tracker: Any = None,
+    run_dir: Optional[Path] = None,
+    bypass_cache: bool = False,
+    run_config: Optional[RunConfig] = None,
+    cache_v2: Optional[CacheV2] = None,
+    cache_mode: str = "default",  # "default", "no_cache", "refresh_cache"
+    manifest: Optional[Any] = None,
+) -> CaseResult:
+    """P2: status-carrying scorer with Cache V2 support and run manifest tracking.
+
+    Cache modes:
+      - 'default': read from Cache V2 (or cache dict); on hit, return cached valid result; on miss, score & cache if valid.
+      - 'no_cache': bypass both read and write.
+      - 'refresh_cache': ignore cache on read (recompute), write valid result to cache.
+
+    Only status == valid results are ever written to the cache; invalid results are never cached.
+    """
+    cid = record["case_id"]
+
+    effective_read = not bypass_cache and (cache_mode == "default")
+    effective_write = not bypass_cache and (cache_mode in ("default", "refresh_cache"))
+
+    key_v2 = None
+    key_comps = None
+    if cache_v2 is not None:
+        key_v2, key_comps = build_cache_key_v2(record, JUDGE_CONFIG, custom_faithfulness)
+
+    # 1. Cache Read
+    if effective_read:
+        if cache_v2 is not None and key_v2 is not None:
+            cached = cache_v2.get(key_v2)
+            if cached is not None and cached.get("eval_status") == "valid":
+                if manifest is not None:
+                    manifest.record_cache_event("hit")
+                return CaseResult(
+                    case_id=cid,
+                    status=EvalStatus.valid,
+                    score=float(cached["faithfulness"]),
+                    warnings=cached.get("warnings", []),
+                    unsupported=cached.get("unsupported", []),
+                    category=record.get("category"),
+                    cache_hit=True,
+                )
+            else:
+                if manifest is not None:
+                    manifest.record_cache_event("miss")
+        elif cache is not None:
+            inputs = {
+                "question": record.get("user_text", "") or f"Analyze medication: {record.get('ocr_text', '')}",
+                "response": record.get("answer_core", "").strip() or "No answer provided.",
+                "retrieved_contexts": record.get("retrieved_contexts", []),
+            }
+            cache_key = compute_cache_key("faithfulness", inputs, JUDGE_CONFIG)
+            if cache_key in cache:
+                cached = cache[cache_key]
+                cached_score = cached.get("faithfulness")
+                if isinstance(cached_score, (int, float)) and not np.isnan(cached_score):
+                    if manifest is not None:
+                        manifest.record_cache_event("hit")
+                    return CaseResult(
+                        case_id=cid, status=EvalStatus.valid, score=float(cached_score),
+                        warnings=["served_from_legacy_cache_not_revalidated"],
+                        unsupported=cached.get("unsupported", []), category=record.get("category"), cache_hit=True,
+                    )
+                else:
+                    if manifest is not None:
+                        manifest.record_cache_event("miss")
+            else:
+                if manifest is not None:
+                    manifest.record_cache_event("miss")
+    else:
+        if manifest is not None:
+            manifest.record_cache_event("bypassed")
+
+    # 2. Strict Scoring
+    res = score_case_strict(
+        record, custom_faithfulness, judge_wrapper,
+        tracker=tracker, run_dir=run_dir, run_config=run_config,
+    )
+
+    # 3. Cache Write: Only status == valid results are ever written (invalid results never are).
+    if res.status is EvalStatus.valid and effective_write:
+        if cache_v2 is not None and key_v2 is not None and key_comps is not None:
+            cache_v2.put(key_v2, key_comps, {
+                "faithfulness": res.score,
+                "unsupported": res.unsupported,
+                "eval_status": res.status.value,
+                "eval_guard_version": res.guard_version,
+            })
+        elif cache is not None:
+            inputs = {
+                "question": record.get("user_text", "") or f"Analyze medication: {record.get('ocr_text', '')}",
+                "response": record.get("answer_core", "").strip() or "No answer provided.",
+                "retrieved_contexts": record.get("retrieved_contexts", []),
+            }
+            cache_key = compute_cache_key("faithfulness", inputs, JUDGE_CONFIG)
+            cache[cache_key] = {
+                "faithfulness": res.score,
+                "unsupported": res.unsupported,
+                "nan_reasons": {},
+                "eval_status": res.status.value,
+                "eval_guard_version": res.guard_version,
+            }
+            save_cache(cache)
+
+    return res
 
 
 def score_faithfulness_single_candidate(
@@ -46,74 +165,25 @@ def score_faithfulness_single_candidate(
     custom_faithfulness: TraceableFaithfulness,
     judge_wrapper: LangchainLLMWrapper,
     cache: Dict[str, Any],
+    *,
+    tracker: Any = None,
+    run_dir: Optional[Path] = None,
+    bypass_cache: bool = False,
 ) -> Tuple[float, List[Dict[str, Any]], Dict[str, Any]]:
-    cid = record["case_id"]
-    ans_core = record.get("answer_core", "").strip()
-    contexts = record.get("retrieved_contexts", [])
-    user_text = record.get("user_text", "") or f"Analyze medication: {record.get('ocr_text', '')}"
-
-    inputs = {
-        "question": user_text,
-        "response": ans_core if ans_core else "No answer provided.",
-        "retrieved_contexts": contexts,
+    """Legacy tuple API kept for existing callers (e.g. run_a6_1_evaluation). Invalid cases return NaN
+    here for tuple compatibility ONLY, and always carry the status and cause in `nan_reasons`; they are
+    never cached. New code should call score_faithfulness_strict_candidate()."""
+    res = score_faithfulness_strict_candidate(
+        record, custom_faithfulness, judge_wrapper, cache,
+        tracker=tracker, run_dir=run_dir, bypass_cache=bypass_cache,
+    )
+    if res.status is EvalStatus.valid:
+        return res.score, res.unsupported, {}
+    nan_reasons = {
+        "judge_faithfulness": f"{res.status.value}: {res.error_class}: {(res.error_message or '')[:60]}",
+        "eval_status": res.status.value,
     }
-
-    cache_key = compute_cache_key("faithfulness", inputs, JUDGE_CONFIG)
-
-    if cache_key in cache:
-        cached = cache[cache_key]
-        return cached["faithfulness"], cached.get("unsupported", []), cached.get("nan_reasons", {})
-
-    ragas_ds = Dataset.from_dict({
-        "question": [inputs["question"]],
-        "response": [inputs["response"]],
-        "retrieved_contexts": [inputs["retrieved_contexts"]],
-    })
-
-    ragas_run_cfg = RunConfig(max_workers=1, timeout=600, max_retries=2)
-    judge_faithfulness = np.nan
-    nan_reasons = {}
-    unsupported_items = []
-
-    try:
-        scores_df = evaluate(
-            dataset=ragas_ds,
-            metrics=[custom_faithfulness],
-            llm=judge_wrapper,
-            run_config=ragas_run_cfg,
-            show_progress=False,
-        ).to_pandas()
-
-        f_score = scores_df.iloc[0].get("faithfulness")
-        judge_faithfulness = round(float(f_score), 4) if pd.notna(f_score) else np.nan
-        if pd.isna(judge_faithfulness):
-            nan_reasons["judge_faithfulness"] = "judge_returned_nan_or_empty_statements"
-
-        if custom_faithfulness.last_verdicts_output:
-            for v in custom_faithfulness.last_verdicts_output.statements:
-                if int(v.verdict) == 0:
-                    if not is_boilerplate_statement(v.statement):
-                        f_match = compute_best_fuzzy_match(v.statement, contexts)
-                        unsupported_items.append({
-                            "case_id": cid,
-                            "statement": v.statement,
-                            "reason": v.reason,
-                            "fuzzy_score": f_match,
-                        })
-
-    except Exception as e:
-        err_msg = str(e)
-        nan_reasons["judge_faithfulness"] = f"judge_error: {err_msg[:60]}"
-
-    if pd.notna(judge_faithfulness):
-        cache[cache_key] = {
-            "faithfulness": judge_faithfulness,
-            "unsupported": unsupported_items,
-            "nan_reasons": nan_reasons,
-        }
-        save_cache(cache)
-
-    return judge_faithfulness, unsupported_items, nan_reasons
+    return np.nan, [], nan_reasons
 
 
 def compute_cheap_diagnostics(records: List[Dict[str, Any]]) -> Dict[str, Any]:
@@ -150,7 +220,12 @@ def compute_cheap_diagnostics(records: List[Dict[str, Any]]) -> Dict[str, Any]:
     }
 
 
-def evaluate_candidate(candidate_name: str, baseline_name: str = "A2"):
+def evaluate_candidate(
+    candidate_name: str,
+    baseline_name: str = "A2",
+    no_cache: bool = False,
+    refresh_cache: bool = False,
+):
     cand_dir = RESULTS_DIR / candidate_name
     base_dir = RESULTS_DIR / baseline_name
 
@@ -182,10 +257,32 @@ def evaluate_candidate(candidate_name: str, baseline_name: str = "A2"):
     print(f"  {baseline_name} Routing: {base_diag['routing_distribution']}")
     print(f"  {candidate_name} Routing: {cand_diag['routing_distribution']}")
 
-    # 2. Judge Evaluation
+    # 2. Judge Evaluation Setup
     verify_ollama_state()
 
-    print(f"\n⚖️ Initializing judge for {candidate_name} evaluation...")
+    # Determine Cache Mode
+    if no_cache:
+        cache_mode = "no_cache"
+    elif refresh_cache:
+        cache_mode = "refresh_cache"
+    else:
+        cache_mode = "default"
+
+    cache_v2 = CacheV2()
+
+    # Initialize Manifest
+    probe_path = REPO_ROOT / "evaluation/e2e/audit/p1_preflight/judge_probe.json"
+    manifest = RunManifest(
+        run_dir=cand_dir,
+        candidate_id=candidate_name,
+        dataset_path=REPO_ROOT / "evaluation/e2e/dataset/dev_subset_40.json",
+        input_answers_path=cand_file,
+        judge_config=JUDGE_CONFIG,
+        probe_result_path=probe_path if probe_path.exists() else None,
+        cache_mode=cache_mode,
+    )
+
+    print(f"\n⚖️ Initializing judge for {candidate_name} evaluation (cache_mode={cache_mode})...")
     judge_llm = ChatOpenAI(
         base_url="http://localhost:11434/v1",
         api_key="ollama",
@@ -204,26 +301,38 @@ def evaluate_candidate(candidate_name: str, baseline_name: str = "A2"):
     )
     judge_wrapper = LangchainLLMWrapper(judge_llm)
     custom_faithfulness = TraceableFaithfulness(llm=judge_wrapper)
-    cache = load_cache()
-    print(f"Loaded judge cache with {len(cache)} entries.")
 
     ordered_case_ids = get_stratified_order(cand_list, seed=42)
 
     cand_scored = []
     all_unsupported = []
-    t0 = time.time()
     nan_count = 0
 
     print(f"\n--- Scoring {candidate_name} Faithfulness ---")
+    case_results: List[CaseResult] = []
     for idx, cid in enumerate(ordered_case_ids, 1):
         t_case_start = time.time()
         rec = cand_cases[cid]
-        f_score, unsupp, n_reasons = score_faithfulness_single_candidate(
-            rec, custom_faithfulness, judge_wrapper, cache
+        res = score_faithfulness_strict_candidate(
+            rec,
+            custom_faithfulness,
+            judge_wrapper,
+            cache=None,
+            cache_v2=cache_v2,
+            cache_mode=cache_mode,
+            manifest=manifest,
         )
+        case_results.append(res)
+        f_score = res.score if res.is_valid else np.nan
+        unsupp = res.unsupported
+        n_reasons = {} if res.is_valid else {"judge_faithfulness": f"{res.status.value}: {res.error_class}"}
+
+        manifest.record_case_status(res.status.value)
 
         r_sc = dict(rec)
         r_sc["judge_faithfulness"] = f_score
+        r_sc["eval_status"] = res.status.value
+        r_sc["eval_warnings"] = res.warnings
         r_sc["nan_reasons"] = n_reasons
         cand_scored.append(r_sc)
         all_unsupported.extend(unsupp)
@@ -234,6 +343,11 @@ def evaluate_candidate(candidate_name: str, baseline_name: str = "A2"):
         dt = time.time() - t_case_start
         base_f = base_cases.get(cid, {}).get("judge_faithfulness")
         print(f"[{idx}/40] {cid} ({rec['category']}) | {candidate_name}={f_score} (base {baseline_name}={base_f}) | time={dt:.1f}s | unsupp={len(unsupp)}")
+
+    agg = aggregate_results(case_results)
+    manifest.set_status_counts(agg["n_invalid_by_status"])
+    print(f"\n📊 Status-aware aggregate: n_valid={agg['n_valid']} n_invalid={agg['n_invalid']} "
+          f"by_status={agg['n_invalid_by_status']} mean_valid={agg['mean_valid']}")
 
     # 3. Save Scored Candidate Files
     cand_scored_file = cand_dir / "scored_results.jsonl"
@@ -250,144 +364,39 @@ def evaluate_candidate(candidate_name: str, baseline_name: str = "A2"):
     print(f"\n✅ Scored outputs saved to: {cand_scored_file}")
     print(f"✅ Unsupported statements saved to: {cand_unsupp_file} ({len(all_unsupported)} statements)")
 
-    # 4. Generate Comparative Report
-    generate_comparison_report(candidate_name, baseline_name, cand_scored, base_cases, cand_diag, base_diag, all_unsupported)
-
-
-def generate_comparison_report(
-    cand_name: str,
-    base_name: str,
-    cand_scored: List[Dict[str, Any]],
-    base_cases: Dict[str, Any],
-    cand_diag: Dict[str, Any],
-    base_diag: Dict[str, Any],
-    unsupported_items: List[Dict[str, Any]],
-):
-    def stats(vals):
-        valid = [v for v in vals if v is not None and not np.isnan(v)]
-        if not valid:
-            return {"mean": 0.0, "median": 0.0, "valid_count": 0, "nan_count": len(vals)}
-        arr = np.array(valid, dtype=float)
-        return {
-            "mean": round(float(np.mean(arr)), 4),
-            "median": round(float(np.median(arr)), 4),
-            "valid_count": len(valid),
-            "nan_count": len(vals) - len(valid),
-        }
-
-    c_vals = [r["judge_faithfulness"] for r in cand_scored]
-    b_vals = [base_cases[r["case_id"]]["judge_faithfulness"] for r in cand_scored if r["case_id"] in base_cases]
-
-    s_c = stats(c_vals)
-    s_b = stats(b_vals)
-
-    # Per-category breakdown
-    cats = sorted(list(set(r["category"] for r in cand_scored)))
-    cat_rows = []
-    deltas = []
-
-    for cat in cats:
-        c_sub = [r["judge_faithfulness"] for r in cand_scored if r["category"] == cat]
-        b_sub = [base_cases[r["case_id"]]["judge_faithfulness"] for r in cand_scored if r["category"] == cat and r["case_id"] in base_cases]
-        sc_sub = stats(c_sub)
-        sb_sub = stats(b_sub)
-        delta_cat = round(sc_sub["mean"] - sb_sub["mean"], 4)
-        cat_rows.append({
-            "category": cat,
-            "count": len(c_sub),
-            f"{base_name}_mean": sb_sub["mean"],
-            f"{cand_name}_mean": sc_sub["mean"],
-            "delta": delta_cat,
-            f"{cand_name}_valid": f"{sc_sub['valid_count']}/{len(c_sub)}",
-        })
-
-    # Paired deltas on mutually valid cases
-    paired_deltas = []
-    wins = 0
-    losses = 0
-    ties = 0
-
-    for r in cand_scored:
-        cid = r["case_id"]
-        cf = r["judge_faithfulness"]
-        bf = base_cases.get(cid, {}).get("judge_faithfulness")
-        if pd.notna(cf) and pd.notna(bf):
-            d = round(cf - bf, 4)
-            paired_deltas.append(d)
-            if d > 0.001:
-                wins += 1
-            elif d < -0.001:
-                losses += 1
-            else:
-                ties += 1
-
-    mean_paired_delta = round(float(np.mean(paired_deltas)), 4) if paired_deltas else 0.0
-
-    report_path = RESULTS_DIR / f"{cand_name}_EVAL_REPORT.md"
+    # 4. Generate Comparative Report Using Dynamic Data-Only Module
+    report_md = generate_evaluation_markdown(
+        candidate_id=candidate_name,
+        baseline_id=baseline_name,
+        cand_records=cand_scored,
+        base_records=list(base_cases.values()),
+        cand_unsupported=all_unsupported,
+        base_unsupported=None,
+        seed=42,
+    )
+    report_path = RESULTS_DIR / f"{candidate_name}_EVAL_REPORT.md"
     with open(report_path, "w", encoding="utf-8") as f:
-        f.write(f"# MediScanAI {cand_name} Evaluation Report (vs {base_name})\n\n")
-        f.write(f"**Date:** {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
-        f.write(f"**Evaluator:** `SELF-JUDGED (llama3.1:8b)`\n")
-        f.write(f"**Dataset:** `dev_subset_40.json` (40 frozen development cases)\n\n")
+        f.write(report_md)
 
-        f.write("## 1. Overall Faithfulness Summary\n\n")
-        f.write(f"| Metric | {base_name} Baseline | {cand_name} Candidate | Delta |\n")
-        f.write("|---|---|---|---|\n")
-        f.write(f"| **Mean Faithfulness** | **{s_b['mean']:.4f}** | **{s_c['mean']:.4f}** | **{s_c['mean'] - s_b['mean']:+.4f}** |\n")
-        f.write(f"| Median Faithfulness | {s_b['median']:.4f} | {s_c['median']:.4f} | {s_c['median'] - s_b['median']:+.4f} |\n")
-        f.write(f"| Valid Cases (non-NaN) | {s_b['valid_count']}/40 | {s_c['valid_count']}/40 | {s_c['valid_count'] - s_b['valid_count']:+d} |\n")
-        f.write(f"| NaN Count | {s_b['nan_count']} | {s_c['nan_count']} | {s_c['nan_count'] - s_b['nan_count']:+d} |\n")
-        f.write(f"| Paired Mean Delta | - | - | {mean_paired_delta:+.4f} |\n")
-        f.write(f"| Wins / Losses / Ties | - | - | {wins} wins / {losses} losses / {ties} ties |\n\n")
-
-        f.write("## 2. Category-Level Faithfulness Breakdown\n\n")
-        f.write(f"| Category | N | {base_name} Mean | {cand_name} Mean | Delta | Valid |\n")
-        f.write("|---|---|---|---|---|---|\n")
-        for cr in cat_rows:
-            f.write(f"| `{cr['category']}` | {cr['count']} | {cr[f'{base_name}_mean']:.4f} | {cr[f'{cand_name}_mean']:.4f} | {cr['delta']:+.4f} | {cr[f'{cand_name}_valid']} |\n")
-        f.write("\n")
-
-        f.write("## 3. Cheap Diagnostics and Resource Metrics\n\n")
-        f.write(f"| Metric | {base_name} | {cand_name} | Change |\n")
-        f.write("|---|---|---|---|\n")
-        f.write(f"| Avg Latency (ms) | {base_diag['avg_latency_ms']:.1f} | {cand_diag['avg_latency_ms']:.1f} | {cand_diag['avg_latency_ms'] - base_diag['avg_latency_ms']:+.1f} |\n")
-        f.write(f"| Avg Prompt Tokens | {base_diag['avg_prompt_tokens']:.1f} | {cand_diag['avg_prompt_tokens']:.1f} | {cand_diag['avg_prompt_tokens'] - base_diag['avg_prompt_tokens']:+.1f} |\n")
-        f.write(f"| Avg Evidence Tokens | {base_diag['avg_evidence_tokens']:.1f} | {cand_diag['avg_evidence_tokens']:.1f} | {cand_diag['avg_evidence_tokens'] - base_diag['avg_evidence_tokens']:+.1f} |\n")
-        f.write(f"| Avg Eval Tokens | {base_diag['avg_eval_tokens']:.1f} | {cand_diag['avg_eval_tokens']:.1f} | {cand_diag['avg_eval_tokens'] - base_diag['avg_eval_tokens']:+.1f} |\n")
-        f.write(f"| Truncated Generations | {base_diag['truncated_count']} | {cand_diag['truncated_count']} | {cand_diag['truncated_count'] - base_diag['truncated_count']:+d} |\n")
-        f.write(f"| Abstained Generations | {base_diag['abstained_count']} | {cand_diag['abstained_count']} | {cand_diag['abstained_count'] - base_diag['abstained_count']:+d} |\n")
-        f.write(f"| Invalid Citation Tags | {base_diag['invalid_tags_count']} | {cand_diag['invalid_tags_count']} | {cand_diag['invalid_tags_count'] - base_diag['invalid_tags_count']:+d} |\n")
-        f.write(f"| Total Citation Tags | {base_diag['total_tags_count']} | {cand_diag['total_tags_count']} | {cand_diag['total_tags_count'] - base_diag['total_tags_count']:+d} |\n\n")
-
-        f.write("### Routing Distribution\n")
-        f.write(f"- **{base_name}:** `{base_diag['routing_distribution']}`\n")
-        f.write(f"- **{cand_name}:** `{cand_diag['routing_distribution']}`\n\n")
-
-        base_unsupp_file = RESULTS_DIR / base_name / "unsupported_statements.jsonl"
-        base_unsupp_count = sum(1 for _ in open(base_unsupp_file)) if base_unsupp_file.exists() else "N/A"
-
-        f.write(f"## 4. Unsupported Statements Analysis ({len(unsupported_items)} statements)\n\n")
-        if unsupported_items:
-            f.write(f"Found {len(unsupported_items)} unsupported statements flagged by judge in {cand_name} (vs {base_unsupp_count} in {base_name}).\n\n")
-            f.write("| Case ID | Statement | Reason | Fuzzy Overlap |\n")
-            f.write("|---|---|---|---|\n")
-            for u in unsupported_items[:25]:  # list top 25
-                clean_s = u["statement"].replace("\n", " ")
-                clean_r = u["reason"].replace("\n", " ")
-                f.write(f"| `{u['case_id']}` | {clean_s} | {clean_r} | {u.get('fuzzy_score', 0):.2f} |\n")
-        else:
-            f.write("Zero unsupported statements found!\n")
-
-    print(f"\n🎉 Comparison report generated: {report_path}")
+    manifest_file = manifest.finalize()
+    print(f"🎉 Run manifest finalized: {manifest_file}")
+    print(f"🎉 Comparison report generated: {report_path}")
 
 
 def main():
     parser = argparse.ArgumentParser(description="Candidate Evaluation Runner")
     parser.add_argument("--candidate", default="A3", help="Candidate run identifier (e.g. A3, A4)")
     parser.add_argument("--baseline", default="A2", help="Baseline run identifier (default: A2)")
+    parser.add_argument("--no-cache", action="store_true", help="Bypass cache reads and writes")
+    parser.add_argument("--refresh-cache", action="store_true", help="Ignore cache on read, overwrite on write")
     args = parser.parse_args()
 
-    evaluate_candidate(args.candidate, args.baseline)
+    evaluate_candidate(
+        args.candidate,
+        args.baseline,
+        no_cache=args.no_cache,
+        refresh_cache=args.refresh_cache,
+    )
 
 
 if __name__ == "__main__":

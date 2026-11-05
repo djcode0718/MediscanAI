@@ -65,77 +65,48 @@ CACHE_DIR = REPO_ROOT / "evaluation/e2e/cache"
 
 # ---------------------------------------------------------------------------
 # Judge Caching Layer
+# Disabled by default so that judge calls are live and judge_io.jsonl is complete.
+# Only enabled if EVAL_LLM_CACHE=1 is explicitly set in the environment.
 # ---------------------------------------------------------------------------
 
-CACHE_DIR.mkdir(parents=True, exist_ok=True)
 import langchain
-from langchain_community.cache import SQLiteCache
-langchain.llm_cache = SQLiteCache(database_path=str(CACHE_DIR / "judge_cache.sqlite"))
+try:
+    from langchain_core.globals import set_llm_cache
+except ImportError:
+    set_llm_cache = None
+
+if os.getenv("EVAL_LLM_CACHE") == "1":
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    from langchain_community.cache import SQLiteCache
+    _sqlite_cache = SQLiteCache(database_path=str(CACHE_DIR / "judge_cache.sqlite"))
+    langchain.llm_cache = _sqlite_cache
+    if set_llm_cache:
+        set_llm_cache(_sqlite_cache)
+else:
+    langchain.llm_cache = None
+    if set_llm_cache:
+        set_llm_cache(None)
 
 
 # ---------------------------------------------------------------------------
 # Traceable Faithfulness Subclass
+# (implementation moved to evaluation/e2e/traceable_faithfulness.py in P1; re-exported here)
 # ---------------------------------------------------------------------------
 
-class TraceableFaithfulness(Faithfulness):
-    """Subclass of Ragas Faithfulness that exposes statement-level verdicts."""
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.last_statements_output = None
-        self.last_verdicts_output = None
-
-    async def _ascore(self, row: dict, callbacks: Any) -> float:
-        assert self.llm is not None, "LLM is not set"
-        statements = await self._create_statements(row, callbacks)
-        self.last_statements_output = statements
-        stmts = statements.statements
-        if not stmts:
-            self.last_verdicts_output = None
-            return np.nan
-
-        verdicts = await self._create_verdicts(row, stmts, callbacks)
-        self.last_verdicts_output = verdicts
-        return self._compute_score(verdicts)
+from evaluation.e2e.traceable_faithfulness import TraceableFaithfulness  # noqa: E402,F401
 
 
 # ---------------------------------------------------------------------------
 # Diagnostics Helpers
 # ---------------------------------------------------------------------------
 
-BOILERPLATE_PATTERNS = [
-    re.compile(r"consult\s+(?:a|your)\s+(?:doctor|physician|healthcare\s+provider|pharmacist)", re.IGNORECASE),
-    re.compile(r"informational\s+purposes\s+only", re.IGNORECASE),
-    re.compile(r"not\s+a\s+substitute\s+for\s+professional\s+medical\s+advice", re.IGNORECASE),
-    re.compile(r"emergency\s+(?:medical\s+)?attention", re.IGNORECASE),
-    re.compile(r"call\s+(?:911|112)", re.IGNORECASE),
-    re.compile(r"do\s+not\s+take\s+any\s+medication\s+without", re.IGNORECASE),
-]
-
-
-def is_boilerplate_statement(statement: str) -> bool:
-    for pat in BOILERPLATE_PATTERNS:
-        if pat.search(statement):
-            return True
-    return False
-
-
-def compute_best_fuzzy_match(statement: str, contexts: List[str]) -> float:
-    if not statement or not contexts:
-        return 0.0
-    stmt_clean = statement.lower().strip()
-    best_score = 0.0
-    for ctx in contexts:
-        # Check against context sentences or chunks
-        sentences = re.split(r"[.\n;]", ctx)
-        for s in sentences:
-            s_clean = s.lower().strip()
-            if not s_clean:
-                continue
-            ratio = difflib.SequenceMatcher(None, stmt_clean, s_clean).ratio()
-            if ratio > best_score:
-                best_score = ratio
-    return round(best_score, 4)
+# (BOILERPLATE_PATTERNS / is_boilerplate_statement / compute_best_fuzzy_match moved verbatim to
+#  evaluation/e2e/statement_diagnostics.py in P1; re-exported here)
+from evaluation.e2e.statement_diagnostics import (  # noqa: E402,F401
+    BOILERPLATE_PATTERNS,
+    is_boilerplate_statement,
+    compute_best_fuzzy_match,
+)
 
 
 def compute_deterministic_id_metrics(
@@ -550,12 +521,7 @@ def run_e2e_evaluation(args):
             "NEO4J_ENABLED": settings.NEO4J_ENABLED,
             "EMERGENCY_GUARDRAIL_ENABLED": settings.EMERGENCY_GUARDRAIL_ENABLED,
         },
-        "packages": {
-            "ragas": "0.2.15",
-            "langchain": "1.4.6",
-            "datasets": "3.6.0",
-            "sentence_transformers": "5.1.0",
-        },
+        "packages": (lambda: __import__("evaluation.e2e.cache_v2", fromlist=["get_installed_package_versions"]).get_installed_package_versions())(),
         "total_cases_evaluated": len(eval_records),
         "timestamp": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
     }
