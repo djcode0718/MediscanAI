@@ -116,6 +116,21 @@ class Settings(BaseSettings):
         "symptoms": 12,
     }
 
+    # Phase 4 Feature Flags (Answer-Grounding Fixes, DEFAULT OFF for A6 reproducibility)
+    SANITIZER_A61: bool = False
+    ENTITY_GATE: bool = False
+    FLAG_ENTITY_GATE: bool = False
+    SYMPTOM_EVIDENCE_HYGIENE: bool = False
+    FLAG_SYMPTOM_EVIDENCE_HYGIENE: bool = False
+    SYMPTOM_RESTATE: bool = False
+    FLAG_SYMPTOM_RESTATE: bool = False
+    ALT_SECTION_OMIT: bool = False
+    FLAG_ALT_SECTION_OMIT: bool = False
+    ABSTENTION_V2: bool = False
+    FLAG_ABSTENTION_V2: bool = False
+    CROSSFIELD_GUARD: bool = False
+    FLAG_CROSSFIELD_GUARD: bool = False
+
     @field_validator("JWT_SECRET_KEY")
     @classmethod
     def validate_jwt_secret(cls, v: str) -> str:

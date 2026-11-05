@@ -184,6 +184,13 @@ cp .env.example .env
 | `ACCESS_TOKEN_EXPIRE_MINUTES` | `60` | JWT token validity window in minutes. |
 | `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama service endpoint. |
 | `OLLAMA_MODEL` | `mistral` | LLM model tag for clinical reasoning. |
+| `LLM_MODE` | `offline` | Primary LLM mode: `offline` (local Ollama) or `online` (cloud fallback chain). |
+| `GEMINI_API_KEY` | *(Optional)* | Google Gemini API key (required if `LLM_MODE=online`). |
+| `GROQ_API_KEY` | *(Optional)* | Groq API key (optional secondary fallback if `LLM_MODE=online`). |
+| `NEO4J_ENABLED` | `false` | Enable Neo4j Knowledge Graph retrieval (`true` or `false`). |
+| `NEO4J_URI` | `bolt://localhost:7687` | Neo4j Bolt connection URI. |
+| `NEO4J_USER` | `neo4j` | Neo4j database username. |
+| `NEO4J_PASSWORD` | *(Required if enabled)* | Neo4j database password. |
 | `CORS_ORIGINS` | `http://localhost:5173,http://127.0.0.1:5173` | Allowed frontend origin list. |
 | `MAX_CONCURRENT_ANALYSES` | `2` | Bounded capacity for simultaneous ML analyses. |
 | `RATE_LIMIT_ANALYZE_PER_MINUTE` | `10` | Max `/api/analyze` submissions per IP/user per minute. |
@@ -196,7 +203,20 @@ cp .env.example .env
 * **Python 3.10+** (Conda recommended)
 * **Node.js 18+** & npm
 * **PostgreSQL 15+**
+* **Neo4j 5.x** (optional, for Knowledge Graph traversal)
+* **Tesseract OCR** (for prescription/medicine label OCR extraction)
+* **FFmpeg** (for speech-to-text audio processing)
 * **Ollama** installed locally
+
+Install system multimedia and OCR dependencies:
+
+```bash
+# macOS (Homebrew)
+brew install tesseract ffmpeg
+
+# Ubuntu / Debian
+sudo apt-get update && sudo apt-get install -y tesseract-ocr ffmpeg
+```
 
 ### 2. Python Environment
 
@@ -225,15 +245,52 @@ alembic upgrade head
 
 ---
 
-## 🧠 Local AI / Ollama Setup
+## 🕸️ Knowledge Graph Setup (Neo4j)
 
-Install Ollama from [ollama.com](https://ollama.com) and pull the reasoning model:
+If Knowledge Graph traversal is enabled (`NEO4J_ENABLED=true`), ensure Neo4j is running (locally or via `docker compose up -d neo4j`).
 
+> [!NOTE]
+> **Data Prerequisites:** The full knowledge-graph ingestion datasets (`data/drugs_faiss_data.jsonl` and `data/diseases_faiss_data.jsonl`) are large biomedical corpora and are **not bundled** in this public repository release. Users who wish to populate Neo4j must supply compatible clinical JSONL datasets in the local `data/` directory before executing `import_data.py`. Applying schema constraints (`apply_schema.py`) does not require data files.
+
+Initialize Neo4j schema and import data:
+
+```bash
+# 1. Apply schema constraints and uniqueness indexes (no dataset required)
+python scripts/neo4j/apply_schema.py
+
+# 2. Import clinical entities and relationships (requires user-supplied JSONL data in data/)
+python scripts/neo4j/import_data.py
+
+# 3. Validate graph integrity against source datasets
+python scripts/neo4j/validate_data.py
+```
+
+---
+
+## 🧠 Local AI & LLM Providers
+
+MediScanAI supports two execution modes configured via `LLM_MODE` in `.env`:
+
+### 1. Offline Mode (`LLM_MODE=offline` - Default)
+Uses local Ollama for all clinical reasoning. No external network traffic or API keys are required.
+
+Install Ollama from [ollama.com](https://ollama.com) and pull the clinical model:
 ```bash
 ollama pull mistral
 ```
-
 Verify Ollama is reachable at `http://localhost:11434`.
+
+### 2. Online Mode (`LLM_MODE=online`)
+Routes clinical inference through an automated, multi-tiered cloud fallback chain:
+$$\text{Gemini-1} \longrightarrow \text{Gemini-2} \longrightarrow \text{Groq-1} \longrightarrow \text{Groq-2}$$
+
+To enable Online mode, configure the following in `.env`:
+```bash
+LLM_MODE=online
+GEMINI_API_KEY=your_gemini_api_key_here
+GROQ_API_KEY=your_groq_api_key_here  # Optional secondary fallback
+```
+If an online provider times out or returns an error, MediScanAI automatically falls through to the next model in the chain without interrupting user requests.
 
 ---
 

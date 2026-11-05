@@ -1,123 +1,96 @@
-import sys, os
+import sys
+import os
+import tempfile
+import types
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-# # import os
-# # import cv2
-# # import matplotlib.pyplot as plt
-# # from backend import ocr
+# Compatibility shims for paddlex on environments with modern langchain
+try:
+    import langchain_community.docstore.document
+    import langchain_text_splitters
+    m1 = types.ModuleType("langchain.docstore")
+    m1.document = langchain_community.docstore.document
+    sys.modules["langchain.docstore"] = m1
+    sys.modules["langchain.docstore.document"] = langchain_community.docstore.document
+    sys.modules["langchain.text_splitter"] = langchain_text_splitters
+except ImportError:
+    pass
 
-# # def test_ocr_preview_and_text():
-# #     # Replace with a real pill image path before running
-# #     img_path = r"C:\Users\karth\OneDrive\Desktop\ocr_test_img1.jpg"
-
-# #     if not os.path.exists(img_path):
-# #         print("⚠️ Sample image not found, skipping OCR test.")
-# #         return
-
-# #     # Run OCR
-# #     extracted_text, preview_img = ocr.extract_with_preview(img_path)
-
-# #     # Show preview with bounding boxes
-# #     plt.figure(figsize=(12, 12))
-# #     plt.imshow(cv2.cvtColor(preview_img, cv2.COLOR_BGR2RGB))
-# #     plt.axis("off")
-# #     plt.title("OCR Preview with Bounding Boxes")
-# #     plt.show()
-
-# #     # Print extracted text
-# #     print("\n===== Extracted Text =====")
-# #     for t in extracted_text:
-# #         print(t)
-
-# #     # Assertions (basic check)
-# #     assert isinstance(extracted_text, list)
-# #     assert all(isinstance(t, str) for t in extracted_text)
-# # from backend import ocr 
-# # print(ocr.extract_with_preview(r"C:\Users\karth\OneDrive\Desktop\ocr_test_img1.jpg")[0])
-
-# import argparse
-# import os
-# import cv2
-# from backend import ocr
-
-# def run_test(image_path: str, show_preview: bool = False):
-#     # Run OCR and get both text + preview image with bounding boxes
-#     texts, preview_img = ocr.extract_with_preview(image_path)
-
-#     print("\n=== OCR Extracted Texts ===")
-#     for t in texts:
-#         print(t)
-
-#     if show_preview:
-#         # Save preview for reference
-#         save_path = os.path.join("tests", "ocr_preview3.jpg")
-#         cv2.imwrite(save_path, preview_img)
-#         print(f"\nPreview with bounding boxes saved to: {save_path}")
-
-#         # Show window
-#         cv2.imshow("OCR Preview", preview_img)
-#         print("Press any key in the preview window to close...")
-#         cv2.waitKey(0)
-#         cv2.destroyAllWindows()
-
-
-# if __name__ == "__main__":
-#     parser = argparse.ArgumentParser(description="Test OCR Module")
-#     parser.add_argument("-i", "--image", type=str, help="Path to input image")
-#     parser.add_argument("-s", "--show", action="store_true", help="Show preview window with bounding boxes")
-#     args = parser.parse_args()
-
-#     test_folder = "tests/test_data"
-
-#     if args.image:
-#         run_test(args.image, args.show)
-#     else:
-#         # Run OCR on all images in test_data folder
-#         for fname in os.listdir(test_folder):
-#             if fname.lower().endswith((".jpg", ".jpeg", ".png")):
-#                 print(f"\nProcessing: {fname}")
-#                 run_test(os.path.join(test_folder, fname), args.show)
-
-
-import os
 import cv2
+import numpy as np
 from app import ocr
 
+
+def generate_synthetic_medicine_label(output_path: str) -> str:
+    """
+    Generates a deterministic, fictitious medicine label image for testing OCR ingestion.
+    Contains strictly fictional test text; contains no real patient data or commercial branding.
+    """
+    img = np.full((400, 800, 3), 255, dtype=np.uint8)
+
+    # Blue header border
+    cv2.rectangle(img, (10, 10), (790, 390), (0, 0, 150), 3)
+    cv2.putText(img, "FICTIONAL PHARMA - RX SPECIMEN", (40, 60), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (150, 0, 0), 2)
+    cv2.putText(img, "MEDISCAN SYNTHETIC RX 500MG", (40, 130), cv2.FONT_HERSHEY_SIMPLEX, 1.1, (0, 0, 0), 3)
+    cv2.putText(img, "ACTIVE: FICTITIOUS HYDROCHLORIDE 500 MG", (40, 190), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
+    cv2.putText(img, "DOSAGE: TAKE 1 TABLET DAILY WITH WATER", (40, 240), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
+    cv2.putText(img, "CAUTION: FOR TESTING PURPOSES ONLY", (40, 300), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 180), 2)
+    cv2.putText(img, "LOT: SYN-2026-TEST  EXP: 12/2099", (40, 350), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (80, 80, 80), 1)
+
+    cv2.imwrite(output_path, img)
+    return output_path
+
+
 def run_test(image_path: str, show_preview: bool = False):
-    # Run OCR and get both text + preview image with bounding boxes
+    """Runs OCR extraction on the provided image and asserts text was successfully extracted."""
     texts, preview_img = ocr.extract_with_preview(image_path)
 
     print("\n=== OCR Extracted Texts ===")
     for t in texts:
         print(t)
 
-    # Hardcoded extracted text
-    hardcoded_text = "I have skin allergy"
-    print(f"\nHardcoded Text: {hardcoded_text}")
+    assert len(texts) > 0, "OCR extraction failed: 0 text lines extracted from image."
+    full_extracted = " ".join(texts).upper()
+    assert "MEDISCAN" in full_extracted or "SYNTHETIC" in full_extracted or "500MG" in full_extracted, (
+        f"OCR extraction failed to find expected synthetic label tokens: {texts}"
+    )
 
     if show_preview:
-        # Save preview for reference
-        save_path = os.path.join("tests", "ocr_preview3.jpg")
+        save_path = os.path.join(tempfile.gettempdir(), "ocr_preview_debug.jpg")
         cv2.imwrite(save_path, preview_img)
         print(f"\nPreview with bounding boxes saved to: {save_path}")
 
-        # Show window
-        cv2.imshow("OCR Preview", preview_img)
-        print("Press any key in the preview window to close...")
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+    return texts
+
+
+def test_ocr_synthetic_extraction():
+    """Pytest test case verifying OCR extraction on a deterministic synthetic image."""
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+        tmp_path = tmp.name
+
+    try:
+        generate_synthetic_medicine_label(tmp_path)
+        texts = run_test(tmp_path, show_preview=False)
+        assert len(texts) >= 3, f"Expected at least 3 extracted text lines, got {len(texts)}"
+    finally:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
 
 
 if __name__ == "__main__":
-    print("starting..")
-    image_path = '/Users/sj/Downloads/WhatsApp Image 2025-09-16 at 22.31.52.jpeg'
-    # Fallback to local test image if downloads file is missing
-    if not os.path.exists(image_path):
-        image_path = 'tests/ocr_preview.jpg'
-        
-    show_preview = False  # Set to False for non-blocking headless automated runs
-    
-    if os.path.exists(image_path):
-        run_test(image_path, show_preview)
-    else:
-        print(f"⚠️ Test image '{image_path}' not found. Skipping OCR test.")
+    print("--- Running OCR Test with Synthetic Fictitious Label ---")
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+        tmp_path = tmp.name
+
+    try:
+        generate_synthetic_medicine_label(tmp_path)
+        print(f"Created temporary synthetic label at: {tmp_path}")
+        extracted = run_test(tmp_path, show_preview=False)
+        print(f"\n✅ OCR Test Successfully Extracted {len(extracted)} lines.")
+    finally:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
+            print(f"Cleaned up temporary synthetic label at: {tmp_path}")
+
+

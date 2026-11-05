@@ -179,12 +179,11 @@ import time
 from app.ocr import extract_text_from_image, ocr_text_join
 from app.retriever import MultiRetriever
 from app.llm import generate_with_mode, generate_with_mode_meta, GenerationParams
-from app.utils import normalize_text
+from app.utils import normalize_text, normalize_disease_chunk_id
 from app.prompt import ANALYSIS_PROMPT_TEMPLATE
 from app.formatter import build_summary_card
 from backend.core.config import get_settings, Settings
 from app.graph import GraphRetriever
-from evaluation.retrieval.pool_evidence import normalize_disease_chunk_id
 
 logger = logging.getLogger("mediscanai.rag.core")
 
@@ -702,6 +701,7 @@ class Pipeline:
                 max_items_per_channel=getattr(self.settings, "EVIDENCE_MAX_ITEMS_PER_CHANNEL", 3),
                 drug_fields=getattr(self.settings, "EVIDENCE_DRUG_FIELDS", None),
                 field_caps=getattr(self.settings, "EVIDENCE_FIELD_CAPS", None),
+                settings=self.settings,
             )
             routing_version = getattr(self.settings, "ROUTING_VERSION", "legacy")
             is_med_dir = False
@@ -756,6 +756,14 @@ class Pipeline:
                 system_prompt = SYSTEM_PROMPT_V6
             elif prompt_version == "v5":
                 system_prompt = SYSTEM_PROMPT_V5
+                entity_gate_on = getattr(self.settings, "ENTITY_GATE", False) or getattr(self.settings, "FLAG_ENTITY_GATE", False)
+                if entity_gate_on:
+                    identify_rule = (
+                        "\n12. A medicine counts as identified only if its name, generic name or an active ingredient "
+                        "appears in USER_TEXT or LABEL_TEXT AND in a DRUG or DRUG_NAME_MATCH evidence block. "
+                        "Otherwise write: \"The medicine could not be identified from the available sources.\""
+                    )
+                    system_prompt = system_prompt + identify_rule
             elif prompt_version == "v4":
                 system_prompt = SYSTEM_PROMPT_V4
             elif prompt_version == "v3":
@@ -775,12 +783,15 @@ class Pipeline:
                 v2_evidence_text = "\n\n".join(ev_parts)
 
             routing_version = getattr(self.settings, "ROUTING_VERSION", "legacy")
+            ent_status = evidence_trace_data.get("entity_resolution_status") if evidence_trace_data else None
             full_prompt, case_type = build_v2_user_message(
                 user_text=user_text,
                 ocr_text=ocr_text,
                 evidence_text=v2_evidence_text,
                 routing_version=routing_version,
                 prompt_version=prompt_version,
+                entity_status=ent_status,
+                settings=self.settings,
             )
         else:
             print("📝 [Prompt] Assembling context-grounded prompt template...")
@@ -924,7 +935,10 @@ class Pipeline:
                 "prompt_tokens_est": prompt_tokens_est,
                 "evidence_format": evidence_format,
                 "prompt_version": prompt_version,
+                "rendered_evidence": rendered_evidence if evidence_format == "compact" else "",
+                "retrieved_contexts": blocks if evidence_format == "compact" else [],
                 "evidence_items": evidence_trace_data["evidence_items"] if evidence_trace_data else [],
+                "rendered_evidence_items": evidence_trace_data["evidence_items"] if evidence_trace_data else [],
                 "total_evidence_tokens": evidence_trace_data["total_evidence_tokens"] if evidence_trace_data else None,
                 "retrieved_but_omitted_ids": evidence_trace_data["retrieved_but_omitted_ids"] if evidence_trace_data else [],
                 "evidence_trims": evidence_trace_data["trims"] if evidence_trace_data else [],

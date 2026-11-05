@@ -168,6 +168,22 @@ Do not use words like "also includes" or "additionally includes". State only the
 ### Suggested Alternatives
 List up to 2 medicines from EVIDENCE: "<Brand/Generic> is labeled for <wording from its Indications>. [E#]". If no medicine in EVIDENCE is labeled for these symptoms, write: "Not applicable.\""""
 
+TASK_SYMPTOM_ONLY_V5_A6 = """TASK: Write exactly this format.
+**Verdict:** Based on the available sources, the symptoms you describe overlap with the conditions listed below. This is not a diagnosis.
+Explanation: For up to 2 conditions in EVIDENCE that share symptoms with USER_TEXT:
+"<Condition> is documented with overlapping symptoms: <1-3 symptoms that appear in both USER_TEXT and that condition's listed symptoms in E#>. [E#]"
+Do not use words like "also includes" or "additionally includes". State only the exact shared symptoms. Do not make negative claims about other conditions or alternative diagnoses.
+### Suggested Alternatives
+List up to 2 medicines from EVIDENCE: "<Brand/Generic> is labeled for <wording from its Indications>. [E#]". If no medicine in EVIDENCE is labeled for these symptoms, write: "None identified in the available sources.\""""
+
+TASK_SYMPTOM_ONLY_V5_RESTATE = """TASK: Write exactly this format.
+**Verdict:** Based on the available sources, the symptoms you describe overlap with the conditions listed below. This is not a diagnosis.
+Explanation: For up to 2 conditions in EVIDENCE that share symptoms with USER_TEXT:
+"<Condition> lists these symptoms: <1-3 symptoms that appear in both USER_TEXT and that condition's listed symptoms in E#>. [E#]"
+Do not use words like "also includes" or "additionally includes". State only the exact shared symptoms. Do not make negative claims about other conditions or alternative diagnoses.
+### Suggested Alternatives
+List up to 2 medicines from EVIDENCE: "<Brand/Generic> is labeled for <wording from its Indications>. [E#]". If no medicine in EVIDENCE is labeled for these symptoms, write: "Not applicable.\""""
+
 TASK_MEDICINE_ONLY_V5 = """TASK: Write exactly this format.
 **Verdict:** one sentence: either "The label text identifies <Brand/Generic from E#>. [E#]" or "The medicine could not be identified from the available sources."
 Explanation: If identified: "<Brand/Generic> label evidence lists active ingredients: <ingredients from E#> and indications: <exact wording from Indications in E#>. [E#]". Report ONLY labeled indications from the Indications field. Do not convert background intoxicant warnings into indications. If any field is missing from [E#], write "This is not stated in the available sources." for that field. Do not invent facts or indications not stated in [E#]. Never write prompt meta-words.
@@ -191,9 +207,33 @@ CRITICAL: Never list symptoms or diseases that the medicine does NOT treat. Do n
 ### Suggested Alternatives
 If the scanned medicine does not treat the symptoms, list up to 2 other medicines from EVIDENCE labeled for those symptoms: "<Brand/Generic> is labeled for <wording from Indications>. [E#]". Otherwise write: "Not applicable.\""""
 
+TASK_SYMPTOM_AND_MEDICINE_V5_A6 = """TASK: Write exactly this format.
+The primary medicine being evaluated is the scanned medicine from LABEL_TEXT. In Verdict and Explanation, evaluate ONLY whether that scanned medicine treats the described symptoms.
+
+**Verdict:** one sentence:
+ (a) If the scanned medicine is labeled for the described condition:
+     - For single-ingredient products: "<Brand/Generic> is labeled for <exact phrase from Indications in E#>. [E#]"
+     - For multi-ingredient products or kits: "<Brand/Generic> contains <specific ingredient from E#>, which is labeled for <exact phrase from Indications in E#>. [E#]"
+ (b) If the scanned medicine is NOT labeled for the described condition:
+     "<Brand/Generic from E#> is labeled for <exact phrase from Indications in E#>, which does not cover the presented symptoms. [E#]"
+ (c) If the scanned medicine is not identified in the evidence blocks or its indications are missing:
+     "The available sources do not state labeled indications for this medicine."
+
+Explanation: 1-2 sentences. Directly state the labeled indications and active ingredients of the scanned medicine from [E#].
+CRITICAL: Never list symptoms or diseases that the medicine does NOT treat. Do not say "does not treat X, Y, Z". Simply state what it IS labeled for [E#]. Do not attribute indications across different medicines or kit formulations.
+
+### Suggested Alternatives
+If the scanned medicine does not treat the symptoms, list up to 2 other medicines from EVIDENCE labeled for those symptoms: "<Brand/Generic> is labeled for <wording from Indications>. [E#]". Otherwise write: "Not applicable.\""""
+
 TASK_UNANSWERABLE_V5 = """TASK: Write exactly this format.
 **Verdict:** The available sources do not state the specific information requested in this inquiry.
 Explanation: Write: "The requested medication information could not be verified from the available sources." Do not repeat or echo unverified drug names, fictitious products, trial endpoints, or approval dates. Do not make universal claims about existence.
+### Suggested Alternatives
+Write: "Not applicable: no symptoms were provided.\""""
+
+TASK_UNANSWERABLE_V5_V2 = """TASK: Write exactly this format.
+**Verdict:** The available sources do not state the requested information.
+Explanation: The active ingredients and labeled indications are not stated in the available sources.
 ### Suggested Alternatives
 Write: "Not applicable: no symptoms were provided.\""""
 
@@ -351,13 +391,12 @@ def is_symptom_presentation(text: str) -> bool:
         r"\bpain circumstance\b",
         r"\bcan i take this medicine to treat my symptoms\b",
         r"\bis it appropriate for my condition\b",
-        r"\bfor severe chronic\b",
     ]
     return any(re.search(p, t) for p in patterns)
 
 
 def is_unanswerable_factual_probe(text: str) -> bool:
-    """Detects factual questions unanswerable from patient drug labels (e.g. FDA approval dates, first-line protocols, cure claims, fictitious probes)."""
+    """Detects factual questions unanswerable from patient drug labels (e.g. FDA approval dates, first-line protocols, cure claims)."""
     if not text:
         return False
     t = text.lower()
@@ -373,7 +412,9 @@ def is_unanswerable_factual_probe(text: str) -> bool:
         r"\brecommended (?:clinical )?dosage\b",
         r"\bcommon adverse reactions and contraindications of\b",
         r"\bsafe for use during pregnancy or lactation\b",
-        r"\b(?:novaproxin|nonexistentdrug[a-z]?|valerionex|glycozempra|xanthroflurane)\b",
+        r"\bclinical trial endpoints?\b",
+        r"\bpharmacokinetic profile\b",
+        r"\bmechanism of action\b",
     ]
     return any(re.search(p, t) for p in patterns)
 
@@ -402,7 +443,11 @@ def is_medicine_label_inquiry(text: str) -> bool:
     return any(re.search(p, t) for p in patterns)
 
 
-def classify_intent_v2(user_text: Optional[str], ocr_text: Optional[str]) -> str:
+def classify_intent_v2(
+    user_text: Optional[str],
+    ocr_text: Optional[str],
+    entity_status: Optional[str] = None,
+) -> str:
     """
     Deterministic intent classifier for ROUTING_VERSION=v2.
     Does NOT assume non-empty user_text implies symptoms were supplied.
@@ -411,6 +456,9 @@ def classify_intent_v2(user_text: Optional[str], ocr_text: Optional[str]) -> str
     user = (user_text or "").strip()
     ocr = (ocr_text or "").strip()
     has_ocr = bool(ocr)
+
+    if entity_status == "UNRESOLVED":
+        return "UNANSWERABLE"
 
     if is_unanswerable_factual_probe(user) or is_unanswerable_factual_probe(ocr):
         return "UNANSWERABLE"
@@ -434,6 +482,7 @@ def determine_case_type(
     user_text: Optional[str],
     ocr_text: Optional[str],
     routing_version: str = "legacy",
+    entity_status: Optional[str] = None,
 ) -> str:
     """
     Determines the prompt case type:
@@ -441,7 +490,7 @@ def determine_case_type(
     - v2: uses deterministic intent classifier classify_intent_v2
     """
     if routing_version == "v2":
-        return classify_intent_v2(user_text, ocr_text)
+        return classify_intent_v2(user_text, ocr_text, entity_status=entity_status)
 
     # Legacy routing
     has_user = bool(user_text and user_text.strip())
@@ -460,6 +509,8 @@ def build_v2_user_message(
     evidence_text: str,
     routing_version: str = "legacy",
     prompt_version: str = "v2",
+    entity_status: Optional[str] = None,
+    settings: Optional[Any] = None,
 ) -> Tuple[str, str]:
     """
     Constructs the v2/v3 USER message for the LLM.
@@ -467,7 +518,9 @@ def build_v2_user_message(
     Never includes 'No image provided' or empty evidence groups.
     Returns (user_message, case_type).
     """
-    case_type = determine_case_type(user_text, ocr_text, routing_version=routing_version)
+    case_type = determine_case_type(
+        user_text, ocr_text, routing_version=routing_version, entity_status=entity_status
+    )
     blocks: List[str] = []
 
     if user_text and user_text.strip():
@@ -501,14 +554,24 @@ def build_v2_user_message(
         else:
             blocks.append(TASK_SYMPTOM_AND_MEDICINE_V6)
     elif prompt_version == "v5":
+        from backend.core.config import get_settings
+        cfg = settings or get_settings()
+        is_a61 = cfg.SANITIZER_A61
+        is_restate = getattr(cfg, "SYMPTOM_RESTATE", False) or getattr(cfg, "FLAG_SYMPTOM_RESTATE", False)
+        is_abstain_v2 = getattr(cfg, "ABSTENTION_V2", False) or getattr(cfg, "FLAG_ABSTENTION_V2", False)
         if case_type == "SYMPTOM_ONLY":
-            blocks.append(TASK_SYMPTOM_ONLY_V5)
+            if is_restate:
+                blocks.append(TASK_SYMPTOM_ONLY_V5_RESTATE)
+            elif is_a61:
+                blocks.append(TASK_SYMPTOM_ONLY_V5)
+            else:
+                blocks.append(TASK_SYMPTOM_ONLY_V5_A6)
         elif case_type == "MEDICINE_ONLY":
             blocks.append(TASK_MEDICINE_ONLY_V5)
         elif case_type == "UNANSWERABLE":
-            blocks.append(TASK_UNANSWERABLE_V5)
+            blocks.append(TASK_UNANSWERABLE_V5_V2 if is_abstain_v2 else TASK_UNANSWERABLE_V5)
         else:
-            blocks.append(TASK_SYMPTOM_AND_MEDICINE_V5)
+            blocks.append(TASK_SYMPTOM_AND_MEDICINE_V5 if is_a61 else TASK_SYMPTOM_AND_MEDICINE_V5_A6)
     elif prompt_version == "v4":
         if case_type == "SYMPTOM_ONLY":
             blocks.append(TASK_SYMPTOM_ONLY_V4)

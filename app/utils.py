@@ -151,3 +151,11 @@ def normalize_text(s: str) -> str:
     restored_text = re.sub(r'\s+', ' ', restored_text).strip()
     
     return restored_text
+
+
+def normalize_disease_chunk_id(chunk_id_str: str) -> str:
+    """Extracts chunk number from chunk_X or disease_chunk_X and returns disease_chunk_X."""
+    match = re.search(r"\d+", str(chunk_id_str))
+    if match:
+        return f"disease_chunk_{match.group(0)}"
+    return str(chunk_id_str)

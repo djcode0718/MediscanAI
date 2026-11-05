@@ -65,9 +65,13 @@ coverage/
 coverage.xml
 htmlcov/
 
-# Large generated data / ML artifacts
-data/
-indexes/
+# Large generated data / ML artifacts (anchored to repository root)
+/data/
+/indexes/
+
+# Sealed benchmark dataset and generation assets
+/evaluation/e2e/data/sealed/
+/evaluation/e2e/generate_sealed_test.py
 
 # Local biomedical entity-resolution working data
 # entity_resolution
@@ -87,6 +91,30 @@ mediscanai_data_inventory.txt
 
 # Evaluation run output directories
 evaluation/results/
+
+# Generated Prompt 4 raw per-run evaluations and debug/tmp outputs
+/results/**/eval_*.json
+/results/**/debug/
+/results/**/tmp/
+
+# Evaluation execution caches and quarantined legacy caches
+evaluation/e2e/cache_quarantine/
+evaluation/e2e/audit/calibration_execution/caches/
+evaluation/e2e/audit/calibration_execution/controlled_run_*/cache/
+evaluation/e2e/audit/calibration_execution/controlled_run_*/*.jsonl
+evaluation/e2e/audit/calibration_execution/controlled_run_*/results.json
+evaluation/e2e/audit/calibration_execution/controlled_run_20261101_143908/
+evaluation/e2e/audit/calibration_execution/controlled_run_20261101_144308/
+evaluation/e2e/audit/calibration_execution/validation_runs/
+evaluation/e2e/audit/calibration_execution/calibration_runs/
+evaluation/e2e/audit/calibration_execution/step1d_corrections_*/
+evaluation/e2e/audit/calibration_execution/step2_readjudication_*/
+evaluation/e2e/audit/p1_smoke/
+evaluation/e2e/audit/p1_preflight/
+
+# Temporary B0 execution artifacts and transcripts
+evaluation/e2e/results/B0/B0_*/
+**/judge_io.jsonl
 
 # Large Evaluation Generation & Run Data Files
 evaluation/ragas/phase_c_4/*.jsonl
@@ -174,6 +202,84 @@ dmypy.json
 # Local profiling artifacts
 *.prof
 .prof
+
+# ==============================================================================
+# Final Public Release — Local and Review-Only Artifacts
+# ==============================================================================
+
+# Reviewer datasets and annotation packets
+evaluation/e2e/audit/calibration_execution/datasets/
+
+# Superseded methodology revision
+evaluation/e2e/audit/methodology_redesign/revision_2_4/
+
+# Obsolete freeze artifacts
+evaluation/e2e/audit/calibration_execution/frozen_release/
+
+# Obsolete calibration experiments
+evaluation/e2e/audit/calibration_execution/regressions/
+evaluation/e2e/audit/calibration_execution/run_calibration_case_isolated.py
+evaluation/e2e/audit/calibration_execution/run_calibration_corrected.py
+evaluation/e2e/audit/calibration_execution/run_calibration_experiments.py
+evaluation/e2e/audit/calibration_execution/run_calibration_v2.py
+evaluation/e2e/audit/calibration_execution/synthesize_calibration_statistics.py
+
+# Intermediate milestone reports and configurations
+evaluation/e2e/audit/EVALUATOR_CALIBRATION_PLAN.md
+evaluation/e2e/audit/EVALUATOR_CALIBRATION_PLAN_CHANGELOG.md
+evaluation/e2e/audit/EVALUATOR_CALIBRATION_READINESS_REVIEW.md
+evaluation/e2e/audit/EVALUATOR_CALIBRATION_REVISION_2_3_AUDIT.md
+evaluation/e2e/audit/EVALUATOR_CALIBRATION_STATUS.json
+evaluation/e2e/audit/EVALUATOR_PARTITION_INTEGRITY_AUDIT.md
+evaluation/e2e/audit/p1_report.md
+evaluation/e2e/audit/p2_report.md
+evaluation/e2e/audit/P1_STATUS.json
+evaluation/e2e/audit/P2_STATUS.json
+evaluation/e2e/audit/calibration_execution/FINAL_EXECUTION_REPORT.md
+evaluation/e2e/audit/calibration_execution/FINAL_EXECUTION_STATUS.json
+evaluation/e2e/audit/calibration_execution/CALIBRATION_RESULTS_SUMMARY.md
+evaluation/e2e/audit/calibration_execution/CALIBRATION_RESULTS_SUMMARY.json
+evaluation/e2e/audit/calibration_execution/STEP_1G_HANDOFF_READINESS_REPORT.md
+evaluation/e2e/audit/calibration_execution/CALIBRATION_EXECUTION_CONFIG.json
+evaluation/e2e/audit/calibration_execution/EXECUTION_STATUS.json
+evaluation/e2e/audit/calibration_execution/EXP_COMBINED_CORRECTED_CALIBRATION_REPORT.md
+evaluation/e2e/audit/calibration_execution/HISTORICAL_HELDOUT_EXPOSURE_AUDIT.md
+evaluation/e2e/audit/calibration_execution/controlled_run_20261101_144546/
+
+# Redundant methodology documents
+evaluation/e2e/audit/methodology_redesign/ARCHITECTURE_AND_IMPLEMENTATION_ROADMAP.md
+evaluation/e2e/audit/methodology_redesign/CALIBRATION_EXPERIMENT_MATRIX.md
+evaluation/e2e/audit/methodology_redesign/DATASET_AND_ADJUDICATION_DESIGN.md
+evaluation/e2e/audit/methodology_redesign/METRICS_AND_STATISTICAL_PROTOCOL.md
+evaluation/e2e/audit/methodology_redesign/METHODOLOGY_DECISIONS_AND_OPEN_QUESTIONS.md
+evaluation/e2e/audit/methodology_redesign/METHODOLOGY_REDESIGN_SUMMARY.md
+evaluation/e2e/audit/methodology_redesign/METHODOLOGY_REDESIGN_STATUS.json
+
+# Transient diagnostic scripts and generators
+evaluation/e2e/audit/run_judge_transport_diagnostic.py
+evaluation/e2e/audit/judge_transport_diagnostic.json
+evaluation/e2e/audit/judge_transport_evaluation.md
+evaluation/e2e/audit/generate_p4_reports.py
+evaluation/e2e/audit/generate_p4_reconciliation.py
+evaluation/e2e/audit/p4_dryrun.py
+evaluation/e2e/audit/p4_symptom_audit.py
+
+# Legacy recomputation artifacts
+evaluation/e2e/recompute_legacy.py
+evaluation/e2e/run_b0_rescore.py
+evaluation/e2e/run_p1_smoke.py
+evaluation/e2e/results/_recomputed_legacy/
+
+# Local-only adjudication tools
+evaluation/e2e/tools/adjudication_stats.py
+
+# REVIEW-required files (pending authorization)
+evaluation/e2e/data/splits.json
+evaluation/e2e/results/B0/adjudication_disagreements.csv
+evaluation/e2e/results/B0/adjudication_audit_report.md
+evaluation/e2e/results/B0/adjudication_failure_analysis.md
+evaluation/e2e/results/B0/adjudication_sheet_blind.csv
+evaluation/e2e/results/B0/adjudication_sheet.csv
 
 
 

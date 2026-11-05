@@ -10,6 +10,22 @@ from enum import Enum
 from typing import Dict, List, Any, Optional, Tuple, Set
 from dataclasses import dataclass, field
 
+try:
+    from rapidfuzz import fuzz
+except ImportError:
+    import difflib
+    class _FuzzFallback:
+        @staticmethod
+        def ratio(s1: str, s2: str) -> float:
+            return difflib.SequenceMatcher(None, s1, s2).ratio() * 100.0
+        @staticmethod
+        def partial_ratio(s1: str, s2: str) -> float:
+            return difflib.SequenceMatcher(None, s1, s2).ratio() * 100.0
+        @staticmethod
+        def token_set_ratio(s1: str, s2: str) -> float:
+            return difflib.SequenceMatcher(None, " ".join(sorted(s1.split())), " ".join(sorted(s2.split()))).ratio() * 100.0
+    fuzz = _FuzzFallback()
+
 
 PLACEHOLDER_VALUES = {
     "none", "n/a", "na", "null", "empty", "none reported", "not specified", "unknown", "undefined"
@@ -289,7 +305,9 @@ class CompactEvidenceFormatter:
         max_items_per_channel: int = 3,
         drug_fields: str = "brand_name,generic_name,active_ingredients,indications",
         field_caps: Optional[Dict[str, int]] = None,
+        settings: Optional[Any] = None,
     ):
+        self.settings = settings
         self.max_items_per_channel = max_items_per_channel
         self.allowed_drug_fields = set(f.strip().lower() for f in drug_fields.split(",") if f.strip())
         self.field_caps = field_caps or {
@@ -328,7 +346,6 @@ class CompactEvidenceFormatter:
         # Extract meaningful symptom query tokens if symptoms were presented
         symptom_tokens = set()
         if query_aware_filtering and user_text:
-            import re
             words = re.findall(r"[a-z]{4,}", user_text.lower())
             stop_words = {
                 "experiencing", "suffering", "recently", "developed", "feeling", "several", "doctor",
@@ -338,6 +355,7 @@ class CompactEvidenceFormatter:
             }
             symptom_tokens = {w for w in words if w not in stop_words}
 
+        entity_resolution_result: Optional[EntityResolutionResult] = None
         channel_order = [
             "diseases",
             "drugs",
@@ -346,6 +364,9 @@ class CompactEvidenceFormatter:
             "graph_diseases",
             "graph_drugs",
         ]
+
+        from backend.core.config import get_settings
+        cfg = self.settings or get_settings()
 
         # 1. Collect & deduplicate per channel
         for chan in channel_order:
@@ -359,10 +380,57 @@ class CompactEvidenceFormatter:
                 )
                 omitted_ids.extend(chan_omitted)
 
-                # Under query_aware_filtering for drugs_from_ocr:
-                # If any candidate drug has a strong brand name match present in ocr_text,
-                # retain only matching brand candidate(s) to prevent false-positive cross-retrievals
-                if chan == "drugs_from_ocr" and query_aware_filtering and ocr_text:
+                from backend.core.config import get_settings
+                cfg = get_settings()
+                entity_gate_on = getattr(cfg, "ENTITY_GATE", False) or getattr(cfg, "FLAG_ENTITY_GATE", False)
+
+                if chan == "drugs_from_ocr" and entity_gate_on and ocr_text:
+                    dict_items = all_retrievals.get("drug_dict", [])
+                    dict_reps = [
+                        EvidenceItem(
+                            channel="drug_dict",
+                            raw_id=str(it[2].get("id", it[0]) if isinstance(it[2], dict) else it[0]),
+                            covers_ids=[str(it[0])],
+                            item_type="DRUG_NAME_MATCH",
+                            fields={"name": clean_text_field(it[2].get("drug_name", it[0]) if isinstance(it[2], dict) else it[0])}
+                        )
+                        for it in dict_items
+                    ]
+                    drug_cand_items = []
+                    for r in deduped:
+                        drug_cand_items.append(
+                            EvidenceItem(
+                                channel=chan,
+                                raw_id=r["raw_id"],
+                                covers_ids=r["covers_ids"],
+                                item_type="DRUG",
+                                fields={
+                                    "brand_name": r["primary_brand"],
+                                    "generic_name": r["generic_name"],
+                                    "active_ingredients": "; ".join(r["substances"]),
+                                    "also_marketed_as": "; ".join(r["also_marketed_as"]),
+                                }
+                            )
+                        )
+                    resolution = resolve_label_entity(ocr_text, drug_cand_items, dict_reps, threshold=75.0)
+                    entity_resolution_result = resolution
+                    if resolution.status == EntityResolutionStatus.RESOLVED:
+                        matching_ids = {
+                            rid.replace("drug_", "")
+                            for rid, sc in resolution.item_scores.items()
+                            if rid.startswith("drug_") and sc >= 75.0
+                        }
+                        matching_reps = [r for r in deduped if str(r["raw_id"]) in matching_ids]
+                        if matching_reps:
+                            for r in deduped:
+                                if r["raw_id"] not in {m["raw_id"] for m in matching_reps}:
+                                    omitted_ids.extend(r["covers_ids"])
+                            deduped = matching_reps
+                    elif resolution.status in (EntityResolutionStatus.NAME_ONLY, EntityResolutionStatus.UNRESOLVED):
+                        for r in deduped:
+                            omitted_ids.extend(r["covers_ids"])
+                        deduped = []
+                elif chan == "drugs_from_ocr" and query_aware_filtering and ocr_text:
                     ocr_lower = ocr_text.lower()
                     matching_reps = [
                         r for r in deduped
@@ -451,8 +519,35 @@ class CompactEvidenceFormatter:
                     symptoms_raw = chunk_data.get("symptoms", [])
                     if isinstance(symptoms_raw, str):
                         symptoms_raw = [s.strip() for s in symptoms_raw.split(",") if s.strip()]
-                    symptoms_capped = [clean_text_field(s) for s in symptoms_raw if clean_text_field(s)]
-                    symptoms_capped = symptoms_capped[: self.field_caps.get("symptoms", 12)]
+                    
+                    symptom_hygiene_on = getattr(cfg, "SYMPTOM_EVIDENCE_HYGIENE", False) or getattr(cfg, "FLAG_SYMPTOM_EVIDENCE_HYGIENE", False)
+                    if symptom_hygiene_on:
+                        cond_norm = (cond_name or "").strip().lower()
+                        clean_slist = [
+                            clean_text_field(s) for s in symptoms_raw
+                            if clean_text_field(s) and clean_text_field(s).strip().lower() != cond_norm
+                        ]
+                        deduped_slist = []
+                        seen_s = set()
+                        for s in clean_slist:
+                            sn = s.lower()
+                            if sn not in seen_s:
+                                seen_s.add(sn)
+                                deduped_slist.append(s)
+                        user_words = set(re.findall(r"[a-z]{3,}", (user_text or "").lower())) if user_text else set()
+                        matched_s = []
+                        unmatched_s = []
+                        for s in deduped_slist:
+                            swords = set(re.findall(r"[a-z]{3,}", s.lower()))
+                            if swords.intersection(user_words) or (user_text and s.lower() in user_text.lower()):
+                                matched_s.append(s)
+                            else:
+                                unmatched_s.append(s)
+                        ordered_s = matched_s + unmatched_s
+                        symptoms_capped = ordered_s[: self.field_caps.get("symptoms", 12)]
+                    else:
+                        symptoms_capped = [clean_text_field(s) for s in symptoms_raw if clean_text_field(s)]
+                        symptoms_capped = symptoms_capped[: self.field_caps.get("symptoms", 12)]
 
                     # Under query-aware filtering for medicine-directed queries or queries with no symptoms presented:
                     # omit disease blocks that do not overlap with actual patient symptoms
@@ -510,8 +605,35 @@ class CompactEvidenceFormatter:
                     key, score, obj = item
                     cond_name = clean_text_field(obj.get("disease", key) if isinstance(obj, dict) else key)
                     symptoms_raw = obj.get("symptoms", []) if isinstance(obj, dict) else []
-                    symptoms_capped = [clean_text_field(s) for s in symptoms_raw if clean_text_field(s)]
-                    symptoms_capped = symptoms_capped[: self.field_caps.get("symptoms", 12)]
+                    
+                    symptom_hygiene_on = getattr(cfg, "SYMPTOM_EVIDENCE_HYGIENE", False) or getattr(cfg, "FLAG_SYMPTOM_EVIDENCE_HYGIENE", False)
+                    if symptom_hygiene_on:
+                        cond_norm = (cond_name or "").strip().lower()
+                        clean_slist = [
+                            clean_text_field(s) for s in symptoms_raw
+                            if clean_text_field(s) and clean_text_field(s).strip().lower() != cond_norm
+                        ]
+                        deduped_slist = []
+                        seen_s = set()
+                        for s in clean_slist:
+                            sn = s.lower()
+                            if sn not in seen_s:
+                                seen_s.add(sn)
+                                deduped_slist.append(s)
+                        user_words = set(re.findall(r"[a-z]{3,}", (user_text or "").lower())) if user_text else set()
+                        matched_s = []
+                        unmatched_s = []
+                        for s in deduped_slist:
+                            swords = set(re.findall(r"[a-z]{3,}", s.lower()))
+                            if swords.intersection(user_words) or (user_text and s.lower() in user_text.lower()):
+                                matched_s.append(s)
+                            else:
+                                unmatched_s.append(s)
+                        ordered_s = matched_s + unmatched_s
+                        symptoms_capped = ordered_s[: self.field_caps.get("symptoms", 12)]
+                    else:
+                        symptoms_capped = [clean_text_field(s) for s in symptoms_raw if clean_text_field(s)]
+                        symptoms_capped = symptoms_capped[: self.field_caps.get("symptoms", 12)]
 
                     fields = {}
                     if cond_name:
@@ -575,6 +697,8 @@ class CompactEvidenceFormatter:
                     "tag": tag,
                     "channel": itm.channel,
                     "item_type": itm.item_type,
+                    "type": itm.item_type,
+                    "fields": itm.fields,
                     "tokens": tokens,
                 })
             joined = "\n".join(blocks)
@@ -635,9 +759,197 @@ class CompactEvidenceFormatter:
             "retrieved_but_omitted_ids": sorted(list(set(omitted_ids))),
             "trims": trims_recorded,
             "cap_multiplier": multiplier,
+            "entity_resolution_status": entity_resolution_result.status.value if entity_resolution_result else None,
         }
 
         return rendered_text, evidence_trace
+
+def normalize_ocr_noise(text: str) -> str:
+    """Normalize common OCR character confusions: 0/O, 1/l, rn/m, |/l."""
+    if not text:
+        return ""
+    s = str(text).lower()
+    s = s.replace("0", "o")
+    s = s.replace("1", "l")
+    s = s.replace("rn", "m")
+    s = s.replace("|", "l")
+    return s
+
+
+class EntityResolutionStatus(str, Enum):
+    RESOLVED = "RESOLVED"
+    NAME_ONLY = "NAME_ONLY"
+    AMBIGUOUS = "AMBIGUOUS"
+    UNRESOLVED = "UNRESOLVED"
+
+
+@dataclass
+class EntityResolutionResult:
+    status: EntityResolutionStatus
+    item: Optional[Any] = None
+    name: Optional[str] = None
+    best_score: float = 0.0
+    item_scores: Dict[str, float] = field(default_factory=dict)
+    matched_tokens: List[str] = field(default_factory=list)
+
+
+OCR_ENTITY_STOPS = {
+    "tablets", "capsules", "solution", "inhalation", "suspension", "daily", "oral", 
+    "dose", "dosage", "only", "mfg", "exp", "lot", "distributed", "corporation", 
+    "corp", "inc", "adult", "pediatric", "formulation", "take", "treat", "cure", 
+    "pain", "symptoms", "chronic", "acute", "severe", "safe", "pregnancy", "lactation", 
+    "prescribed", "warning", "warnings", "ndc", "keep", "reach", "children", "store", 
+    "temperature", "controlled", "usp", "bottle", "package", "label", "medicine", 
+    "drug", "active", "ingredients", "purpose", "indications", "usage", "directions"
+}
+
+
+def compute_field_token_match_score(tok: str, target_field: str) -> float:
+    """Computes best fuzzy match score between an OCR token and words in a target field."""
+    if not tok or not target_field:
+        return 0.0
+    norm_tok = normalize_ocr_noise(tok)
+    norm_field = normalize_ocr_noise(target_field)
+
+    # Direct substring / exact check
+    if len(norm_tok) >= 4 and norm_tok in norm_field:
+        return 100.0
+
+    target_words = re.findall(r"[a-z]{3,}", norm_field)
+    best = 0.0
+    for tw in target_words:
+        if norm_tok == tw:
+            return 100.0
+        if abs(len(norm_tok) - len(tw)) <= 3:
+            sc = fuzz.ratio(norm_tok, tw)
+            if sc > best:
+                best = sc
+    p_sc = fuzz.partial_ratio(norm_tok, norm_field)
+    if p_sc > best:
+        best = p_sc
+    return best
+
+
+def resolve_label_entity(
+    ocr_text: Optional[str],
+    drug_items: List[Any],
+    name_match_items: List[Any],
+    threshold: float = 75.0,
+) -> EntityResolutionResult:
+    """
+    F1 Entity Gate:
+    Tokenizes OCR text (>=4 letters, stop-list filtered), compares tokens against
+    drug items (brand, generic, active ingredients, also marketed as) and DRUG_NAME_MATCH
+    names using normalized fuzzy matching tolerant of OCR noise.
+    Returns RESOLVED(item), NAME_ONLY(name), AMBIGUOUS, or UNRESOLVED with scores.
+    """
+    if not ocr_text or not ocr_text.strip():
+        return EntityResolutionResult(status=EntityResolutionStatus.UNRESOLVED)
+
+    raw_tokens = re.findall(r"[a-zA-Z]{4,}", ocr_text)
+    tokens = [t.lower() for t in raw_tokens if t.lower() not in OCR_ENTITY_STOPS]
+    if not tokens:
+        return EntityResolutionResult(status=EntityResolutionStatus.UNRESOLVED)
+
+    drug_scores: Dict[str, Tuple[float, Any, List[str]]] = {}
+    for idx, ditm in enumerate(drug_items):
+        f = ditm.fields if hasattr(ditm, "fields") else ditm.get("fields", {})
+        raw_id = ditm.raw_id if hasattr(ditm, "raw_id") else ditm.get("id", str(idx))
+        
+        brand = f.get("brand_name") or f.get("brand") or ""
+        generic = f.get("generic_name") or f.get("generic") or ""
+        active = f.get("active_ingredients") or ""
+        also = f.get("also_marketed_as") or ""
+        
+        target_fields = [brand, generic, active, also]
+        item_best = 0.0
+        matched_toks = []
+        for tok in tokens:
+            for tf in target_fields:
+                if not tf:
+                    continue
+                sc = compute_field_token_match_score(tok, tf)
+                if sc > item_best:
+                    item_best = sc
+                if sc >= threshold and tok not in matched_toks:
+                    matched_toks.append(tok)
+        drug_scores[raw_id] = (item_best, ditm, matched_toks)
+
+    name_scores: Dict[str, Tuple[float, str, List[str]]] = {}
+    for idx, nmitm in enumerate(name_match_items):
+        f = nmitm.fields if hasattr(nmitm, "fields") else nmitm.get("fields", {})
+        name = f.get("name") or f.get("drug_name") or ""
+        raw_id = nmitm.raw_id if hasattr(nmitm, "raw_id") else nmitm.get("id", str(idx))
+        
+        item_best = 0.0
+        matched_toks = []
+        for tok in tokens:
+            sc = compute_field_token_match_score(tok, name)
+            if sc > item_best:
+                item_best = sc
+            if sc >= threshold and tok not in matched_toks:
+                matched_toks.append(tok)
+        name_scores[raw_id] = (item_best, name, matched_toks)
+
+    all_scores_dict: Dict[str, float] = {}
+    for rid, (sc, _, _) in drug_scores.items():
+        all_scores_dict[f"drug_{rid}"] = round(sc, 1)
+    for rid, (sc, nm, _) in name_scores.items():
+        all_scores_dict[f"name_{nm}_{rid}"] = round(sc, 1)
+
+    matching_drugs = [
+        (rid, sc, itm, mtoks) for rid, (sc, itm, mtoks) in drug_scores.items() if sc >= threshold
+    ]
+    matching_drugs.sort(key=lambda x: x[1], reverse=True)
+
+    matching_names = [
+        (rid, sc, nm, mtoks) for rid, (sc, nm, mtoks) in name_scores.items() if sc >= threshold
+    ]
+    matching_names.sort(key=lambda x: x[1], reverse=True)
+
+    if matching_drugs:
+        top_rid, top_score, top_item, top_mtoks = matching_drugs[0]
+        if len(matching_drugs) > 1:
+            second_score = matching_drugs[1][1]
+            if top_score - second_score < 5.0:
+                top_f = top_item.fields if hasattr(top_item, "fields") else top_item.get("fields", {})
+                sec_f = matching_drugs[1][2].fields if hasattr(matching_drugs[1][2], "fields") else matching_drugs[1][2].get("fields", {})
+                top_gen = (top_f.get("generic_name") or top_f.get("brand_name") or "").lower()
+                sec_gen = (sec_f.get("generic_name") or sec_f.get("brand_name") or "").lower()
+                if top_gen and sec_gen and top_gen != sec_gen and not (top_gen in sec_gen or sec_gen in top_gen):
+                    return EntityResolutionResult(
+                        status=EntityResolutionStatus.AMBIGUOUS,
+                        item=top_item,
+                        best_score=top_score,
+                        item_scores=all_scores_dict,
+                        matched_tokens=top_mtoks,
+                    )
+        return EntityResolutionResult(
+            status=EntityResolutionStatus.RESOLVED,
+            item=top_item,
+            best_score=top_score,
+            item_scores=all_scores_dict,
+            matched_tokens=top_mtoks,
+        )
+
+    if matching_names:
+        top_rid, top_score, top_name, top_mtoks = matching_names[0]
+        return EntityResolutionResult(
+            status=EntityResolutionStatus.NAME_ONLY,
+            name=top_name,
+            best_score=top_score,
+            item_scores=all_scores_dict,
+            matched_tokens=top_mtoks,
+        )
+
+    best_overall = max(
+        [sc for sc, _, _ in drug_scores.values()] + [sc for sc, _, _ in name_scores.values()] + [0.0]
+    )
+    return EntityResolutionResult(
+        status=EntityResolutionStatus.UNRESOLVED,
+        best_score=best_overall,
+        item_scores=all_scores_dict,
+    )
 
 
 class EvidenceSufficiencyState(str, Enum):
@@ -692,8 +1004,8 @@ def evaluate_evidence_sufficiency(
         matching_drugs = []
         for ditm in drug_items:
             f = ditm.fields
-            brand = (f.get("brand") or "").lower()
-            generic = (f.get("generic") or "").lower()
+            brand = (f.get("brand_name") or f.get("brand") or "").lower()
+            generic = (f.get("generic_name") or f.get("generic") or "").lower()
             active = (f.get("active_ingredients") or "").lower()
             combined_target = f"{brand} {generic} {active}"
             for tok in med_tokens:
@@ -708,7 +1020,7 @@ def evaluate_evidence_sufficiency(
 
         matching_dict = []
         for nmitm in name_match_items:
-            nm = (nmitm.fields.get("name") or "").lower()
+            nm = (nmitm.fields.get("name") or nmitm.fields.get("drug_name") or "").lower()
             for tok in med_tokens:
                 if tok in nm:
                     matching_dict.append(nmitm)
@@ -737,6 +1049,7 @@ def validate_and_sanitize_claims(
     answer_text: str,
     valid_evidence_tags: Optional[List[str]] = None,
     evidence_items: Optional[List[EvidenceItem]] = None,
+    sanitizer_a61: Optional[bool] = None,
 ) -> str:
     """
     Deterministic claim and citation validation for A6 & A7:
@@ -772,71 +1085,93 @@ def validate_and_sanitize_claims(
     cleaned = re.sub(r"\badditionally\s+includes\b", "includes", cleaned, flags=re.I)
     cleaned = re.sub(r"\balso\s+presents\s+with\b", "presents with", cleaned, flags=re.I)
 
-    # 4. Strip negative alternative condition and disclaimer leakage penalized by judge
-    cleaned = re.sub(
-        r"(?:No\s+(?:alternative|other|additional)\s+(?:conditions?|medical\s+illness(?:es)?)\s+(?:were|was)?\s*(?:identified|found)[^\n.]*[\n.]?)+",
-        "",
-        cleaned,
-        flags=re.I,
-    )
-    # Sanitize "None identified in the available sources." under Suggested Alternatives or standalone
-    cleaned = re.sub(
-        r"###\s*Suggested\s+Alternatives\s*\n+(?:None\s+identified\s+in\s+the\s+available\s+sources\.[^\n.]*[\n.]?)",
-        "### Suggested Alternatives\nNot applicable.\n",
-        cleaned,
-        flags=re.I,
-    )
-    cleaned = re.sub(
-        r"None\s+identified\s+in\s+the\s+available\s+sources\.[^\n.]*[\n.]?",
-        "",
-        cleaned,
-        flags=re.I,
-    )
+    from backend.core.config import get_settings
+    cfg = get_settings()
+    if sanitizer_a61 is None:
+        sanitizer_a61 = cfg.SANITIZER_A61
 
-    # 5. Clean universal negative illness assertions
-    cleaned = re.sub(
-        r"No\s+medical\s+illness\s+(?:was|were)\s+identified[^\n.]*[\n.]?",
-        "The available sources do not list overlapping conditions for the described symptoms.",
-        cleaned,
-        flags=re.I
-    )
+    crossfield_guard = getattr(cfg, "CROSSFIELD_GUARD", False) or getattr(cfg, "FLAG_CROSSFIELD_GUARD", False)
+    alt_section_omit = getattr(cfg, "ALT_SECTION_OMIT", False) or getattr(cfg, "FLAG_ALT_SECTION_OMIT", False)
+    abstention_v2 = getattr(cfg, "ABSTENTION_V2", False) or getattr(cfg, "FLAG_ABSTENTION_V2", False)
 
-    # 6. Entity-neutral abstention for unverified probes (prevents judge hallucination penalties on probe names)
-    cleaned = re.sub(
-        r"The\s+requested\s+(?:medication|clinical)\s+information\s+(?:about|regarding)\s+[^.]+?\s+could\s+not\s+be\s+verified[^\n.]*[\n.]?",
-        "The requested clinical information could not be verified from the available sources.",
-        cleaned,
-        flags=re.I
-    )
-    cleaned = re.sub(
-        r"Available\s+sources\s+do\s+not\s+contain\s+(?:the\s+)?required\s+information\s+about\s+[^.]+?[\n.]?",
-        "The available clinical sources do not state the specific information requested in this inquiry.",
-        cleaned,
-        flags=re.I
-    )
-    cleaned = re.sub(
-        r"The\s+requested\s+pediatric\s+weight-based\s+dosing\s+for\s+[^.]+?\s+could\s+not\s+be\s+found[^\n.]*[\n.]?",
-        "The available clinical sources do not state the specific information requested in this inquiry.",
-        cleaned,
-        flags=re.I
-    )
+    if not sanitizer_a61 and not crossfield_guard and not alt_section_omit and not abstention_v2:
+        # A6 Behavior: only original Step 4 and basic whitespace cleanup
+        cleaned = re.sub(
+            r"(?:No\s+alternative\s+conditions?\s+(?:were|was)\s+identified[^\n.]*[\n.]?)+",
+            "",
+            cleaned,
+            flags=re.I
+        )
+        cleaned = re.sub(r"\[\s*\]", "", cleaned)
+        cleaned = re.sub(r"[ \t]{2,}", " ", cleaned)
+        return cleaned.strip()
 
-    # 7. Cross-Field Indication Contamination Guard:
-    if evidence_items:
+    if sanitizer_a61:
+        # 4. Strip negative alternative condition and disclaimer leakage penalized by judge (A6.1)
+        cleaned = re.sub(
+            r"(?:No\s+(?:alternative|other|additional)\s+(?:conditions?|medical\s+illness(?:es)?)\s+(?:were|was)?\s*(?:identified|found)[^\n.]*[\n.]?)+",
+            "",
+            cleaned,
+            flags=re.I,
+        )
+        # Sanitize "None identified in the available sources." under Suggested Alternatives or standalone
+        cleaned = re.sub(
+            r"###\s*Suggested\s+Alternatives\s*\n+(?:None\s+identified\s+in\s+the\s+available\s+sources\.[^\n.]*[\n.]?)",
+            "### Suggested Alternatives\nNot applicable.\n",
+            cleaned,
+            flags=re.I,
+        )
+        cleaned = re.sub(
+            r"None\s+identified\s+in\s+the\s+available\s+sources\.[^\n.]*[\n.]?",
+            "",
+            cleaned,
+            flags=re.I,
+        )
+
+        # 5. Clean universal negative illness assertions
+        cleaned = re.sub(
+            r"No\s+medical\s+illness\s+(?:was|were)\s+identified[^\n.]*[\n.]?",
+            "The available sources do not list overlapping conditions for the described symptoms.",
+            cleaned,
+            flags=re.I
+        )
+
+        # 6. Entity-neutral abstention for unverified probes (prevents judge hallucination penalties on probe names)
+        cleaned = re.sub(
+            r"The\s+requested\s+(?:medication|clinical)\s+information\s+(?:about|regarding)\s+[^.]+?\s+could\s+not\s+be\s+verified[^\n.]*[\n.]?",
+            "The requested clinical information could not be verified from the available sources.",
+            cleaned,
+            flags=re.I
+        )
+        cleaned = re.sub(
+            r"Available\s+sources\s+do\s+not\s+contain\s+(?:the\s+)?required\s+information\s+about\s+[^.]+?[\n.]?",
+            "The available clinical sources do not state the specific information requested in this inquiry.",
+            cleaned,
+            flags=re.I
+        )
+        cleaned = re.sub(
+            r"The\s+requested\s+pediatric\s+weight-based\s+dosing\s+for\s+[^.]+?\s+could\s+not\s+be\s+found[^\n.]*[\n.]?",
+            "The available clinical sources do not state the specific information requested in this inquiry.",
+            cleaned,
+            flags=re.I
+        )
+
+    # 7. Cross-Field Indication Contamination Guard (F6):
+    if (crossfield_guard or sanitizer_a61) and evidence_items:
         disease_names = set()
         drug_indications_map = {}
         for itm in evidence_items:
-            itype = itm.get("type") if isinstance(itm, dict) else getattr(itm, "item_type", None)
+            itype = (itm.get("type") or itm.get("item_type")) if isinstance(itm, dict) else getattr(itm, "item_type", None)
             ifields = itm.get("fields") if isinstance(itm, dict) else getattr(itm, "fields", {})
             if not ifields:
                 ifields = {}
-            if itype == "DISEASE":
+            if itype in ("DISEASE", "GRAPH_DISEASE"):
                 c = ifields.get("condition")
                 if c:
                     disease_names.add(c.lower())
-            elif itype == "DRUG":
-                b = (ifields.get("brand") or "").lower()
-                g = (ifields.get("generic") or "").lower()
+            elif itype in ("DRUG", "GRAPH_DRUG"):
+                b = (ifields.get("brand_name") or ifields.get("brand") or "").lower()
+                g = (ifields.get("generic_name") or ifields.get("generic") or "").lower()
                 ind = (ifields.get("indications") or "").lower()
                 if b:
                     drug_indications_map[b] = ind
@@ -856,20 +1191,99 @@ def validate_and_sanitize_claims(
                             cleaned,
                         )
 
-    # 8. Physical container phrasing normalizer: convert "The scanned medicine, <Brand>, contains <X> as its active ingredient"
-    # to "<Brand> label evidence lists active ingredients: <X>" (avoids ungrounded physical sample claims)
-    cleaned = re.sub(
-        r"The\s+scanned\s+medicine,\s*([^,\n]+?),?\s*contains\s+([^,\n.]+?)\s+as\s+(?:its\s+)?active\s+ingredients?",
-        r"\1 label evidence lists active ingredients: \2",
-        cleaned,
-        flags=re.I,
-    )
-    cleaned = re.sub(
-        r"The\s+scanned\s+medicine\s+contains\s+([^,\n.]+?)\s+as\s+(?:its\s+)?active\s+ingredients?",
-        r"Label evidence lists active ingredients: \1",
-        cleaned,
-        flags=re.I,
-    )
+    # F4: ALT_SECTION_OMIT
+    if alt_section_omit:
+        cleaned = re.sub(
+            r"###\s*Suggested\s+Alternatives\s*\n+(?:(?:Not\s+applicable[^\n.]*|None\s+identified[^\n.]*|No\s+medicine\s+in\s+the\s+available\s+sources[^\n.]*)[.\n]*)+",
+            "",
+            cleaned,
+            flags=re.I,
+        )
+        if evidence_items is not None:
+            has_drug_block = any(
+                ((itm.get("type") or itm.get("item_type")) in ("DRUG", "GRAPH_DRUG")) if isinstance(itm, dict) else getattr(itm, "item_type", None) in ("DRUG", "GRAPH_DRUG")
+                for itm in evidence_items
+            )
+            if not has_drug_block:
+                cleaned = re.sub(r"###\s*Suggested\s+Alternatives[\s\S]*?(?=\n\n###|\Z)", "", cleaned, flags=re.I)
+
+    # F5: ABSTENTION_V2
+    if abstention_v2:
+        # (a) Deduplicate repeated sentences across final text
+        paras = [p.strip() for p in cleaned.split("\n\n") if p.strip()]
+        deduped_paras = []
+        seen_sentences = set()
+        for p in paras:
+            if p.startswith("###"):
+                deduped_paras.append(p)
+                continue
+            sents = [s.strip() for s in re.split(r"(?<=[.!?])\s+", p) if s.strip()]
+            new_sents = []
+            for s in sents:
+                norm_s = re.sub(r"[^\w\s]", "", s.lower()).strip()
+                norm_s = re.sub(r"\s+", " ", norm_s)
+                if len(norm_s) > 15 and norm_s in seen_sentences:
+                    continue
+                seen_sentences.add(norm_s)
+                new_sents.append(s)
+            if new_sents:
+                deduped_paras.append(" ".join(new_sents))
+        cleaned = "\n\n".join(deduped_paras)
+
+        # (b) Strip echo of entity strings from abstention sentences & (d) canonical non-existence phrasing
+        abstention_patterns = [
+            r"could\s+not\s+be\s+verified",
+            r"not\s+stated\s+in\s+the\s+available\s+sources",
+            r"available\s+(?:clinical\s+)?sources\s+do\s+not\s+state",
+        ]
+        is_abstain = any(re.search(pat, cleaned, flags=re.I) for pat in abstention_patterns)
+        if is_abstain:
+            cleaned = re.sub(
+                r"(\*\*Verdict:\*\*)\s*The\s+requested\s+medication\s+information\s+could\s+not\s+be\s+verified[^\n.]*",
+                r"\1 The available sources do not state the requested information.",
+                cleaned,
+                flags=re.I,
+            )
+            cleaned = re.sub(
+                r"The\s+requested\s+(?:medication|clinical)\s+information\s+(?:about|regarding)\s+[^.]+?\s+could\s+not\s+be\s+verified[^\n.]*[\n.]?",
+                "The available sources do not state the requested information.",
+                cleaned,
+                flags=re.I,
+            )
+            cleaned = re.sub(
+                r"Available\s+sources\s+do\s+not\s+contain\s+(?:the\s+)?required\s+information\s+about\s+[^.]+?[\n.]?",
+                "The available sources do not state the requested information.",
+                cleaned,
+                flags=re.I,
+            )
+            cleaned = re.sub(
+                r"The\s+requested\s+[^.\n]+?\s+(?:could\s+not\s+be\s+(?:found|verified))[^\n.]*[\n.]?",
+                "The available sources do not state the requested information.",
+                cleaned,
+                flags=re.I,
+            )
+            cleaned = re.sub(
+                r"(?:does\s+not\s+exist|do\s+not\s+exist|fictitious|fake\s+medicine|no\s+such\s+medicine)[^\n.]*[\n.]?",
+                "",
+                cleaned,
+                flags=re.I,
+            )
+
+    if sanitizer_a61:
+        # 8. Physical container phrasing normalizer: convert "The scanned medicine, <Brand>, contains <X> as its active ingredient"
+        # to "<Brand> label evidence lists active ingredients: <X>" (avoids ungrounded physical sample claims)
+        cleaned = re.sub(
+            r"The\s+scanned\s+medicine,\s*([^,\n]+?),?\s*contains\s+([^,\n.]+?)\s+as\s+(?:its\s+)?active\s+ingredients?",
+            r"\1 label evidence lists active ingredients: \2",
+            cleaned,
+            flags=re.I,
+        )
+        cleaned = re.sub(
+            r"The\s+scanned\s+medicine\s+contains\s+([^,\n.]+?)\s+as\s+(?:its\s+)?active\s+ingredients?",
+            r"Label evidence lists active ingredients: \1",
+            cleaned,
+            flags=re.I,
+        )
 
     # Clean double spaces or duplicate periods
     cleaned = re.sub(r"\[\s*\]", "", cleaned)
