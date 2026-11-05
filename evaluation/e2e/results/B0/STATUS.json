@@ -1,0 +1,122 @@
+{
+  "baseline_status": "provisional",
+  "phase": 3,
+  "authoritative_judge_model": "llama3.1:8b",
+  "timestamp": "2026-10-24T18:09:36.398633+00:00",
+  "included_results": [
+    "B0_A6_p1",
+    "B0_A6_p2",
+    "B0_A61_p1",
+    "B0_A61_p2"
+  ],
+  "excluded_results": [
+    {
+      "name": "B0_A6_second_judge",
+      "model": "qwen2.5:3b",
+      "reason": "Unauthorized judge model; preserved as historical diagnostic artifact only."
+    }
+  ],
+  "criteria": {
+    "invalid_rate_threshold": 0.03,
+    "baseline_a6_invalid_rate": 0.0,
+    "baseline_invalid_rate_pass": true,
+    "case_level_mad_threshold": 0.05,
+    "baseline_case_level_mad": 0.0,
+    "case_level_mad_pass": true,
+    "valid_case_coverage_threshold": 0.95,
+    "baseline_valid_case_coverage": 1.0,
+    "valid_case_coverage_pass": true,
+    "unflagged_contamination_count": 0,
+    "unflagged_contamination_pass": true,
+    "human_adjudication_required_for_established": true,
+    "human_adjudication_status": "pending_human_labels",
+    "adjudication_sheet_path": "evaluation/e2e/results/B0/adjudication_sheet.csv",
+    "adjudication_sheet_blind_path": "evaluation/e2e/results/B0/adjudication_sheet_blind.csv",
+    "adjudication_stats_path": null
+  },
+  "candidate_gate_a61": {
+    "invalid_rate_threshold": 0.03,
+    "observed_invalid_rate": 0.05,
+    "invalid_rate_pass": false,
+    "verdict": "INCONCLUSIVE",
+    "gate_verdict": "REJECTED_FOR_PROMOTION (Candidate invalid rate 5.0% exceeds 3.0% threshold)"
+  },
+  "b0_scores": {
+    "all_cases_mean": 0.8021,
+    "all_cases_median": 1.0,
+    "answerable_only_mean": 0.8839,
+    "unanswerable_ragas_on_abstentions_mean": 0.4167,
+    "per_case_mean_scores": {
+      "E2E-001": 0.5,
+      "E2E-004": 0.75,
+      "E2E-005": 1.0,
+      "E2E-008": 1.0,
+      "E2E-009": 0.8,
+      "E2E-021": 0.75,
+      "E2E-024": 1.0,
+      "E2E-025": 1.0,
+      "E2E-027": 1.0,
+      "E2E-032": 1.0,
+      "E2E-034": 1.0,
+      "E2E-035": 1.0,
+      "E2E-036": 1.0,
+      "E2E-037": 1.0,
+      "E2E-041": 0.0,
+      "E2E-042": 1.0,
+      "E2E-044": 1.0,
+      "E2E-052": 1.0,
+      "E2E-055": 1.0,
+      "E2E-056": 1.0,
+      "E2E-059": 1.0,
+      "E2E-062": 0.5,
+      "E2E-063": 1.0,
+      "E2E-065": 0.9091,
+      "E2E-069": 0.75,
+      "E2E-072": 0.875,
+      "E2E-073": 1.0,
+      "E2E-076": 1.0,
+      "E2E-078": 1.0,
+      "E2E-080": 1.0,
+      "E2E-081": 1.0,
+      "E2E-082": 0.3333,
+      "E2E-088": 1.0,
+      "E2E-091": 1.0,
+      "E2E-093": 1.0,
+      "E2E-094": 0.0,
+      "E2E-095": 0.6667,
+      "E2E-097": 0.25,
+      "E2E-099": 0.0,
+      "E2E-100": 0.0
+    }
+  },
+  "test_retest": {
+    "a6": {
+      "case_level_mad": 0.0,
+      "disagreeing_cases_count": 0,
+      "flipped_cases": [],
+      "statement_agreement_rate": 1.0,
+      "total_statements_compared": 187
+    },
+    "a61": {
+      "case_level_mad": 0.0,
+      "disagreeing_cases_count": 0,
+      "flipped_cases": [],
+      "statement_agreement_rate": 1.0,
+      "total_statements_compared": 168
+    }
+  },
+  "candidate_effect_a61_vs_a6": {
+    "intersection_count": 38,
+    "paired_mean_delta": -0.0234,
+    "bootstrap_95_ci": {
+      "mean": -0.0234,
+      "ci_lower": -0.0763,
+      "ci_upper": 0.0315,
+      "std_err": 0.0272,
+      "n_resamples": 10000,
+      "seed": 42
+    },
+    "wins_losses_ties": "4W / 8L / 26T",
+    "verdict": "INCONCLUSIVE"
+  }
+}

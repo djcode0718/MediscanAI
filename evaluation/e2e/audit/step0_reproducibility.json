@@ -1,0 +1,72 @@
+{
+  "timestamp": 1793531071.9140859,
+  "total_cases": 8,
+  "exact_matches": 8,
+  "exact_match_rate_pct": 100.0,
+  "comparisons": [
+    {
+      "case_id": "E2E-001",
+      "exact_match": true,
+      "duration_sec": 18.77,
+      "saved_length": 782,
+      "generated_length": 782,
+      "diff": ""
+    },
+    {
+      "case_id": "E2E-004",
+      "exact_match": true,
+      "duration_sec": 9.6,
+      "saved_length": 733,
+      "generated_length": 733,
+      "diff": ""
+    },
+    {
+      "case_id": "E2E-005",
+      "exact_match": true,
+      "duration_sec": 9.09,
+      "saved_length": 732,
+      "generated_length": 732,
+      "diff": ""
+    },
+    {
+      "case_id": "E2E-008",
+      "exact_match": true,
+      "duration_sec": 10.22,
+      "saved_length": 737,
+      "generated_length": 737,
+      "diff": ""
+    },
+    {
+      "case_id": "E2E-009",
+      "exact_match": true,
+      "duration_sec": 14.75,
+      "saved_length": 706,
+      "generated_length": 706,
+      "diff": ""
+    },
+    {
+      "case_id": "E2E-021",
+      "exact_match": true,
+      "duration_sec": 21.04,
+      "saved_length": 769,
+      "generated_length": 769,
+      "diff": ""
+    },
+    {
+      "case_id": "E2E-024",
+      "exact_match": true,
+      "duration_sec": 32.31,
+      "saved_length": 1049,
+      "generated_length": 1049,
+      "diff": ""
+    },
+    {
+      "case_id": "E2E-025",
+      "exact_match": true,
+      "duration_sec": 25.73,
+      "saved_length": 687,
+      "generated_length": 687,
+      "diff": ""
+    }
+  ]
+}

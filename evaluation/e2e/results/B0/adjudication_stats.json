@@ -1,0 +1,31 @@
+{
+  "status": "completed",
+  "total_items": 136,
+  "labeled_items": 136,
+  "unlabeled_items": 0,
+  "unclear_items": 2,
+  "decisive_clean_items": 127,
+  "input_file": "evaluation/e2e/results/B0/adjudication_sheet_blind.csv",
+  "authoritative_judge_model": "llama3.1:8b",
+  "metrics": {
+    "overall_judge_human_agreement": 0.7559,
+    "judge_negative_precision": 0.3864,
+    "judge_false_negative_rate": 0.2547
+  },
+  "breakdown": {
+    "judge_negative_total": 44,
+    "judge_negative_confirmed_unsupported": 17,
+    "judge_positive_total": 83,
+    "judge_positive_confirmed_supported": 79,
+    "false_negatives": 27,
+    "false_positives": 4
+  },
+  "contaminated_statements_audit": {
+    "case_id": "E2E-080",
+    "total_contaminated_statements": 7,
+    "labeled_contaminated_statements": 7,
+    "confirmed_unsupported": 4,
+    "notes": "Prompt few-shot contamination statements isolated from medical agreement rate."
+  },
+  "criteria_met_for_established": false
+}
