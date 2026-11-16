@@ -30,7 +30,27 @@ class TestAnalysisPersistence(unittest.TestCase):
         backend.main.startup_complete = True
         backend.main.ocr_prewarmed = True
         self.client = TestClient(app)
-        self.db = SessionLocal()
+        self.is_sqlite = False
+        try:
+            self.db = SessionLocal()
+            self.db.execute(select(1))
+        except Exception:
+            self.is_sqlite = True
+            from sqlalchemy.pool import StaticPool
+            from sqlalchemy import create_engine
+            from sqlalchemy.orm import sessionmaker
+            from backend.db.base import Base
+            from backend.db.session import get_db
+
+            sqlite_engine = create_engine(
+                "sqlite:///:memory:",
+                connect_args={"check_same_thread": False},
+                poolclass=StaticPool
+            )
+            Base.metadata.create_all(bind=sqlite_engine)
+            SQLiteSession = sessionmaker(autocommit=False, autoflush=False, bind=sqlite_engine)
+            self.db = SQLiteSession()
+            app.dependency_overrides[get_db] = lambda: SQLiteSession()
 
         self.user_a_email = "phase3_user_a@mediscan.ai"
         self.user_b_email = "phase3_user_b@mediscan.ai"
@@ -75,6 +95,9 @@ class TestAnalysisPersistence(unittest.TestCase):
                 self.db.delete(u)
         self.db.commit()
         self.db.close()
+        if getattr(self, "is_sqlite", False):
+            from backend.db.session import get_db
+            app.dependency_overrides.pop(get_db, None)
 
     def test_01_analysis_persistence_and_schema_minimization(self):
         """Verify that analysis records persist structured outputs without raw audio/image blobs."""
@@ -210,7 +233,8 @@ class TestAnalysisPersistence(unittest.TestCase):
             record_audit_event(
                 event_type="TEST_ISOLATED_EVENT",
                 user_id=new_user_id,
-                metadata={"password": "SecretPasswordShouldBeFiltered", "modality": "text"}
+                metadata={"password": "SecretPasswordShouldBeFiltered", "modality": "text"},
+                db=self.db
             )
             filtered_record = self.db.execute(
                 select(AuditLog).where(
