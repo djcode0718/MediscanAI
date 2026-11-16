@@ -13,12 +13,15 @@ def generate_safe_temp_path(extension: str) -> str:
     Generate an unguessable randomized temporary file path in the OS temp directory.
     Never uses user-supplied filenames to prevent path traversal or collision.
     """
-    if extension and not extension.startswith("."):
-        clean_ext = f".{extension.lower()}"
-    elif extension:
-        clean_ext = extension.lower()
-    else:
+    if not extension:
         clean_ext = ".tmp"
+    else:
+        # Extract purely the file extension to strip any directory traversal
+        parts = extension.split(".")
+        ext = parts[-1].lower() if len(parts) > 1 else extension.lower()
+        # Keep alphanumeric extension characters only
+        ext = "".join(c for c in ext if c.isalnum())
+        clean_ext = f".{ext}" if ext else ".tmp"
     unique_filename = f"mediscan_{uuid.uuid4().hex}{clean_ext}"
     return os.path.join(tempfile.gettempdir(), unique_filename)
 

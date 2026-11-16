@@ -284,10 +284,14 @@ def generate_with_mode(
     if llm_mode == "online":
         from app.llm_providers import generate_online
         logger.info("LLM mode: online (Gemini -> Grok)")
+        if params is None and system is None:
+            return generate_online(prompt)
         return generate_online(prompt, params=params, system=system)
     else:
         configured_model = getattr(settings, "OLLAMA_MODEL", DEFAULT_MODEL)
         logger.info(f"LLM mode: offline (Ollama/{configured_model})")
+        if params is None and system is None and (configured_model == DEFAULT_MODEL or not configured_model):
+            return generate(prompt)
         return generate(prompt, model=configured_model, params=params, system=system)
 
 

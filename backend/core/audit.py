@@ -47,11 +47,9 @@ def record_audit_event(
             metadata_json=sanitized_meta
         )
         session.add(audit_entry)
-        if own_session:
-            session.commit()
+        session.commit()
     except Exception as e:
-        if own_session:
-            session.rollback()
+        session.rollback()
         logger.error(f"Failed to record audit event '{event_type}': {e}", exc_info=True)
     finally:
         if own_session:
