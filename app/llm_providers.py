@@ -318,10 +318,10 @@ def generate_online(
 ) -> str:
     """
     Execute the 4-step online provider fallback chain:
-      1. Gemini (gemini-2.0-flash)
-      2. Gemini (gemini-1.5-flash)
-      3. Groq   (llama-3.3-70b-versatile)
-      4. Groq   (llama-3.1-8b-instant)
+      1. Gemini (gemini-3.6-flash via GEMINI_MODEL_1)
+      2. Gemini (gemini-3.7-flash via GEMINI_MODEL_2)
+      3. Groq   (openai/gpt-oss-120b via GROQ_MODEL_1)
+      4. Groq   (openai/gpt-oss-20b via GROQ_MODEL_2)
 
     Each step is attempted only after the previous one fails.
     Does NOT fall back to Ollama — online mode stays online.
