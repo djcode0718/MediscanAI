@@ -284,3 +284,39 @@ evaluation/e2e/results/B0/adjudication_sheet.csv
 
 
 README-dummy.md
+
+# ==============================================================================
+# Local-only audit reports and generated engineering documentation
+# Preserved on disk for reference; excluded from Git tracking
+# ==============================================================================
+
+# Historical evaluation audit reports and benchmark adjudication
+/evaluation/retrieval/phase_*
+!/evaluation/retrieval/phase_1_2_b_emergency_guardrail/
+/evaluation/retrieval/phase_1_2_b_emergency_guardrail/*
+!/evaluation/retrieval/phase_1_2_b_emergency_guardrail/guardrail_design.md
+/evaluation/retrieval/results/
+/evaluation/ragas/
+/evaluation/model_pilot/
+/evaluation/benchmark/candidate_judgments_audit_*
+/evaluation/benchmark/evidence_adjudication/
+/evaluation/benchmark/human_review/
+/evaluation/benchmark/narrative_references/
+/evaluation/benchmark/research_adjudication/
+/evaluation/e2e/results/
+/evaluation/e2e/cache_quarantine/
+/evaluation/e2e/audit/
+!/evaluation/e2e/audit/methodology_redesign/
+/evaluation/e2e/audit/methodology_redesign/*
+!/evaluation/e2e/audit/methodology_redesign/MEDISCANAI_EVALUATOR_METHODOLOGY.md
+/evaluation/results/
+/results/
+
+# Local deployment and runtime reports
+/deployment/assessment/
+/deployment/logs/
+/deployment/*.log
+
+# Scratch and temporary markdown files
+/GIT_PRE_MERGE_AUDIT.md
+/p4_report.md
