@@ -1,0 +1,50 @@
+# MediScanAI Production Caddyfile
+# Automatic HTTPS, Reverse Proxy, and Security Headers
+
+{
+    # Global options
+    admin off
+    # Restrict log exposure
+    log {
+        output stdout
+        format json
+        level INFO
+    }
+}
+
+# The site address can be configured via environment variable DOMAIN_NAME
+# Default fallback to :80 for direct IP or local verification
+{$DOMAIN_NAME::80} {
+    # Encode responses using modern gzip and zstd compression
+    encode zstd gzip
+
+    # Request body size limit (matching maximum multimodal upload bounds: 30MB)
+    request_body {
+        max_size 30MB
+    }
+
+    # Security Headers
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "camera=(), microphone=(self), geolocation=()"
+        -Server
+    }
+
+    # Reverse proxy all traffic to FastAPI backend service
+    reverse_proxy backend:8000 {
+        # Transparent proxy headers
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+
+        # Health check configuration for upstream backend
+        health_uri /api/health
+        health_interval 30s
+        health_timeout 5s
+    }
+}
+
