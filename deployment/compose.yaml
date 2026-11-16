@@ -1,0 +1,124 @@
+# MediScanAI Production Docker Compose Stack
+# Target: Oracle Cloud Always Free (Ampere A1 ARM64) / Linux x86_64
+# Security: Zero exposed internal ports, non-root execution, internal bridge network
+
+services:
+  # ----------------------------------------------------------------------------
+  # PostgreSQL Database Service
+  # ----------------------------------------------------------------------------
+  postgres:
+    image: postgres:15-alpine
+    container_name: mediscanai-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-mediscanai}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres_secure_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-mediscanai}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - internal-net
+    # Port 5432 is strictly internal; NEVER map to host 0.0.0.0 in production
+    expose:
+      - "5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+
+  # ----------------------------------------------------------------------------
+  # FastAPI Multimodal Backend Service
+  # ----------------------------------------------------------------------------
+  backend:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile
+    image: mediscanai-backend:production
+    container_name: mediscanai-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      APP_ENV: production
+      LLM_MODE: ${LLM_MODE:-online}
+      WAIT_FOR_DB: "true"
+      RUN_MIGRATIONS: "true"
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-mediscanai}:${POSTGRES_PASSWORD:-postgres_secure_pass}@postgres:5432/${POSTGRES_DB:-mediscanai}
+    volumes:
+      # Read-only mount for static knowledge assets and precomputed FAISS indices
+      - ../data:/app/data:ro
+      - ../indexes:/app/indexes:ro
+      # Named volume for persistent Hugging Face / Paddle cache across restarts
+      - model_cache:/home/appuser/.cache
+    networks:
+      - internal-net
+    expose:
+      - "8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+    deploy:
+      resources:
+        limits:
+          memory: 4096M
+
+  # ----------------------------------------------------------------------------
+  # Caddy Reverse Proxy & Automatic TLS Termination
+  # ----------------------------------------------------------------------------
+  caddy:
+    image: caddy:2-alpine
+    container_name: mediscanai-caddy
+    restart: unless-stopped
+    ports:
+      - "${PORT_HTTP:-80}:80"
+      - "${PORT_HTTPS:-443}:443"
+    environment:
+      DOMAIN_NAME: ${DOMAIN_NAME:-:80}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - internal-net
+    depends_on:
+      backend:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+# ------------------------------------------------------------------------------
+# Persistent Volumes
+# ------------------------------------------------------------------------------
+volumes:
+  postgres_data:
+    name: mediscanai_postgres_data
+  model_cache:
+    name: mediscanai_model_cache
+  caddy_data:
+    name: mediscanai_caddy_data
+  caddy_config:
+    name: mediscanai_caddy_config
+
+# ------------------------------------------------------------------------------
+# Isolated Internal Network
+# ------------------------------------------------------------------------------
+networks:
+  internal-net:
+    name: mediscanai_internal_net
+    driver: bridge
+

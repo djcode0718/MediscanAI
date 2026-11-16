@@ -32,6 +32,9 @@ class TestAuthSuite(unittest.TestCase):
     """
 
     def setUp(self):
+        import backend.main
+        backend.main.startup_complete = True
+        backend.main.ocr_prewarmed = True
         self.client = TestClient(app)
         self.db = SessionLocal()
         self.test_emails = [

@@ -1,15 +1,40 @@
+# .dockerignore
+# Exclude version control and development files
 .git
 .gitignore
 .env
-.pytest_cache
+.env.*
+!.env.example
+.DS_Store
+*.swp
+*.swo
+
+# Exclude caches and logs
 __pycache__
 *.pyc
 *.pyo
 *.pyd
 *.log
-.DS_Store
-node_modules
-frontend/dist
-frontend/node_modules
+.pytest_cache
 tests/.pytest_cache
+.coverage
+htmlcov
+
+# Exclude frontend source & build artifacts
+node_modules
+frontend/node_modules
+frontend/dist
+
+# Exclude scratch, temporary and evaluation artifacts
+evaluation
+results
 scratch
+
+# Exclude local deployment logs
+deployment/logs
+deployment/*.log
+
+# Datasets and indexes are mounted as host volumes at runtime
+# Excluded from build context to reduce image build context size
+data
+indexes

@@ -66,9 +66,17 @@ def client(db_session: Session) -> Generator[TestClient, None, None]:
     app.dependency_overrides[get_db] = override_get_db
     slot_manager.reset()
 
+    import backend.main
+    orig_startup = backend.main.startup_complete
+    orig_ocr = backend.main.ocr_prewarmed
+    backend.main.startup_complete = True
+    backend.main.ocr_prewarmed = True
+
     with TestClient(app) as test_client:
         yield test_client
 
+    backend.main.startup_complete = orig_startup
+    backend.main.ocr_prewarmed = orig_ocr
     app.dependency_overrides.clear()
     slot_manager.reset()
 

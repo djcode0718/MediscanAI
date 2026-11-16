@@ -22,6 +22,22 @@ def get_ocr_model():
                 print(f"[OCR] PaddleOCR initialization: {time.perf_counter()-_t:.2f}s")
     return _ocr_model
 
+def prewarm_ocr() -> bool:
+    """
+    Mandatory startup pre-warming for PaddleOCR.
+    Executes a synthetic in-memory prediction to prime OpenMP thread pools
+    and verify native C++ inference stability before Faster-Whisper is initialized.
+    Does NOT perform disk I/O or create persistent artifacts.
+    Raises RuntimeError if initialization or inference fails.
+    """
+    model = get_ocr_model()
+    dummy = np.ones((64, 128, 3), dtype=np.uint8) * 255
+    with _ocr_lock:
+        res = model.predict(dummy)
+    if res is None or len(res) == 0:
+        raise RuntimeError("PaddleOCR synthetic pre-warm inference returned empty result.")
+    return True
+
 def extract_with_preview(img_path: str):
     """Run OCR on image and return (texts, preview_image_with_boxes)."""
     model = get_ocr_model()

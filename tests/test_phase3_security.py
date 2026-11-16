@@ -36,6 +36,9 @@ class TestPhase3Security(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        import backend.main
+        backend.main.startup_complete = True
+        backend.main.ocr_prewarmed = True
         cls.client = TestClient(app)
         cls.db = SessionLocal()
         cls.test_email = "phase3_sec_user@mediscan.ai"

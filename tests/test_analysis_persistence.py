@@ -26,6 +26,9 @@ class TestAnalysisPersistence(unittest.TestCase):
     """
 
     def setUp(self):
+        import backend.main
+        backend.main.startup_complete = True
+        backend.main.ocr_prewarmed = True
         self.client = TestClient(app)
         self.db = SessionLocal()
 
@@ -184,6 +187,7 @@ class TestAnalysisPersistence(unittest.TestCase):
         self.assertEqual(bad_login_res.status_code, 401)
 
         # 4. Check AuditLog table records
+        self.db.rollback()
         audit_records = self.db.execute(
             select(AuditLog).where(AuditLog.user_id == new_user_id)
         ).scalars().all()
@@ -225,6 +229,96 @@ class TestAnalysisPersistence(unittest.TestCase):
         if u:
             self.db.delete(u)
         self.db.commit()
+
+    def test_04_audit_transaction_ownership_and_caller_isolation(self):
+        """
+        Verify that record_audit_event respects database transaction ownership:
+        - When isolated=True (default), does not commit or roll back caller's session.
+        - Caller's pending uncommitted changes remain uncommitted.
+        - Audit events remain durable even after caller rollback.
+        - Audit write errors do not invalidate the caller's session.
+        - When isolated=False, audit events commit/rollback atomically with caller.
+        """
+        from sqlalchemy.orm import Session
+        bind = self.db.get_bind()
+        caller_session = Session(bind=bind, expire_on_commit=False)
+
+        pending_email = "audit_isolation_pending@mediscan.ai"
+        # Cleanup if exists
+        old = self.db.execute(select(User).where(User.email == pending_email)).scalar_one_or_none()
+        if old:
+            self.db.delete(old)
+            self.db.commit()
+
+        try:
+            # 1. Caller adds a pending change without committing
+            pending_user = User(
+                email=pending_email,
+                full_name="Pending Isolation User",
+                password_hash="hashed_pass_test"
+            )
+            caller_session.add(pending_user)
+            self.assertIn(pending_user, caller_session.new)
+
+            # 2. Call record_audit_event with isolated=True (default)
+            record_audit_event(
+                event_type="ISOLATED_DURABLE_EVENT",
+                metadata={"test": "transaction_ownership"},
+                db=caller_session,
+                isolated=True
+            )
+
+            # 3. Verify caller's pending change was NOT committed prematurely
+            self.assertIn(pending_user, caller_session.new)
+            check_u = self.db.execute(select(User).where(User.email == pending_email)).scalar_one_or_none()
+            self.assertIsNone(check_u, "Caller's pending changes must NOT be committed by record_audit_event")
+
+            # 4. Verify audit log was committed and is durable in its own transaction
+            audit_record = self.db.execute(
+                select(AuditLog).where(AuditLog.event_type == "ISOLATED_DURABLE_EVENT")
+            ).scalars().first()
+            self.assertIsNotNone(audit_record, "Isolated audit event must be persisted immediately")
+
+            # 5. Caller rolls back their business transaction
+            caller_session.rollback()
+
+            # 6. Verify caller's pending user was rolled back, but audit log remains durable
+            check_u_after_rollback = self.db.execute(select(User).where(User.email == pending_email)).scalar_one_or_none()
+            self.assertIsNone(check_u_after_rollback)
+
+            audit_still_exists = self.db.execute(
+                select(AuditLog).where(AuditLog.event_type == "ISOLATED_DURABLE_EVENT")
+            ).scalars().first()
+            self.assertIsNotNone(audit_still_exists, "Audit log must remain durable after caller rollback")
+
+            # 7. Test non-isolated mode (isolated=False) rolls back with caller
+            shared_user = User(
+                email="audit_shared_test@mediscan.ai",
+                full_name="Shared User",
+                password_hash="hashed_pass_test"
+            )
+            caller_session.add(shared_user)
+            record_audit_event(
+                event_type="SHARED_TRANSACTION_EVENT",
+                db=caller_session,
+                isolated=False
+            )
+            # Both roll back together
+            caller_session.rollback()
+            shared_audit = self.db.execute(
+                select(AuditLog).where(AuditLog.event_type == "SHARED_TRANSACTION_EVENT")
+            ).scalars().first()
+            self.assertIsNone(shared_audit, "Shared audit event must roll back when caller rolls back")
+
+        finally:
+            caller_session.close()
+            # Cleanup audit records created
+            recs = self.db.execute(
+                select(AuditLog).where(AuditLog.event_type.in_(["ISOLATED_DURABLE_EVENT", "SHARED_TRANSACTION_EVENT"]))
+            ).scalars().all()
+            for r in recs:
+                self.db.delete(r)
+            self.db.commit()
 
 
 if __name__ == "__main__":

@@ -148,6 +148,7 @@ def login(
         user_agent=request.headers.get("user-agent"),
         db=db
     )
+    db.commit()
 
     return TokenResponse(
         access_token=access_token,

@@ -63,6 +63,9 @@ app.include_router(analyses_router)
 # Global model instances loaded lazily or on startup
 pipeline_instance: Optional[Pipeline] = None
 transcriber_instance: Optional[WhisperTranscriber] = None
+ocr_prewarmed: bool = False
+startup_complete: bool = False
+startup_failure_reason: Optional[str] = None
 
 
 def get_pipeline() -> Pipeline:
@@ -97,6 +100,7 @@ def get_transcriber() -> WhisperTranscriber:
 
 @app.on_event("startup")
 async def startup_event():
+    global pipeline_instance, transcriber_instance, ocr_prewarmed, startup_complete, startup_failure_reason
     _t_startup = time.perf_counter()
     print("\n" + "=" * 60)
     print("[STARTUP] MediScanAI initialization beginning...")
@@ -111,31 +115,57 @@ async def startup_event():
     else:
         print(f"[STARTUP] PostgreSQL connection: {_db_s:.2f}s ⚠️  (failed — will retry on request)")
 
-    # 2. Pre-warm Pipeline (embedding model + FAISS + BM25 + CrossEncoder)
+    # 2. Mandatory: Initialize and Pre-warm PaddleOCR FIRST (Primes OpenMP context)
+    _t_ocr = time.perf_counter()
+    try:
+        from app.ocr import prewarm_ocr
+        prewarm_ocr()
+        ocr_prewarmed = True
+        print(f"[STARTUP] PaddleOCR pre-warm: {time.perf_counter()-_t_ocr:.2f}s ✅")
+    except Exception as e:
+        ocr_prewarmed = False
+        startup_complete = False
+        startup_failure_reason = f"PaddleOCR mandatory pre-warming failed: {e}"
+        logger.critical(f"FATAL: PaddleOCR mandatory pre-warming failed: {e}", exc_info=True)
+        print(f"[STARTUP] PaddleOCR pre-warm: {time.perf_counter()-_t_ocr:.2f}s ❌ (FATAL: {e})")
+        # Abort startup to avoid native OpenMP crash and invalid readiness state
+        return
+
+    # 3. Pre-warm Whisper (STT) SECOND — only after PaddleOCR succeeds
+    _t_whisper = time.perf_counter()
+    try:
+        get_transcriber()
+        print(f"[STARTUP] Whisper model total: {time.perf_counter()-_t_whisper:.2f}s ✅")
+    except Exception as e:
+        startup_complete = False
+        startup_failure_reason = f"Whisper speech model failed to load: {e}"
+        logger.critical(f"FATAL: Whisper initialization failed: {e}", exc_info=True)
+        print(f"[STARTUP] Whisper model: {time.perf_counter()-_t_whisper:.2f}s ❌ (FATAL: {e})")
+        return
+
+    # 4. Pre-warm Pipeline (embedding model + FAISS + BM25 + CrossEncoder)
     _t_pipeline = time.perf_counter()
     try:
         get_pipeline()
         print(f"[STARTUP] RAG pipeline total: {time.perf_counter()-_t_pipeline:.2f}s ✅")
     except Exception as e:
-        print(f"[STARTUP] RAG pipeline: {time.perf_counter()-_t_pipeline:.2f}s ⚠️  (skipped/failed: {e})")
+        startup_complete = False
+        startup_failure_reason = f"RAG pipeline failed to load: {e}"
+        logger.critical(f"FATAL: RAG pipeline initialization failed: {e}", exc_info=True)
+        print(f"[STARTUP] RAG pipeline: {time.perf_counter()-_t_pipeline:.2f}s ❌ (FATAL: {e})")
+        return
 
-    # 3. Pre-warm Whisper
-    _t_whisper = time.perf_counter()
-    try:
-        get_transcriber()
-        # [STARTUP] Whisper model line already printed inside WhisperTranscriber.__init__
-    except Exception as e:
-        print(f"[STARTUP] Whisper model: {time.perf_counter()-_t_whisper:.2f}s ⚠️  (skipped/failed: {e})")
-
-    # 4. Check Emergency Guardrail status
+    # 5. Check Emergency Guardrail status
     if settings.EMERGENCY_GUARDRAIL_ENABLED:
         print(f"[STARTUP] Emergency Triage Guardrail: ENABLED (Fast-path: {settings.EMERGENCY_GUARDRAIL_FAST_PATH}) 🚨")
     else:
         print("[STARTUP] Emergency Triage Guardrail: DISABLED (baseline mode) 🛡️")
 
+    startup_complete = True
+    startup_failure_reason = None
     _total_s = time.perf_counter() - _t_startup
     print("[STARTUP] " + "-" * 50)
-    print(f"[STARTUP] Total initialization: {_total_s:.2f}s")
+    print(f"[STARTUP] Total initialization: {_total_s:.2f}s ✅")
     print("=" * 60 + "\n")
 
 
@@ -168,11 +198,24 @@ def health_check():
 def readiness_check():
     """
     Readiness probe: answers whether this instance is capable of serving analysis requests.
-    Checks PostgreSQL connectivity, model load status, and lightweight Ollama availability.
+    Checks PostgreSQL connectivity, model load status, PaddleOCR pre-warming, and LLM availability.
+    When LLM_MODE is 'online', local Ollama is not required.
     """
     db_ok = check_db_connection()
-    models_ready = pipeline_instance is not None and transcriber_instance is not None
-    ollama_ok = check_ollama_status()
+    models_ready = (
+        startup_complete
+        and ocr_prewarmed
+        and pipeline_instance is not None
+        and transcriber_instance is not None
+    )
+
+    is_online_llm = (settings.LLM_MODE == "online")
+    if is_online_llm:
+        ollama_ok = True
+        ollama_status_str = "not_required"
+    else:
+        ollama_ok = check_ollama_status()
+        ollama_status_str = "available" if ollama_ok else "unavailable"
 
     is_ready = db_ok and models_ready and ollama_ok
     status_code = status.HTTP_200_OK if is_ready else status.HTTP_503_SERVICE_UNAVAILABLE
@@ -184,13 +227,16 @@ def readiness_check():
         "components": {
             "database": "connected" if db_ok else "disconnected",
             "models_loaded": "ready" if models_ready else "not_loaded",
-            "ollama_service": "available" if ollama_ok else "unavailable"
+            "ocr_prewarmed": "ready" if ocr_prewarmed else "failed_or_pending",
+            "ollama_service": ollama_status_str
         },
         "concurrency": {
             "active_slots": slot_manager.active_slots,
             "max_concurrent": slot_manager.max_concurrent
         }
     }
+    if startup_failure_reason:
+        response_payload["startup_error"] = startup_failure_reason
 
     if not is_ready:
         raise HTTPException(
@@ -214,8 +260,15 @@ async def analyze(
     Protected, Rate-Limited, Concurrency-Controlled Multimodal Analysis Endpoint.
     LLM provider is determined by LLM_MODE in server config (.env), not by the client.
     """
+    # 0. Startup & Pre-Warm Verification: Do not accept analysis requests if startup failed or pre-warm not complete
+    if not (ocr_prewarmed and startup_complete):
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"MediScanAI is still initializing or encountered a startup error: {startup_failure_reason or 'Required ML components not ready.'}"
+        )
+
     # Read server-configured LLM mode (set via LLM_MODE in .env)
-    llm_mode = get_settings().LLM_MODE
+    llm_mode = getattr(settings, "LLM_MODE", None) or get_settings().LLM_MODE
 
     # 1. Rate Limiting Check (Request frequency)
     rate_key = f"user:{current_user.id}"

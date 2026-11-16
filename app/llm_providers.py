@@ -317,8 +317,52 @@ def generate_online(
     system: Optional[str] = None,
 ) -> str:
     """
-    Execute the 4-step online provider fallback chain.
+    Execute the 4-step online provider fallback chain:
+      1. Gemini (gemini-3.6-flash via GEMINI_MODEL_1)
+      2. Gemini (gemini-3.7-flash via GEMINI_MODEL_2)
+      3. Groq   (openai/gpt-oss-120b via GROQ_MODEL_1)
+      4. Groq   (openai/gpt-oss-20b via GROQ_MODEL_2)
+
+    Each step is attempted only after the previous one fails.
+    Does NOT fall back to Ollama — online mode stays online.
+    Raises OnlineProviderError if all four attempts fail.
     """
-    text, _ = generate_online_meta(prompt, params=params, system=system)
-    return text
+    cfg = _get_cfg()
+    steps: List[tuple] = [
+        ("gemini", cfg.GEMINI_MODEL_1),
+        ("gemini", cfg.GEMINI_MODEL_2),
+        ("groq",   cfg.GROQ_MODEL_1),
+        ("groq",   cfg.GROQ_MODEL_2),
+    ]
+
+    last_error: Optional[OnlineProviderError] = None
+
+    for provider, model in steps:
+        try:
+            if provider == "gemini":
+                logger.info("Online mode: trying Gemini/%s", model)
+                if params or system:
+                    text, _ = call_gemini_meta(prompt, model, params=params, system=system)
+                    return text
+                return call_gemini(prompt, model)
+            else:
+                logger.info("Online mode: trying Groq/%s", model)
+                if params or system:
+                    text, _ = call_groq_meta(prompt, model, params=params, system=system)
+                    return text
+                return call_groq(prompt, model)
+        except OnlineProviderError as exc:
+            logger.warning(
+                "Online provider %s/%s failed: %s — trying next.",
+                provider, model, exc.message,
+            )
+            last_error = exc
+
+    # All four failed
+    logger.error("All online providers failed. Last error: %s", last_error.message if last_error else "unknown")
+    raise OnlineProviderError(
+        "All online providers (Gemini x2, Groq x2) are currently unavailable. "
+        "Please try again later or switch to Offline mode.",
+        provider="all",
+    )
 

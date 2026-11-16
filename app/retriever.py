@@ -1,7 +1,8 @@
 import os
 import time
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
-os.environ["OMP_NUM_THREADS"] = "1"
+# Note: OMP_NUM_THREADS must NOT be forced to "1" because PaddlePaddle's
+# LCNet C++ tensor dispatching crashes with SIGSEGV (code 139) under OMP_NUM_THREADS=1.
 
 import faiss
 
@@ -57,26 +58,26 @@ class BM25Index:
         self.k1 = k1
         self.b = b
         self.N = len(corpus)
-        
+
         self.doc_lengths = []
         self.doc_term_freqs = []  # list of Dict[str, int]
-        
+
         self.df = {}
         for doc in corpus:
             text = text_field_extractor(doc) or ""
             tokens = self._tokenize(text)
             self.doc_lengths.append(len(tokens))
-            
+
             tf = {}
             for t in tokens:
                 tf[t] = tf.get(t, 0) + 1
             self.doc_term_freqs.append(tf)
-            
+
             for t in tf.keys():
                 self.df[t] = self.df.get(t, 0) + 1
-                
+
         self.avgdl = sum(self.doc_lengths) / self.N if self.N > 0 else 1.0
-        
+
         # Calculate IDF values
         self.idf = {}
         for term, freq in self.df.items():
@@ -91,25 +92,25 @@ class BM25Index:
         query_tokens = self._tokenize(query)
         if not query_tokens:
             return []
-            
+
         scores = []
         for idx in range(self.N):
             score = 0.0
             tf_dict = self.doc_term_freqs[idx]
             doc_len = self.doc_lengths[idx]
-            
+
             for token in query_tokens:
                 if token not in tf_dict:
                     continue
                 tf = tf_dict[token]
                 idf = self.idf.get(token, 0.0)
-                
+
                 numerator = tf * (self.k1 + 1)
                 denominator = tf + self.k1 * (1.0 - self.b + self.b * (doc_len / self.avgdl))
                 score += idf * (numerator / denominator)
-                
+
             scores.append((idx, score))
-            
+
         scores.sort(key=lambda x: x[1], reverse=True)
         return scores[:top_k]
 
@@ -119,23 +120,23 @@ def rrf_fuse(faiss_results: List[Tuple[str, float, dict]], bm25_results: List[Tu
     Fuses rankings from FAISS (Euclidean/cosine distance) and BM25 using Reciprocal Rank Fusion.
     """
     scores = {}
-    
+
     # Cosine/Euclidean distance from FAISS: lower score is closer (assumed sorted ascending)
     for rank, (key, score, obj) in enumerate(faiss_results, 1):
         if key not in scores:
             scores[key] = {'rrf_score': 0.0, 'obj': obj}
         scores[key]['rrf_score'] += 1.0 / (k + rank)
-        
+
     # BM25 scores: higher score is better (assumed sorted descending)
     for rank, (key, score, obj) in enumerate(bm25_results, 1):
         if key not in scores:
             scores[key] = {'rrf_score': 0.0, 'obj': obj}
         scores[key]['rrf_score'] += 1.0 / (k + rank)
-        
+
     fused_results = []
     for key, val in scores.items():
         fused_results.append((key, val['rrf_score'], val['obj']))
-        
+
     fused_results.sort(key=lambda x: x[1], reverse=True)
     return fused_results
 
@@ -158,20 +159,20 @@ class CrossEncoderReranker:
     def rerank(self, query: str, candidates: List[Tuple[str, float, dict]], index_name: str, top_k: int = 5) -> List[Tuple[str, float, dict]]:
         if not candidates:
             return []
-        
+
         self.load_model()
         pairs = []
         for key, score, obj in candidates:
             doc_text = extract_text_for_bm25(index_name, obj)
             pairs.append((query, doc_text))
-            
+
         with self._lock:
             scores = self.model.predict(pairs)
-        
+
         reranked = []
         for idx, (key, score, obj) in enumerate(candidates):
             reranked.append((key, float(scores[idx]), obj))
-            
+
         reranked.sort(key=lambda x: x[1], reverse=True)
         return reranked[:top_k]
 

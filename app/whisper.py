@@ -1,10 +1,10 @@
-from faster_whisper import WhisperModel
 import os
 import time
 import threading
 
 class WhisperTranscriber:
     def __init__(self, model_size="base"):
+        from faster_whisper import WhisperModel
         self.model_size = model_size
         _t = time.perf_counter()
         self.model = WhisperModel(self.model_size, device="cpu", compute_type="int8")
