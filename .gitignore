@@ -320,3 +320,16 @@ README-dummy.md
 # Scratch and temporary markdown files
 /GIT_PRE_MERGE_AUDIT.md
 /p4_report.md
+
+# Granular P2 audit reports (synthesized into FINAL_PROMOTION_GATE_REPORT.md)
+/deployment/P2_FULL_REGRESSION_REPORT.md
+/deployment/P2_DOCKER_STORAGE_AUDIT.md
+/deployment/P2_MAC_MEMORY_AUDIT.md
+/deployment/P2_ML_RUNTIME_RELIABILITY_AUDIT.md
+/deployment/P2_NEO4J_RESIDUAL_DEPENDENCY_AUDIT.md
+
+# Documentation transition and verification working artifacts
+/deployment/GIT_DOCUMENTATION_CLASSIFICATION.md
+/deployment/PROPOSED_GIT_DOCUMENTATION_STRUCTURE.md
+/deployment/POST_CLEANUP_VERIFICATION.md
+/deployment/FINAL_DOCUMENTATION_CONSOLIDATION_REPORT.md

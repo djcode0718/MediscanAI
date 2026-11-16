@@ -193,7 +193,7 @@ All 22 pending changes and documentation updates were partitioned into 6 cohesiv
 - **Scope:** Staged deletion of 143 historical evaluation files from Git index. Working copies preserved 100% on disk.
 
 ### Commit 6: Deployment Infrastructure & Canonical Documentation
-- **Hash:** *(Generated upon commit)*
+- **Hash:** `3fea7d4`
 - **Message:** `docs(deployment): add production promotion gate, runbooks, and audit reports`
 - **Scope:**
   - Deployment configuration files: `Dockerfile`, `Dockerfile.cpu`, `compose.yaml`, `docker-compose.prod.yml`, `Caddyfile`, `docker-entrypoint.sh`, `requirements.txt`, `requirements-cpu.txt`, `.env.example`.
