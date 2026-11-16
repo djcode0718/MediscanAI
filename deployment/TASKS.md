@@ -52,6 +52,9 @@
 | **P2-T13** | Engineer and validate CPU-only ARM64 backend Docker image (P1) | `[x]` | P0 | P2-T12 | `deployment/Dockerfile.cpu`, `deployment/requirements-cpu.txt` | Shrunk uncompressed backend image from 11.66 GB to 3.85 GB (-67%) and compressed archive to 865 MB (-78%). Removed 3.3 GB of CUDA/Triton binaries. |
 | **P2-T14** | Conduct comprehensive Docker footprint & runtime memory audit (P2) | `[x]` | P0 | P2-T13 | `deployment/P2_*.md` deliverables | Complete audit suite: Storage reconciliation, Mac memory sizing, Neo4j reachability, OpenMP thread collision mitigation, regression suite (235/239 pass), and promotion runbook. |
 | **P2-T15** | Execute Final Production Promotion Gate & SRE Reliability Verification | `[x]` | P0 | P2-T14 | `deployment/FINAL_PROMOTION_GATE_REPORT.md` | Pre-warmed PaddleOCR, resolved OpenMP LCNet segfault, 162/162 production tests passing (100% across 3 runs), empirical rollback RTO measured at 101.96s, compose start_period validated. |
+| **P2-T16** | Repository documentation rationalization and Git cleanup | `[x]` | P0 | P2-T15 | `deployment/GIT_CLEANUP_FINAL_REPORT.md` | Reduced tracked Markdown files from 152 to 26 canonical docs; preserved 225 local historical docs; hardened ignore files. |
+| **P2-T17** | Audit and reconcile PR #1 code, LLM chain & transaction ownership | `[x]` | P0 | P2-T16 | `deployment/CHANGE_REVIEW_REPORT.md`, commit `369288e` | Reconciled LLM docstrings to Gemini 3.6/3.7 & Groq 120B/20B; isolated audit transaction ownership; added automated test. |
+| **P2-T18** | Merge PR #1 into `main` and author next-phase readiness documentation | `[x]` | P0 | P2-T17 | `deployment/MERGE_FINAL_REPORT.md`, `deployment/NEXT_PHASE_READINESS.md` | PR #1 merged into `main` via merge commit `15d360a`; full 8-commit history preserved; verified 237 unit tests and frontend build. |
 
 ---
 
