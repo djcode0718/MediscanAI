@@ -26,6 +26,9 @@ class TestAnalysisPersistence(unittest.TestCase):
     """
 
     def setUp(self):
+        import backend.main
+        backend.main.startup_complete = True
+        backend.main.ocr_prewarmed = True
         self.client = TestClient(app)
         self.db = SessionLocal()
 
@@ -184,6 +187,7 @@ class TestAnalysisPersistence(unittest.TestCase):
         self.assertEqual(bad_login_res.status_code, 401)
 
         # 4. Check AuditLog table records
+        self.db.rollback()
         audit_records = self.db.execute(
             select(AuditLog).where(AuditLog.user_id == new_user_id)
         ).scalars().all()

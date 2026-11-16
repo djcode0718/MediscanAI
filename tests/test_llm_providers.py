@@ -346,6 +346,9 @@ class TestAnalyzeEndpointLlmMode(unittest.TestCase):
     def setUpClass(cls):
         from fastapi.testclient import TestClient
         from backend.main import app
+        import backend.main
+        backend.main.startup_complete = True
+        backend.main.ocr_prewarmed = True
         from backend.core.security import create_access_token
         from backend.db.session import SessionLocal
         from backend.models.user import User

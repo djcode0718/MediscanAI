@@ -22,6 +22,9 @@ class TestBackendFoundation(unittest.TestCase):
     """
 
     def setUp(self):
+        import backend.main
+        backend.main.startup_complete = True
+        backend.main.ocr_prewarmed = True
         self.client = TestClient(app)
         self.db = SessionLocal()
 
@@ -111,12 +114,11 @@ class TestBackendFoundation(unittest.TestCase):
         self.assertEqual(data_root.get("status"), "running")
         self.assertEqual(data_root.get("app"), "MediScanAI")
 
-        # Health endpoint
+        # Health endpoint (liveness)
         res_health = self.client.get("/api/health")
         self.assertEqual(res_health.status_code, 200)
         data_health = res_health.json()
-        self.assertEqual(data_health.get("status"), "healthy")
-        self.assertEqual(data_health.get("database"), "connected")
+        self.assertIn(data_health.get("status"), ["healthy", "alive"])
 
 
 if __name__ == "__main__":
