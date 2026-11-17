@@ -7,9 +7,9 @@ faiss-cpu>=1.7.4
 rapidfuzz>=2.13.7
 symspellpy>=6.7.0
 
-# OCR & Computer Vision (Headless, no GUI / X11 dependencies)
+# OCR & Computer Vision (Deduplicated single OpenCV distribution for PaddleX/PaddleOCR)
 pillow>=9.0.0
-opencv-python-headless>=4.10.0.84
+opencv-contrib-python==4.10.0.84
 paddleocr==3.2.0
 paddlepaddle==3.0.0
 paddlex==3.2.1
