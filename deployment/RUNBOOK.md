@@ -131,7 +131,7 @@ rsync -avz -e "ssh -i ~/.ssh/id_rsa" data/ ubuntu@<OCI_VM_PUBLIC_IP>:~/mediscana
 rsync -avz -e "ssh -i ~/.ssh/id_rsa" indexes/ ubuntu@<OCI_VM_PUBLIC_IP>:~/mediscanai/indexes/
 ```
 
-### B. Transfer Deployment Manifests
+### B. Transfer Deployment Manifests & Management Scripts
 ```bash
 rsync -avz -e "ssh -i ~/.ssh/id_rsa" \
   deployment/compose.yaml \
@@ -139,17 +139,23 @@ rsync -avz -e "ssh -i ~/.ssh/id_rsa" \
   deployment/Dockerfile \
   deployment/requirements.txt \
   deployment/docker-entrypoint.sh \
+  deployment/preflight-check.sh \
+  deployment/backup.sh \
+  deployment/restore.sh \
   deployment/.env.example \
   ubuntu@<OCI_VM_PUBLIC_IP>:~/mediscanai/deployment/
+
+# Ensure scripts have execution permissions on the VM
+ssh -i ~/.ssh/id_rsa ubuntu@<OCI_VM_PUBLIC_IP> "chmod +x ~/mediscanai/deployment/*.sh"
 ```
 
 ### C. Transfer Verified ARM64 Docker Image
-To maintain exact bitwise reproducibility without compiling dependencies on the cloud host (verified local image: `11.66 GB` uncompressed; compressed transfer archive: `~3.88 GB` / `3,878,709,150 bytes`):
+To maintain exact bitwise reproducibility without compiling dependencies on the cloud host (verified local image: `3.86 GB` uncompressed; compressed transfer archive: `~865 MB` / `865,042,668 bytes`):
 ```bash
 # On local machine (save verified production image)
 docker save mediscanai-backend:production | gzip > mediscanai-backend-production-arm64.tar.gz
 
-# Transfer compressed image (~3.88 GB)
+# Transfer compressed image (~865 MB)
 scp -i ~/.ssh/id_rsa mediscanai-backend-production-arm64.tar.gz ubuntu@<OCI_VM_PUBLIC_IP>:~/mediscanai/
 
 # On cloud VM (load verified image)
@@ -218,6 +224,38 @@ EMERGENCY_GUARDRAIL_FAST_PATH=true
 EMERGENCY_GUARDRAIL_CONFIG_PATH=app/guardrail_config.json
 ```
 
+### Run Preflight Configuration Verification
+Before starting the stack, validate environment configuration and secrets using the preflight check script:
+```bash
+cd ~/mediscanai/deployment
+./preflight-check.sh
+```
+Expected output:
+```text
+============================================================
+ MediScanAI — Production Deployment Preflight Check
+============================================================
+[PASS] .env file exists: /home/ubuntu/mediscanai/deployment/.env
+[PASS] .env permissions are 600 (-rw-------)
+[PASS] APP_ENV is set to 'production'
+[PASS] DEBUG is set to 'false'
+[PASS] POSTGRES_USER is set
+[PASS] POSTGRES_PASSWORD is valid (strong)
+[PASS] POSTGRES_DB is set: mediscanai
+[PASS] JWT_SECRET_KEY is valid (strong, length: 64)
+[PASS] LLM_MODE is set to 'online'
+[PASS] GEMINI_API_KEY is configured
+[PASS] GROQ_API_KEY is configured
+[PASS] Local data directory exists: /home/ubuntu/mediscanai/data
+[PASS] Local indexes directory exists: /home/ubuntu/mediscanai/indexes
+[PASS] Docker daemon is running
+[PASS] Docker Compose v2 is available
+============================================================
+PREFLIGHT CHECK SUMMARY: ALL CHECKS PASSED
+Stack is ready for deployment.
+============================================================
+```
+
 ---
 
 ## 4. Stack Launch & Lifecycle Management
@@ -270,8 +308,50 @@ docker compose -f compose.yaml down
 
 ## 5. Automated Backup & Restore Procedures
 
-### A. Logical PostgreSQL Database Backup
-Run an automated dump of the production database:
+### A. Automated Production Backup (`backup.sh`)
+Execute the standardized backup script to back up the PostgreSQL database, `.env` file, and Caddy TLS certificates:
+```bash
+cd ~/mediscanai/deployment
+./backup.sh
+```
+This generates a timestamped directory under `~/mediscanai/backups/mediscanai_backup_<TIMESTAMP>/` containing:
+- `mediscanai_postgres_<TIMESTAMP>.dump` (Custom format pg_dump)
+- `env.backup` (chmod 600)
+- `caddy_data/` (TLS certificates & account keys)
+
+Optional arguments:
+```bash
+# Custom backup destination
+./backup.sh /mnt/secure-backups
+
+# Retain backups for 14 days (prunes backups older than N days)
+./backup.sh ~/mediscanai/backups 14
+```
+
+### B. Safe Restore & Integrity Verification (`restore.sh`)
+To verify backup data integrity safely without modifying the live database, run `restore.sh` in `--test-db` mode:
+```bash
+cd ~/mediscanai/deployment
+./restore.sh ~/mediscanai/backups/mediscanai_backup_<TIMESTAMP>/mediscanai_postgres_<TIMESTAMP>.dump --test-db
+```
+This automatically:
+1. Provisions an isolated temporary database (`mediscanai_restore_test`).
+2. Restores the dump into the temporary database.
+3. Queries and logs row counts for `users`, `analyses`, and `audit_logs`.
+4. Automatically drops the temporary test database, ensuring zero modifications to the live production database.
+
+### C. Emergency Production Database Restore
+In a disaster recovery scenario where the live production database must be replaced:
+```bash
+cd ~/mediscanai/deployment
+./restore.sh ~/mediscanai/backups/mediscanai_backup_<TIMESTAMP>/mediscanai_postgres_<TIMESTAMP>.dump --force-production-restore
+```
+*(Requires explicit typing of `RESTORE-PRODUCTION` to prevent accidental execution).*
+
+---
+
+### D. Manual Backup & Restore Procedures (Reference)
+If managing backups directly via Docker CLI:
 ```bash
 BACKUP_DIR=~/mediscanai/backups
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
@@ -287,33 +367,53 @@ chmod 600 "$BACKUP_DIR/mediscanai_db_${TIMESTAMP}.dump"
 echo "Backup created at: $BACKUP_DIR/mediscanai_db_${TIMESTAMP}.dump"
 ```
 
-### B. Backup Verification Procedure
-Verify dump integrity without touching the live database:
-```bash
-# Verify dump contents and table catalogs
-pg_restore -l "$BACKUP_DIR/mediscanai_db_${TIMESTAMP}.dump" | head -n 30
+### E. Off-Host Disaster Recovery & Scheduling Limitations
+
+> [!WARNING]
+> **Host-Level Disaster Recovery Boundary & Limitations**:
+> 1. **Local vs Off-Host Protection:** Backups stored in `~/mediscanai/backups/` protect against software defects, migration failures, and administrative errors on the VM, but **do not protect against termination, disk failure, or loss of the cloud VM itself**.
+> 2. **Conditional Off-Host Protection:** Off-host replication to a local administrative machine (e.g., MacBook Air) protects against VM destruction **only after a successful transfer has completed**.
+> 3. **Mac Sleep / Disconnect Limitations:** A local Mac that is asleep, shut down, or disconnected from the network **cannot run its scheduled synchronization job**. Therefore, continuous disaster recovery cannot be guaranteed by a client-side pull alone.
+> 4. **Scheduling Recommendation:** Use macOS `launchd` (via a LaunchAgent) rather than standard cron, as `launchd` will automatically run missed jobs when the Mac wakes up and reconnects to the network. Configure dedicated error and standard logging.
+> 5. **Periodic Restore Verification:** Off-host backups must be validated periodically by executing the safe test restore (`./restore.sh <dump> --test-db`) against a local test container.
+> 6. **Zero-Cost & No Third-Party Storage:** Consistent with the ₹0 infrastructure budget, do not configure paid third-party cloud storage (AWS S3, GCP Cloud Storage) or automated paid storage tiers.
+
+#### Recommended macOS `launchd` Job Setup (Local Mac)
+Create `~/Library/LaunchAgents/com.mediscanai.backupsync.plist`:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.mediscanai.backupsync</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/rsync</string>
+        <string>-avz</string>
+        <string>-e</string>
+        <string>ssh -i /Users/sj/.ssh/id_rsa</string>
+        <string>ubuntu@<OCI_VM_PUBLIC_IP>:~/mediscanai/backups/</string>
+        <string>/Users/sj/mediscanai_cloud_backups/</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>4</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>/Users/sj/mediscanai_cloud_backups/sync.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/sj/mediscanai_cloud_backups/sync_err.log</string>
+</dict>
+</plist>
 ```
-
-### C. Restore Procedure (Into Isolated Test Database)
-To test restoration safely without overwriting the live database:
+Load the agent on macOS:
 ```bash
-# Create isolated test database
-docker exec -it mediscanai-postgres psql -U mediscanai -d postgres -c "CREATE DATABASE mediscanai_restore_test;"
-
-# Restore dump into the test database
-docker cp "$BACKUP_DIR/mediscanai_db_${TIMESTAMP}.dump" mediscanai-postgres:/tmp/restore.dump
-docker exec -it mediscanai-postgres pg_restore -U mediscanai -d mediscanai_restore_test /tmp/restore.dump
-docker exec -it mediscanai-postgres rm /tmp/restore.dump
-
-# Verify row counts in the restored test database
-docker exec -it mediscanai-postgres psql -U mediscanai -d mediscanai_restore_test -c "
-SELECT count(*) FROM users;
-SELECT count(*) FROM analyses;
-SELECT count(*) FROM audit_logs;
-"
-
-# Clean up test database
-docker exec -it mediscanai-postgres psql -U mediscanai -d postgres -c "DROP DATABASE mediscanai_restore_test;"
+mkdir -p ~/mediscanai_cloud_backups
+launchctl load ~/Library/LaunchAgents/com.mediscanai.backupsync.plist
 ```
 
 ---
