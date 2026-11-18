@@ -1,7 +1,8 @@
 import Foundation
 
-// MARK: - Network Configuration Manager (NET-02)
+// MARK: - Network Configuration Manager (NET-02, WIFI-01)
 
+@Observable
 public final class NetworkConfiguration {
     public static let defaultBaseURLString = "http://192.168.0.155:8000"
     private static let userDefaultsKey = "ai.mediscan.network.baseURL"
@@ -58,7 +59,33 @@ public final class NetworkConfiguration {
         guard let host = url.host, !host.isEmpty else {
             return false
         }
+        if let port = url.port, !(1...65535).contains(port) {
+            return false
+        }
         return true
+    }
+
+    public static func validationError(for string: String) -> String? {
+        let trimmed = string.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            return "Server URL cannot be empty."
+        }
+        guard let url = URL(string: trimmed) else {
+            return "Malformed URL structure."
+        }
+        guard let scheme = url.scheme?.lowercased() else {
+            return "Missing scheme. URL must start with http:// or https://"
+        }
+        guard scheme == "http" || scheme == "https" else {
+            return "Unsupported scheme '\(scheme)'. Use http:// or https://"
+        }
+        guard let host = url.host, !host.isEmpty else {
+            return "Missing host address. E.g. 192.168.0.155"
+        }
+        if let port = url.port, !(1...65535).contains(port) {
+            return "Invalid port number. Port must be between 1 and 65535."
+        }
+        return nil
     }
 
     public static func normalize(url: URL) -> URL {

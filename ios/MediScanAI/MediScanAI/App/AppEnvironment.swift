@@ -20,6 +20,7 @@ public final class AppEnvironment {
     public let networkMonitor: NetworkMonitoring
     public let keychain: KeychainStorageProtocol
     public let authManager: AuthManager
+    public let serverConnectionManager: ServerConnectionManager
 
     /// Current base URL for server communications.
     public var defaultBaseURL: URL {
@@ -34,7 +35,8 @@ public final class AppEnvironment {
         keychain: KeychainStorageProtocol = KeychainStorage(),
         networkClient: NetworkClientProtocol? = nil,
         networkMonitor: NetworkMonitoring = NetworkMonitor(),
-        authManager: AuthManager? = nil
+        authManager: AuthManager? = nil,
+        serverConnectionManager: ServerConnectionManager? = nil
     ) {
         self.networkConfiguration = networkConfiguration
         self.authProvider = authProvider
@@ -54,6 +56,13 @@ public final class AppEnvironment {
             authProvider: authProvider
         )
         self.authManager = manager
+
+        let connManager = serverConnectionManager ?? ServerConnectionManager(
+            networkClient: client,
+            configuration: networkConfiguration,
+            networkMonitor: networkMonitor
+        )
+        self.serverConnectionManager = connManager
 
         // Wire 401 automatic session revocation (AUTH-05)
         client.onUnauthorized = { [weak manager] in
