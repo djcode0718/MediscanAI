@@ -6,6 +6,7 @@ import os
 public protocol NetworkClientProtocol: AnyObject {
     var configuration: NetworkConfiguration { get }
     var authProvider: AuthorizationHeaderProviding { get }
+    var onUnauthorized: (() -> Void)? { get set }
 
     func send<T: Decodable>(endpoint: APIEndpoint, responseType: T.Type) async throws -> T
     func send<T: Decodable, Body: Encodable>(endpoint: APIEndpoint, body: Body, responseType: T.Type) async throws -> T
@@ -20,6 +21,7 @@ public final class NetworkClient: NetworkClientProtocol {
     public let configuration: NetworkConfiguration
     public let transport: NetworkTransport
     public let authProvider: AuthorizationHeaderProviding
+    public var onUnauthorized: (() -> Void)?
     private let logger = Logger(subsystem: "ai.mediscan.ios", category: "NetworkClient")
 
     public static func makeDefaultDecoder() -> JSONDecoder {
@@ -209,6 +211,11 @@ public final class NetworkClient: NetworkClientProtocol {
 
         // Validate HTTP Status Code
         guard (200...299).contains(statusCode) else {
+            if statusCode == 401 && endpoint.requiresAuthorization {
+                DispatchQueue.main.async { [weak self] in
+                    self?.onUnauthorized?()
+                }
+            }
             throw APIError.from(statusCode: statusCode, data: data, httpResponse: httpResponse)
         }
 

@@ -18,6 +18,8 @@ public final class AppEnvironment {
     public let authProvider: AuthorizationHeaderProviding
     public let networkClient: NetworkClientProtocol
     public let networkMonitor: NetworkMonitoring
+    public let keychain: KeychainStorageProtocol
+    public let authManager: AuthManager
 
     /// Current base URL for server communications.
     public var defaultBaseURL: URL {
@@ -29,21 +31,35 @@ public final class AppEnvironment {
     public init(
         networkConfiguration: NetworkConfiguration = NetworkConfiguration(),
         authProvider: AuthorizationHeaderProviding = InMemoryAuthorizationHeaderProvider(),
+        keychain: KeychainStorageProtocol = KeychainStorage(),
         networkClient: NetworkClientProtocol? = nil,
-        networkMonitor: NetworkMonitoring = NetworkMonitor()
+        networkMonitor: NetworkMonitoring = NetworkMonitor(),
+        authManager: AuthManager? = nil
     ) {
         self.networkConfiguration = networkConfiguration
         self.authProvider = authProvider
+        self.keychain = keychain
         self.networkMonitor = networkMonitor
 
-        if let injectedClient = networkClient {
-            self.networkClient = injectedClient
-        } else {
-            self.networkClient = NetworkClient(
-                configuration: networkConfiguration,
-                transport: URLSessionTransport(),
-                authProvider: authProvider
-            )
+        let client = networkClient ?? NetworkClient(
+            configuration: networkConfiguration,
+            transport: URLSessionTransport(),
+            authProvider: authProvider
+        )
+        self.networkClient = client
+
+        let manager = authManager ?? AuthManager(
+            networkClient: client,
+            keychain: keychain,
+            authProvider: authProvider
+        )
+        self.authManager = manager
+
+        // Wire 401 automatic session revocation (AUTH-05)
+        client.onUnauthorized = { [weak manager] in
+            Task { @MainActor in
+                manager?.handleUnauthorized()
+            }
         }
     }
 }
