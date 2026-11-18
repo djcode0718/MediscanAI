@@ -15,14 +15,14 @@
 | Metric | Count | Percentage | Definition |
 | :--- | :---: | :---: | :--- |
 | **Total Implementation Tasks** | **92** | 100.0% | Active scope (Phase 1 through Phase 11). Excludes Phase 0 and deferred Phase 12. |
-| **Completed & Verified Tasks `[x]`** | **26** | **28.3%** | Concrete implementation code exists and is empirically verified in `ios/MediScanAI/`. |
+| **Completed & Verified Tasks `[x]`** | **38** | **41.3%** | Concrete implementation code exists and is empirically verified in `ios/MediScanAI/`. |
 | **In Progress Tasks `[-]`** | **0** | **0.0%** | Currently active tasks. |
 | **Blocked Tasks `[!]`** | **0** | **0.0%** | Tasks blocked by architectural or environmental impediments. |
-| **Remaining Tasks `[ ]`** | **66** | **71.7%** | Scheduled for execution across Phases 4–11. |
+| **Remaining Tasks `[ ]`** | **54** | **58.7%** | Scheduled for execution across Phases 6–11. |
 | **Phase 0 Discovery Tasks (Audit Baseline)** | **14 / 14** | **100.0%** | Pre-implementation discovery & architectural specifications completed. |
 | **Future Enhancements (Deferred)** | **5** | — | Remote Tailscale connectivity tasks (explicitly excluded from initial milestone). |
 
-*Counting Methodology:* Completion metrics track actual Swift/Xcode implementation code. Completed Phase 0 audit documents are tracked separately in Section 2 and are not counted toward the code implementation progress. Tasks SCAF-01 through SCAF-07 (Phase 1), DSGN-01 through DSGN-10 (Phase 2), and NET-01 through NET-09 (Phase 3) represent 28.3% of the 92 active tasks.
+*Counting Methodology:* Completion metrics track actual Swift/Xcode implementation code. Completed Phase 0 audit documents are tracked separately in Section 2 and are not counted toward the code implementation progress. Tasks SCAF-01 through SCAF-07 (Phase 1), DSGN-01 through DSGN-10 (Phase 2), NET-01 through NET-09 (Phase 3), AUTH-01 through AUTH-07 (Phase 4), and WIFI-01 through WIFI-05 (Phase 5) represent 41.3% of the 92 active tasks.
 
 ---
 
@@ -373,35 +373,35 @@ All implementation work is subject to these non-negotiable boundaries:
 
 *Objective:* Enable dynamic Mac LAN IP configuration, real-time connectivity testing, and user guidance for same-Wi-Fi execution.
 
-- [ ] `WIFI-01`: **Server Connection Configuration UI**  
-  - *Dependencies:* `NET-02`, `DSGN-07`  
-  - *Acceptance Criteria:* Implement `ServerConfigSheet` allowing the user to view and edit the backend base URL (e.g., `http://192.168.0.155:8000`), with input validation and clear setup tips.  
-  - *Verification Method:* SwiftUI preview tests URL editing and persistence.  
-  - *Status:* `[ ]` Not Started
+- [x] `WIFI-01`: **Server Connection Configuration UI**
+  - *Dependencies:* `NET-02`, `DSGN-07`
+  - *Acceptance Criteria:* Implement `ServerConfigSheet` allowing the user to view and edit the backend base URL (e.g., `http://192.168.0.155:8000`), with input validation and clear setup tips.
+  - *Verification Method:* Verified in `ServerConfigSheet.swift` and `NetworkConfiguration.swift`; validated by `ServerConnectionTests.testValidLocalURLNormalization`, `testInvalidURLDetection`, and `testConfigurationPersistenceAcrossInstances`.
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `WIFI-02`: **Live Connection Testing Action**  
-  - *Dependencies:* `WIFI-01`, `NET-08`  
-  - *Acceptance Criteria:* Provide a "Test Connection" button that calls `checkHealth()`. Displays green checkmark with round-trip latency (e.g., `Connected (14ms)`) on success, or red warning with diagnostic guidance on failure.  
-  - *Verification Method:* Interactive testing against reachable and unreachable IP addresses.  
-  - *Status:* `[ ]` Not Started
+- [x] `WIFI-02`: **Live Connection Testing Action**
+  - *Dependencies:* `WIFI-01`, `NET-08`
+  - *Acceptance Criteria:* Provide a "Test Connection" button that calls `checkHealth()`. Displays green checkmark with round-trip latency (e.g., `Connected (14 ms)`) on success, or red warning with diagnostic guidance on failure.
+  - *Verification Method:* Verified in `ServerConnectionManager.checkConnection()`; validated by `ServerConnectionTests.testCheckConnectionSuccessReportsLatency`, `testCheckConnectionUnhealthyStatus`, `testCheckConnectionTimeoutError`, and `testCheckConnectionPreventsDuplicateRequests`.
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `WIFI-03`: **Home Screen Connection Status Badge**  
-  - *Dependencies:* `WIFI-02`, `DSGN-08`  
-  - *Acceptance Criteria:* Add a compact status capsule in the Home header: `🟢 Local Wi-Fi` when connected, `🔴 Disconnected` when unreachable. Tapping opens `ServerConfigSheet`.  
-  - *Verification Method:* SwiftUI preview verifies connected and disconnected header states.  
-  - *Status:* `[ ]` Not Started
+- [x] `WIFI-03`: **Home Screen Connection Status Badge**
+  - *Dependencies:* `WIFI-02`, `DSGN-08`
+  - *Acceptance Criteria:* Add a compact status capsule in the Home header: `🟢 Local Wi-Fi` when connected, `🔴 Disconnected` when unreachable. Tapping opens `ServerConfigSheet`.
+  - *Verification Method:* Verified in `ServerConnectionBadge.swift`; validated by `ServerConnectionTests.testServerConnectionStatusTaxonomy` and automated UI tap test in `ServerConnectionUITests.testTappingBadgeOpensServerConfigSheetAndDismisses`.
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `WIFI-04`: **Local Network Permission Prompt Handling**  
-  - *Dependencies:* `SCAF-05`  
-  - *Acceptance Criteria:* Handle iOS local network privacy prompt gracefully without crashing or false-positive error alerts.  
-  - *Verification Method:* Physical device test verifies first-run local network prompt behavior.  
-  - *Status:* `[ ]` Not Started
+- [x] `WIFI-04`: **Local Network Permission Prompt Handling**
+  - *Dependencies:* `SCAF-05`
+  - *Acceptance Criteria:* Handle iOS local network privacy prompt gracefully without crashing or false-positive error alerts. Provide clear guidance on iOS Settings → MediScanAI permissions.
+  - *Verification Method:* Verified in `Info.plist` (`NSLocalNetworkUsageDescription`), `ServerConnectionManager.swift`, and `ServerConfigSheet.swift`.
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `WIFI-05`: **Connection Failure Recovery Screen**  
-  - *Dependencies:* `WIFI-01`, `DSGN-09`  
-  - *Acceptance Criteria:* When requests fail due to network loss, display an actionable offline card: *"Cannot reach Mac backend. Ensure your iPhone is on the same Wi-Fi network and the backend is running."*  
-  - *Verification Method:* SwiftUI preview verifies offline error view.  
-  - *Status:* `[ ]` Not Started
+- [x] `WIFI-05`: **Connection Failure Recovery Screen**
+  - *Dependencies:* `WIFI-01`, `DSGN-09`
+  - *Acceptance Criteria:* When requests fail due to network loss, display an actionable offline card: *"Cannot reach Mac backend. Ensure your iPhone is on the same Wi-Fi network and the backend is running."*
+  - *Verification Method:* Verified in `ConnectionFailureRecoveryView.swift`; validated by `ServerConnectionTests.testUnreachableBackendDoesNotInvalidateUserSession` and integrated into `AuthenticatedHomePlaceholderView`.
+  - *Status:* `[x]` Completed and verified
 
 ---
 
