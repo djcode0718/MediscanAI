@@ -17,8 +17,13 @@ public final class AppCoordinator {
     }
 
     public var currentDestination: RootDestination = .foundation
+    public var selectedTab: AppTab = .home
 
     public init() {}
+
+    public func selectTab(_ tab: AppTab) {
+        selectedTab = tab
+    }
 
     public func resetToFoundation() {
         currentDestination = .foundation

@@ -33,7 +33,7 @@ struct RootContentView: View {
             } else if environment.authManager.isRestoringSession {
                 SessionRestoringSplashView()
             } else if environment.authManager.isAuthenticated {
-                AuthenticatedHomePlaceholderView()
+                MainTabView()
             } else {
                 LoginView()
             }
@@ -41,7 +41,7 @@ struct RootContentView: View {
             if environment.authManager.isRestoringSession {
                 SessionRestoringSplashView()
             } else if environment.authManager.isAuthenticated {
-                AuthenticatedHomePlaceholderView()
+                MainTabView()
             } else {
                 LoginView()
             }
