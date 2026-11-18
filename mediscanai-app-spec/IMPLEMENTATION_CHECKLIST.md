@@ -15,14 +15,14 @@
 | Metric | Count | Percentage | Definition |
 | :--- | :---: | :---: | :--- |
 | **Total Implementation Tasks** | **92** | 100.0% | Active scope (Phase 1 through Phase 11). Excludes Phase 0 and deferred Phase 12. |
-| **Completed & Verified Tasks `[x]`** | **17** | **18.5%** | Concrete implementation code exists and is empirically verified in `ios/MediScanAI/`. |
+| **Completed & Verified Tasks `[x]`** | **26** | **28.3%** | Concrete implementation code exists and is empirically verified in `ios/MediScanAI/`. |
 | **In Progress Tasks `[-]`** | **0** | **0.0%** | Currently active tasks. |
 | **Blocked Tasks `[!]`** | **0** | **0.0%** | Tasks blocked by architectural or environmental impediments. |
-| **Remaining Tasks `[ ]`** | **75** | **81.5%** | Scheduled for execution across Phases 3–11. |
+| **Remaining Tasks `[ ]`** | **66** | **71.7%** | Scheduled for execution across Phases 4–11. |
 | **Phase 0 Discovery Tasks (Audit Baseline)** | **14 / 14** | **100.0%** | Pre-implementation discovery & architectural specifications completed. |
 | **Future Enhancements (Deferred)** | **5** | — | Remote Tailscale connectivity tasks (explicitly excluded from initial milestone). |
 
-*Counting Methodology:* Completion metrics track actual Swift/Xcode implementation code. Completed Phase 0 audit documents are tracked separately in Section 2 and are not counted toward the code implementation progress. Tasks SCAF-01 through SCAF-07 (Phase 1) and DSGN-01 through DSGN-10 (Phase 2) represent 18.5% of the 92 active tasks.
+*Counting Methodology:* Completion metrics track actual Swift/Xcode implementation code. Completed Phase 0 audit documents are tracked separately in Section 2 and are not counted toward the code implementation progress. Tasks SCAF-01 through SCAF-07 (Phase 1), DSGN-01 through DSGN-10 (Phase 2), and NET-01 through NET-09 (Phase 3) represent 28.3% of the 92 active tasks.
 
 ---
 
@@ -265,59 +265,59 @@ All implementation work is subject to these non-negotiable boundaries:
 
 *Objective:* Build an async/await `URLSession` client with streaming multipart/form-data support, robust error mapping, and health/readiness probe integration.
 
-- [ ] `NET-01`: **API Endpoint Taxonomy**  
-  - *Dependencies:* `SCAF-02`  
-  - *Acceptance Criteria:* Implement type-safe `APIEndpoint` enum covering all 10 backend routes (`health`, `ready`, `authRegister`, `authLogin`, `authMe`, `analyze`, `analysesList`, `analysisDetail`, `analysisDelete`).  
-  - *Verification Method:* Unit tests verify generated URL paths, HTTP methods, and query parameter encoding.  
-  - *Status:* `[ ]` Not Started
+- [x] `NET-01`: **API Endpoint Taxonomy**
+  - *Dependencies:* `SCAF-02`
+  - *Acceptance Criteria:* Implement type-safe `APIEndpoint` enum covering all backend routes (`health`, `ready`, `authRegister`, `authLogin`, `authMe`, `analyze`, `analysesList`, `analysisDetail`, `analysisDelete`).
+  - *Verification Method:* Verified in `APIEndpoint.swift`; validated by `NetworkingTests.testAPIEndpointTaxonomyAndURLs` verifying HTTP methods, relative paths, timeout intervals (15s standard, 120s analyze), query item parameters, and auth requirements.
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `NET-02`: **Server Configuration Manager**  
-  - *Dependencies:* `NET-01`  
-  - *Acceptance Criteria:* Implement `ServerConfig` storing the user-configurable base URL (default: `http://192.168.0.155:8000`), persisting to `UserDefaults`, and stripping trailing slashes.  
-  - *Verification Method:* Unit tests verify base URL persistence and normalization.  
-  - *Status:* `[ ]` Not Started
+- [x] `NET-02`: **Server Configuration Manager**
+  - *Dependencies:* `NET-01`
+  - *Acceptance Criteria:* Implement `NetworkConfiguration` storing the user-configurable base URL (default: `http://192.168.0.155:8000`), persisting to `UserDefaults`, validating scheme and host, and stripping trailing slashes.
+  - *Verification Method:* Verified in `NetworkConfiguration.swift`; validated by `NetworkingTests.testNetworkConfigurationNormalizationAndDefaults`.
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `NET-03`: **JSON Request & Response Pipeline**  
-  - *Dependencies:* `NET-01`  
-  - *Acceptance Criteria:* Implement typed `request<T: Decodable>(_ endpoint: APIEndpoint)` method on `APIClient` using `URLSession.shared` with ISO8601 date decoding strategy.  
-  - *Verification Method:* Unit test decodes mock JSON responses into strongly-typed model structs.  
-  - *Status:* `[ ]` Not Started
+- [x] `NET-03`: **JSON Request & Response Pipeline**
+  - *Dependencies:* `NET-01`
+  - *Acceptance Criteria:* Implement typed `send<T: Decodable>(_ endpoint: APIEndpoint, responseType: T.Type)` method on `NetworkClient` using `NetworkTransport` with ISO8601 custom date decoding strategy (handling fractional seconds and Unix timestamps).
+  - *Verification Method:* Verified in `NetworkClient.swift`; validated by `NetworkingTests.testUserResponseAndTokenResponseDecoding` and `testAnalysisResultResponseDecoding`.
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `NET-04`: **Multipart/Form-Data Encoder**  
-  - *Dependencies:* `NET-01`  
-  - *Acceptance Criteria:* Implement `MultipartFormDataBuilder` streaming `text` (form field), `image` (file part with MIME type), and repeated `audio` (file parts with MIME type) using unique boundaries.  
-  - *Verification Method:* Unit test verifies raw multipart byte stream formatting against RFC 7578.  
-  - *Status:* `[ ]` Not Started
+- [x] `NET-04`: **Multipart/Form-Data Encoder**
+  - *Dependencies:* `NET-01`
+  - *Acceptance Criteria:* Implement `MultipartFormDataEncoder` supporting `text` (form field), `image` (file part with MIME type), and repeated `audio` (file parts with MIME type) using unique boundaries, enforcing backend constraints (max 4000 char text, max 10MB image, max 25MB audio, max 5 audio clips, empty submission rejection).
+  - *Verification Method:* Verified in `MultipartFormDataEncoder.swift`; validated by `NetworkingTests.testMultipartFormDataEncoderEncodingAndValidation` testing constraints and RFC 7578 formatting.
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `NET-05`: **Correlation ID Injection**  
-  - *Dependencies:* `NET-03`  
-  - *Acceptance Criteria:* Inject unique `X-Request-ID` UUID header into every outgoing request; read returned `X-Request-ID` from response headers for logging.  
-  - *Verification Method:* Unit test confirms header presence on generated `URLRequest`.  
-  - *Status:* `[ ]` Not Started
+- [x] `NET-05`: **Correlation ID Injection**
+  - *Dependencies:* `NET-03`
+  - *Acceptance Criteria:* Inject unique `X-Request-ID` UUID header into every outgoing request; read returned `X-Request-ID` from response headers for logging.
+  - *Verification Method:* Verified in `NetworkClient.swift`; validated by `NetworkingTests.testCorrelationIDHeaderInjection`.
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `NET-06`: **Network Error Mapping**  
-  - *Dependencies:* `NET-03`  
-  - *Acceptance Criteria:* Implement `NetworkError` enum decoding HTTP status codes: `400 (validation)`, `401 (unauthorized)`, `404 (not found)`, `429 (rate limited with Retry-After)`, `503 (service unavailable with Retry-After)`, `connectionFailed`, `timeout`.  
-  - *Verification Method:* Unit tests verify error mapping for HTTP 400, 401, 429, and 503 responses.  
-  - *Status:* `[ ]` Not Started
+- [x] `NET-06`: **Network Error Mapping**
+  - *Dependencies:* `NET-03`
+  - *Acceptance Criteria:* Implement `APIError` enum decoding HTTP status codes: `400 (badRequest)`, `401 (unauthorized)`, `403 (forbidden)`, `404 (notFound)`, `422 (unprocessableEntity)`, `429 (rateLimited with Retry-After)`, `503 (serviceUnavailable with Retry-After)`, `500...599 (serverError)`, `timeout`, `noConnection`, `invalidURL`, `cancelled`.
+  - *Verification Method:* Verified in `APIError.swift`; validated by `NetworkingTests.testErrorMappingFromStatusCodes`.
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `NET-07`: **Timeout & Cancellation Policy**  
-  - *Dependencies:* `NET-03`  
-  - *Acceptance Criteria:* Configure 15s timeout for standard auth/history requests; 120s timeout for heavy multimodal analysis requests; cooperative cancellation support via Swift `Task.isCancelled`.  
-  - *Verification Method:* Unit test verifies request timeout configurations and cancellation behavior.  
-  - *Status:* `[ ]` Not Started
+- [x] `NET-07`: **Timeout & Cancellation Policy**
+  - *Dependencies:* `NET-03`
+  - *Acceptance Criteria:* Configure 15s timeout for standard auth/history requests; 120s timeout for heavy multimodal analysis requests; cooperative cancellation support via Swift `Task.checkCancellation()`.
+  - *Verification Method:* Verified in `APIEndpoint.timeoutInterval` and `NetworkClient.swift`; validated by `NetworkingTests.testAPIEndpointTaxonomyAndURLs`.
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `NET-08`: **Health Probe Integration**  
-  - *Dependencies:* `NET-02`, `NET-03`  
-  - *Acceptance Criteria:* Implement `checkHealth()` pinging `GET /api/health` returning latency in milliseconds and server status.  
-  - *Verification Method:* Unit test with mocked 200 OK verifies latency calculation and model decoding.  
-  - *Status:* `[ ]` Not Started
+- [x] `NET-08`: **Health Probe Integration**
+  - *Dependencies:* `NET-02`, `NET-03`
+  - *Acceptance Criteria:* Implement `checkHealth()` pinging `GET /api/health` returning latency in milliseconds and server status.
+  - *Verification Method:* Verified in `NetworkClient.checkHealth()`; validated by `NetworkingTests.testHealthProbeExecution`.
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `NET-09`: **Readiness Probe Integration**  
-  - *Dependencies:* `NET-03`  
-  - *Acceptance Criteria:* Implement `checkReadiness()` pinging `GET /api/ready` returning database, model loading, OCR pre-warming, and slot capacity metrics.  
-  - *Verification Method:* Unit test decodes ready and not-ready response payloads.  
-  - *Status:* `[ ]` Not Started
+- [x] `NET-09`: **Readiness Probe Integration**
+  - *Dependencies:* `NET-03`
+  - *Acceptance Criteria:* Implement `checkReadiness()` pinging `GET /api/ready` returning database, model loading, OCR pre-warming, and slot capacity metrics.
+  - *Verification Method:* Verified in `NetworkClient.checkReadiness()`; validated by `NetworkingTests.testReadinessProbeExecution`.
+  - *Status:* `[x]` Completed and verified
 
 ---
 
