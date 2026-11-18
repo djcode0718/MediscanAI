@@ -3,7 +3,8 @@ import Foundation
 // MARK: - API Endpoint Definition (NET-01)
 
 public enum APIEndpoint: Equatable {
-    // Health & Readiness Probes
+    // Root & Health & Readiness Probes
+    case root
     case health
     case ready
 
@@ -23,7 +24,7 @@ public enum APIEndpoint: Equatable {
     // MARK: - HTTP Method
     public var method: HTTPMethod {
         switch self {
-        case .health, .ready, .authMe, .analysesList, .analysisDetail:
+        case .root, .health, .ready, .authMe, .analysesList, .analysisDetail:
             return .get
         case .authRegister, .authLogin, .analyze:
             return .post
@@ -35,6 +36,8 @@ public enum APIEndpoint: Equatable {
     // MARK: - Relative Path
     public var path: String {
         switch self {
+        case .root:
+            return "/"
         case .health:
             return "/api/health"
         case .ready:
@@ -72,7 +75,7 @@ public enum APIEndpoint: Equatable {
     // MARK: - Authentication Requirement
     public var requiresAuthorization: Bool {
         switch self {
-        case .health, .ready, .authRegister, .authLogin:
+        case .root, .health, .ready, .authRegister, .authLogin:
             return false
         case .authMe, .analyze, .analysesList, .analysisDetail, .analysisDelete:
             return true
@@ -93,7 +96,7 @@ public enum APIEndpoint: Equatable {
     public func url(relativeTo baseURL: URL) -> URL? {
         var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: true)
         let normalizedPath = path.hasPrefix("/") ? path : "/\(path)"
-        
+
         // Ensure clean path combining without double slashes
         if let currentPath = components?.path, !currentPath.isEmpty && currentPath != "/" {
             components?.path = currentPath.trimmingCharacters(in: CharacterSet(charactersIn: "/")) + normalizedPath

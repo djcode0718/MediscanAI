@@ -64,6 +64,14 @@ final class NetworkingTests: XCTestCase {
     func testAPIEndpointTaxonomyAndURLs() {
         let baseURL = URL(string: "http://192.168.0.155:8000")!
 
+        // Root
+        let root = APIEndpoint.root
+        XCTAssertEqual(root.method, .get)
+        XCTAssertEqual(root.path, "/")
+        XCTAssertFalse(root.requiresAuthorization)
+        XCTAssertEqual(root.timeoutInterval, 15.0)
+        XCTAssertEqual(root.url(relativeTo: baseURL)?.absoluteString, "http://192.168.0.155:8000/")
+
         // Health
         let health = APIEndpoint.health
         XCTAssertEqual(health.method, .get)
