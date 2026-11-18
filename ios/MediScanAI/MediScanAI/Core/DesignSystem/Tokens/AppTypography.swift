@@ -33,6 +33,9 @@ public enum AppTypography {
     /// Caption 1: Medium, 12pt, modality pills, tags, status
     public static let caption1: Font = .system(size: 12, weight: .medium, design: .default)
 
+    /// Caption 2: Regular, 11pt, micro badges, secondary tags
+    public static let caption2: Font = .system(size: 11, weight: .regular, design: .default)
+
     /// Monospaced Numbers (for metrics, durations, and percentages)
     public static func monospaced(_ font: Font) -> Font {
         font.monospacedDigit()
@@ -52,6 +55,7 @@ extension Font {
     public static let appSubheadline = AppTypography.subheadline
     public static let appFootnote = AppTypography.footnote
     public static let appCaption1 = AppTypography.caption1
+    public static let appCaption2 = AppTypography.caption2
 }
 
 // MARK: - View Modifiers for Dynamic Type Tracking & Leading

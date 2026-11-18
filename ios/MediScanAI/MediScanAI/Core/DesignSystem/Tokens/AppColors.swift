@@ -56,6 +56,9 @@ public enum AppColors {
     /// Focused text inputs and active viewfinder reticles (#404040)
     public static let borderFocus = Color(hex: "#404040")
 
+    /// Prominent card and active button borders (#404040)
+    public static let borderPrimary = Color(hex: "#404040")
+
     // MARK: Text & Iconography Tokens
     /// Headlines, primary labels, and user inputs (#FFFFFF, 21:1 contrast)
     public static let textPrimary = Color(hex: "#FFFFFF")

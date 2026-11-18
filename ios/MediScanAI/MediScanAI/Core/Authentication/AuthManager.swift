@@ -55,6 +55,23 @@ public final class AuthManager {
         isRestoringSession = true
         defer { isRestoringSession = false }
 
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-UITest_AuthenticatedUser") {
+            let testUser = UserResponse(
+                id: 1,
+                email: "clinician@mediscan.ai",
+                fullName: "Dr. Jane Foster",
+                isActive: true,
+                isSuperuser: false,
+                createdAt: Date()
+            )
+            let testSession = UserSession(token: "uitest_mock_jwt_token", user: testUser)
+            authProvider.setToken("uitest_mock_jwt_token")
+            state = .authenticated(testSession)
+            return
+        }
+        #endif
+
         logger.debug("Beginning session restoration check...")
 
         guard let token = try? keychain.getToken(), !token.isEmpty else {

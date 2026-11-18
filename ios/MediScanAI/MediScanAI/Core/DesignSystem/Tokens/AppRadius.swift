@@ -3,6 +3,9 @@ import Foundation
 // MARK: - App Corner Radii Scale
 
 public enum AppRadius {
+    /// 4pt - Micro badges and nested inner tags
+    public static let micro: CGFloat = 4
+
     /// 8pt - Small chips, badges, and tag pills
     public static let small: CGFloat = 8
 
