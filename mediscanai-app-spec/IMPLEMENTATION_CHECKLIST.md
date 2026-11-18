@@ -15,14 +15,14 @@
 | Metric | Count | Percentage | Definition |
 | :--- | :---: | :---: | :--- |
 | **Total Implementation Tasks** | **92** | 100.0% | Active scope (Phase 1 through Phase 11). Excludes Phase 0 and deferred Phase 12. |
-| **Completed & Verified Tasks `[x]`** | **38** | **41.3%** | Concrete implementation code exists and is empirically verified in `ios/MediScanAI/`. |
+| **Completed & Verified Tasks `[x]`** | **42** | **45.7%** | Concrete implementation code exists and is empirically verified in `ios/MediScanAI/`. |
 | **In Progress Tasks `[-]`** | **0** | **0.0%** | Currently active tasks. |
 | **Blocked Tasks `[!]`** | **0** | **0.0%** | Tasks blocked by architectural or environmental impediments. |
-| **Remaining Tasks `[ ]`** | **54** | **58.7%** | Scheduled for execution across Phases 6–11. |
+| **Remaining Tasks `[ ]`** | **50** | **54.3%** | Scheduled for execution across Phases 7–11. |
 | **Phase 0 Discovery Tasks (Audit Baseline)** | **14 / 14** | **100.0%** | Pre-implementation discovery & architectural specifications completed. |
 | **Future Enhancements (Deferred)** | **5** | — | Remote Tailscale connectivity tasks (explicitly excluded from initial milestone). |
 
-*Counting Methodology:* Completion metrics track actual Swift/Xcode implementation code. Completed Phase 0 audit documents are tracked separately in Section 2 and are not counted toward the code implementation progress. Tasks SCAF-01 through SCAF-07 (Phase 1), DSGN-01 through DSGN-10 (Phase 2), NET-01 through NET-09 (Phase 3), AUTH-01 through AUTH-07 (Phase 4), and WIFI-01 through WIFI-05 (Phase 5) represent 41.3% of the 92 active tasks.
+*Counting Methodology:* Completion metrics track actual Swift/Xcode implementation code. Completed Phase 0 audit documents are tracked separately in Section 2 and are not counted toward the code implementation progress. Tasks SCAF-01 through SCAF-07 (Phase 1), DSGN-01 through DSGN-10 (Phase 2), NET-01 through NET-09 (Phase 3), AUTH-01 through AUTH-07 (Phase 4), WIFI-01 through WIFI-05 (Phase 5), and NAV-01 through NAV-04 (Phase 6) represent 45.7% of the 92 active tasks.
 
 ---
 
@@ -409,29 +409,29 @@ All implementation work is subject to these non-negotiable boundaries:
 
 *Objective:* Implement the 4-tab native navigation container, the home dashboard, quick-action cards, and recent analyses preview.
 
-- [ ] `NAV-01`: **4-Tab Navigation Shell**  
+- [x] `NAV-01`: **4-Tab Navigation Shell**  
   - *Dependencies:* `DSGN-01`, `AUTH-02`  
-  - *Acceptance Criteria:* Implement `MainTabView` containing 4 tabs: `Home` (`house`), `Scan` (`camera.viewfinder`), `History` (`clock`), `Profile` (`person`). Active tab uses `#FFFFFF`; inactive uses `#707070`.  
-  - *Verification Method:* SwiftUI preview verifies tab navigation and icon rendering.  
-  - *Status:* `[ ]` Not Started
+  - *Acceptance Criteria:* Implement `MainTabView` containing 4 tabs: `Home` (`house`), `Scan` (`camera.viewfinder`), `History` (`clock`), `Profile` (`person`). Active tab uses `#FFFFFF`; inactive uses `#707070`. Integrated into authenticated app routing via `MediScanAIApp.swift`.  
+  - *Verification Method:* Verified in `MainTabView.swift`, `AppTab.swift`, and `AppCoordinator.swift`; validated by `HomeNavigationTests.testAppCoordinatorTabSelection` and automated UI test `HomeNavigationUITests.testTabBarSwitchingAcrossAllTabs`.  
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `NAV-02`: **Home Dashboard View**  
+- [x] `NAV-02`: **Home Dashboard View**  
   - *Dependencies:* `NAV-01`, `DSGN-06`  
-  - *Acceptance Criteria:* Implement `HomeView` with brand header, connection status pill, greeting, quick-action cards, and recent history section.  
-  - *Verification Method:* SwiftUI preview renders complete home layout.  
-  - *Status:* `[ ]` Not Started
+  - *Acceptance Criteria:* Implement `HomeView` with brand header, connection status badge (`ServerConnectionBadge`), greeting with authenticated clinician name/email, quick-action cards, and recent activity section.  
+  - *Verification Method:* Verified in `HomeView.swift` and `HomeViewModel.swift`; validated by `HomeNavigationTests.testHomeViewModelInitialState` and automated UI test `HomeNavigationUITests.testAuthenticatedHomeRendersFourTabsAndDashboard`.  
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `NAV-03`: **Quick-Action Cards**  
+- [x] `NAV-03`: **Quick-Action Cards**  
   - *Dependencies:* `NAV-02`, `DSGN-06`  
-  - *Acceptance Criteria:* Implement large hero card: **"Scan Medicine"** (switches to Scan tab or presents camera sheet); secondary cards: **"Enter Symptoms"** (opens symptom composer) and **"Voice Recording"** (opens audio recorder).  
-  - *Verification Method:* Tapping each quick action triggers appropriate navigation.  
-  - *Status:* `[ ]` Not Started
+  - *Acceptance Criteria:* Implement large hero card: **"Scan Medicine"** (programmatically switches to Scan tab via `AppCoordinator.selectTab(.scan)`); secondary cards: **"Enter Symptoms"** (opens dedicated symptom composer sheet) and **"Voice Recording"** (opens dedicated audio consultation sheet).  
+  - *Verification Method:* Verified in `HomeView.swift`, `SymptomComposerPlaceholderSheet.swift`, and `VoiceRecordingPlaceholderSheet.swift`; validated by `HomeNavigationUITests.testHeroScanMedicineNavigatesToScanTab`, `testSecondaryQuickActionEnterSymptomsOpensSheet`, and `testSecondaryQuickActionVoiceRecordingOpensSheet`.  
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `NAV-04`: **Recent Activity Section**  
+- [x] `NAV-04`: **Recent Activity Section**  
   - *Dependencies:* `NAV-02`  
-  - *Acceptance Criteria:* Fetch latest 3 analyses; render compact cards with modality badge, verdict headline snippet, and relative timestamp. Empty state displays *"Awaiting First Analysis"*.  
-  - *Verification Method:* SwiftUI preview tests populated and empty states.  
-  - *Status:* `[ ]` Not Started
+  - *Acceptance Criteria:* Fetch latest 3 analyses via `GET /api/analyses?limit=3&offset=0`; render compact cards with modality badge, verdict status pill, and relative timestamp. Empty state displays *"Awaiting First Analysis"*. View All action navigates to History tab. Tapping an item opens detail placeholder.  
+  - *Verification Method:* Verified in `RecentAnalysisCard.swift`, `AnalysisDetailPlaceholderSheet.swift`, and `HomeViewModel.swift`; validated by `HomeNavigationTests.testLoadRecentActivitySuccessWith3Items`, `testLoadRecentActivityCapsAtMax3`, `testLoadRecentActivityEmptyState`, `testLoadRecentActivityServerError`, `testClinicalVerdictStatusMapping`, `testModalityIconMapping`, and `HomeNavigationUITests.testViewAllHistorySwitchesToHistoryTab`.  
+  - *Status:* `[x]` Completed and verified
 
 ---
 
