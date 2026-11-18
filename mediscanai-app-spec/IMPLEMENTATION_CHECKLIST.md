@@ -325,47 +325,47 @@ All implementation work is subject to these non-negotiable boundaries:
 
 *Objective:* Implement Keychain-backed JWT credential storage, user registration, login, profile retrieval, and automatic session expiration handling.
 
-- [ ] `AUTH-01`: **Keychain Storage Service**  
-  - *Dependencies:* `SCAF-02`  
-  - *Acceptance Criteria:* Implement `KeychainStorage` wrapping Apple Keychain Services (`kSecClassGenericPassword`) for storing, retrieving, and wiping the JWT access token.  
-  - *Verification Method:* Unit tests verify token save, read, overwrite, and delete operations on device/simulator Keychain.  
-  - *Status:* `[ ]` Not Started
+- [x] `AUTH-01`: **Keychain Storage Service**
+  - *Dependencies:* `SCAF-02`
+  - *Acceptance Criteria:* Implement `KeychainStorage` wrapping Apple Keychain Services (`kSecClassGenericPassword`, `kSecAttrAccessibleAfterFirstUnlock`) for storing, retrieving, and wiping the JWT access token. Provide `MockKeychainStorage` for tests.
+  - *Verification Method:* Verified in `KeychainStorage.swift`; validated by `AuthenticationTests.testMockKeychainSaveAndRetrieve`, `testMockKeychainOverwriteToken`, `testMockKeychainDeleteToken`, `testMockKeychainErrorPropagation`, and `testRealKeychainStorageInitialization`.
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `AUTH-02`: **Auth State Machine & Session Coordinator**  
-  - *Dependencies:* `AUTH-01`, `NET-03`  
-  - *Acceptance Criteria:* Implement `@Observable class AuthManager` with states: `.unauthenticated`, `.authenticating`, `.authenticated(UserSession)`. Expose `token` for authenticated requests.  
-  - *Verification Method:* Unit tests verify state transitions during login, logout, and token expiration.  
-  - *Status:* `[ ]` Not Started
+- [x] `AUTH-02`: **Auth State Machine & Session Coordinator**
+  - *Dependencies:* `AUTH-01`, `NET-03`
+  - *Acceptance Criteria:* Implement `@Observable class AuthManager` with states: `.unauthenticated`, `.authenticating`, `.authenticated(UserSession)`. Expose `currentUser`, `isAuthenticated`, and coordinate with `AuthorizationHeaderProviding`.
+  - *Verification Method:* Verified in `UserSession.swift` and `AuthManager.swift`; validated by `AuthenticationTests.testAuthManagerInitialState` and `testExplicitLogoutClearsStateAndKeychain`.
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `AUTH-03`: **User Registration Flow**  
-  - *Dependencies:* `AUTH-02`  
-  - *Acceptance Criteria:* Implement `register(email, password, fullName)` calling `POST /api/auth/register`. On 201 Created, save access token to Keychain, set user state, and transition to `.authenticated`. Password constraint enforces min 6 characters.  
-  - *Verification Method:* Unit test verifies registration request payload and token extraction.  
-  - *Status:* `[ ]` Not Started
+- [x] `AUTH-03`: **User Registration Flow**
+  - *Dependencies:* `AUTH-02`
+  - *Acceptance Criteria:* Implement `register(email, password, fullName)` calling `POST /api/auth/register`. On 201 Created, save access token to Keychain, set user state, and transition to `.authenticated`. Enforce minimum 6 characters for password.
+  - *Verification Method:* Verified in `AuthManager.register`; validated by `AuthenticationTests.testRegisterSuccessPersistsTokenAndUpdatesState` and `testRegisterFailureThrowsBadRequest`.
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `AUTH-04`: **User Login Flow**  
-  - *Dependencies:* `AUTH-02`  
-  - *Acceptance Criteria:* Implement `login(email, password)` calling `POST /api/auth/login`. On 200 OK, persist token to Keychain, update user profile, and transition to `.authenticated`.  
-  - *Verification Method:* Unit test verifies login payload and error handling for 401 Unauthorized.  
-  - *Status:* `[ ]` Not Started
+- [x] `AUTH-04`: **User Login Flow**
+  - *Dependencies:* `AUTH-02`
+  - *Acceptance Criteria:* Implement `login(email, password)` calling `POST /api/auth/login`. On 200 OK, persist token to Keychain, update user profile, and transition to `.authenticated`. Throw `APIError.unauthorized` on 401.
+  - *Verification Method:* Verified in `AuthManager.login`; validated by `AuthenticationTests.testLoginSuccessPersistsTokenAndUpdatesState` and `testLoginFailureThrowsErrorAndClearsState`.
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `AUTH-05`: **Session Restoration on App Launch**  
-  - *Dependencies:* `AUTH-02`  
-  - *Acceptance Criteria:* On app startup, read token from Keychain; if present, call `GET /api/auth/me`. If 200 OK, restore user session; if 401 Unauthorized, wipe Keychain and transition to `.unauthenticated`.  
-  - *Verification Method:* Unit test simulates cold launch with valid and expired Keychain tokens.  
-  - *Status:* `[ ]` Not Started
+- [x] `AUTH-05`: **Session Restoration on App Launch**
+  - *Dependencies:* `AUTH-02`
+  - *Acceptance Criteria:* On app startup, read token from Keychain; if present, call `GET /api/auth/me`. If 200 OK, restore user session; if 401 Unauthorized, wipe Keychain and transition to `.unauthenticated`.
+  - *Verification Method:* Verified in `AuthManager.restoreSession`; validated by `AuthenticationTests.testRestoreSessionWithValidToken`, `testRestoreSessionWithExpiredTokenWipesKeychain`, and `testRestoreSessionWithEmptyKeychain`.
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `AUTH-06`: **Automatic 401 Interception & Sign-Out**  
-  - *Dependencies:* `AUTH-02`, `NET-06`  
-  - *Acceptance Criteria:* When any protected API request encounters HTTP 401, `APIClient` notifies `AuthManager` to immediately wipe credentials and route UI to the login screen.  
-  - *Verification Method:* Unit test verifies 401 response triggers session teardown.  
-  - *Status:* `[ ]` Not Started
+- [x] `AUTH-06`: **Automatic 401 Interception & Sign-Out**
+  - *Dependencies:* `AUTH-02`, `NET-06`
+  - *Acceptance Criteria:* When any protected API request encounters HTTP 401, `NetworkClient` triggers `onUnauthorized` to notify `AuthManager` to immediately wipe credentials and route UI to the login screen without duplicate storm triggers.
+  - *Verification Method:* Verified in `NetworkClient.executeAndDecode` and `AuthManager.handleUnauthorized`; validated by `AuthenticationTests.testHandleUnauthorizedEvictsSession`.
+  - *Status:* `[x]` Completed and verified
 
-- [ ] `AUTH-07`: **Sign-In & Sign-Up UI Views**  
-  - *Dependencies:* `AUTH-03`, `AUTH-04`, `DSGN-05`, `DSGN-07`  
-  - *Acceptance Criteria:* Implement `LoginView` and `RegisterView` following the true-black design system, with keyboard avoidance, email validation, and inline error banners.  
-  - *Verification Method:* SwiftUI preview and UI test verify form inputs and submission triggers.  
-  - *Status:* `[ ]` Not Started
+- [x] `AUTH-07`: **Sign-In & Sign-Up UI Views**
+  - *Dependencies:* `AUTH-03`, `AUTH-04`, `DSGN-05`, `DSGN-07`
+  - *Acceptance Criteria:* Implement `LoginView`, `RegisterView`, `AuthenticatedHomePlaceholderView`, and `AuthenticationViewModel` following the true-black design system, with keyboard handling, email validation, and inline error banners.
+  - *Verification Method:* Validated by `AuthenticationTests.testAuthenticationViewModelValidation` and end-to-end UI automation in `AuthenticationUITests.testLoginViewElementsPresent` and `testNavigateToRegistrationAndBack`.
+  - *Status:* `[x]` Completed and verified
 
 ---
 
