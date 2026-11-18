@@ -58,6 +58,9 @@ public struct LoginView: View {
                             .foregroundColor(AppColors.textTertiary)
                             .multilineTextAlignment(.center)
 
+                        // Server Connection Status Badge (WIFI-03)
+                        ServerConnectionBadge()
+
                         // Error Banner
                         if let error = viewModel.errorMessage {
                             NoticeBanner(

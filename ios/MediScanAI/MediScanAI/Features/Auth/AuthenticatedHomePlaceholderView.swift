@@ -42,8 +42,16 @@ public struct AuthenticatedHomePlaceholderView: View {
                                 .font(.appSubheadline)
                                 .foregroundColor(AppColors.textSecondary)
                         }
+
+                        // Local Wi-Fi Server Connection Status Badge (WIFI-03)
+                        ServerConnectionBadge()
                     }
                     .padding(.top, AppSpacing.large)
+
+                    // Offline Recovery Card when backend is unreachable (WIFI-05)
+                    if case .unreachable = environment.serverConnectionManager.status {
+                        ConnectionFailureRecoveryView()
+                    }
 
                     // User Profile Card
                     if let user = environment.authManager.currentUser {
