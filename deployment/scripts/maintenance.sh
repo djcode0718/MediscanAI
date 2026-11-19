@@ -87,6 +87,7 @@ fi
 # 1. Inspect Protected Images (Current + 2 Previous Known-Good)
 log "Step 1/5: Identifying protected images..."
 PROTECTED_IMAGES=()
+PROTECTED_IMAGE_IDS=()
 
 if [ -f "$CURRENT_DEPLOY_FILE" ]; then
     CURR_IMG=$(cat "$CURRENT_DEPLOY_FILE" | tr -d '[:space:]')
@@ -100,7 +101,7 @@ if [ -f "$HISTORY_FILE" ]; then
     # Extract last 2 unique previous images from history
     while IFS= read -r img; do
         if [ -n "$img" ] && [ "$img" != "unknown" ]; then
-            if [[ ! " ${PROTECTED_IMAGES[*]} " =~ " ${img} " ]]; then
+            if [[ ! " ${PROTECTED_IMAGES[*]:-} " =~ " ${img} " ]]; then
                 PROTECTED_IMAGES+=("$img")
                 log "  Protected [HISTORY]: ${img}"
             fi
@@ -108,75 +109,95 @@ if [ -f "$HISTORY_FILE" ]; then
     done < <(awk -F'|' '{print $3}' "$HISTORY_FILE" | tr -d '[:space:]' | tail -n 5 | sort -u)
 fi
 
-# Dynamically protect images currently in use by active containers
+# Dynamically protect images currently in use by any container (running or stopped)
 if docker info >/dev/null 2>&1; then
     while IFS= read -r running_img; do
         if [ -n "$running_img" ]; then
-            if [[ ! " ${PROTECTED_IMAGES[*]} " =~ " ${running_img} " ]]; then
+            if [[ ! " ${PROTECTED_IMAGES[*]:-} " =~ " ${running_img} " ]]; then
                 PROTECTED_IMAGES+=("$running_img")
-                log "  Protected [ACTIVE CONTAINER]: ${running_img}"
+                log "  Protected [ACTIVE/STOPPED CONTAINER]: ${running_img}"
+            fi
+            # Resolve image ID
+            IMG_ID=$(docker inspect "$running_img" --format '{{.Id}}' 2>/dev/null || echo "")
+            if [ -n "$IMG_ID" ] && [[ ! " ${PROTECTED_IMAGE_IDS[*]:-} " =~ " ${IMG_ID} " ]]; then
+                PROTECTED_IMAGE_IDS+=("$IMG_ID")
             fi
         fi
-    done < <(docker ps --format '{{.Image}}' 2>/dev/null || true)
+    done < <(docker ps -a --format '{{.Image}}' 2>/dev/null || true)
 fi
 
-# 2. Docker Image Pruning (Targeted MediScanAI Images Only)
+# 2. Docker Image Pruning (Strict Positive MediScanAI Ownership Only)
 log "Step 2/5: Evaluating Docker images..."
 if docker info >/dev/null 2>&1; then
     # Protect common infrastructure images
     BASE_INFRA_IMAGES=("postgres:15-alpine" "caddy:2-alpine" "alpine:latest")
     for base_img in "${BASE_INFRA_IMAGES[@]}"; do
         PROTECTED_IMAGES+=("$base_img")
+        IMG_ID=$(docker inspect "$base_img" --format '{{.Id}}' 2>/dev/null || echo "")
+        if [ -n "$IMG_ID" ] && [[ ! " ${PROTECTED_IMAGE_IDS[*]:-} " =~ " ${IMG_ID} " ]]; then
+            PROTECTED_IMAGE_IDS+=("$IMG_ID")
+        fi
     done
 
-    # Remove dangling untagged images (<none>) safely
-    DANGLING_COUNT=$(docker images -f "dangling=true" -q | wc -l | tr -d ' ')
-    if [ "$DANGLING_COUNT" -gt 0 ]; then
-        log "  Found ${DANGLING_COUNT} dangling untagged image(s)."
-        if [ "$DRY_RUN" = "false" ]; then
-            docker image prune -f >/dev/null 2>&1
-            log "  Pruned dangling images."
-        else
-            log "  [DRY-RUN] Would prune ${DANGLING_COUNT} dangling image(s)."
-        fi
-    else
-        log "  No dangling images to prune."
-    fi
+    # Policy Enforcement: Global dangling-image pruning is DISABLED to protect unrelated projects
+    log "  POLICY: Global dangling-image pruning (docker image prune) is DISABLED."
+    log "  POLICY: Untagged images and images with unverified ownership are permanently PRESERVED."
 
-    # Evaluate obsolete MediScanAI backend images
-    log "  Evaluating obsolete MediScanAI images..."
-    while IFS= read -r candidate_img; do
-        if [ -n "$candidate_img" ] && [ "$candidate_img" != "<none>:<none>" ]; then
-            # Verify candidate is strictly a MediScanAI image
-            if [[ "$candidate_img" =~ (mediscanai-backend) ]]; then
-                # Check if image is protected
+    # Resolve IDs for all protected deployment tags
+    for p_img in "${PROTECTED_IMAGES[@]:-}"; do
+        if [ -n "$p_img" ]; then
+            IMG_ID=$(docker inspect "$p_img" --format '{{.Id}}' 2>/dev/null || echo "")
+            if [ -n "$IMG_ID" ] && [[ ! " ${PROTECTED_IMAGE_IDS[*]:-} " =~ " ${IMG_ID} " ]]; then
+                PROTECTED_IMAGE_IDS+=("$IMG_ID")
+            fi
+        fi
+    done
+
+    # Evaluate ONLY positively identified MediScanAI backend images
+    log "  Evaluating positively identified MediScanAI images (*mediscanai-backend*)..."
+    while IFS=$'\t' read -r candidate_id candidate_tag; do
+        if [ -n "$candidate_id" ] && [ -n "$candidate_tag" ] && [ "$candidate_tag" != "<none>:<none>" ]; then
+            # Verify candidate strictly matches MediScanAI repository name
+            if [[ "$candidate_tag" =~ (mediscanai-backend) ]]; then
+                # Resolve full image ID
+                FULL_CANDIDATE_ID=$(docker inspect "$candidate_id" --format '{{.Id}}' 2>/dev/null || echo "$candidate_id")
+
+                # Check if image ID or Tag is in protected list
                 IS_PROTECTED=false
-                for p in "${PROTECTED_IMAGES[@]}"; do
-                    if [ "$candidate_img" = "$p" ] || [[ "$candidate_img" == *"$p"* ]]; then
+                for p in "${PROTECTED_IMAGES[@]:-}"; do
+                    if [ -n "$p" ] && { [ "$candidate_tag" = "$p" ] || [[ "$candidate_tag" == *"$p"* ]]; }; then
+                        IS_PROTECTED=true
+                        break
+                    fi
+                done
+                for pid in "${PROTECTED_IMAGE_IDS[@]:-}"; do
+                    if [ -n "$pid" ] && { [ "$FULL_CANDIDATE_ID" = "$pid" ] || [[ "$FULL_CANDIDATE_ID" == *"$pid"* ]]; }; then
                         IS_PROTECTED=true
                         break
                     fi
                 done
 
-                # Check if referenced by any existing container
+                # Check if referenced by any container (running or stopped)
                 IN_USE=false
-                if [ -n "$(docker ps -a --filter "ancestor=${candidate_img}" -q 2>/dev/null)" ]; then
+                if [ -n "$(docker ps -a --filter "ancestor=${FULL_CANDIDATE_ID}" -q 2>/dev/null)" ]; then
                     IN_USE=true
                 fi
 
                 if [ "$IS_PROTECTED" = "false" ] && [ "$IN_USE" = "false" ]; then
                     if [ "$DRY_RUN" = "false" ]; then
-                        docker rmi "$candidate_img" >/dev/null 2>&1 || true
-                        log "  Removed obsolete MediScanAI image: ${candidate_img}"
+                        docker rmi "$candidate_id" >/dev/null 2>&1 || true
+                        log "  Removed obsolete MediScanAI image: ${candidate_tag} (${candidate_id})"
                     else
-                        log "  [DRY-RUN] Would remove obsolete MediScanAI image: ${candidate_img}"
+                        log "  [DRY-RUN] Would remove obsolete MediScanAI image: ${candidate_tag} (${candidate_id})"
                     fi
                 else
-                    log "  Retained protected/in-use MediScanAI image: ${candidate_img}"
+                    log "  Retained protected/in-use MediScanAI image: ${candidate_tag} (${candidate_id})"
                 fi
+            else
+                log "  Skipped image (non-MediScanAI ownership): ${candidate_tag} (${candidate_id})"
             fi
         fi
-    done < <(docker images --format '{{.Repository}}:{{.Tag}}' 2>/dev/null || true)
+    done < <(docker images --filter "reference=*mediscanai-backend*" --format '{{.ID}}\t{{.Repository}}:{{.Tag}}' 2>/dev/null || true)
 
     # Evaluate Docker builder cache (shared with other projects on Mac)
     if [ "$PRUNE_BUILD_CACHE" = "true" ]; then
@@ -234,8 +255,10 @@ else
     log "  Backup directory '${BACKUP_DIR}' does not exist yet."
 fi
 
-# 5. Clean Temporary MediScanAI Artifacts (> 24 hours old)
-log "Step 5/5: Cleaning temporary staging files (> 24 hours old)..."
+# 5. Evaluate Temporary Staging Files (Inspection Only — Automatic Deletion Disabled)
+log "Step 5/7: Evaluating temporary staging files (Inspection only)..."
+log "  POLICY: Automatic deletion of temporary files is DISABLED."
+log "  POLICY: Temporary files remain untouched by scheduled maintenance and --force."
 # Resolve canonical temp directory
 if [ -d "/private/tmp" ]; then
     CANONICAL_TEMP="/private/tmp"
@@ -261,18 +284,20 @@ for pattern in "${TEMP_PATTERNS[@]}"; do
                 continue
             fi
             FOUND_TEMP_COUNT=$((FOUND_TEMP_COUNT + 1))
-            if [ "$DRY_RUN" = "false" ]; then
-                rm -rf "$item"
-                log "  Removed stale temp item: $item"
+            ITEM_AGE_OVER_24H=$(find "$item" -maxdepth 0 -mtime +1 2>/dev/null || true)
+            if [ -n "$ITEM_AGE_OVER_24H" ]; then
+                log "  [UNVERIFIED CANDIDATE (>24h)]: $item (Preserved: lifecycle/database references cannot be proven offline)"
             else
-                log "  [DRY-RUN] Would remove stale temp item: $item"
+                log "  [ACTIVE/RECENT (<24h)]: $item (Preserved: active upload or recent processing)"
             fi
         fi
-    done < <(find "$CANONICAL_TEMP" -maxdepth 1 \( -name "$pattern" \) -mtime +1 2>/dev/null || true)
+    done < <(find "$CANONICAL_TEMP" -maxdepth 1 \( -name "$pattern" \) 2>/dev/null || true)
 done
 
 if [ "$FOUND_TEMP_COUNT" -eq 0 ]; then
-    log "  No stale MediScanAI temporary files found (> 24 hours old)."
+    log "  No MediScanAI temporary files found in ${CANONICAL_TEMP}."
+else
+    log "  Notice: ${FOUND_TEMP_COUNT} temporary file(s) inspected. All temporary files left untouched (automatic deletion disabled)."
 fi
 
 # 6. Evaluate Operational Logs Bounded Rotation

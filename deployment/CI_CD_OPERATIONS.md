@@ -271,21 +271,21 @@ Enforces storage hygiene without risking production data.
 
 ## 6. Storage Retention & Resource Safeguards
 
-The MacBook Air M4 has a unified internal SSD (460 GiB APFS container) and acts as both development workstation and server. The operations system enforces the following explicit policies:
+The MacBook Air M4 has a unified internal SSD (460 GiB APFS container) and acts as both development workstation and server. The operations system enforces the following explicit safety policies:
 
 | Resource | Retention Policy | Enforcement Mechanism |
 | :--- | :--- | :--- |
 | **Active Docker Image** | Kept indefinitely | Recorded in `deployment/.current_deployment` |
 | **Rollback Images** | Last 2 known-good images preserved | Recorded in `deployment/.deployment_history` |
-| **Dangling Images** | Removed during maintenance | `docker image prune -f` in `maintenance.sh` |
-| **Obsolete Backend Images**| Removed if not in protected list | Targeted `mediscanai-backend` image prune in `maintenance.sh` |
+| **Dangling Images** | **Global Pruning DISABLED** | Untagged images of unverified ownership are preserved to protect other projects |
+| **Obsolete Backend Images**| Removed ONLY if positively identified | Targeted `mediscanai-backend` image prune in `maintenance.sh` |
 | **Unrelated Docker Projects**| **Permanently Exempt** | Images/volumes of other projects (e.g. `paxel`, etc.) are never touched |
-| **Build Cache** | Shared across host projects | Not pruned automatically; pruned only via `--prune-build-cache` |
+| **Build Cache** | Shared across host projects | Not pruned by scheduled maintenance; pruned only via explicit `--prune-build-cache` |
 | **Container Logs** | Max 30 MB per container (10MB x 3 files) | Configured in `deployment/compose.yaml` logging options |
 | **PostgreSQL Data** | **Permanently Protected** | Named volume `mediscanai_postgres_data` is locked |
 | **AI Model Cache** | **Permanently Protected** | Named volume `mediscanai_model_cache` is locked |
 | **Database Backups** | 7 days retention (newest always preserved) | Automated verification and pruning in `backup-postgres.sh` |
-| **Temporary Files** | Deleted after 24 hours | Strict allowlist `/private/tmp/mediscan_*` in `maintenance.sh` |
+| **Temporary Files** | **Automatic Deletion DISABLED** | Inspected only; files are preserved because offline age does not prove unreferenced state |
 
 ### Storage Threshold & Headroom Policy
 Storage utilization on macOS is evaluated on `/System/Volumes/Data` (the APFS volume holding user and container data):
