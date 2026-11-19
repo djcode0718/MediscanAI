@@ -99,12 +99,18 @@ chmod 600 "$GZ_PATH"
 ARCHIVE_SIZE=$(du -h "$GZ_PATH" | cut -f1)
 log "Backup successfully created: ${GZ_PATH} (${ARCHIVE_SIZE})"
 
-# 6. Apply retention pruning
+# 6. Apply retention pruning (guarantee latest backup is permanently preserved)
 if [ -n "$RETENTION_DAYS" ] && [ "$RETENTION_DAYS" -gt 0 ] 2>/dev/null; then
     log "Applying retention policy: Pruning backups older than ${RETENTION_DAYS} days..."
+    # Identify newest backup to guarantee it is NEVER deleted regardless of age
+    LATEST_ARCHIVE=$(ls -t "${BACKUP_DIR}"/mediscanai_postgres_*.dump.gz 2>/dev/null | head -n 1 || echo "")
     DELETED_COUNT=0
     while IFS= read -r old_file; do
         if [ -n "$old_file" ]; then
+            if [ "$old_file" = "$LATEST_ARCHIVE" ]; then
+                log "Preserving latest valid backup despite age threshold: $(basename "$old_file")"
+                continue
+            fi
             rm -f "$old_file"
             DELETED_COUNT=$((DELETED_COUNT + 1))
             log "Pruned old backup: $(basename "$old_file")"

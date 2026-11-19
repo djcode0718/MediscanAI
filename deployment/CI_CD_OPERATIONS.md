@@ -120,6 +120,7 @@ Configure these settings under **GitHub Repository -> Settings -> Secrets and va
 | :--- | :--- | :--- |
 | `TAILSCALE_AUTHKEY` | Tailscale pre-authenticated reusable or OAuth auth key tagged `tag:ci-cd` | `tskey-auth-k...` |
 | `MACBOOK_SSH_KEY` | Ed25519 or RSA private SSH key for remote command execution on the Mac | `-----BEGIN OPENSSH PRIVATE KEY-----...` |
+| `MACBOOK_SSH_KNOWN_HOSTS` | (Optional) Pinned SSH public key fingerprint of MacBook on Tailscale mesh | `100.85.12.34 ssh-ed25519 AAAAC3...` |
 
 ### Repository Variables (`Settings -> Secrets and variables -> Actions -> Variables`)
 

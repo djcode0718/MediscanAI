@@ -30,19 +30,28 @@ echo -e "${BLUE}================================================================
 # 1. Host Storage & SSD Capacity
 echo -e "\n${BLUE}[1/6] Host SSD Storage Utilization (MacBook Air M4):${NC}"
 if [ "$(uname)" = "Darwin" ]; then
-    DISK_LINE=$(df -h / | awk 'NR==2')
-    TOTAL_SIZE=$(echo "$DISK_LINE" | awk '{print $2}')
-    USED_SIZE=$(echo "$DISK_LINE" | awk '{print $3}')
-    AVAIL_SIZE=$(echo "$DISK_LINE" | awk '{print $4}')
-    USED_PCT=$(df -k / | awk 'NR==2 {gsub("%","",$5); print $5}')
+    TARGET_VOL="/System/Volumes/Data"
+    if [ ! -d "$TARGET_VOL" ]; then
+        TARGET_VOL="$DEPLOY_DIR"
+    fi
+    TOTAL_SIZE=$(df -h "$TARGET_VOL" | awk 'NR==2 {print $2}')
+    USED_SIZE=$(df -h "$TARGET_VOL" | awk 'NR==2 {print $3}')
+    AVAIL_SIZE=$(df -h "$TARGET_VOL" | awk 'NR==2 {print $4}')
+    TOTAL_KB=$(df -k "$TARGET_VOL" | awk 'NR==2 {print $2}')
+    AVAIL_KB=$(df -k "$TARGET_VOL" | awk 'NR==2 {print $4}')
+    USED_PCT=$(( (TOTAL_KB - AVAIL_KB) * 100 / TOTAL_KB ))
+    VOL_LABEL="APFS Container (${TARGET_VOL})"
 else
     TOTAL_SIZE=$(df -h / | awk 'NR==2 {print $2}')
     USED_SIZE=$(df -h / | awk 'NR==2 {print $3}')
     AVAIL_SIZE=$(df -h / | awk 'NR==2 {print $4}')
-    USED_PCT=$(df -k / | awk 'NR==2 {gsub("%","",$5); print $5}')
+    TOTAL_KB=$(df -k / | awk 'NR==2 {print $2}')
+    AVAIL_KB=$(df -k / | awk 'NR==2 {print $4}')
+    USED_PCT=$(( (TOTAL_KB - AVAIL_KB) * 100 / TOTAL_KB ))
+    VOL_LABEL="Root Filesystem (/)"
 fi
 
-echo "  Root Filesystem: ${USED_SIZE} used / ${TOTAL_SIZE} total (${AVAIL_SIZE} available)"
+echo "  ${VOL_LABEL}: ${USED_SIZE} used / ${TOTAL_SIZE} total (${AVAIL_SIZE} available, ${USED_PCT}% capacity)"
 
 if [ "$USED_PCT" -ge 90 ]; then
     echo -e "  Threshold Status: ${RED}CRITICAL (${USED_PCT}% used >= 90% limit). Deployments blocked.${NC}"

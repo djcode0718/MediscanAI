@@ -91,16 +91,27 @@ log "Docker daemon is active and responding."
 
 # 2. Check Host Storage Capacity & Thresholds
 log "Step 2/7: Checking host SSD storage capacity against safety thresholds..."
-# Calculate root filesystem usage percentage
+# On macOS APFS, root (/) is a read-only system volume; /System/Volumes/Data holds user/docker data.
+# Inspecting /System/Volumes/Data (or $DEPLOY_DIR) accurately reflects shared APFS container headroom.
 if [ "$(uname)" = "Darwin" ]; then
-    USED_PCT=$(df -k / | awk 'NR==2 {gsub("%","",$5); print $5}')
-    AVAIL_HUMAN=$(df -h / | awk 'NR==2 {print $4}')
+    TARGET_VOL="/System/Volumes/Data"
+    if [ ! -d "$TARGET_VOL" ]; then
+        TARGET_VOL="$DEPLOY_DIR"
+    fi
+    TOTAL_KB=$(df -k "$TARGET_VOL" | awk 'NR==2 {print $2}')
+    AVAIL_KB=$(df -k "$TARGET_VOL" | awk 'NR==2 {print $4}')
+    USED_PCT=$(( (TOTAL_KB - AVAIL_KB) * 100 / TOTAL_KB ))
+    AVAIL_HUMAN=$(df -h "$TARGET_VOL" | awk 'NR==2 {print $4}')
+    VOL_NAME="APFS Data volume (${TARGET_VOL})"
 else
-    USED_PCT=$(df -k / | awk 'NR==2 {gsub("%","",$5); print $5}')
+    TOTAL_KB=$(df -k / | awk 'NR==2 {print $2}')
+    AVAIL_KB=$(df -k / | awk 'NR==2 {print $4}')
+    USED_PCT=$(( (TOTAL_KB - AVAIL_KB) * 100 / TOTAL_KB ))
     AVAIL_HUMAN=$(df -h / | awk 'NR==2 {print $4}')
+    VOL_NAME="Root filesystem (/)"
 fi
 
-log "Root filesystem storage: ${USED_PCT}% used (${AVAIL_HUMAN} available)."
+log "Host storage [${VOL_NAME}]: ${USED_PCT}% used (${AVAIL_HUMAN} available)."
 
 if [ "$USED_PCT" -ge 90 ]; then
     log_err "CRITICAL: Storage capacity is at ${USED_PCT}% (>= 90% threshold). Blocking deployment to prevent system freeze."
@@ -146,13 +157,21 @@ fi
 
 # 5. Pre-Deployment Database Backup
 if [ "$SKIP_BACKUP" != "true" ]; then
-    log "Step 5/7: Executing pre-deployment PostgreSQL safety backup..."
-    if [ -x "${SCRIPT_DIR}/backup-postgres.sh" ]; then
-        "${SCRIPT_DIR}/backup-postgres.sh" --retention-days 7 || {
-            log "WARNING: Pre-deployment backup failed or postgres was offline. Proceeding cautiously..."
-        }
+    log "Step 5/7: Evaluating pre-deployment database backup..."
+    if docker ps --format '{{.Names}}' | grep -q "^mediscanai-postgres$"; then
+        log "PostgreSQL container is active. Executing mandatory pre-deployment backup..."
+        if [ -x "${SCRIPT_DIR}/backup-postgres.sh" ]; then
+            if ! "${SCRIPT_DIR}/backup-postgres.sh" --retention-days 7; then
+                log_err "CRITICAL: Pre-deployment database backup failed. Blocking deployment to protect data integrity."
+                exit 1
+            fi
+            log "Pre-deployment database backup verified successfully."
+        else
+            log_err "CRITICAL: backup-postgres.sh is missing or not executable. Blocking deployment."
+            exit 1
+        fi
     else
-        log "WARNING: backup-postgres.sh not executable or not found. Skipping backup."
+        log "NOTICE: PostgreSQL container is not running (e.g. cold first deployment). Skipping pre-deployment backup."
     fi
 else
     log "Step 5/7: Skipping pre-deployment database backup (--skip-backup passed)."

@@ -88,6 +88,18 @@ if [ -f "$HISTORY_FILE" ]; then
     done < <(awk -F'|' '{print $3}' "$HISTORY_FILE" | tr -d '[:space:]' | tail -n 5 | sort -u)
 fi
 
+# Dynamically protect images currently in use by active containers
+if docker info >/dev/null 2>&1; then
+    while IFS= read -r running_img; do
+        if [ -n "$running_img" ]; then
+            if [[ ! " ${PROTECTED_IMAGES[*]} " =~ " ${running_img} " ]]; then
+                PROTECTED_IMAGES+=("$running_img")
+                log "  Protected [ACTIVE CONTAINER]: ${running_img}"
+            fi
+        fi
+    done < <(docker ps --format '{{.Image}}' 2>/dev/null || true)
+fi
+
 # 2. Docker Image Pruning (Safe & Targeted)
 log "Step 2/5: Evaluating Docker images..."
 if docker info >/dev/null 2>&1; then
@@ -126,9 +138,15 @@ log "  SAFEGUARD VERIFIED: 'mediscanai_caddy_data' is LOCKED and exempt from pru
 # 4. PostgreSQL Backup Archives Pruning
 log "Step 4/5: Evaluating database backup retention (${RETENTION_DAYS} days)..."
 if [ -d "$BACKUP_DIR" ]; then
+    # Newest backup is protected under all circumstances
+    LATEST_ARCHIVE=$(ls -t "${BACKUP_DIR}"/mediscanai_postgres_*.dump.gz 2>/dev/null | head -n 1 || echo "")
     OLD_BACKUPS=()
     while IFS= read -r f; do
         if [ -n "$f" ]; then
+            if [ "$f" = "$LATEST_ARCHIVE" ]; then
+                log "  Preserving latest valid backup: $(basename "$f")"
+                continue
+            fi
             OLD_BACKUPS+=("$f")
         fi
     done < <(find "$BACKUP_DIR" -type f -name "mediscanai_postgres_*.dump.gz" -mtime "+${RETENTION_DAYS}" 2>/dev/null || true)
@@ -150,26 +168,51 @@ else
     log "  Backup directory '${BACKUP_DIR}' does not exist yet."
 fi
 
-# 5. Clean Temporary Upload Artifacts (> 24 hours old)
+# 5. Clean Temporary MediScanAI Artifacts (> 24 hours old)
 log "Step 5/5: Cleaning temporary staging files (> 24 hours old)..."
-TEMP_DIRS=("/tmp/mediscanai_*" "/tmp/ocr_*" "/tmp/whisper_*")
-for pattern in "${TEMP_DIRS[@]}"; do
-    for dir in $pattern; do
-        if [ -d "$dir" ] && [ -n "$(find "$dir" -maxdepth 0 -mtime +1 2>/dev/null)" ]; then
+# Resolve canonical temp directory
+if [ -d "/private/tmp" ]; then
+    CANONICAL_TEMP="/private/tmp"
+else
+    CANONICAL_TEMP="/tmp"
+fi
+
+TEMP_PATTERNS=("mediscan_*" "mediscanai_*")
+FOUND_TEMP_COUNT=0
+
+for pattern in "${TEMP_PATTERNS[@]}"; do
+    while IFS= read -r item; do
+        if [ -n "$item" ]; then
+            # Verify item canonical path resides strictly inside canonical temp directory
+            REAL_PATH=$(realpath "$item" 2>/dev/null || echo "")
+            if [[ "$REAL_PATH" != "$CANONICAL_TEMP"/mediscan* ]]; then
+                log "  SKIPPING unsafe item outside temp bounds: $item -> $REAL_PATH"
+                continue
+            fi
+            # Guard: Never follow or delete symlink targets
+            if [ -L "$item" ]; then
+                log "  SKIPPING symlink: $item"
+                continue
+            fi
+            FOUND_TEMP_COUNT=$((FOUND_TEMP_COUNT + 1))
             if [ "$DRY_RUN" = "false" ]; then
-                rm -rf "$dir"
-                log "  Removed stale temp dir: $dir"
+                rm -rf "$item"
+                log "  Removed stale temp item: $item"
             else
-                log "  [DRY-RUN] Would remove stale temp dir: $dir"
+                log "  [DRY-RUN] Would remove stale temp item: $item"
             fi
         fi
-    done
+    done < <(find "$CANONICAL_TEMP" -maxdepth 1 \( -name "$pattern" \) -mtime +1 2>/dev/null || true)
 done
+
+if [ "$FOUND_TEMP_COUNT" -eq 0 ]; then
+    log "  No stale MediScanAI temporary files found (> 24 hours old)."
+fi
 
 # 6. Report Storage After Maintenance
 log "Storage Summary:"
 if [ "$(uname)" = "Darwin" ]; then
-    df -h / | awk 'NR==1 || NR==2 {print "  " $0}'
+    df -h /System/Volumes/Data / | awk 'NR==1 || NR==2 || NR==3 {print "  " $0}'
 else
     df -h / | awk 'NR==1 || NR==2 {print "  " $0}'
 fi
