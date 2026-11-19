@@ -32,6 +32,11 @@ services:
       resources:
         limits:
           memory: 1024M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   # ----------------------------------------------------------------------------
   # FastAPI Multimodal Backend Service
@@ -42,7 +47,7 @@ services:
       dockerfile: deployment/Dockerfile
       args:
         BUILD_TARGET: cpu
-    image: mediscanai-backend:production
+    image: ${MEDISCANAI_IMAGE:-mediscanai-backend:production}
     container_name: mediscanai-backend
     restart: unless-stopped
     env_file:
@@ -77,6 +82,11 @@ services:
       resources:
         limits:
           memory: 4096M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   # ----------------------------------------------------------------------------
   # Caddy Reverse Proxy & Automatic TLS Termination
@@ -103,6 +113,11 @@ services:
       resources:
         limits:
           memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 # ------------------------------------------------------------------------------
 # Persistent Volumes
