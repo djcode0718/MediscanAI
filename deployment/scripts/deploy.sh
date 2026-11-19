@@ -113,6 +113,17 @@ fi
 
 log "Host storage [${VOL_NAME}]: ${USED_PCT}% used (${AVAIL_HUMAN} available)."
 
+# Absolute Headroom Requirement:
+# Image pull (~3.86GB uncompressed + ~1.2GB download stream) + rollback image (~3.86GB) + DB backup + runtime buffer = 15 GiB
+REQUIRED_HEADROOM_KB=15728640  # 15 GiB in KiB
+REQUIRED_HEADROOM_HUMAN="15Gi"
+
+if [ "$AVAIL_KB" -lt "$REQUIRED_HEADROOM_KB" ]; then
+    log_err "CRITICAL: Insufficient disk headroom for deployment. Required minimum: ${REQUIRED_HEADROOM_HUMAN}, Available: ${AVAIL_HUMAN}."
+    log_err "Deployment blocked to protect host system stability and prevent disk exhaustion."
+    exit 1
+fi
+
 if [ "$USED_PCT" -ge 90 ]; then
     log_err "CRITICAL: Storage capacity is at ${USED_PCT}% (>= 90% threshold). Blocking deployment to prevent system freeze."
     exit 1

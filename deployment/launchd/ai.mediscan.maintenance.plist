@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>ai.mediscan.maintenance</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/sj/Documents/mediscanai/deployment/scripts/maintenance.sh</string>
+        <string>--force</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>/Users/sj/Documents/mediscanai</string>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Weekday</key>
+        <integer>0</integer> <!-- Sunday (0 or 7 in launchd) -->
+        <key>Hour</key>
+        <integer>3</integer>  <!-- 03:00 AM -->
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>/Users/sj/Documents/mediscanai/deployment/logs/maintenance.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/sj/Documents/mediscanai/deployment/logs/maintenance_error.log</string>
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>

@@ -18,7 +18,7 @@ GitHub Pull Request (PR)
         │
         ├─► [Workflow: pr-ci.yml] (Fast Checks: ~3 min)
         │     ├─ Python Syntax & Bytecode Compilation
-        │     ├─ Fast Backend Unit Tests (71 tests, SQLite in-memory, mocked boundaries)
+        │     ├─ Fast Backend Unit Tests (69 tests, SQLite in-memory, mocked boundaries)
         │     ├─ Frontend Lint & Production Asset Build (Vite)
         │     └─ Native iOS Debug Build & Unit Tests (62 tests, iPhone 16 Simulator)
         │
@@ -94,7 +94,7 @@ deployment/scripts/deploy.sh
 - **Triggers:** Merge/push to `main`, release tags (`v*.*.*`), or manual dispatch.
 - **Registry:** GitHub Container Registry (`ghcr.io`).
 - **Target Image:** `ghcr.io/<owner>/mediscanai-backend`.
-- **Architecture:** `linux/arm64` (Apple Silicon M4 production target).
+- **Architecture:** `linux/arm64` (Apple Silicon M4 production target). Built on GitHub-hosted `ubuntu-22.04` runners using QEMU emulation (`docker/setup-qemu-action`) and Docker Buildx to cross-compile native `linux/arm64` container images.
 - **Caching:** GitHub Actions Cache (`type=gha,mode=max`).
 - **Tagging Strategy:**
   - `sha-${{ github.sha }}`: **Immutable reference** used for all CD deployments.
@@ -119,8 +119,14 @@ Configure these settings under **GitHub Repository -> Settings -> Secrets and va
 | Secret Name | Description | Example / Format |
 | :--- | :--- | :--- |
 | `TAILSCALE_AUTHKEY` | Tailscale pre-authenticated reusable or OAuth auth key tagged `tag:ci-cd` | `tskey-auth-k...` |
-| `MACBOOK_SSH_KEY` | Ed25519 or RSA private SSH key for remote command execution on the Mac | `-----BEGIN OPENSSH PRIVATE KEY-----...` |
-| `MACBOOK_SSH_KNOWN_HOSTS` | (Optional) Pinned SSH public key fingerprint of MacBook on Tailscale mesh | `100.85.12.34 ssh-ed25519 AAAAC3...` |
+| `MACBOOK_SSH_KEY` | Ed25519 private SSH key for remote command execution on the Mac | `-----BEGIN OPENSSH PRIVATE KEY-----...` |
+| `MACBOOK_SSH_KNOWN_HOSTS` | **Mandatory** pinned SSH host key line (StrictHostKeyChecking=yes) | `<host> ssh-ed25519 AAAAC3...` |
+
+*To securely obtain `MACBOOK_SSH_KNOWN_HOSTS` on the Mac host:*
+```bash
+# Extract the Mac host's ed25519 public host key and prefix with Tailscale IP/hostname:
+echo "<MACBOOK_TAILSCALE_HOST> $(cat /etc/ssh/ssh_host_ed25519_key.pub)"
+```
 
 ### Repository Variables (`Settings -> Secrets and variables -> Actions -> Variables`)
 
@@ -150,11 +156,12 @@ brew install --cask tailscale
 Open Tailscale, sign in with your account, and connect.
 
 ### Step 2: Configure Access Control Lists (ACLs) in Tailscale Admin Console
-In the [Tailscale Admin Console](https://login.tailscale.com/admin/acls), configure tags:
+In the [Tailscale Admin Console](https://login.tailscale.com/admin/acls), configure tags. Both `tag:ci-cd` and `tag:production-host` must be declared under `tagOwners`:
 ```json
 {
   "tagOwners": {
-    "tag:ci-cd": ["autogroup:admin"]
+    "tag:ci-cd": ["autogroup:admin"],
+    "tag:production-host": ["autogroup:admin"]
   },
   "acls": [
     {
@@ -175,7 +182,7 @@ In the [Tailscale Admin Console](https://login.tailscale.com/admin/acls), config
 
 ### Step 4: Configure Remote Login (SSH) on the MacBook
 1. Open **System Settings -> General -> Sharing**.
-2. Turn on **Remote Login** (SSH).
+2. Turn on **Remote Login** (SSH), restricted to your account (`sj`).
 3. Generate a dedicated deploy keypair:
    ```bash
    ssh-keygen -t ed25519 -C "github-actions-mediscanai-deploy" -f ~/.ssh/id_ed25519_deploy -N ""
@@ -183,6 +190,7 @@ In the [Tailscale Admin Console](https://login.tailscale.com/admin/acls), config
    chmod 600 ~/.ssh/authorized_keys
    ```
 4. Copy `~/.ssh/id_ed25519_deploy` (private key) into GitHub Secrets as `MACBOOK_SSH_KEY`.
+5. Copy the host's public key into `MACBOOK_SSH_KNOWN_HOSTS`.
 5. Verify that SSH is accessible over the Tailscale IP (`100.x.y.z`).
 
 ---
@@ -263,70 +271,58 @@ Enforces storage hygiene without risking production data.
 
 ## 6. Storage Retention & Resource Safeguards
 
-The MacBook Air M4 has limited internal SSD capacity (256 GB or 512 GB) and acts as both server and workstation. The operations system enforces the following explicit policies:
+The MacBook Air M4 has a unified internal SSD (460 GiB APFS container) and acts as both development workstation and server. The operations system enforces the following explicit policies:
 
 | Resource | Retention Policy | Enforcement Mechanism |
 | :--- | :--- | :--- |
 | **Active Docker Image** | Kept indefinitely | Recorded in `deployment/.current_deployment` |
 | **Rollback Images** | Last 2 known-good images preserved | Recorded in `deployment/.deployment_history` |
 | **Dangling Images** | Removed during maintenance | `docker image prune -f` in `maintenance.sh` |
-| **Build Cache** | Capped at 5 GB headroom | `docker builder prune --keep-storage 5GB` in `maintenance.sh` |
+| **Obsolete Backend Images**| Removed if not in protected list | Targeted `mediscanai-backend` image prune in `maintenance.sh` |
+| **Unrelated Docker Projects**| **Permanently Exempt** | Images/volumes of other projects (e.g. `paxel`, etc.) are never touched |
+| **Build Cache** | Shared across host projects | Not pruned automatically; pruned only via `--prune-build-cache` |
 | **Container Logs** | Max 30 MB per container (10MB x 3 files) | Configured in `deployment/compose.yaml` logging options |
 | **PostgreSQL Data** | **Permanently Protected** | Named volume `mediscanai_postgres_data` is locked |
 | **AI Model Cache** | **Permanently Protected** | Named volume `mediscanai_model_cache` is locked |
-| **Database Backups** | 7 days retention (compressed `.dump.gz`) | Automated pruning in `backup-postgres.sh` |
-| **Temporary Files** | Deleted after 24 hours | Automated in `maintenance.sh` |
+| **Database Backups** | 7 days retention (newest always preserved) | Automated verification and pruning in `backup-postgres.sh` |
+| **Temporary Files** | Deleted after 24 hours | Strict allowlist `/private/tmp/mediscan_*` in `maintenance.sh` |
 
-### Storage Threshold Policy
-Storage utilization on `/` is verified automatically by `deploy.sh`:
+### Storage Threshold & Headroom Policy
+Storage utilization on macOS is evaluated on `/System/Volumes/Data` (the APFS volume holding user and container data):
 - `< 70%`: **Normal** — Headroom healthy.
 - `70% – 79%`: **Notice** — Logged in deployment report.
 - `80% – 89%`: **High Warning** — Maintenance cleanup recommended.
 - `>= 90%`: **CRITICAL BLOCK** — `deploy.sh` halts immediately to prevent SSD exhaustion.
+- **Minimum Absolute Headroom:** At least **15 GiB** of free space is required before any deployment can proceed (covers image pull, layer extraction, rollback retention, and pre-deployment database backup). If free space is below 15 GiB, deployment is blocked regardless of percentage.
+
+### Docker Desktop Host Configuration Recommendations
+- **Virtual Disk Limit:** In Docker Desktop (**Settings -> Resources -> Advanced**), set the virtual disk limit to **32 GB – 48 GB**. On macOS APFS, `Docker.raw` is a sparse file (currently allocating ~14 GB of physical SSD space). Setting an upper boundary guarantees Docker cannot consume unexpected disk space.
+- **Resource Allocation:** Allocate **8 GB RAM** and **6–8 CPU cores** to Docker Desktop, leaving ample memory and CPU for macOS workstation tasks.
 
 ---
 
 ## 7. Automated Maintenance Scheduling (macOS `launchd`)
 
-To run weekly maintenance on the MacBook Air M4 automatically, configure a user `launchd` agent:
+A validated LaunchAgent template is tracked in the repository at `deployment/launchd/ai.mediscan.maintenance.plist`.
 
-Create `~/Library/LaunchAgents/ai.mediscan.maintenance.plist`:
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>ai.mediscan.maintenance</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>/bin/bash</string>
-        <string>/Users/sj/Documents/mediscanai/deployment/scripts/maintenance.sh</string>
-        <string>--force</string>
-    </array>
-    <key>StartCalendarInterval</key>
-    <dict>
-        <key>Weekday</key>
-        <integer>0</integer> <!-- Sunday -->
-        <key>Hour</key>
-        <integer>3</integer>  <!-- 03:00 AM -->
-        <key>Minute</key>
-        <integer>0</integer>
-    </dict>
-    <key>StandardOutPath</key>
-    <string>/Users/sj/Documents/mediscanai/deployment/logs/maintenance.log</string>
-    <key>StandardErrorPath</key>
-    <string>/Users/sj/Documents/mediscanai/deployment/logs/maintenance_error.log</string>
-</dict>
-</plist>
-```
+To install and activate the weekly recurring maintenance job on the MacBook Air M4:
 
-Load the job:
 ```bash
+# 1. Copy the plist to user LaunchAgents:
+cp deployment/launchd/ai.mediscan.maintenance.plist ~/Library/LaunchAgents/
+
+# 2. Ensure log directory exists:
+mkdir -p /Users/sj/Documents/mediscanai/deployment/logs
+
+# 3. Load the launchd agent:
 launchctl load ~/Library/LaunchAgents/ai.mediscan.maintenance.plist
 ```
 
-*(Note: Maintenance runs only when the MacBook is awake. If sleeping, macOS runs it upon waking).*
+Features:
+- **Weekly Execution:** Runs every Sunday at 03:00 AM (or upon system wake).
+- **Concurrency Locking:** Atomic lock (`/tmp/mediscanai_maintenance.lock.d`) prevents overlapping maintenance runs.
+- **Bounded Logging:** Logs to `deployment/logs/maintenance.log` and automatically rotates logs exceeding 5 MB.
+- **Dry-run vs Force:** `maintenance.sh` defaults to `--dry-run`; the LaunchAgent invokes `--force` to apply tested, safe maintenance actions.
 
 ---
 

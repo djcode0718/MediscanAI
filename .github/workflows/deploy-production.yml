@@ -72,23 +72,22 @@ jobs:
           echo "${{ secrets.MACBOOK_SSH_KEY }}" > ~/.ssh/macbook_deploy_key
           chmod 600 ~/.ssh/macbook_deploy_key
 
-          # If known_hosts key fingerprint is provided in secrets, enforce strict pinned verification
-          if [ -n "${{ secrets.MACBOOK_SSH_KNOWN_HOSTS }}" ]; then
-            echo "${{ secrets.MACBOOK_SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
-            chmod 644 ~/.ssh/known_hosts
-            STRICT_CHECK="yes"
-            echo "Enforced pinned host-key verification (StrictHostKeyChecking=yes)."
-          else
-            STRICT_CHECK="accept-new"
-            echo "Using first-contact host-key recording (StrictHostKeyChecking=accept-new)."
+          # Enforce mandatory pinned SSH host-key verification
+          if [ -z "${{ secrets.MACBOOK_SSH_KNOWN_HOSTS }}" ]; then
+            echo "::error::MACBOOK_SSH_KNOWN_HOSTS secret is missing! Strict pinned SSH host-key verification is mandatory."
+            exit 1
           fi
+
+          echo "${{ secrets.MACBOOK_SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+          echo "Enforced pinned host-key verification (StrictHostKeyChecking=yes)."
 
           cat <<EOF >> ~/.ssh/config
           Host macbook-production
               HostName ${{ vars.MACBOOK_TAILSCALE_HOST }}
               User ${{ vars.MACBOOK_DEPLOY_USER }}
               IdentityFile ~/.ssh/macbook_deploy_key
-              StrictHostKeyChecking ${STRICT_CHECK}
+              StrictHostKeyChecking yes
               ConnectTimeout 30
               ServerAliveInterval 15
           EOF

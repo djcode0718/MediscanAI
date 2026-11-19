@@ -53,6 +53,15 @@ fi
 
 echo "  ${VOL_LABEL}: ${USED_SIZE} used / ${TOTAL_SIZE} total (${AVAIL_SIZE} available, ${USED_PCT}% capacity)"
 
+REQUIRED_HEADROOM_KB=15728640  # 15 GiB
+REQUIRED_HEADROOM_HUMAN="15Gi"
+
+if [ "$AVAIL_KB" -lt "$REQUIRED_HEADROOM_KB" ]; then
+    echo -e "  Deployment Headroom: ${RED}INSUFFICIENT (${AVAIL_SIZE} available < ${REQUIRED_HEADROOM_HUMAN} required). Deployments blocked.${NC}"
+else
+    echo -e "  Deployment Headroom: ${GREEN}SUFFICIENT (${AVAIL_SIZE} available >= ${REQUIRED_HEADROOM_HUMAN} requirement).${NC}"
+fi
+
 if [ "$USED_PCT" -ge 90 ]; then
     echo -e "  Threshold Status: ${RED}CRITICAL (${USED_PCT}% used >= 90% limit). Deployments blocked.${NC}"
 elif [ "$USED_PCT" -ge 80 ]; then
@@ -61,6 +70,14 @@ elif [ "$USED_PCT" -ge 70 ]; then
     echo -e "  Threshold Status: ${YELLOW}WARNING (${USED_PCT}% used >= 70%).${NC}"
 else
     echo -e "  Threshold Status: ${GREEN}NORMAL (${USED_PCT}% used < 70%). Headroom healthy.${NC}"
+fi
+
+# Docker Desktop Disk Image on macOS Host
+DOCKER_RAW_PATH="$HOME/Library/Containers/com.docker.docker/Data/vms/0/data/Docker.raw"
+if [ -f "$DOCKER_RAW_PATH" ]; then
+    DOCKER_RAW_ALLOC=$(du -sh "$DOCKER_RAW_PATH" | cut -f1)
+    DOCKER_RAW_VIRTUAL=$(ls -lh "$DOCKER_RAW_PATH" | awk '{print $5}')
+    echo -e "  Docker VM Disk (Docker.raw): ${DOCKER_RAW_ALLOC} allocated on SSD (Virtual limit: ${DOCKER_RAW_VIRTUAL})"
 fi
 
 # 2. Docker Daemon & Engine Status
@@ -118,20 +135,27 @@ fi
 echo -e "\n${BLUE}[6/6] PostgreSQL Backups & Storage Volumes:${NC}"
 if [ -d "$BACKUP_DIR" ]; then
     BACKUP_COUNT=$(find "$BACKUP_DIR" -type f -name "mediscanai_postgres_*.dump.gz" 2>/dev/null | wc -l | tr -d ' ')
+    BACKUP_DIR_SIZE=$(du -sh "$BACKUP_DIR" 2>/dev/null | cut -f1 || echo "0B")
     if [ "$BACKUP_COUNT" -gt 0 ]; then
         LATEST_BACKUP=$(ls -t "${BACKUP_DIR}"/mediscanai_postgres_*.dump.gz 2>/dev/null | head -n 1 || echo "")
         LATEST_SIZE=$(du -h "$LATEST_BACKUP" 2>/dev/null | cut -f1 || echo "unknown")
-        echo -e "  Backups: ${GREEN}${BACKUP_COUNT} archive(s) present.${NC}"
+        echo -e "  Backups: ${GREEN}${BACKUP_COUNT} archive(s) present (${BACKUP_DIR_SIZE} total).${NC}"
         echo "  Latest Backup: $(basename "$LATEST_BACKUP") (${LATEST_SIZE})"
     else
-        echo -e "  Backups: ${YELLOW}No backup archives found in ${BACKUP_DIR}.${NC}"
+        echo -e "  Backups: ${YELLOW}No backup archives found in ${BACKUP_DIR} (${BACKUP_DIR_SIZE}).${NC}"
     fi
 else
     echo "  Backup directory does not exist yet."
 fi
 
 if [ "$DOCKER_AVAILABLE" = "true" ]; then
-    echo -e "\n  Docker Disk Usage (docker system df):"
+    echo -e "\n  MediScanAI Docker Images:"
+    docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}" | grep -E "(REPOSITORY|mediscanai-backend|postgres|caddy)" || echo "    No MediScanAI images found."
+
+    echo -e "\n  MediScanAI Named Persistent Volumes (LOCKED):"
+    docker volume ls --format "table {{.Name}}\t{{.Driver}}" | grep -E "(VOLUME NAME|mediscanai_)" || echo "    No MediScanAI named volumes found."
+
+    echo -e "\n  Global Docker Storage Summary (docker system df):"
     docker system df 2>/dev/null || true
 fi
 

@@ -18,10 +18,25 @@ PROJECT_ROOT="$(cd "${DEPLOY_DIR}/.." && pwd)"
 CURRENT_DEPLOY_FILE="${DEPLOY_DIR}/.current_deployment"
 HISTORY_FILE="${DEPLOY_DIR}/.deployment_history"
 BACKUP_DIR="${DEPLOY_DIR}/backups"
+LOGS_DIR="${DEPLOY_DIR}/logs"
 
 DRY_RUN=true
+PRUNE_BUILD_CACHE=false
 RETENTION_DAYS="${RETENTION_DAYS:-7}"
 BUILDER_KEEP_STORAGE="${BUILDER_KEEP_STORAGE:-5GB}"
+
+# Lock to prevent overlapping maintenance runs
+LOCK_DIR="/tmp/mediscanai_maintenance.lock.d"
+
+cleanup_lock() {
+    rmdir "$LOCK_DIR" 2>/dev/null || true
+}
+
+if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+    echo "[MAINTENANCE $(date +'%Y-%m-%d %H:%M:%S')] NOTICE: Another maintenance process is currently active (${LOCK_DIR} exists). Exiting cleanly."
+    exit 0
+fi
+trap cleanup_lock EXIT
 
 log() {
     echo "[MAINTENANCE $(date +'%Y-%m-%d %H:%M:%S')] $*"
@@ -41,13 +56,18 @@ while [[ $# -gt 0 ]]; do
             DRY_RUN=true
             shift
             ;;
+        --prune-build-cache)
+            PRUNE_BUILD_CACHE=true
+            shift
+            ;;
         --retention-days)
             RETENTION_DAYS="$2"
             shift 2
             ;;
         -h|--help)
-            echo "Usage: $0 [--dry-run | --force] [--retention-days <days>]"
+            echo "Usage: $0 [--dry-run | --force] [--prune-build-cache] [--retention-days <days>]"
             echo "  Default mode is --dry-run. Pass --force to execute cleanup actions."
+            echo "  --prune-build-cache explicitly prunes build cache (keeps ${BUILDER_KEEP_STORAGE})."
             exit 0
             ;;
         *)
@@ -100,10 +120,16 @@ if docker info >/dev/null 2>&1; then
     done < <(docker ps --format '{{.Image}}' 2>/dev/null || true)
 fi
 
-# 2. Docker Image Pruning (Safe & Targeted)
+# 2. Docker Image Pruning (Targeted MediScanAI Images Only)
 log "Step 2/5: Evaluating Docker images..."
 if docker info >/dev/null 2>&1; then
-    # Remove dangling untagged images (<none>)
+    # Protect common infrastructure images
+    BASE_INFRA_IMAGES=("postgres:15-alpine" "caddy:2-alpine" "alpine:latest")
+    for base_img in "${BASE_INFRA_IMAGES[@]}"; do
+        PROTECTED_IMAGES+=("$base_img")
+    done
+
+    # Remove dangling untagged images (<none>) safely
     DANGLING_COUNT=$(docker images -f "dangling=true" -q | wc -l | tr -d ' ')
     if [ "$DANGLING_COUNT" -gt 0 ]; then
         log "  Found ${DANGLING_COUNT} dangling untagged image(s)."
@@ -117,13 +143,53 @@ if docker info >/dev/null 2>&1; then
         log "  No dangling images to prune."
     fi
 
-    # Clean old Docker builder cache with bounded limit
-    log "  Evaluating Docker buildx builder cache (retention target: ${BUILDER_KEEP_STORAGE})..."
-    if [ "$DRY_RUN" = "false" ]; then
-        docker builder prune -f --keep-storage "$BUILDER_KEEP_STORAGE" >/dev/null 2>&1 || true
-        log "  Builder cache pruned with headroom preserved."
+    # Evaluate obsolete MediScanAI backend images
+    log "  Evaluating obsolete MediScanAI images..."
+    while IFS= read -r candidate_img; do
+        if [ -n "$candidate_img" ] && [ "$candidate_img" != "<none>:<none>" ]; then
+            # Verify candidate is strictly a MediScanAI image
+            if [[ "$candidate_img" =~ (mediscanai-backend) ]]; then
+                # Check if image is protected
+                IS_PROTECTED=false
+                for p in "${PROTECTED_IMAGES[@]}"; do
+                    if [ "$candidate_img" = "$p" ] || [[ "$candidate_img" == *"$p"* ]]; then
+                        IS_PROTECTED=true
+                        break
+                    fi
+                done
+
+                # Check if referenced by any existing container
+                IN_USE=false
+                if [ -n "$(docker ps -a --filter "ancestor=${candidate_img}" -q 2>/dev/null)" ]; then
+                    IN_USE=true
+                fi
+
+                if [ "$IS_PROTECTED" = "false" ] && [ "$IN_USE" = "false" ]; then
+                    if [ "$DRY_RUN" = "false" ]; then
+                        docker rmi "$candidate_img" >/dev/null 2>&1 || true
+                        log "  Removed obsolete MediScanAI image: ${candidate_img}"
+                    else
+                        log "  [DRY-RUN] Would remove obsolete MediScanAI image: ${candidate_img}"
+                    fi
+                else
+                    log "  Retained protected/in-use MediScanAI image: ${candidate_img}"
+                fi
+            fi
+        fi
+    done < <(docker images --format '{{.Repository}}:{{.Tag}}' 2>/dev/null || true)
+
+    # Evaluate Docker builder cache (shared with other projects on Mac)
+    if [ "$PRUNE_BUILD_CACHE" = "true" ]; then
+        log "  Evaluating Docker buildx builder cache (explicit prune requested, keeping ${BUILDER_KEEP_STORAGE})..."
+        if [ "$DRY_RUN" = "false" ]; then
+            docker builder prune -f --keep-storage "$BUILDER_KEEP_STORAGE" >/dev/null 2>&1 || true
+            log "  Builder cache pruned with headroom preserved."
+        else
+            log "  [DRY-RUN] Would prune build cache exceeding ${BUILDER_KEEP_STORAGE}."
+        fi
     else
-        log "  [DRY-RUN] Would prune build cache exceeding ${BUILDER_KEEP_STORAGE}."
+        log "  Build cache evaluation: Skipped automatic prune (build cache is shared across host projects)."
+        log "  Pass --prune-build-cache to prune build cache exceeding ${BUILDER_KEEP_STORAGE}."
     fi
 else
     log "  Docker daemon offline; skipping container/image prune."
@@ -209,8 +275,29 @@ if [ "$FOUND_TEMP_COUNT" -eq 0 ]; then
     log "  No stale MediScanAI temporary files found (> 24 hours old)."
 fi
 
-# 6. Report Storage After Maintenance
-log "Storage Summary:"
+# 6. Evaluate Operational Logs Bounded Rotation
+log "Step 6/7: Evaluating operational log files..."
+if [ -d "$LOGS_DIR" ]; then
+    for log_file in "${LOGS_DIR}"/*.log; do
+        if [ -f "$log_file" ]; then
+            LOG_SIZE_KB=$(du -k "$log_file" 2>/dev/null | awk '{print $1}' || echo 0)
+            if [ "$LOG_SIZE_KB" -gt 5120 ]; then # > 5MB
+                if [ "$DRY_RUN" = "false" ]; then
+                    mv "$log_file" "${log_file}.1"
+                    : > "$log_file"
+                    log "  Rotated oversized log (>5MB): $(basename "$log_file")"
+                else
+                    log "  [DRY-RUN] Would rotate oversized log (>5MB): $(basename "$log_file")"
+                fi
+            fi
+        fi
+    done
+else
+    mkdir -p "$LOGS_DIR"
+fi
+
+# 7. Report Storage After Maintenance
+log "Step 7/7: Storage Summary:"
 if [ "$(uname)" = "Darwin" ]; then
     df -h /System/Volumes/Data / | awk 'NR==1 || NR==2 || NR==3 {print "  " $0}'
 else
