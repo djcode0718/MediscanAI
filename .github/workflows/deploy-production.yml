@@ -1,0 +1,124 @@
+name: Production Deployment (MacBook Air M4)
+
+on:
+  workflow_run:
+    workflows: ["Build and Publish Production Docker Image"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Exact immutable image reference to deploy (e.g., ghcr.io/djcode0718/mediscanai-backend:sha-abc1234)'
+        required: false
+        default: ''
+      dry_run:
+        description: 'Simulate deployment without modifying production (true/false)'
+        type: boolean
+        required: false
+        default: false
+
+concurrency:
+  group: production-deployment
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-to-macbook:
+    name: Deploy to MacBook Air M4 Host
+    runs-on: ubuntu-22.04
+    environment: production
+    timeout-minutes: 25
+
+    # Triggered automatically only if upstream publish build succeeded on main
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Resolve target image reference
+        id: resolve
+        run: |
+          REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          DEFAULT_IMAGE="ghcr.io/${REPO_OWNER}/mediscanai-backend:sha-${{ github.sha }}"
+
+          if [ -n "${{ github.event.inputs.image_tag }}" ]; then
+            TARGET_IMAGE="${{ github.event.inputs.image_tag }}"
+          elif [ "${{ github.event_name }}" = "workflow_run" ]; then
+            TARGET_IMAGE="ghcr.io/${REPO_OWNER}/mediscanai-backend:sha-${{ github.event.workflow_run.head_sha }}"
+          else
+            TARGET_IMAGE="${DEFAULT_IMAGE}"
+          fi
+
+          echo "target_image=${TARGET_IMAGE}" >> "$GITHUB_OUTPUT"
+          echo "Target deployment image resolved: ${TARGET_IMAGE}"
+
+      # ------------------------------------------------------------------------
+      # Private Tailscale Mesh Connectivity
+      # ------------------------------------------------------------------------
+      - name: Connect to Private Tailscale Mesh
+        uses: tailscale/github-action@v3
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+          tags: tag:ci-cd
+          args: --accept-routes
+
+      - name: Configure SSH over Tailscale
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "${{ secrets.MACBOOK_SSH_KEY }}" > ~/.ssh/macbook_deploy_key
+          chmod 600 ~/.ssh/macbook_deploy_key
+
+          cat <<EOF >> ~/.ssh/config
+          Host macbook-production
+              HostName ${{ vars.MACBOOK_TAILSCALE_HOST }}
+              User ${{ vars.MACBOOK_DEPLOY_USER }}
+              IdentityFile ~/.ssh/macbook_deploy_key
+              StrictHostKeyChecking accept-new
+              ConnectTimeout 30
+              ServerAliveInterval 15
+          EOF
+
+      # ------------------------------------------------------------------------
+      # Host Verification & Health Check
+      # ------------------------------------------------------------------------
+      - name: Verify Host & Docker Availability
+        run: |
+          echo "Connecting to production host over private Tailscale tunnel..."
+          ssh macbook-production "
+            echo 'Host connection established: '\$(hostname)
+            echo 'Kernel architecture: '\$(uname -m)
+            echo 'Checking Docker availability...'
+            docker info >/dev/null || (echo 'ERROR: Docker daemon is unreachable on MacBook' && exit 1)
+          "
+
+      - name: Execute Production Deployment
+        id: deploy
+        run: |
+          DRY_RUN_FLAG=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            DRY_RUN_FLAG="--dry-run"
+          fi
+
+          echo "Executing deployment on MacBook Air M4..."
+          ssh macbook-production "
+            cd \${DEPLOY_PATH:-~/Documents/mediscanai}
+            ./deployment/scripts/deploy.sh --image '${{ steps.resolve.outputs.target_image }}' ${DRY_RUN_FLAG}
+          "
+
+      # ------------------------------------------------------------------------
+      # Automated Rollback on Failure
+      # ------------------------------------------------------------------------
+      - name: Safe Rollback on Deployment Failure
+        if: failure() && steps.deploy.outcome == 'failure'
+        run: |
+          echo "================================================================"
+          echo "CRITICAL: Deployment step failed! Initiating automated rollback..."
+          echo "================================================================"
+          ssh macbook-production "
+            cd \${DEPLOY_PATH:-~/Documents/mediscanai}
+            ./deployment/scripts/rollback.sh
+          "

@@ -1,0 +1,98 @@
+name: Build and Publish Production Docker Image
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*.*.*']
+  workflow_dispatch:
+    inputs:
+      custom_tag:
+        description: 'Optional custom image tag'
+        required: false
+        default: ''
+
+concurrency:
+  group: docker-publish-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-publish:
+    name: Build & Push ARM64 Production Image to GHCR
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+
+    outputs:
+      image_uri: ${{ steps.meta.outputs.image_uri }}
+      image_tag: ${{ steps.meta.outputs.immutable_tag }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU (ARM64 emulation)
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: linux/arm64
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compute image tags and metadata
+        id: meta
+        run: |
+          # Lowercase repository owner for GHCR compatibility
+          REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          IMAGE_NAME="ghcr.io/${REPO_OWNER}/mediscanai-backend"
+          IMMUTABLE_TAG="sha-${{ github.sha }}"
+
+          TAGS="${IMAGE_NAME}:${IMMUTABLE_TAG}"
+
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            TAGS="${TAGS},${IMAGE_NAME}:latest"
+          fi
+
+          if [[ "${{ github.ref }}" =~ ^refs/tags/v ]]; then
+            TAG_NAME="${GITHUB_REF#refs/tags/}"
+            TAGS="${TAGS},${IMAGE_NAME}:${TAG_NAME}"
+          fi
+
+          if [ -n "${{ github.event.inputs.custom_tag }}" ]; then
+            TAGS="${TAGS},${IMAGE_NAME}:${{ github.event.inputs.custom_tag }}"
+          fi
+
+          echo "tags=${TAGS}" >> "$GITHUB_OUTPUT"
+          echo "immutable_tag=${IMMUTABLE_TAG}" >> "$GITHUB_OUTPUT"
+          echo "image_uri=${IMAGE_NAME}:${IMMUTABLE_TAG}" >> "$GITHUB_OUTPUT"
+          echo "Building with tags: ${TAGS}"
+
+      - name: Build and push ARM64 Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: deployment/Dockerfile
+          platforms: linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          build-args: |
+            BUILD_TARGET=cpu
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Display published image references
+        run: |
+          echo "================================================================"
+          echo "Published immutable image: ${{ steps.meta.outputs.image_uri }}"
+          echo "Platform: linux/arm64 (Apple Silicon M4 Target)"
+          echo "Registry: GitHub Container Registry (GHCR)"
+          echo "================================================================"
