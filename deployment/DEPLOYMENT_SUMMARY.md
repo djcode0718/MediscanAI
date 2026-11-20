@@ -4,8 +4,8 @@
 **Target Cloud:** Oracle Cloud Infrastructure (OCI) Always Free  
 **Shape:** `VM.Standard.A1.Flex` (Ampere A1 ARM64: 2 OCPUs, 12 GB RAM, 50 GB Boot Volume)  
 **Monthly Infrastructure Cost:** Strictly ₹0  
-**Current Git Branch:** `feature/cloud-docker-deployment`  
-**Current Git Commit HEAD:** `fc5ad47a32db873d267340ac2857e0d00359ed32`  
+**Current Git Branch:** `main`<br>
+**Current Git Commit HEAD:** `8751520943d64e596fe140a440eacf43a753c9d1`
 
 ---
 
@@ -92,20 +92,20 @@ MediScanAI has been containerized and structured for production deployment using
 Following forensic audit and CPU-only optimization:
 
 1. **Docker Storage Optimization:**
-   - **Backend Image Virtual Size:** Shrunk from **11.66 GB to 3.85 GB** (-66.96%).
-   - **Transfer Archive Size:** Shrunk from **3.89 GB to 865 MB** (-77.76%).
+   - **Backend Image Virtual Size:** Shrunk from **11.66 GB to 3.86 GB** (-66.90% vs baseline).
+   - **Transfer Archive Size:** Shrunk from **3.88 GB to 865 MB** (-77.70% vs baseline).
    - **Python Environment (`/opt/venv`):** Reduced from **6.70 GB to 2.30 GB** (-65.67%).
    - **P0 Cleanup:** Reclaimed **4.15 GB** of host disk space (obsolete Neo4j container, image, log volume, and dangling intermediate image).
 2. **Runtime Memory Profiling:**
-   - **FastAPI Backend:** 247 MB idle, 1.02 GB warmed, 1.48 GB peak during concurrent multimodal analysis.
-   - **PostgreSQL 15:** 52 MB idle, 85 MB peak.
-   - **Caddy Proxy:** 15 MB idle, 24 MB peak.
-   - **Total Stack Peak RSS:** **~1.59 GB** (well within the 12–24 GB Ampere A1 cloud memory budget).
+   - **FastAPI Backend:** 247 MB idle, 1.02 GB warmed baseline, 2.72 GB peak under full multimodal pipeline with CrossEncoder (Phase 3A local test); 1.48 GB peak during concurrent multimodal analysis without CrossEncoder (Phase 2).
+   - **PostgreSQL 15:** 27.5 MB idle, 48.2 MB peak.
+   - **Caddy Proxy:** 14.0 MB idle, 18.5 MB peak.
+   - **Total Stack Peak Memory:** **~2.76 GB** (Phase 3A peak load) / **~1.64 GiB** (Phase 2 point-in-time baseline snapshot), well within the 12 GB Ampere A1 cloud memory budget.
 3. **Local Host Sizing Recommendation (Apple Silicon M4, 16 GB RAM):**
    - Configure Docker Desktop VM to **4.0 GiB RAM / 1.0 GiB swap**, recovering 4 GB of physical RAM for macOS and eliminating SSD swap paging.
 4. **ML Runtime Safety:**
-   - Mandatory PaddleOCR startup pre-warming resolves OpenMP collision with CTranslate2 / Faster-Whisper, guaranteeing 100% stable execution.
-5. **Promotion Readiness:**
-   - **Ready with Warnings**. Promotion of `mediscanai-backend:cpu-test` (`f6225228ce25`) to `mediscanai-backend:production` is prepared and awaiting final user command.
-
-
+   - Mandatory PaddleOCR startup pre-warming prevents the observed OpenMP collision with CTranslate2 / Faster-Whisper, eliminating startup segmentation faults during local verification.
+5. **Phase 3 Unified Build Consolidation & Promotion Readiness:**
+   - Unified `deployment/Dockerfile` with `ARG BUILD_TARGET=cpu` builds the production ARM64 image `4ea6bb3f3e42` (3.86 GB uncompressed, 865 MB compressed archive) tagged as `mediscanai-backend:production`.
+   - Baseline image preserved under permanent tag `mediscanai-backend:rollback-baseline` (`1d080e38142b`).
+   - Verified health and readiness probes (`/api/health`, `/api/ready` returning HTTP 200), authentication flow, PaddleOCR, Whisper, and hybrid FAISS/BM25 retrieval on local container stack.

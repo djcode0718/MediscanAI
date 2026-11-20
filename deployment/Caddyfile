@@ -23,14 +23,21 @@
         max_size 30MB
     }
 
-    # Security Headers
+    # Security Headers (Applied universally)
     header {
-        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
         X-Content-Type-Options "nosniff"
         X-Frame-Options "DENY"
         Referrer-Policy "strict-origin-when-cross-origin"
         Permissions-Policy "camera=(), microphone=(self), geolocation=()"
         -Server
+    }
+
+    # HSTS Header (Applied strictly over HTTPS to comply with RFC 6797 and prevent plain HTTP breakages)
+    @https {
+        protocol https
+    }
+    header @https {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
     }
 
     # Reverse proxy all traffic to FastAPI backend service

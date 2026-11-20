@@ -1,0 +1,154 @@
+name: MediScanAI Nightly Regression CI
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # Daily at 03:00 UTC
+  workflow_dispatch:
+
+concurrency:
+  group: nightly-ci-${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  # ----------------------------------------------------------------------------
+  # 1. Full Backend Integration with Isolated PostgreSQL Service
+  # ----------------------------------------------------------------------------
+  backend-full-integration:
+    name: Backend PostgreSQL & Migration Integration
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: mediscanai
+          POSTGRES_PASSWORD: testpassword123
+          POSTGRES_DB: mediscanai
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+          cache-dependency-path: 'deployment/requirements.txt'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install --extra-index-url https://download.pytorch.org/whl/cpu torch==2.1.2+cpu || pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r deployment/requirements.txt
+          pip install pytest pytest-asyncio pytest-cov psycopg2-binary alembic
+
+      - name: Run Alembic migrations against PostgreSQL
+        env:
+          DATABASE_URL: postgresql+psycopg2://mediscanai:testpassword123@localhost:5432/mediscanai
+        run: |
+          alembic upgrade head
+
+      - name: Run PostgreSQL and Database Integration Tests
+        env:
+          APP_ENV: test
+          DATABASE_URL: postgresql+psycopg2://mediscanai:testpassword123@localhost:5432/mediscanai
+          JWT_SECRET_KEY: ci-cd-mock-jwt-secret-key-for-testing-only-32-chars
+          LLM_MODE: online
+        run: |
+          pytest \
+            tests/database/test_database_postgres.py \
+            tests/database/test_database_sqlite.py \
+            tests/test_backend_foundation.py \
+            tests/test_auth.py \
+            tests/api/test_auth_api.py \
+            tests/api/test_health_and_readiness.py \
+            tests/unit/test_maintenance_safety.py \
+            -v --durations=10
+
+  # ----------------------------------------------------------------------------
+  # 2. Native iOS Full Suite (Unit + UI Automation)
+  # ----------------------------------------------------------------------------
+  ios-full-suite:
+    name: iOS Unit & UI Automation
+    runs-on: macos-15
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Select Xcode with iOS Simulator support
+        run: |
+          if [ -d "/Applications/Xcode_16.4.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.4.app
+          elif [ -d "/Applications/Xcode_16.3.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.3.app
+          elif [ -d "/Applications/Xcode.app" ]; then
+            sudo xcode-select -s /Applications/Xcode.app
+          fi
+
+          sw_vers
+          xcodebuild -version
+          xcrun simctl list runtimes
+
+      - name: Run Complete Test Suite (Unit + UI Tests)
+        run: |
+          DEST_ID=$(xcodebuild -showdestinations -scheme MediScanAI -project ios/MediScanAI/MediScanAI.xcodeproj 2>/dev/null | grep "platform:iOS Simulator" | grep -v "placeholder" | grep -E "name:iPhone (16|15)" | head -n 1 | sed -n 's/.*id:\([^, ]*\).*/\1/p')
+          if [ -z "$DEST_ID" ]; then
+            DEST_ID=$(xcodebuild -showdestinations -scheme MediScanAI -project ios/MediScanAI/MediScanAI.xcodeproj 2>/dev/null | grep "platform:iOS Simulator" | grep -v "placeholder" | head -n 1 | sed -n 's/.*id:\([^, ]*\).*/\1/p')
+          fi
+
+          if [ -n "$DEST_ID" ]; then
+            DEST="id=${DEST_ID}"
+          else
+            DEST="platform=iOS Simulator,OS=18.5,name=iPhone 16"
+          fi
+
+          echo "Targeting destination: ${DEST}"
+          xcodebuild test \
+            -project ios/MediScanAI/MediScanAI.xcodeproj \
+            -scheme MediScanAI \
+            -destination "${DEST}"
+
+  # ----------------------------------------------------------------------------
+  # 3. Frontend Full Regression & Build Verification
+  # ----------------------------------------------------------------------------
+  frontend-regression:
+    name: Frontend Build & Asset Audit
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'frontend/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Run linter
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Build production bundle
+        working-directory: frontend
+        run: npm run build

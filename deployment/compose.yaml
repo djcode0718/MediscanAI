@@ -12,7 +12,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-mediscanai}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres_secure_pass}
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be configured in deployment/.env}"
       POSTGRES_DB: ${POSTGRES_DB:-mediscanai}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
@@ -31,7 +31,16 @@ services:
     deploy:
       resources:
         limits:
+          cpus: "2.0"
           memory: 1024M
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   # ----------------------------------------------------------------------------
   # FastAPI Multimodal Backend Service
@@ -40,7 +49,9 @@ services:
     build:
       context: ..
       dockerfile: deployment/Dockerfile
-    image: mediscanai-backend:production
+      args:
+        BUILD_TARGET: cpu
+    image: ${MEDISCANAI_IMAGE:-mediscanai-backend:production}
     container_name: mediscanai-backend
     restart: unless-stopped
     env_file:
@@ -50,7 +61,8 @@ services:
       LLM_MODE: ${LLM_MODE:-online}
       WAIT_FOR_DB: "true"
       RUN_MIGRATIONS: "true"
-      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-mediscanai}:${POSTGRES_PASSWORD:-postgres_secure_pass}@postgres:5432/${POSTGRES_DB:-mediscanai}
+      DATABASE_URL: "postgresql+psycopg2://${POSTGRES_USER:-mediscanai}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be configured in deployment/.env}@postgres:5432/${POSTGRES_DB:-mediscanai}"
+      JWT_SECRET_KEY: "${JWT_SECRET_KEY:?JWT_SECRET_KEY must be configured in deployment/.env}"
     volumes:
       # Read-only mount for static knowledge assets and precomputed FAISS indices
       - ../data:/app/data:ro
@@ -73,7 +85,16 @@ services:
     deploy:
       resources:
         limits:
+          cpus: "4.0"
           memory: 4096M
+        reservations:
+          cpus: "1.0"
+          memory: 1024M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   # ----------------------------------------------------------------------------
   # Caddy Reverse Proxy & Automatic TLS Termination
@@ -99,7 +120,16 @@ services:
     deploy:
       resources:
         limits:
+          cpus: "1.0"
           memory: 256M
+        reservations:
+          cpus: "0.1"
+          memory: 64M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 # ------------------------------------------------------------------------------
 # Persistent Volumes

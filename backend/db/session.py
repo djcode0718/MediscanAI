@@ -8,13 +8,21 @@ from backend.core.config import settings
 
 logger = logging.getLogger("mediscanai.db")
 
-# Application-level SQLAlchemy engine with connection pooling
+# Application-level SQLAlchemy engine with dialect-aware connection pooling
+engine_kwargs = {}
+if "sqlite" in settings.DATABASE_URL:
+    engine_kwargs["connect_args"] = {"check_same_thread": False}
+else:
+    engine_kwargs.update({
+        "pool_size": settings.DB_POOL_SIZE,
+        "max_overflow": settings.DB_MAX_OVERFLOW,
+        "pool_timeout": settings.DB_POOL_TIMEOUT,
+        "pool_pre_ping": settings.DB_POOL_PRE_PING,
+    })
+
 engine = create_engine(
     settings.DATABASE_URL,
-    pool_size=settings.DB_POOL_SIZE,
-    max_overflow=settings.DB_MAX_OVERFLOW,
-    pool_timeout=settings.DB_POOL_TIMEOUT,
-    pool_pre_ping=settings.DB_POOL_PRE_PING,
+    **engine_kwargs
 )
 
 # Application-level Session factory

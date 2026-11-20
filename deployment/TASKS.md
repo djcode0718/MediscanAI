@@ -4,7 +4,7 @@
 **Budget:** Strictly ₹0/month  
 **Development Machine:** MacBook Air M4 (macOS ARM64)  
 **Client Targets:** Existing React 19 Frontend + Future Native iOS (SwiftUI) Client  
-**Current Phase:** Phase 3 — Cloud Provisioning & Deployment
+**Current Phase:** Phase 3 — Pre-Provisioning Finalization Complete (Ready for Cloud Provisioning)
 
 ---
 
@@ -20,7 +20,7 @@
 
 | Task ID | Description | Status | Priority | Dependencies | Evidence Required | Notes |
 | :--- | :--- | :---: | :---: | :---: | :--- | :--- |
-| **P1-T01** | Inspect Git state and establish clean working baseline | `[x]` | P0 | None | `git status`, `git branch -vv` | Branch `feature/cloud-docker-deployment` at commit `fc5ad47`. |
+| **P1-T01** | Inspect Git state and establish clean working baseline | `[x]` | P0 | None | `git status`, `git branch -vv` | [Historical Phase 1]: Branch `feature/cloud-docker-deployment` at commit `fc5ad47`. (Merged to `main` via PR #1; current baseline is `8751520`). |
 | **P1-T02** | Map FastAPI lifecycle, routers, and request pipeline flow | `[x]` | P0 | P1-T01 | `deployment/AUDIT_REPORT.md`, `deployment/ARCHITECTURE.md` | Documented startup events, lazy singletons, middleware, and `/api/analyze` lifecycle. |
 | **P1-T03** | Compile exhaustive API endpoint contract inventory | `[x]` | P0 | P1-T02 | `deployment/AUDIT_REPORT.md` (Section 4) | Documented all 9 endpoints, auth requirements, Pydantic schemas, and frontend bindings. |
 | **P1-T04** | Audit existing `Dockerfile` and `docker-compose.yml` | `[x]` | P0 | P1-T01 | `deployment/AUDIT_REPORT.md` (Section 5) | Identified hardcoded secrets, open 0.0.0.0 DB ports, missing context exclusions, and build layers. |
@@ -38,10 +38,10 @@
 | Task ID | Description | Status | Priority | Dependencies | Evidence Required | Notes |
 | :--- | :--- | :---: | :---: | :---: | :--- | :--- |
 | **P2-T01** | Harden `.dockerignore` to exclude evaluation, tests, and caches | `[x]` | P0 | Phase 1 Complete | `.dockerignore`, build context: 779 kB | Context transfer shrunk to 779 kB (excluded `evaluation/`, `results/`, `data/`, `indexes/`, test caches). |
-| **P2-T02** | Resolve OpenCV dependency conflict in `requirements.txt` | `[x]` | P0 | Phase 1 Complete | `deployment/requirements.txt` | Replaced colliding `opencv-python` and `opencv-contrib-python` with `opencv-python-headless>=4.10.0.84`. |
+| **P2-T02** | Resolve OpenCV dependency conflict in `requirements.txt` | `[x]` | P0 | Phase 1 Complete | `deployment/requirements.txt` | [Historical Phase 2]: Replaced colliding `opencv-python` with `opencv-python-headless>=4.10.0.84`. (Superseded in Phase 3A by `opencv-contrib-python==4.10.0.84` to satisfy PaddleOCR requirement without dual-installation). |
 | **P2-T03** | Decouple `/api/ready` probe from local Ollama service | `[x]` | P0 | Phase 1 Complete | `backend/main.py`, `tests/api/test_health_and_readiness.py` | Readiness probe returns 200 with `ollama_service: "not_required"` when `LLM_MODE=online`. 6/6 health/readiness unit tests passed. |
 | **P2-T04** | Author production-grade multi-stage `Dockerfile` | `[x]` | P0 | P2-T01, P2-T02 | `deployment/Dockerfile` | Two-stage build: builder builds venv; runtime strips GCC/build tools, UID 1000 `appuser`, healthcheck with 180s start-period. |
-| **P2-T05** | Build and test ARM64 container image locally on Apple Silicon | `[x]` | P0 | P2-T04 | `mediscanai-backend:production` | Built image `mediscanai-backend:production` on macOS M4 (LinuxKit aarch64 kernel). Verified imports of `cv2`, `paddle`, `faiss`, `torch`, `faster_whisper`. (Local verification; distinct from live OCI VM). |
+| **P2-T05** | Build and test ARM64 container image locally on Apple Silicon | `[x]` | P0 | P2-T04 | `mediscanai-backend:production` | [Historical Phase 2]: Built baseline 11.66 GB image (`1d080e38142b`). (Preserved as `rollback-baseline`; superseded in Phase 3A by unified 3.86 GB image `4ea6bb3f3e42`). |
 | **P2-T06** | Author production `deployment/compose.yaml` and `.prod.yml` | `[x]` | P0 | P2-T04 | `deployment/compose.yaml`, `deployment/.env.example` | Zero public host exposure on DB/backend, internal bridge network `mediscanai_internal_net`, production resource limits. |
 | **P2-T07** | Configure Caddy reverse proxy with automated TLS | `[x]` | P0 | P2-T06 | `deployment/Caddyfile` | Ingress reverse proxy configuration with HSTS, X-Content-Type-Options, X-Frame-Options, 30MB upload limits. (Local testing verified over HTTP :80; public Let's Encrypt TLS pending cloud domain). |
 | **P2-T08** | Verify volume mounting for FAISS indexes and dataset files | `[x]` | P0 | P2-T06 | `docker run -v ... ls -la /app/data /app/indexes` | Verified read-only host mounts (`../data:/app/data:ro` and `../indexes:/app/indexes:ro`). Model cache mounted to `/home/appuser/.cache`. |
@@ -49,7 +49,7 @@
 | **P2-T10** | Perform end-to-end API verification inside local container stack | `[x]` | P0 | P2-T08, P2-T09 | `deployment/logs/phase2_runtime_verification.log` | Tested `/api/auth/register` (201), `/api/auth/login` (200), `/api/analyses` (200), and text-only `/api/analyze` (200 in 31.98s via online fallback). Multimodal OCR verified via `test_ocr.py`. |
 | **P2-T11** | Profile container resource consumption under local baseline load | `[x]` | P1 | P2-T10 | `docker stats --no-stream` | Point-in-time steady-state snapshot: Backend ~1.59 GiB RAM (39.8% of 4GB limit); Caddy: 21.4 MiB; Postgres: 22.5 MiB. Stack total: ~1.64 GiB. (Single-request snapshot; not a peak stress test). |
 | **P2-T12** | Execute P0 Docker resource cleanup and reconcile disk savings | `[x]` | P0 | P2-T11 | `deployment/P2_DOCKER_STORAGE_AUDIT.md` | Purged stopped Neo4j container (172 MB), obsolete image (889 MB), log volume (203 KB), and dangling image (3.09 GB). Exactly 4.15 GB reclaimed. |
-| **P2-T13** | Engineer and validate CPU-only ARM64 backend Docker image (P1) | `[x]` | P0 | P2-T12 | `deployment/Dockerfile.cpu`, `deployment/requirements-cpu.txt` | Shrunk uncompressed backend image from 11.66 GB to 3.85 GB (-67%) and compressed archive to 865 MB (-78%). Removed 3.3 GB of CUDA/Triton binaries. |
+| **P2-T13** | Engineer and validate CPU-only ARM64 backend Docker image (P1) | `[x]` | P0 | P2-T12 | `deployment/Dockerfile.cpu`, `deployment/requirements-cpu.txt` | [Historical Phase 2]: Built experimental CPU-only image (`f6225228ce25`, 3.85 GB uncompressed, 865 MB archive). (Superseded in Phase 3A by consolidated `deployment/Dockerfile` with `ARG BUILD_TARGET=cpu`, image `4ea6bb3f3e42`). |
 | **P2-T14** | Conduct comprehensive Docker footprint & runtime memory audit (P2) | `[x]` | P0 | P2-T13 | `deployment/P2_*.md` deliverables | Complete audit suite: Storage reconciliation, Mac memory sizing, Neo4j reachability, OpenMP thread collision mitigation, regression suite (235/239 pass), and promotion runbook. |
 | **P2-T15** | Execute Final Production Promotion Gate & SRE Reliability Verification | `[x]` | P0 | P2-T14 | `deployment/FINAL_PROMOTION_GATE_REPORT.md` | Pre-warmed PaddleOCR, resolved OpenMP LCNet segfault, 162/162 production tests passing (100% across 3 runs), empirical rollback RTO measured at 101.96s, compose start_period validated. |
 | **P2-T16** | Repository documentation rationalization and Git cleanup | `[x]` | P0 | P2-T15 | `deployment/GIT_CLEANUP_FINAL_REPORT.md` | Reduced tracked Markdown files from 152 to 26 canonical docs; preserved 225 local historical docs; hardened ignore files. |
@@ -60,19 +60,34 @@
 
 ## Phase 3: Oracle Cloud Always Free Provisioning & Deployment
 
+### Phase 3A: Pre-Provisioning Audit & Docker Deployment Finalization (Completed)
+
 | Task ID | Description | Status | Priority | Dependencies | Evidence Required | Notes |
 | :--- | :--- | :---: | :---: | :---: | :--- | :--- |
-| **P3-T01** | Verify Oracle Cloud Always Free tier and tenancy allowances | `[!]` | P0 | Phase 2 Complete | Tenancy console verification | **BLOCKED:** Awaiting user tenancy verification (no local OCI CLI credentials in environment). |
-| **P3-T02** | Provision VM.Standard.A1.Flex instance (2 OCPU, 12 GB RAM) | `[!]` | P0 | P3-T01 | Instance details, public IP | **BLOCKED:** Requires user provisioning in OCI Console or SSH access to target instance. Target: Ubuntu 24.04 LTS aarch64 minimal. Strictly ₹0 Always Free tier. |
-| **P3-T03** | Harden Linux host (SSH keys, UFW/iptables, disable root login) | `[ ]` | P0 | P3-T02 | `ssh -V`, firewall status | Not started. Script documented in `deployment/RUNBOOK.md`. |
-| **P3-T04** | Install Docker Engine, Docker Compose, and fail2ban on cloud VM | `[ ]` | P0 | P3-T03 | `docker --version`, Compose v2 | Not started. Automated installation sequence documented in `deployment/RUNBOOK.md`. |
-| **P3-T05** | Securely transfer dataset files, FAISS indexes, and `.env.prod` | `[ ]` | P0 | P3-T04 | `rsync`/`scp` transfer verification | Not started. `rsync` commands for `data/` and `indexes/` (~328 MB) documented. |
-| **P3-T06** | Deploy production container stack (`docker compose -f ... up -d`)| `[ ]` | P0 | P3-T05 | `docker ps`, container health checks | Not started. Compose stack verified locally in Phase 2. |
-| **P3-T07** | Configure DNS records and verify automated Let's Encrypt SSL | `[ ]` | P0 | P3-T06 | HTTPS curl test, TLS certificate expiry | Not started. Requires user-configured DNS A-record pointing to VM public IP. |
-| **P3-T08** | Execute smoke & integration tests against live cloud URL | `[ ]` | P0 | P3-T07 | `test_cloud_e2e.py` log | Not started. Local container tests passed; live cloud execution pending. |
-| **P3-T09** | Validate React frontend connection to live cloud backend | `[ ]` | P0 | P3-T08 | Frontend browser verification | Not started. Requires live cloud URL. |
-| **P3-T10** | Perform restart resilience and automated reboot testing on cloud VM | `[ ]` | P1 | P3-T09 | VM reboot test, container restart logs | Not started. Service restart policy verified locally; cloud VM reboot pending. |
-| **P3-T11** | Establish backup routines and prepare rollback runbook | `[~]` | P1 | P2-T06, P2-T09 | `deployment/RUNBOOK.md` | **In Progress / Partial:** Procedures authored and verified in local Docker containers; cloud host execution and scheduled automation pending. |
+| **P3-PRE-01** | Docker Architecture & Build Path Consolidation | `[x]` | P0 | Phase 2 Complete | `deployment/Dockerfile`, `mediscanai-backend:production` | Selected Approach C (unified multi-target Dockerfile). Deduplicated OpenCV to `opencv-contrib-python==4.10.0.84`. Built 3.86 GB ARM64 production image (`4ea6bb3f3e42`, compressed transfer archive: 865 MB). Original baseline preserved under `rollback-baseline` (`1d080e38142b`). |
+| **P3-PRE-02** | Compose Configuration & Fail-Fast Secret Hardening | `[x]` | P0 | P3-PRE-01 | `deployment/compose.yaml`, `deployment/preflight-check.sh` | Replaced fallback passwords with `${VAR:?error}` fail-fast syntax. Authored executable `preflight-check.sh` validating permissions, entropy, secrets, and directories without leaking secrets to stdout. |
+| **P3-PRE-03** | Database Startup Probe & Automated Backup/Restore Suite | `[x]` | P0 | P3-PRE-01 | `deployment/docker-entrypoint.sh`, `deployment/backup.sh`, `deployment/restore.sh` | Hardened entrypoint with Python DB probe, timeout termination (exit 1), migration abort on failure, and secret redaction. Authored `backup.sh` and `restore.sh` with automated test-database validation. |
+| **P3-PRE-04** | Caddy RFC 6797 Ingress & Protocol Compliance | `[x]` | P0 | P3-PRE-01 | `deployment/Caddyfile` | Wrapped HSTS in `@https { protocol https }` matcher to comply with RFC 6797 and allow clean plain-HTTP testing on `:80`. |
+| **P3-PRE-05** | Complete Local Docker Stack Validation | `[x]` | P0 | P3-PRE-01-04 | Container logs, health probes, API tests | All 3 containers reported healthy. Verified `/api/health`, `/api/ready`, user registration/login/JWT, PaddleOCR text extraction, Faster-Whisper, FAISS+BM25+CrossEncoder retrieval, and emergency guardrail. Peak stack memory: ~2.76 GB. |
+| **P3-PRE-06** | Pre-Provisioning Audit Deliverables & Decision Records | `[x]` | P0 | P3-PRE-05 | `deployment/PHASE3_*.md`, `deployment/OCI_*.md` | Authored comprehensive pre-provisioning audit report, 6 architectural decision records, and operational OCI provisioning checklist. |
+
+---
+
+### Phase 3B: Oracle Cloud Infrastructure (OCI) Provisioning & Deployment (Awaiting User Action)
+
+| Task ID | Description | Status | Priority | Dependencies | Evidence Required | Notes |
+| :--- | :--- | :---: | :---: | :---: | :--- | :--- |
+| **P3-T01** | Verify Oracle Cloud Always Free tier and tenancy allowances | `[!]` | P0 | Phase 3A Complete | Tenancy console verification | **NEEDS USER ACTION:** Awaiting user tenancy verification in OCI Console (zero cloud spend budget). |
+| **P3-T02** | Provision VM.Standard.A1.Flex instance (2 OCPU, 12 GB RAM) | `[!]` | P0 | P3-T01 | Instance details, public IP | **NEEDS USER ACTION:** Requires user provisioning in OCI Console. Target: Ubuntu 24.04 LTS aarch64 minimal, 50 GB boot volume. |
+| **P3-T03** | Harden Linux host (SSH keys, UFW/iptables, disable root login) | `[ ]` | P0 | P3-T02 | `ssh -V`, firewall status | Ready to execute once VM is provisioned. Script documented in `deployment/RUNBOOK.md` & `OCI_PROVISIONING_CHECKLIST.md`. |
+| **P3-T04** | Install Docker Engine, Docker Compose, and fail2ban on cloud VM | `[ ]` | P0 | P3-T03 | `docker --version`, Compose v2 | Ready to execute. Automated installation sequence documented. |
+| **P3-T05** | Securely transfer dataset files, FAISS indexes, scripts, and image | `[ ]` | P0 | P3-T04 | `rsync`/`scp` transfer verification | Ready to execute. Transfer 865 MB image archive and ~328 MB assets. |
+| **P3-T06** | Run preflight check and deploy production stack (`docker compose up -d`)| `[ ]` | P0 | P3-T05 | `docker ps`, container health checks | Ready to execute. Verified locally in Phase 3A. |
+| **P3-T07** | Configure DNS records and verify automated Let's Encrypt SSL | `[ ]` | P0 | P3-T06 | HTTPS curl test, TLS certificate expiry | Requires user-configured DNS A-record pointing to VM public IP. |
+| **P3-T08** | Execute smoke & integration tests against live cloud URL | `[ ]` | P0 | P3-T07 | `test_cloud_e2e.py` log | Ready to execute post-deployment. |
+| **P3-T09** | Validate React frontend connection to live cloud backend | `[ ]` | P0 | P3-T08 | Frontend browser verification | Requires live cloud URL. |
+| **P3-T10** | Perform restart resilience and automated reboot testing on cloud VM | `[ ]` | P1 | P3-T09 | VM reboot test, container restart logs | Service restart policy verified locally; cloud VM reboot pending. |
+| **P3-T11** | Establish scheduled backup cron and verify rollback procedure | `[ ]` | P1 | P3-T06 | `crontab -l`, backup verify | Automated backup/restore scripts authored and verified locally in Phase 3A. |
 
 ---
 

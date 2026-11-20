@@ -20,6 +20,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# Build argument: 'cpu' (default for ARM64 cloud VM ₹0 budget) or 'gpu'
+ARG BUILD_TARGET=cpu
+
 # Create isolated virtual environment
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
@@ -27,7 +30,11 @@ ENV PATH="/opt/venv/bin:$PATH"
 COPY deployment/requirements.txt /tmp/requirements.txt
 
 # Install dependencies into isolated venv
+# When BUILD_TARGET=cpu, pre-install deterministic CPU-only PyTorch before requirements
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    if [ "$BUILD_TARGET" = "cpu" ]; then \
+        pip install --no-cache-dir --extra-index-url https://download.pytorch.org/whl/cpu torch==2.14.1+cpu; \
+    fi && \
     pip install --no-cache-dir -r /tmp/requirements.txt
 
 # ------------------------------------------------------------------------------

@@ -183,7 +183,7 @@ def test_budget_never_exceeded_and_trims_recorded():
 
 
 def test_legacy_format_remains_unchanged():
-    pipeline = Pipeline()
+    pipeline = Pipeline(indexes_config={})
     sample_retrievals = {
         "diseases": [("dis_1", 0.95, {"chunk": {"disease": "Flu", "symptoms": ["fever"]}})]
     }
