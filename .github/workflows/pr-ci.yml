@@ -125,11 +125,13 @@ jobs:
 
       - name: Run iOS Unit Tests (Focused Suite)
         run: |
-          SIM_NAME=$(xcrun simctl list devices available | grep -E "iPhone (16|15)" | head -n 1 | sed -E 's/^[ ]+//; s/ \([A-F0-9-]+\).*//')
-          SIM_NAME="${SIM_NAME:-iPhone 16}"
-          echo "Targeting simulator: ${SIM_NAME}"
+          DEST_ID=$(xcodebuild -showdestinations -scheme MediScanAI -project ios/MediScanAI/MediScanAI.xcodeproj | grep "platform:iOS Simulator" | grep -v "placeholder" | grep -E "name:iPhone (16|15)" | head -n 1 | sed -n 's/.*id:\([^, ]*\).*/\1/p')
+          if [ -z "$DEST_ID" ]; then
+            DEST_ID=$(xcodebuild -showdestinations -scheme MediScanAI -project ios/MediScanAI/MediScanAI.xcodeproj | grep "platform:iOS Simulator" | grep -v "placeholder" | head -n 1 | sed -n 's/.*id:\([^, ]*\).*/\1/p')
+          fi
+          echo "Targeting simulator destination id: ${DEST_ID}"
           xcodebuild test \
             -project ios/MediScanAI/MediScanAI.xcodeproj \
             -scheme MediScanAI \
             -only-testing:MediScanAITests \
-            -destination "platform=iOS Simulator,name=${SIM_NAME}"
+            -destination "id=${DEST_ID}"

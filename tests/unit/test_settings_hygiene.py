@@ -69,11 +69,9 @@ def test_pipeline_threads_settings_into_generation_params(mock_gen):
         OLLAMA_NUM_CTX=8192,
         OLLAMA_NUM_PREDICT=700,
     )
-    pipeline = Pipeline(settings=s)
-
     mock_retriever = MagicMock()
     mock_retriever.search_specific.return_value = []
-    pipeline.retriever = mock_retriever
+    pipeline = Pipeline(settings=s, retriever=mock_retriever)
 
     res = pipeline.run("test query", return_trace=True)
     trace = res["trace"]
@@ -94,11 +92,9 @@ def test_pipeline_explicit_params_override_settings(mock_gen):
         GEN_TEMPERATURE=0.7,
         GEN_SEED=99,
     )
-    pipeline = Pipeline(settings=s)
-
     mock_retriever = MagicMock()
     mock_retriever.search_specific.return_value = []
-    pipeline.retriever = mock_retriever
+    pipeline = Pipeline(settings=s, retriever=mock_retriever)
 
     explicit = GenerationParams(temperature=0.0, seed=42)
     res = pipeline.run("test query", gen_params=explicit, return_trace=True)
