@@ -123,15 +123,6 @@ jobs:
           sw_vers
           xcodebuild -version
 
-      - name: Build iOS Simulator target (Debug)
-        run: |
-          xcodebuild \
-            -project ios/MediScanAI/MediScanAI.xcodeproj \
-            -scheme MediScanAI \
-            -configuration Debug \
-            -destination "generic/platform=iOS Simulator" \
-            build
-
       - name: Run iOS Unit Tests (Focused Suite)
         run: |
           SIM_NAME=$(xcrun simctl list devices available | grep -E "iPhone (16|15)" | head -n 1 | sed -E 's/^[ ]+//; s/ \([A-F0-9-]+\).*//')

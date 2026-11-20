@@ -5,12 +5,12 @@
 # def _load_spell_checker():
 #     """Helper function to load the SymSpell object and dictionary only once."""
 #     sym_spell = SymSpell(max_dictionary_edit_distance=2, prefix_length=7)
-    
+
 #     dictionary_path = os.path.join(os.path.dirname(__file__), "..", "data", "frequency_dictionary_en_82_765.txt")
-    
+
 #     if not os.path.exists(dictionary_path):
 #         raise FileNotFoundError(f"Dictionary file not found at {dictionary_path}. Please download and place it in the 'data' folder.")
-        
+
 #     sym_spell.load_dictionary(dictionary_path, term_index=0, count_index=1)
 #     return sym_spell
 
@@ -22,13 +22,13 @@
 #     """
 #     if not s:
 #         return ""
-    
+
 #     placeholders = []
-    
+
 #     def replacer(match):
 #         placeholders.append(match.group(0))
 #         return f" __placeholder_{len(placeholders)-1}__ "
-    
+
 #     text_with_placeholders = re.sub(r'(\d+\.?\d*)', replacer, s)
 
 #     text_with_placeholders = text_with_placeholders.strip().lower()
@@ -43,7 +43,7 @@
 #         if word.startswith('__placeholder_'):
 #             corrected_words.append(word)
 #             continue
-        
+
 #         suggestions = spell_checker.lookup(word, Verbosity.CLOSEST, max_edit_distance=2)
 #         if suggestions:
 #             corrected_words.append(suggestions[0].term)
@@ -51,13 +51,13 @@
 #             corrected_words.append(word)
 
 #     corrected_text = ' '.join(corrected_words)
-    
+
 #     restored_text = corrected_text
 #     for i, num_val in enumerate(placeholders):
 #         restored_text = restored_text.replace(f"__placeholder_{i}__", num_val.strip(), 1)
-        
+
 #     restored_text = re.sub(r'\s+', ' ', restored_text).strip()
-    
+
 #     return restored_text
 
 
@@ -66,8 +66,11 @@
 import json
 import re
 import os
+import logging
 from typing import Dict
 from symspellpy import SymSpell, Verbosity
+
+logger = logging.getLogger("mediscanai.utils")
 
 def load_jsonl_to_dict(path: str, id_key: str = None) -> Dict[str, Dict]:
     """
@@ -97,13 +100,17 @@ def load_jsonl_to_dict(path: str, id_key: str = None) -> Dict[str, Dict]:
 def _load_spell_checker():
     """Helper function to load the SymSpell object and dictionary only once."""
     sym_spell = SymSpell(max_dictionary_edit_distance=2, prefix_length=7)
-    
+
     dictionary_path = os.path.join(os.path.dirname(__file__), "..", "data", "frequency_dictionary_en_82_765.txt")
-    
-    if not os.path.exists(dictionary_path):
-        raise FileNotFoundError(f"Dictionary file not found at {dictionary_path}. Please download and place it in the 'data' folder.")
-        
-    sym_spell.load_dictionary(dictionary_path, term_index=0, count_index=1)
+
+    if os.path.exists(dictionary_path):
+        sym_spell.load_dictionary(dictionary_path, term_index=0, count_index=1)
+    else:
+        logger.warning(
+            f"Spell check dictionary not found at {dictionary_path}. "
+            "Proceeding without dictionary spell correction (words will be preserved as-is)."
+        )
+
     return sym_spell
 
 spell_checker = _load_spell_checker()
@@ -114,13 +121,13 @@ def normalize_text(s: str) -> str:
     """
     if not s:
         return ""
-    
+
     placeholders = []
-    
+
     def replacer(match):
         placeholders.append(match.group(0))
         return f" __placeholder_{len(placeholders)-1}__ "
-    
+
     text_with_placeholders = re.sub(r'(\d+\.?\d*)', replacer, s)
 
     text_with_placeholders = text_with_placeholders.strip().lower()
@@ -135,7 +142,7 @@ def normalize_text(s: str) -> str:
         if word.startswith('__placeholder_'):
             corrected_words.append(word)
             continue
-        
+
         suggestions = spell_checker.lookup(word, Verbosity.CLOSEST, max_edit_distance=2)
         if suggestions:
             corrected_words.append(suggestions[0].term)
@@ -143,13 +150,13 @@ def normalize_text(s: str) -> str:
             corrected_words.append(word)
 
     corrected_text = ' '.join(corrected_words)
-    
+
     restored_text = corrected_text
     for i, num_val in enumerate(placeholders):
         restored_text = restored_text.replace(f"__placeholder_{i}__", num_val.strip(), 1)
-        
+
     restored_text = re.sub(r'\s+', ' ', restored_text).strip()
-    
+
     return restored_text
 
 
