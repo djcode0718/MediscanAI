@@ -89,31 +89,53 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Select Xcode 16 if available
+      - name: Select Xcode with iOS Simulator support
         run: |
-          if [ -d "/Applications/Xcode_16.2.app" ]; then
-            sudo xcode-select -s /Applications/Xcode_16.2.app
-          elif [ -d "/Applications/Xcode_16.1.app" ]; then
-            sudo xcode-select -s /Applications/Xcode_16.1.app
-          elif [ -d "/Applications/Xcode_16.0.app" ]; then
-            sudo xcode-select -s /Applications/Xcode_16.0.app
-          elif [ -d "/Applications/Xcode_16.app" ]; then
-            sudo xcode-select -s /Applications/Xcode_16.app
+          echo "=== Installed Xcodes ==="
+          ls -d /Applications/Xcode* || true
+
+          FOUND_XCODE=""
+          for xc in /Applications/Xcode*.app; do
+            [ -d "$xc" ] || continue
+            echo "Checking $xc for iOS runtimes..."
+            if DEVELOPER_DIR="$xc/Contents/Developer" xcrun simctl list runtimes 2>/dev/null | grep -iq "iOS"; then
+              FOUND_XCODE="$xc"
+              echo "Found iOS runtime in: $xc"
+              break
+            fi
+          done
+
+          if [ -n "$FOUND_XCODE" ]; then
+            echo "Selecting: $FOUND_XCODE"
+            sudo xcode-select -s "$FOUND_XCODE"
+          else
+            echo "No specific Xcode with iOS runtime found; keeping current default"
           fi
+
           sw_vers
           xcodebuild -version
+          xcrun simctl list runtimes
 
       - name: Run Complete Test Suite (Unit + UI Tests)
         run: |
-          DEST_ID=$(xcodebuild -showdestinations -scheme MediScanAI -project ios/MediScanAI/MediScanAI.xcodeproj | grep "platform:iOS Simulator" | grep -v "placeholder" | grep -E "name:iPhone (16|15)" | head -n 1 | sed -n 's/.*id:\([^, ]*\).*/\1/p')
+          DEST_ID=$(xcodebuild -showdestinations -scheme MediScanAI -project ios/MediScanAI/MediScanAI.xcodeproj 2>/dev/null | grep "platform:iOS Simulator" | grep -v "placeholder" | grep -E "name:iPhone (16|15)" | head -n 1 | sed -n 's/.*id:\([^, ]*\).*/\1/p')
           if [ -z "$DEST_ID" ]; then
-            DEST_ID=$(xcodebuild -showdestinations -scheme MediScanAI -project ios/MediScanAI/MediScanAI.xcodeproj | grep "platform:iOS Simulator" | grep -v "placeholder" | head -n 1 | sed -n 's/.*id:\([^, ]*\).*/\1/p')
+            DEST_ID=$(xcodebuild -showdestinations -scheme MediScanAI -project ios/MediScanAI/MediScanAI.xcodeproj 2>/dev/null | grep "platform:iOS Simulator" | grep -v "placeholder" | head -n 1 | sed -n 's/.*id:\([^, ]*\).*/\1/p')
           fi
-          echo "Targeting simulator destination id: ${DEST_ID}"
+
+          if [ -n "$DEST_ID" ]; then
+            DEST_ARG="-destination id=${DEST_ID}"
+          else
+            SIM_NAME=$(xcrun simctl list devices available 2>/dev/null | grep -E "iPhone (16|15)" | head -n 1 | sed -E 's/^[ ]+//; s/ \([A-F0-9-]+\).*//')
+            SIM_NAME="${SIM_NAME:-iPhone 16}"
+            DEST_ARG="-destination platform=iOS Simulator,name=${SIM_NAME}"
+          fi
+
+          echo "Targeting destination: ${DEST_ARG}"
           xcodebuild test \
             -project ios/MediScanAI/MediScanAI.xcodeproj \
             -scheme MediScanAI \
-            -destination "id=${DEST_ID}"
+            ${DEST_ARG}
 
   # ----------------------------------------------------------------------------
   # 3. Frontend Full Regression & Build Verification
