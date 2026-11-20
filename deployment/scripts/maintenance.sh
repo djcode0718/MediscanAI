@@ -17,6 +17,7 @@ PROJECT_ROOT="$(cd "${DEPLOY_DIR}/.." && pwd)"
 
 CURRENT_DEPLOY_FILE="${DEPLOY_DIR}/.current_deployment"
 HISTORY_FILE="${DEPLOY_DIR}/.deployment_history"
+ENV_FILE="${DEPLOY_DIR}/.env"
 BACKUP_DIR="${DEPLOY_DIR}/backups"
 LOGS_DIR="${DEPLOY_DIR}/logs"
 
@@ -84,29 +85,85 @@ else
     log "Operating in FORCE execution mode. Maintenance actions will be applied."
 fi
 
+# Canonical MediScanAI repositories (normalized exact match)
+CANONICAL_REPOSITORIES=("mediscanai-backend" "ghcr.io/djcode0718/mediscanai-backend")
+
+# If .env overrides MEDISCANAI_IMAGE, add its repository if its base name is strictly 'mediscanai-backend'
+if [ -f "$ENV_FILE" ]; then
+    ENV_IMG=$(grep -E '^[[:space:]]*MEDISCANAI_IMAGE=' "$ENV_FILE" 2>/dev/null | cut -d= -f2- | tr -d '[:space:]"' || true)
+    if [ -n "$ENV_IMG" ]; then
+        ENV_REPO=$(echo "$ENV_IMG" | cut -d: -f1)
+        if [ "$(basename "$ENV_REPO")" = "mediscanai-backend" ]; then
+            if [[ ! " ${CANONICAL_REPOSITORIES[*]:-} " =~ " ${ENV_REPO} " ]]; then
+                CANONICAL_REPOSITORIES+=("$ENV_REPO")
+            fi
+        fi
+    fi
+fi
+
 # 1. Inspect Protected Images (Current + 2 Previous Known-Good)
 log "Step 1/5: Identifying protected images..."
 PROTECTED_IMAGES=()
 PROTECTED_IMAGE_IDS=()
+METADATA_AMBIGUOUS=false
 
 if [ -f "$CURRENT_DEPLOY_FILE" ]; then
     CURR_IMG=$(cat "$CURRENT_DEPLOY_FILE" | tr -d '[:space:]')
     if [ -n "$CURR_IMG" ]; then
         PROTECTED_IMAGES+=("$CURR_IMG")
         log "  Protected [CURRENT]: ${CURR_IMG}"
+    else
+        log "  WARNING: Current deployment marker is empty: ${CURRENT_DEPLOY_FILE}"
+        METADATA_AMBIGUOUS=true
     fi
+else
+    log "  NOTICE: Current deployment marker not found. Running in cold/initial mode."
 fi
 
 if [ -f "$HISTORY_FILE" ]; then
-    # Extract last 2 unique previous images from history
-    while IFS= read -r img; do
-        if [ -n "$img" ] && [ "$img" != "unknown" ]; then
-            if [[ ! " ${PROTECTED_IMAGES[*]:-} " =~ " ${img} " ]]; then
-                PROTECTED_IMAGES+=("$img")
-                log "  Protected [HISTORY]: ${img}"
-            fi
+    # Verify history integrity line-by-line
+    HISTORY_MALFORMED=false
+    HISTORY_IMAGES=()
+    while IFS= read -r line; do
+        [ -z "$line" ] && continue
+        # Verify valid pipe count (at least 3 pipe separators: date | action | image | details)
+        PIPE_COUNT=$(grep -o '|' <<< "$line" | wc -l | tr -d ' ')
+        if [ "$PIPE_COUNT" -lt 3 ]; then
+            HISTORY_MALFORMED=true
+            break
         fi
-    done < <(awk -F'|' '{print $3}' "$HISTORY_FILE" | tr -d '[:space:]' | tail -n 5 | sort -u)
+        img=$(echo "$line" | awk -F'|' '{print $3}' | tr -d '[:space:]')
+        if [ -z "$img" ] || [ "$img" = "unknown" ]; then
+            HISTORY_MALFORMED=true
+            break
+        fi
+        HISTORY_IMAGES+=("$img")
+    done < "$HISTORY_FILE"
+
+    if [ "$HISTORY_MALFORMED" = "true" ]; then
+        log "  WARNING: Deployment history is malformed or corrupt: ${HISTORY_FILE}"
+        METADATA_AMBIGUOUS=true
+    else
+        # Extract last 2 unique previous images from valid history (excluding current)
+        for (( idx=${#HISTORY_IMAGES[@]}-1; idx>=0; idx-- )); do
+            h_img="${HISTORY_IMAGES[idx]}"
+            if [[ ! " ${PROTECTED_IMAGES[*]:-} " =~ " ${h_img} " ]]; then
+                PROTECTED_IMAGES+=("$h_img")
+                log "  Protected [HISTORY]: ${h_img}"
+            fi
+            # Protect up to 2 rollback images
+            ROLLBACK_COUNT=0
+            for pi in "${PROTECTED_IMAGES[@]:-}"; do
+                [ "$pi" != "${CURR_IMG:-}" ] && ROLLBACK_COUNT=$((ROLLBACK_COUNT + 1))
+            done
+            [ "$ROLLBACK_COUNT" -ge 2 ] && break
+        done
+    fi
+fi
+
+if [ "$METADATA_AMBIGUOUS" = "true" ]; then
+    log "  CRITICAL SAFETY LOCK: Deployment metadata is missing, malformed, or ambiguous."
+    log "  POLICY: All candidate Docker images will be PRESERVED to prevent accidental deletion."
 fi
 
 # Dynamically protect images currently in use by any container (running or stopped)
@@ -124,6 +181,17 @@ if docker info >/dev/null 2>&1; then
             fi
         fi
     done < <(docker ps -a --format '{{.Image}}' 2>/dev/null || true)
+
+    # Directly resolve container's image sha256 to ensure stopped/renamed containers are protected
+    while IFS= read -r cid; do
+        if [ -n "$cid" ]; then
+            IMG_SHA=$(docker inspect "$cid" --format '{{.Image}}' 2>/dev/null || echo "")
+            if [ -n "$IMG_SHA" ] && [[ ! " ${PROTECTED_IMAGE_IDS[*]:-} " =~ " ${IMG_SHA} " ]]; then
+                PROTECTED_IMAGE_IDS+=("$IMG_SHA")
+                log "  Protected [CONTAINER IMAGE SHA]: ${IMG_SHA}"
+            fi
+        fi
+    done < <(docker ps -a --format '{{.ID}}' 2>/dev/null || true)
 fi
 
 # 2. Docker Image Pruning (Strict Positive MediScanAI Ownership Only)
@@ -153,51 +221,109 @@ if docker info >/dev/null 2>&1; then
         fi
     done
 
-    # Evaluate ONLY positively identified MediScanAI backend images
-    log "  Evaluating positively identified MediScanAI images (*mediscanai-backend*)..."
-    while IFS=$'\t' read -r candidate_id candidate_tag; do
-        if [ -n "$candidate_id" ] && [ -n "$candidate_tag" ] && [ "$candidate_tag" != "<none>:<none>" ]; then
-            # Verify candidate strictly matches MediScanAI repository name
-            if [[ "$candidate_tag" =~ (mediscanai-backend) ]]; then
-                # Resolve full image ID
-                FULL_CANDIDATE_ID=$(docker inspect "$candidate_id" --format '{{.Id}}' 2>/dev/null || echo "$candidate_id")
+    # Evaluate ONLY images with exact canonical MediScanAI repository match
+    log "  Evaluating Docker images for exact canonical MediScanAI ownership..."
+    while IFS=$'\t' read -r candidate_id candidate_repo candidate_tag; do
+        if [ -z "$candidate_id" ] || [ -z "$candidate_repo" ] || [ -z "$candidate_tag" ]; then
+            continue
+        fi
 
-                # Check if image ID or Tag is in protected list
-                IS_PROTECTED=false
-                for p in "${PROTECTED_IMAGES[@]:-}"; do
-                    if [ -n "$p" ] && { [ "$candidate_tag" = "$p" ] || [[ "$candidate_tag" == *"$p"* ]]; }; then
-                        IS_PROTECTED=true
-                        break
-                    fi
-                done
-                for pid in "${PROTECTED_IMAGE_IDS[@]:-}"; do
-                    if [ -n "$pid" ] && { [ "$FULL_CANDIDATE_ID" = "$pid" ] || [[ "$FULL_CANDIDATE_ID" == *"$pid"* ]]; }; then
-                        IS_PROTECTED=true
-                        break
-                    fi
-                done
+        # Untagged/dangling images are permanently preserved
+        if [ "$candidate_repo" = "<none>" ] || [ "$candidate_tag" = "<none>" ]; then
+            log "  Preserved image (untagged/dangling image preserved): ${candidate_id}"
+            continue
+        fi
 
-                # Check if referenced by any container (running or stopped)
-                IN_USE=false
-                if [ -n "$(docker ps -a --filter "ancestor=${FULL_CANDIDATE_ID}" -q 2>/dev/null)" ]; then
-                    IN_USE=true
-                fi
+        # Step A: Exact Canonical Repository Verification (no substring false positives)
+        IS_CANONICAL=false
+        for canon_repo in "${CANONICAL_REPOSITORIES[@]}"; do
+            if [ "$candidate_repo" = "$canon_repo" ]; then
+                IS_CANONICAL=true
+                break
+            fi
+        done
 
-                if [ "$IS_PROTECTED" = "false" ] && [ "$IN_USE" = "false" ]; then
-                    if [ "$DRY_RUN" = "false" ]; then
-                        docker rmi "$candidate_id" >/dev/null 2>&1 || true
-                        log "  Removed obsolete MediScanAI image: ${candidate_tag} (${candidate_id})"
-                    else
-                        log "  [DRY-RUN] Would remove obsolete MediScanAI image: ${candidate_tag} (${candidate_id})"
-                    fi
-                else
-                    log "  Retained protected/in-use MediScanAI image: ${candidate_tag} (${candidate_id})"
-                fi
-            else
-                log "  Skipped image (non-MediScanAI ownership): ${candidate_tag} (${candidate_id})"
+        if [ "$IS_CANONICAL" = "false" ]; then
+            log "  Skipped image (ownership unverified; non-canonical repository '${candidate_repo}'): ${candidate_repo}:${candidate_tag} (${candidate_id})"
+            continue
+        fi
+
+        # Step B: Safe Metadata Ambiguity Lock
+        if [ "$METADATA_AMBIGUOUS" = "true" ]; then
+            log "  Preserved image (metadata ambiguous lock active): ${candidate_repo}:${candidate_tag} (${candidate_id})"
+            continue
+        fi
+
+        # Step C: Resolve Full Immutable Image ID
+        FULL_CANDIDATE_ID=$(docker inspect "$candidate_id" --format '{{.Id}}' 2>/dev/null || echo "$candidate_id")
+
+        # Step D: Protected Tag and ID Verification
+        IS_PROTECTED=false
+        candidate_ref="${candidate_repo}:${candidate_tag}"
+
+        for p in "${PROTECTED_IMAGES[@]:-}"; do
+            if [ -n "$p" ] && { [ "$candidate_ref" = "$p" ] || [ "$candidate_tag" = "$p" ] || [[ "$p" == *"${candidate_ref}"* ]]; }; then
+                IS_PROTECTED=true
+                break
+            fi
+        done
+
+        for pid in "${PROTECTED_IMAGE_IDS[@]:-}"; do
+            if [ -n "$pid" ] && { [ "$FULL_CANDIDATE_ID" = "$pid" ] || [[ "$FULL_CANDIDATE_ID" == *"$pid"* ]] || [[ "$pid" == *"$candidate_id"* ]]; }; then
+                IS_PROTECTED=true
+                break
+            fi
+        done
+
+        # Step E: Container Usage Verification (running or stopped)
+        IN_USE=false
+        if [ -n "$(docker ps -a --filter "ancestor=${FULL_CANDIDATE_ID}" -q 2>/dev/null)" ] || \
+           [ -n "$(docker ps -a --filter "ancestor=${candidate_ref}" -q 2>/dev/null)" ]; then
+            IN_USE=true
+        fi
+
+        if [ "$IS_PROTECTED" = "true" ] || [ "$IN_USE" = "true" ]; then
+            log "  Retained protected/in-use MediScanAI image: ${candidate_ref} (${candidate_id})"
+            continue
+        fi
+
+        # Step F: Immediate Pre-Removal Protection Recheck (Atomic Race Condition Guard)
+        RECHECK_PROTECTION=false
+
+        # 1. Re-verify active/stopped containers right before deletion
+        if [ -n "$(docker ps -a --filter "ancestor=${FULL_CANDIDATE_ID}" -q 2>/dev/null)" ]; then
+            RECHECK_PROTECTION=true
+        fi
+
+        # 2. Re-verify current deployment file on disk
+        if [ -f "$CURRENT_DEPLOY_FILE" ]; then
+            LATEST_CURR=$(cat "$CURRENT_DEPLOY_FILE" | tr -d '[:space:]')
+            if [ "$LATEST_CURR" = "$candidate_ref" ] || [ "$LATEST_CURR" = "$candidate_tag" ]; then
+                RECHECK_PROTECTION=true
             fi
         fi
-    done < <(docker images --filter "reference=*mediscanai-backend*" --format '{{.ID}}\t{{.Repository}}:{{.Tag}}' 2>/dev/null || true)
+
+        # 3. Re-verify against protected image IDs
+        for pid in "${PROTECTED_IMAGE_IDS[@]:-}"; do
+            if [ -n "$pid" ] && { [ "$FULL_CANDIDATE_ID" = "$pid" ] || [[ "$pid" == *"$candidate_id"* ]]; }; then
+                RECHECK_PROTECTION=true
+                break
+            fi
+        done
+
+        if [ "$RECHECK_PROTECTION" = "true" ]; then
+            log "  Retained candidate (failed immediate pre-removal protection recheck): ${candidate_ref} (${candidate_id})"
+            continue
+        fi
+
+        # Step G: Remove candidate if all safeguards pass
+        if [ "$DRY_RUN" = "false" ]; then
+            docker rmi "$candidate_id" >/dev/null 2>&1 || true
+            log "  Removed obsolete MediScanAI image: ${candidate_ref} (${candidate_id})"
+        else
+            log "  [DRY-RUN] Would remove obsolete MediScanAI image: ${candidate_ref} (${candidate_id})"
+        fi
+    done < <(docker images --format '{{.ID}}\t{{.Repository}}\t{{.Tag}}' 2>/dev/null || true)
 
     # Evaluate Docker builder cache (shared with other projects on Mac)
     if [ "$PRUNE_BUILD_CACHE" = "true" ]; then
