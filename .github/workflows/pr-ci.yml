@@ -63,6 +63,7 @@ jobs:
             tests/unit/test_security_and_bounds.py \
             tests/unit/test_settings_hygiene.py \
             tests/unit/test_concurrency_limiter.py \
+            tests/unit/test_maintenance_safety.py \
             -v --durations=10
 
   # ----------------------------------------------------------------------------
@@ -108,8 +109,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Show macOS and Xcode environment
+      - name: Select Xcode 16 if available
         run: |
+          if [ -d "/Applications/Xcode_16.2.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.2.app
+          elif [ -d "/Applications/Xcode_16.1.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.1.app
+          elif [ -d "/Applications/Xcode_16.0.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.0.app
+          elif [ -d "/Applications/Xcode_16.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.app
+          fi
           sw_vers
           xcodebuild -version
 
@@ -124,8 +134,11 @@ jobs:
 
       - name: Run iOS Unit Tests (Focused Suite)
         run: |
+          SIM_NAME=$(xcrun simctl list devices available | grep -E "iPhone (16|15)" | head -n 1 | sed -E 's/^[ ]+//; s/ \([A-F0-9-]+\).*//')
+          SIM_NAME="${SIM_NAME:-iPhone 16}"
+          echo "Targeting simulator: ${SIM_NAME}"
           xcodebuild test \
             -project ios/MediScanAI/MediScanAI.xcodeproj \
             -scheme MediScanAI \
             -only-testing:MediScanAITests \
-            -destination "platform=iOS Simulator,name=iPhone 16"
+            -destination "platform=iOS Simulator,name=${SIM_NAME}"
