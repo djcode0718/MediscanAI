@@ -353,17 +353,29 @@ Features:
 - **Bounded Logging:** Logs to `deployment/logs/maintenance.log` and automatically rotates logs exceeding 5 MB.
 - **Dry-run vs Force:** `maintenance.sh` defaults to `--dry-run`; the LaunchAgent invokes `--force` to apply tested, safe maintenance actions.
 
+> [!IMPORTANT]
+> **macOS TCC & Full Disk Access Requirement:**  
+> When `launchd` executes `maintenance.sh` in the background without an interactive terminal, macOS Sequoia TCC (Transparency, Consent, and Control) restricts background access to protected user directories (such as `~/Documents/`).  
+> To ensure scheduled background maintenance succeeds without `Operation not permitted` errors:
+> 1. Open **System Settings -> Privacy & Security -> Full Disk Access**.
+> 2. Add `/bin/bash` (press `Cmd + Shift + G` and enter `/bin/bash`).
+> 3. Alternatively, for headless production server setups, place the repository in a non-TCC restricted directory (e.g., `/opt/mediscanai` or `/Users/Shared/mediscanai`).
+
 ---
 
 ## 8. Manual Activation Checklist
 
-The CI/CD workflows and deployment scripts are fully implemented, tested, and committed locally. When you are ready to activate live remote deployments from GitHub Actions to your MacBook Air M4, complete these manual steps:
+The CI/CD workflows and deployment scripts are fully implemented, tested, and validated. PR #2 is open targeting `main`:
+👉 **https://github.com/djcode0718/MediscanAI/pull/2**
 
-- [ ] **Step 1:** Push branch `feat/mediscanai-cicd-operations` to GitHub and open a Pull Request.
+When you are ready to activate live remote deployments from GitHub Actions to your MacBook Air M4, complete these manual steps:
+
+- [x] **Step 1:** Push branch `feat/mediscanai-cicd-operations` to GitHub and open Pull Request #2.
 - [ ] **Step 2:** In GitHub repository settings, configure Environment `production` with required reviewers.
 - [ ] **Step 3:** Add GitHub Secret `TAILSCALE_AUTHKEY` (tagged `tag:ci-cd`).
 - [ ] **Step 4:** Add GitHub Secret `MACBOOK_SSH_KEY` (deploy key matching MacBook `~/.ssh/authorized_keys`).
-- [ ] **Step 5:** Add GitHub Variable `MACBOOK_TAILSCALE_HOST` (MacBook Tailscale IP e.g. `100.x.y.z`).
-- [ ] **Step 6:** Add GitHub Variable `MACBOOK_DEPLOY_USER` (MacBook username e.g. `sj`).
-- [ ] **Step 7:** On MacBook Air, ensure Tailscale is connected and Remote Login (SSH) is enabled.
-- [ ] **Step 8:** Merge PR into `main`. The `docker-publish.yml` workflow will build and publish the ARM64 image to GHCR, triggering `deploy-production.yml` for your review and approval!
+- [ ] **Step 5:** Add GitHub Secret `MACBOOK_SSH_KNOWN_HOSTS` (pinned ed25519 host key).
+- [ ] **Step 6:** Add GitHub Variable `MACBOOK_TAILSCALE_HOST` (MacBook Tailscale IP e.g. `100.x.y.z`).
+- [ ] **Step 7:** Add GitHub Variable `MACBOOK_DEPLOY_USER` (MacBook username e.g. `sj`).
+- [ ] **Step 8:** On MacBook Air, ensure Tailscale is connected and Remote Login (SSH) is enabled.
+- [ ] **Step 9:** Merge PR #2 into `main`. The `docker-publish.yml` workflow will build and publish the ARM64 image to GHCR, triggering `deploy-production.yml` for your review and approval!
