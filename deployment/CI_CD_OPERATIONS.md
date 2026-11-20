@@ -275,17 +275,46 @@ The MacBook Air M4 has a unified internal SSD (460 GiB APFS container) and acts 
 
 | Resource | Retention Policy | Enforcement Mechanism |
 | :--- | :--- | :--- |
-| **Active Docker Image** | Kept indefinitely | Recorded in `deployment/.current_deployment` |
-| **Rollback Images** | Last 2 known-good images preserved | Recorded in `deployment/.deployment_history` |
+| **Active Docker Image** | Kept indefinitely | Recorded in `deployment/.current_deployment` (resolved to immutable ID) |
+| **Rollback Images** | Last 2 known-good images preserved | Recorded in `deployment/.deployment_history` (verified line integrity) |
 | **Dangling Images** | **Global Pruning DISABLED** | Untagged images of unverified ownership are preserved to protect other projects |
-| **Obsolete Backend Images**| Removed ONLY if positively identified | Targeted `mediscanai-backend` image prune in `maintenance.sh` |
-| **Unrelated Docker Projects**| **Permanently Exempt** | Images/volumes of other projects (e.g. `paxel`, etc.) are never touched |
+| **Obsolete Backend Images**| Removed ONLY if positively identified | Exact canonical repository match (`mediscanai-backend`, `ghcr.io/djcode0718/mediscanai-backend`) |
+| **Unrelated Docker Projects**| **Permanently Exempt** | Images/volumes of other projects (e.g. `paxel-client`, etc.) are never touched |
 | **Build Cache** | Shared across host projects | Not pruned by scheduled maintenance; pruned only via explicit `--prune-build-cache` |
 | **Container Logs** | Max 30 MB per container (10MB x 3 files) | Configured in `deployment/compose.yaml` logging options |
 | **PostgreSQL Data** | **Permanently Protected** | Named volume `mediscanai_postgres_data` is locked |
 | **AI Model Cache** | **Permanently Protected** | Named volume `mediscanai_model_cache` is locked |
 | **Database Backups** | 7 days retention (newest always preserved) | Automated verification and pruning in `backup-postgres.sh` |
 | **Temporary Files** | **Automatic Deletion DISABLED** | Inspected only; files are preserved because offline age does not prove unreferenced state |
+
+### Exact Docker Image Ownership & Protection Rules
+
+1. **Exact Canonical Repository Matching:**
+   Only images belonging to verified canonical MediScanAI repositories are eligible for obsolete cleanup:
+   - `mediscanai-backend` (local build tag)
+   - `ghcr.io/djcode0718/mediscanai-backend` (official GHCR container registry tag)
+   - Substring matching (`*mediscanai-backend*`) is strictly rejected to prevent false positives on third-party images (e.g., `not-mediscanai-backend`, `mediscanai-backend-service`, `my-mediscanai-backend-tool`).
+   - Third-party images or untrusted labels claiming ownership without established build provenance are preserved.
+
+2. **Immutable Image ID Resolution & Container Protection:**
+   - Both mutable tags and immutable 64-character SHA256 IDs (`sha256:...`) are resolved via `docker inspect`.
+   - Images in use by **any container (running or stopped)** are dynamically protected.
+   - An **immediate pre-removal recheck** runs immediately before `docker rmi` to eliminate race conditions.
+
+3. **Metadata Ambiguity Lock:**
+   - If `.deployment_history` or `.current_deployment` is corrupted, malformed, or missing, a critical safety lock (`METADATA_AMBIGUOUS=true`) is engaged.
+   - Under metadata ambiguity, image pruning is aborted and **all candidate images are preserved**.
+
+4. **Scope of `--force` Execution:**
+   - `--force` is used solely to execute routine maintenance when storage utilization is below warning thresholds ($<80\%$).
+   - `--force` **never bypasses**:
+     - Exact repository ownership verification.
+     - Current deployment image protection.
+     - Rollback history protection.
+     - Running and stopped container locks.
+     - Persistent volume locks (`mediscanai_postgres_data`, `mediscanai_model_cache`).
+     - Temporary-file deletion prohibitions.
+     - Unrelated Docker project isolation.
 
 ### Storage Threshold & Headroom Policy
 Storage utilization on macOS is evaluated on `/System/Volumes/Data` (the APFS volume holding user and container data):
