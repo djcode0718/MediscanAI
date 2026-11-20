@@ -127,7 +127,7 @@ if [ -f "$HISTORY_FILE" ]; then
     while IFS= read -r line; do
         [ -z "$line" ] && continue
         # Verify valid pipe count (at least 3 pipe separators: date | action | image | details)
-        PIPE_COUNT=$(grep -o '|' <<< "$line" | wc -l | tr -d ' ')
+        PIPE_COUNT=$( (grep -o '|' <<< "$line" || true) | wc -l | tr -d ' ')
         if [ "$PIPE_COUNT" -lt 3 ]; then
             HISTORY_MALFORMED=true
             break
