@@ -91,25 +91,12 @@ jobs:
 
       - name: Select Xcode with iOS Simulator support
         run: |
-          echo "=== Installed Xcodes ==="
-          ls -d /Applications/Xcode* || true
-
-          FOUND_XCODE=""
-          for xc in /Applications/Xcode*.app; do
-            [ -d "$xc" ] || continue
-            echo "Checking $xc for iOS runtimes..."
-            if DEVELOPER_DIR="$xc/Contents/Developer" xcrun simctl list runtimes 2>/dev/null | grep -iq "iOS"; then
-              FOUND_XCODE="$xc"
-              echo "Found iOS runtime in: $xc"
-              break
-            fi
-          done
-
-          if [ -n "$FOUND_XCODE" ]; then
-            echo "Selecting: $FOUND_XCODE"
-            sudo xcode-select -s "$FOUND_XCODE"
-          else
-            echo "No specific Xcode with iOS runtime found; keeping current default"
+          if [ -d "/Applications/Xcode_16.4.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.4.app
+          elif [ -d "/Applications/Xcode_16.3.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.3.app
+          elif [ -d "/Applications/Xcode.app" ]; then
+            sudo xcode-select -s /Applications/Xcode.app
           fi
 
           sw_vers
@@ -126,9 +113,7 @@ jobs:
           if [ -n "$DEST_ID" ]; then
             DEST="id=${DEST_ID}"
           else
-            SIM_NAME=$(xcrun simctl list devices available 2>/dev/null | grep -E "iPhone (16|15)" | head -n 1 | sed -E 's/^[ ]+//; s/ \([A-F0-9-]+\).*//')
-            SIM_NAME="${SIM_NAME:-iPhone 16}"
-            DEST="platform=iOS Simulator,name=${SIM_NAME}"
+            DEST="platform=iOS Simulator,OS=18.5,name=iPhone 16"
           fi
 
           echo "Targeting destination: ${DEST}"
